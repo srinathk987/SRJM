@@ -1,0 +1,448 @@
+﻿
+@{
+  //  ViewBag.Title = "ShowDeliveryBoyDeatils";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div ng-controller="DeliveryBoyController" ng-init="LoadData()">
+    <div class="page-content">
+
+        @*<div class="row">
+
+            <div class=" col-sm-12 col-xs-12">
+                <div class="page-header">
+                    <h1 style="width:auto; float:left">
+                        Delivery Boy Details<small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                    </h1>
+
+                </div>
+
+            </div>
+        </div>*@
+
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form" name="frmDeliveryBoy" novalidate>
+
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="radio-inline">
+                                    <label><input type="radio" ng-model='result' ng-value='"Resturant Employee"' name="rdoResult">Resturant Employee</label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label><input type="radio" ng-model='result' ng-value='"Part Time Employee"' name="rdoResult">Part Time Employee</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-xs-12">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Name :
+                                </label>
+
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="Name" name="BoyName" ng-model="data.BoyName" kit-alphabets required ng-disabled="isdisable" maxlength="20" />
+
+                                    <span class="error" ng-show="(frmDeliveryBoy.BoyName.$dirty || submitted) && frmDeliveryBoy.BoyName.$error.required">
+                                        Name required!
+                                    </span>
+                                </div>
+
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Contact No. :
+                                </label>
+
+
+
+
+
+                                <div class="col-sm-4">
+
+                                    <input type="text" class="form-control" placeholder="Contact No." name="MobileNo" ng-model="data.MobileNo" ng-minlength="10" ng-maxlength="10" ng-pattern="/^(0|[1-9][0-9]*)$/" required />
+                                    <span class="error" ng-show="(frmDeliveryBoy.MobileNo.$dirty || submitted) && frmDeliveryBoy.MobileNo.$error.required">
+                                        Contact No. required!
+                                    </span>
+                                    @*<span class="error" ng-show="frmDeliveryBoy.MobileNo.$error.minlength">
+                                        Invalid Mobile No.!
+                                    </span>*@
+                                    <span class="error" ng-show="frmDeliveryBoy.MobileNo.$error.maxlength">
+                                        Sorry You are Exceeding the Limit
+                                    </span>
+
+                                    <span class="error" ng-show="frmDeliveryBoy.MobileNo.$error.pattern">Invalid Mobile No</span>
+
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Vehicle No. :
+                                </label>
+
+                                <div class="col-sm-4">
+
+                                    <input type="text" class="form-control" placeholder="Vehicle No." name="VehicleNo" ng-model="data.VehicleNo" ng-minlength="5" ng-pattern="/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/" required maxlength="20" />
+                                    <span class="error" ng-show="(frmDeliveryBoy.VehicleNo.$dirty || submitted) && frmDeliveryBoy.VehicleNo.$error.required">
+                                        Vehicle No. required!
+                                    </span>
+
+
+
+                                    <span class="error" ng-show="frmDeliveryBoy.VehicleNo.$error.pattern">
+                                        Invalid Vehicle No.!
+                                    </span>
+                                </div>
+
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+
+                                </label>
+                                <div class="col-sm-4">
+
+                                    <button class="btn btn-success" type="button" id="btnDeliveryBoySave" ng-click="SaveDeliveryBoyDetails(data)">
+                                        <i class="ace-icon fa fa-plus bigger-110"></i>{{btnDeliveryBoySave}}
+                                    </button>
+                                    &nbsp; &nbsp; &nbsp;
+                                    <button class="btn orange" type="reset" ng-click="Reset()">
+                                        <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        <table id="grddeliveryboydetails"></table>
+
+        <div id="grid-pager">
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+
+
+    var appElement = document.querySelector('[ ng-controller=DeliveryBoyController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grddeliveryboydetails"))
+    }
+    function edit(row) {
+      
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grddeliveryboydetails").getRowData(row);
+        debugger;
+
+
+
+
+        $http.post('/POSMasters/UpdateDeliveyboydata', rowdata).success(function (data) {
+            debugger;
+            if (data>0) {
+                alert("Cannot Update  Details  as it is in use by the application");
+               
+            }
+            else {
+                $scope.btnDeliveryBoySave = "Update";
+                $scope.data = rowdata;
+
+                $scope.isdisable = true;
+                if (rowdata.EmployeeType == "Resturant Employee") {
+                    debugger;
+                    $scope.result = "Resturant Employee";
+                }
+                if (rowdata.EmployeeType == "Part Time Employee") {
+                    $scope.result = "Part Time Employee";
+                }
+                $scope.$apply();
+            }
+        }).error(function (data) {
+            alert("Error found");
+        });
+
+
+
+
+
+
+
+ 
+      
+    }
+
+
+
+
+
+
+
+
+    function Delete(row) {
+
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnDeliveryBoySave == "Save") {
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#grddeliveryboydetails").getRowData(row);
+
+
+            $http.post('/POSMasters/DeleteDeliveyboydata', rowdata).success(function (data) {
+                if (data == true) {
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+                    if (ans) {
+                        alert("Delivery Boy Details Deleted Successfully");
+                        $('#grddeliveryboydetails').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                }
+                else if (data == false) {
+                    alert("Cannot Delete  Details  as it is in use by the application");
+                }
+
+            }).error(function (data) { alert("Error Occuerd"); });
+
+        }
+
+        else {
+
+            alert("Cannot Delete Delivery Boy Details In Edit Mode");
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+    var app = angular.module('RMS');
+
+    app.controller('DeliveryBoyController', function ($scope, $http, $rootScope) {
+        $scope.btnDeliveryBoySave = "Save";
+
+        $scope.checked = true;
+        $rootScope.FormName = "Deliver Boy";
+        $rootScope.ModuleName = "Masters";
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.isdisable = false;
+        $scope.result = "Resturant Employee";
+
+
+        $scope.$watch('frmDeliveryBoy.$valid', function (newValue) {
+
+            $scope.isFormValid = newValue;
+
+        });
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSMasters/ShowDeliveyboydata/',
+                method: "get"
+
+            }).success(function (data) {
+
+                DeliveryBoyGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+
+
+        function ClearForm() {
+
+            $scope.data = {};
+
+            $scope.frmDeliveryBoy.$setPristine();
+            $scope.submitted = false;
+        }
+
+
+        $scope.SaveDeliveryBoyDetails = function (data) {
+            $scope.submitted = true;
+            var res = $scope.result;
+            if ($scope.isFormValid) {
+
+                if ($scope.btnDeliveryBoySave == "Save") {
+                    var ans = confirm("Are You Sure? Do You Want To Save?");
+
+                    if (ans) {
+                        $http({
+                            url: '/POSMasters/SaveDeliveryBoyDetails/',
+                            method: "POST",
+                            data: { DeliveryBoyDTO: data, Employeetype: $scope.result }
+
+                        }).success(function (data) {
+
+                            debugger;
+                            if (data==true) {
+
+
+                                alert("Delivery Boy Details Saved Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+                                $scope.result = "Resturant Employee";
+                               
+                            }
+                            else
+                                {
+
+                                alert("Mobile No Or Vehicle No Already Exist");
+
+
+                            }
+
+                        });
+                    }
+                }
+                else if ($scope.btnDeliveryBoySave == "Update") {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $http.post('/POSMasters/UpdateDeliveyboydata', data).success(function (data) {
+                            if (data > 0) {
+                              
+                                alert("Mobile No Or Vehicle No Already Exist");
+                               
+
+                            }
+                           else
+                            {
+                                debugger;
+                                alert("Delivery Boy Details  Updated Successfully");
+                                //
+                                ClearForm();
+                                $scope.LoadData();
+                                $scope.btnDeliveryBoySave = "Save";
+                                $scope.isdisable = false;
+                               
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+
+
+                }
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+
+            $scope.btnDeliveryBoySave = "Save";
+           // $scope.result = "Resturant Employee";
+            location.reload();
+            //$scope.result = "Resturant Employee";
+            //$scope.result = "Resturant Employee";
+        }
+        function DeliveryBoyGridBinding(data) {
+
+
+            var grid_data = data;
+            var grid_selector = "#grddeliveryboydetails";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+
+            jQuery(grid_selector).jqGrid({
+
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+
+                rownumbers: true,
+
+                colModel: [
+                    {
+                        label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                            return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        }
+                    },
+
+                    {
+                        label: 'ID', name: 'DeliveryBoyId', width: 50, hidden: true
+
+                    },
+
+
+                   {
+                       label: 'Employee Type', name: 'EmployeeType', width: 50
+
+                   },
+
+			       {
+			           label: 'Name', name: 'BoyName', width: 50
+			       },
+                   { label: 'Mobile No.', name: 'MobileNo', width: 50 },
+                   { label: 'Vehicle No.', name: 'VehicleNo', width: 50 }],
+
+
+
+
+
+
+                beforeSelectRow: function (rowid, e) {
+                    var $self = $(this),
+                        iCol = $.jgrid.getCellIndex($(e.target).closest("td")[0]),
+                        cm = $self.jqGrid("getGridParam", "colModel"),
+                        localData = $self.jqGrid("getLocalRow", rowid);
+                    if (cm[iCol].name === "closed") {
+                        localData.closed = $(e.target).is(":checked");
+                    }
+
+                    return true;
+                },
+                viewrecords: true,
+                rowNum: 100000,
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                groupSummary: [true],
+                ignoreCase: true,
+
+                grouping: true,
+                groupCollapse: true,
+
+                footerrow: true,
+                caption: "Delivery Boy Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span>"
+            });
+            $(window).triggerHandler('resize.jqGrid');
+        }
+    });
+</script>
+

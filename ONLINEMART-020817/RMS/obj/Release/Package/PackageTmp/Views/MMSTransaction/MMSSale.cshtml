@@ -1,0 +1,1919 @@
+﻿@{
+    // ViewBag.Title = "MaterialReturn";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+}
+
+<script src="~/Scripts/ParamQuery/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+    i = 1;
+    function CheckInput() {
+
+        var regex = "^[0-9]*$";
+        var TbText = document.getElementById("txtcardnumber").value;
+        if (TbText.match(regex)) {
+            return true;
+        }
+        else {
+            alert("No Special Charcaters and alphabets are allowed");
+            document.getElementById("txtcardnumber").value = "";
+            return false;
+        }
+    }
+
+
+    function CheckcodeInput() {
+
+        var regex = "^[0-9]*$";
+        var TbText = document.getElementById("txtcardcode").value;
+        if (TbText.match(regex)) {
+            return true;
+        }
+        else {
+            alert("No Special Charcaters and alphabets are allowed");
+            document.getElementById("txtcardcode").value = "";
+            return false;
+        }
+    }
+
+
+    function CheckAmountInput() {
+
+        var regex = "^[0-9]*$";
+        var TbText = document.getElementById("TxtCashPayment").value;
+        if (TbText.match(regex)) {
+            return true;
+        }
+        else {
+            alert("No Special Charcaters and alphabets are allowed");
+            document.getElementById("TxtCashPayment").value = "";
+            return false;
+        }
+    }
+
+
+    function CheckMobileFormat() {
+
+        var regex = "^[0-9]*$";
+        var Value = document.getElementById("txtvchcustomermobileno").value;
+
+        if (Value == '' || Value == null) {
+
+        }
+        else {
+            if (Value.match(regex)) {
+                if (Value.length == '10') {
+                    return true;
+                }
+                else {
+                    alert("Mobile Number must be 10 digits");
+                    //document.getElementById("txtvchcustomermobileno").value = "";
+                    return false;
+                }
+
+            }
+            else {
+                alert("No Special Charcaters and alphabets are allowed in Mobile Numbers");
+                //document.getElementById("txtvchcustomermobileno").value = "";
+                return false;
+            }
+        }
+    }
+
+    function CheckBalanceAmount() {
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+
+        var regex = "^[0-9]*$";
+        var TotalAmount = document.getElementById("Txtamnt").value;
+        var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+        if (TotalAmount.match(regex)) {
+            document.getElementById('TxtChange').value = balance;
+        }
+        else {
+            alert("No Special Charcaters and alphabets are allowed in Amount Field");
+            document.getElementById("Txtamnt").value = GrdTotal;
+            document.getElementById('TxtChange').value = 0;
+            return false;
+        }
+    }
+
+
+
+    function hideControls() {
+        document.getElementById("PaymentTextbox").style.display = "none";
+        document.getElementById("CardOptions").style.display = "none";
+    }
+    function ShowPaymentTextbox() {
+
+
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+        document.getElementById("Txtamnt").value = GrdTotal;
+
+        document.getElementById('balancediv').style.display = "block";
+        document.getElementById('TxtChange').value = "";
+
+        var TotalAmount = document.getElementById("Txtamnt").value;
+        var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+
+        document.getElementById('TxtChange').value = balance;
+
+        document.getElementById('CardOptions').style.display = "none";
+        document.getElementById('AmountDiv').style.display = "block";
+
+    }
+
+    function ShowPaymentCards() {
+
+        document.getElementById("txtcardnumber").value = "";
+        document.getElementById("txtcardcode").value = "";
+        document.getElementById('balancediv').style.display = "none";
+        document.getElementById('AmountDiv').style.display = "none";
+
+        document.getElementById('PaymentTextbox').style.display = "none";
+        document.getElementById('CardOptions').style.display = "block";
+
+    }
+
+
+    function CheckTotalAmount() {
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var TotalAmount = document.getElementById("Txtamnt").value;
+        var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+        var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+
+
+        document.getElementById('balancediv').style.display = "block";
+        var regex = "^[0-9]*$";
+        var TbText = document.getElementById("Txtamnt").value;
+        if (!TbText.match(regex)) {
+            alert("No Special Charcaters and alphabets are allowed");
+            document.getElementById("Txtamnt").value = "";
+        }
+        else {
+
+            if (balance == 0 || balance == undefined) {
+                document.getElementById("TxtChange").value = balance;
+            }
+
+            else if (TotalAmount < GrdTotal) {
+                window.alert("You Have Entered less than sale amount");
+                document.getElementById('balancediv').style.display = "none";
+                //document.getElementById("Txtamnt").value = "";
+                return false;
+            }
+
+            else if (TotalAmount == 0 || GrdTotal == 0) {
+                document.getElementById('balancediv').style.display = "none";
+            }
+
+            else {
+                document.getElementById('balancediv').style.display = "block";
+                document.getElementById("TxtChange").hidden = false;
+                document.getElementById('TxtChange').style.display = "block";
+                document.getElementById("TxtChange").value = balance;
+                return true;
+            }
+        }
+
+    }
+
+
+
+    function edit(row) {
+
+        var $scope = angular.element(appElement).scope();
+        document.getElementById("HdnEditValue").value = row;
+        var rowdata = $("#tblPOS").getRowData(row);
+        $scope.Initial = rowdata;
+        $scope.Availstck = rowdata.quantity;
+        // jQuery('#tblPOS').editRow(row, true);
+        jQuery('#tblPOS').editRow(row);
+        be = "<button type='button' class='btn-grid' id='btnSave'  onclick='save(" + row + ") '><i class='fa fa-floppy-o' aria-hidden='true' style='color:#8EB869;font-size:20px'></i></button>";
+        ce = "<button type='button' class='btn-grid' id='btnCancel'  onclick='Restore(" + row + ")'><i class='fa fa-undo' style='color:#45B5A4'></i></button>";
+        jQuery("#tblPOS").jqGrid('setRowData', row, { act: be + ce });
+
+
+
+    }
+
+
+    function Restore(row) {
+        var $scope = angular.element(appElement).scope();
+        jQuery('#tblPOS').restoreRow(row);
+        var data = $scope.Initial;
+        $("#tblPOS").jqGrid("setCell", row, "amount", data.amount);
+        $("#tblPOS").jqGrid("setCell", row, "quantity", data.quantity);
+        be = "<button  type='button' id='btnedit' class='btn-grid' onclick='edit(" + row + ");'><i class='fa fa-pencil'></i><br/></button>";
+        ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + row + ");'><i class='fa fa-trash'></i><br/></button>";
+        jQuery("#tblPOS").jqGrid('setRowData', row, { act: be + ce });
+    }
+</script>
+
+
+<div ng-controller="MMSsaleControler" ng-init="LoadposDetails()">
+
+
+
+
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <form class="form-horizontal" name="SaleForm" novalidate>
+                    <div id="Inputdiv">
+                        <div class="form-group">
+                            <label for="Barcode" class="col-sm-2 control-label">
+                                Scan Barcode
+                                <span><i style="color:red">*</i></span>
+                            </label>
+                            <div class="col-sm-10 form-horizontal">
+                                @*<input class="form-control" type="text" id="txtcodeid" name="productcode"
+                                           ng-keyup="CallValues(POS)"
+                                           ng-blur="CallValues(POS)"
+                                           ng-model="POS.productcode" autofocus="autofocus">
+
+                                    <ui-select theme="select2"  id="xyxxx" name="producttypename" ng-blur="nah()" ng-model="ctrl.product.selected" on-select="SelectProductType()" title="Choose a Product" on>
+                                        <ui-select-match placeholder="Select Product Type">{{$select.selected.producttypename}}</ui-select-match>
+                                        <ui-select-choices repeat=" product in ProductTypes | propsFilter: {producttypename: $select.search}">
+                                            <div ng-bind-html="product.producttypename | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>*@
+
+                                <input class="form-control" auto-complete ui-items="ProductTypes" id="omschrijving" ng-model="selected" onkeyup="CallValues()" autofocus="autofocus">
+                                @*<div angucomplete-alt id="txtAutocomplete" placeholder="Type Product Name or Code" pause="100"  onkeyup="CallValues()"
+                                         selected-object="SelectedCountry" local-data="ProductTypes" search-fields="producttypename"
+                                         title-field="producttypename" minlength="1" input-class="form-control" match-class="highlight">
+                                    </div>*@
+                            </div>
+                        </div>
+
+                        @*Customer Name*@
+
+
+                        <div class="form-group">
+                            <label for="CustomerName" class="col-sm-2 control-label">
+                                Customer Name
+                            </label>
+                            <div class="col-sm-4 form-horizontal">
+                                <input class="form-control" style="width:150px"
+                                       placeholder="Customer Name" type="text"
+                                       id="txtvchcustomername" maxlength="50"
+                                       ng-model="POS.vchcustomername">
+                            </div>
+
+                            <label for="Customer Mobile Number" class="col-sm-2 no-padding control-label">
+                                Customer Mobile Number
+                            </label>
+                            <div class="col-sm-4 form-horizontal">
+                                <input class="form-control" style="width:150px" placeholder="customer mobile number"
+                                       type="text" id="txtvchcustomermobileno" ng-model="POS.vchcustomermobileno" maxlength="10"
+                                       ng-minlength="10"
+                                       ng-maxlength="10" onblur="return CheckMobileFormat()">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <br /> <br />
+                    <div id="tblgrid">
+                        <table id="tblPOS"></table>
+                        <div id="pagePOS">
+                        </div>
+                    </div>
+                  
+
+                    <div id="PaymentDiv">
+                        <div class="form-group" id="DivCashorCard">
+                            <label for="CustomerName" class="col-sm-2 col-xs-4 control-label"> Mode of Payment</label>
+                            <div class="col-sm-1 col-xs-3">
+                                <label class="control-label no-padding-right" for="form-field-1">
+                                    Cash
+                                </label>
+                                <input id="Chkcash" type="radio" class="ace ace-switch ace-switch-5" ng-model="POS.vchpaymentmode" value="Cash" name="Cash" onclick="ShowPaymentTextbox()">
+
+                                <span class="lbl"></span>
+                            </div>
+                            <div class="col-sm-1 col-xs-3">
+                                <label class="control-label no-padding-right" for="form-field-1">
+                                    Card
+                                </label>
+
+                                <input id="Chkcard" type="radio" class="ace ace-switch ace-switch-5" ng-model="POS.vchpaymentmode" value="Card" name="Card" onclick="ShowPaymentCards()">
+                                <span class="lbl"></span>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    @*<div id="PaymentTextbox" style="display:none">
+                            <input type="text" id="TxtCashPayment" style="width:100px" name="CashPayment" ng-model="POS.numsaleamount" required />
+                        </div>*@
+                    <div class="form-group">
+                        <div class="col-sm-4 col-xs-4">
+                            <div id="PaymentTextbox" style="display:none">
+                                <input type="text" id="TxtCashPayment" style="width:100px" name="CashPayment" onblur="CheckAmountInput()" ng-model="POS.numsaleamount" required />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="CardOptions" style="display:none">
+
+                        <div class="form-group">
+                            <label for="CustomerName" class="col-sm-2 col-xs-4 control-label"> Card Type</label>
+
+                            <div class="col-sm-2 col-xs-3">
+                                <label class="control-label no-padding-right" for="form-field-1">
+                                    VISA
+                                </label>
+                                <input id="ChkCredit" type="radio" class="ace ace-switch ace-switch-5" name="ChkCredit" ng-model="POS.vchcardtype" value="CreditCard">
+                                <span class="lbl"></span>
+                            </div>
+
+                            <div class="col-sm-2 col-xs-3">
+                                <label class=" control-label no-padding-right" for="form-field-1">
+                                    MasterCard
+                                </label>
+                                <input id="ChkDedit" type="radio" class="ace ace-switch ace-switch-5" name="ChkDedit" ng-model="POS.vchcardtype" value="DeditCard">
+
+                                <span class="lbl"></span>
+                            </div>
+                            <div class="col-sm-2 col-xs-3">
+                                <label class=" control-label no-padding-right" for="form-field-1">
+                                    MaestroCard
+                                </label>
+                                <input id="ChkMaestroCard" type="radio" class="ace ace-switch ace-switch-5" name="ChkMaestroCard" ng-model="POS.vchcardtype" value="MaestroCard">
+
+                                <span class="lbl"></span>
+                            </div>
+                            <div class="col-sm-2 col-xs-3">
+                                <label class=" control-label no-padding-right" for="form-field-1">
+                                    RuPay
+                                </label>
+                                <input id="ChkRuPay" type="radio" class="ace ace-switch ace-switch-5" name="ChkRuPay" ng-model="POS.vchcardtype" value="RuPay">
+
+                                <span class="lbl"></span>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6 col-xs-4">
+                                <input type="text" class="form-control" id="txtcardnumber" name="CardNumber" maxlength="16" placeholder="Enter Transaction ID" onblur="return CheckInput()" ng-model="POS.vchreferenceno" required>
+                                <span class="error" ng-show="(SaleForm.CardNumber.$dirty || submitted ) && SaleForm.CardNumber.$error.required">
+                                    Transaction ID required!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6 col-xs-4">
+                                <input type="text" id="txtcardcode" class="form-control" maxlength="4" onblur="return CheckcodeInput()" placeholder="Enter last 4 digits of card" name="CardCode" ng-model="POS.CardCode" required>
+                                <span class="error" ng-show="(SaleForm.CardCode.$dirty || submitted ) && SaleForm.CardCode.$error.required">
+                                    Card Last 4 digits are required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="AmountDiv" style="display:none">
+                        <div class="col-sm-6 col-xs-4" id="AmountEnter">
+                            <label for="change" id="LBLChange"> Enter Amount:</label>
+                            <input type="text" placeholder="Enter Total Amount" class="form-control" id="Txtamnt" name="Amount" ng-model="POS.numamount" maxlength="8" onkeyup="CheckBalanceAmount()" required>
+                            @*<input type="text" placeholder="Enter Total Amount" class="form-control" id="Txtamnt" name="Amount" ng-model="POS.numamount"  onblur="CheckTotalAmount()" required>*@
+                            <span class="error" ng-show="(SaleForm.Amount.$dirty || submitted ) && SaleForm.Amount.$error.required">
+                                Enter Total Amount!
+                            </span>
+                        </div>
+                        <div class="col-sm-6 col-xs-4">
+                            <div id="balancediv">
+                                <label for="change" id="LBLChange"> Balance Amount:</label>
+                                <input type="text" class="form-control" id="TxtChange" name="Change" readonly />
+
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" hidden="hidden" id="HdnEditValue" />
+
+                     @*View Products of COmbo*@
+                    <table id="tblView" title="View Combo Details" style="height:auto;left:108px;top:-374px"></table>
+                    <div id="pageView">
+                    </div>
+                    @* End View Products of COmbo*@
+
+                </form>
+
+                @*<button onclick="SaveSaleDetailss1()">
+                        Save
+                    </button>*@
+
+                <button onclick="SaveSaleDetailss1()" hidden="hidden" id="BtnPayment">
+                    Payment
+                </button>
+
+                @*<button onclick="SavePaymentDetails1()" hidden="hidden" id="BtnSavePAyment">
+                        Make Payment
+                    </button>*@
+
+                @*<button onclick="DeleteTempDetailsonBack()" hidden="hidden" id="BtnBackEvent"> Back</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var appElement = document.querySelector('[ ng-controller=MMSsaleControler]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdMaterialreturn"))
+    }
+    // Calls on Scans Barcode //
+    function CallValues() {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var kk = document.getElementById('omschrijving').value;
+        if (kk.length > 0) {
+            re = /^[\0-9\b.]+$/;
+            if (re.test(kk)) {
+
+
+                if (kk != null && kk !== undefined && kk != "" && kk.length == '18') {
+
+
+                    var sstring = kk.substring(1, 7);
+                    if (sstring.length == 6) {
+                        var w = kk.substring(7, 12);
+
+                        if (kk.substring(11, 12) == '0' || kk.substring(11, 12) == '1' || kk.substring(11, 12) == '2' || kk.substring(11, 12) == '3' || kk.substring(11, 12) == '4' || kk.substring(11, 12) == '5' || kk.substring(11, 12) == '6' || kk.substring(11, 12) == '7' || kk.substring(11, 12) == '8' || kk.substring(11, 12) == '9') {
+                            var quantity = parseFloat(w) / 1000;
+                            var q = quantity.toString();
+                            var fquantity = q.split('.');
+                            var f1 = fquantity[0];
+                            var f2 = fquantity[1];
+
+                            // execute if when product is in weight//
+                            if (kk.substring(0, 1) == '1') {
+
+
+                                if ((f1.length == '1' || f1.length == '2') && f2 == undefined) {
+                                    var FinalQuantity = f1 + ' KG';
+                                }
+
+
+                                if (f1 !== undefined && f2 !== undefined) {
+                                    if (f2.length == '2' && f1.length == '1' && f1 == '0') {
+
+                                        var ff = parseFloat(f2) * 10;
+                                        var FinalQuantity = ff + ' gms';
+                                    }
+                                    else if (f2.length == '2' && f1.length == '1' && f1 != '0') {
+                                        var fff = parseFloat(f2) * 10;
+
+                                        var FinalQuantity = f1 + '.' + fff + ' KG';
+                                    }
+                                    else if (f1.length == '2' && (f2.length == '2' || f2.length == '3')) {
+                                        var vv;
+                                        if (f2.length == '2') {
+                                            var f = f2;
+                                            var FinalQuantity = f1 + '.' + f + ' KG';
+                                        }
+                                        else if (f2.length == '3') {
+                                            var FinalQuantity = f1 + '.' + f2 + ' KG';
+                                        }
+
+                                    }
+
+                                    else if (f1.length == '1' && f1 == '0' && f2.length == '3') {
+                                        var st = f2.charAt(0);
+                                        var sst = f2.charAt(1);
+                                        if (st == '0' && sst == '0') {
+                                            var s = f2.substring(2, 3);
+                                            var FinalQuantity = s + ' gms';
+                                        }
+                                        else if (st == '0') {
+                                            var ss = f2.substring(1, 3);
+                                            var FinalQuantity = ss + ' gms';
+                                        }
+                                        else {
+                                            var FinalQuantity = f2 + ' gms';
+                                        }
+                                    }
+
+                                    else if (f1.length == '1' && f2.length == '3' && f1 != '0') {
+                                        var FinalQuantity = f1 + '.' + f2 + ' KG';
+                                    }
+                                    else if (f1.length == '2' && f2.length == '3') {
+                                        var FinalQuantity = f1 + '.' + f2 + ' KG';
+                                    }
+                                    else if (f1.length == '1' && f2.length == '1' && f2 != '0') {
+                                        var ff = f2 * 100;
+                                        var FinalQuantity = f1 + '.' + ff + ' KG';
+                                    }
+                                    else if (f1.length == '2' && f2.length == '1') {
+                                        var FinalQuantity = f1 + '.' + f2 + ' KG';
+                                    }
+                                }
+
+                            }
+                                // Execute below block if product is in pieces //
+                            else if (kk.substring(0, 1) == '0') {
+
+                                var Pc = kk.substring(7, 12);
+
+                                var p1 = Pc.substring(0, 1);
+                                var p2 = Pc.substring(1, 2);
+                                var p3 = Pc.substring(2, 3);
+                                var p4 = Pc.substring(3, 4);
+                                var p5 = Pc.substring(4, 5);
+
+                                if ((p1 == '0' || p1 == undefined) && (p2 == '0' || p2 == undefined) && (p3 == '0' || p3 == undefined) && (p4 == '0' || p4 == undefined) && (p5 != '0' || p5 != undefined)) {
+                                    var FQ = p5;
+                                    var FinalQuantity = p5 + ' PC';
+                                }
+                                else if ((p1 == '0' || p1 == undefined) && (p2 == '0' || p2 == undefined) && (p3 == '0' || p3 == undefined) && (p4 != '0' || p4 != undefined) && (p5 != '0' || p5 != undefined || p5 == '0')) {
+                                    var s1 = p4.toString();
+                                    var s2 = p5.toString();
+                                    var res = s1.concat(s2);
+
+                                    var FinalQuantity = res + ' PC';
+                                    var FQ = res;
+                                }
+                                else if ((p1 == '0' || p1 == undefined) && (p2 == '0' || p2 == undefined) && (p3 != '0' || p3 != undefined) && (p4 != '0' || p4 != undefined || p4 == '0') && (p5 != '0' || p5 != undefined || p5 == '0')) {
+                                    var s1 = p3.toString();
+                                    var s2 = p4.toString();
+                                    var s3 = p5.toString();
+                                    var s4 = s1.concat(s2);
+                                    var res = s4.concat(s3);
+                                    var FinalQuantity = res + ' PC';
+                                    var FQ = res;
+                                }
+                                else if ((p1 == '0' || p1 == undefined) && (p2 != '0' || p2 != undefined) && (p3 != '0' || p3 != undefined || p3 == '0') && (p4 != '0' || p4 != undefined || p4 == '0') && (p5 != '0' || p5 != undefined || p5 == '0')) {
+                                    var s1 = p2.toString();
+                                    var s2 = p3.toString();
+                                    var s3 = p4.toString();
+                                    var s4 = p5.toString();
+                                    var rr = s1.concat(s2);
+                                    var rrr = rr.concat(s3);
+                                    var rrrr = rrr.concat(s4);
+                                    var FinalQuantity = rrrr + ' PC';
+                                    var FQ = rrrr;
+                                }
+                                else if ((p1 == '0' || p1 == undefined) && (p2 != '0' || p2 != undefined || p2 == '0') && (p3 != '0' || p3 != undefined || p3 == '0') && (p4 != '0' || p4 != undefined || p4 == '0') && (p5 != '0' || p5 != undefined || p5 == '0')) {
+                                    var s1 = p1.toString();
+                                    var s2 = p2.toString();
+                                    var s3 = p3.toString();
+                                    var s4 = p4.toString();
+                                    var s5 = p5.toString();
+                                    var rr = s1.concat(s2);
+                                    var rrr = rr.concat(s3);
+                                    var rrrr = rrr.concat(s4);
+                                    var rrrrr = rrrr.concat(s5);
+                                    var FinalQuantity = rrrrr + ' PC';
+                                    var FQ = rrrrr;
+                                }
+
+
+                                //if ((f1.length == '1' || f1.length == '2') && f2 == undefined) {
+                                //    var FinalQuantity = f1 + ' PC';
+                                //}
+
+                            }
+                        }
+
+
+                        // if (kk === undefined) { alert("Please scan/enter Code to Get product Details"); }
+
+
+
+                        var Items = $scope.RetailDetailsArray.filter(function (POS) {
+                            return POS.productsequence == sstring;
+                        });
+
+                        // $scope.DataList.push({ 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': Math.round((parseFloat(Items[0].numsalerate) * quantity) * 100) / 100 })
+
+                        if (Items[0].vchuomid == 'KG' || Items[0].vchuomid == 'NO.') {
+                            if (Items[0].vchuomid == 'KG') {
+                                $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per KG)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': parseFloat((Items[0].numsalerate) * quantity).toFixed(2) })
+                            }
+                            else if (Items[0].vchuomid == 'NO.') {
+                                debugger;
+                                var Stock = $scope.AvailableStockDataArray.filter(function (POS) {
+                                    return POS.productid == Items[0].productid;
+                                });
+
+                                var Sq = parseInt(Stock[0].availableqty);
+                                var QntyTY = parseInt(FinalQuantity.replace(' PC', ''));
+                                var Pid = Stock[0].productid;
+
+                                if (Sq >= QntyTY) {
+
+                                    $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per Piece)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': QntyTY, 'amount': parseFloat((Items[0].numsalerate) * FQ).toFixed(2) })
+                                    UpdateStock(QntyTY, Pid);
+                                }
+                                else {
+                                    alert(" No Stock Available in Store");
+                                    document.getElementById("omschrijving").value = "";
+                                    angular.element('#omschrijving').focus();
+                                    return false;
+                                }
+                                //$scope.DataList.push({ 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per Piece)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': parseFloat((Items[0].numsalerate) * FQ).toFixed(2) })
+                            }
+
+                        }
+                        else if (Items[0].vchuomid == 'GMS') {
+                            var gramQuantycost = Items[0].numsalerate;
+                            var KiloCost = gramQuantycost * 1000;
+
+                            var l = FinalQuantity.includes(" gms");
+                            if (l == true) {
+                                var Qnty = FinalQuantity.replace(' gms', '');
+                                $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per Gram)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': parseFloat((Qnty * Items[0].numsalerate) * quantity).toFixed(2) })
+                            }
+                            var m = FinalQuantity.includes("KG");
+                            if (m == true) {
+                                var Qnty = FinalQuantity.replace('KG', '');
+                                $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per Gram)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': parseFloat((Qnty) * KiloCost).toFixed(2) })
+                            }
+
+                        }
+                        else if (Items[0].vchuomid == '500GRM') {
+                            var KiloCost = 2 * Items[0].numsalerate;
+                            var GramCost = parseFloat(KiloCost / 1000);
+                            var Qntyy = FinalQuantity;
+                            var n = Qntyy.includes(" gms");
+                            if (n == true) {
+                                var Qnty = FinalQuantity.replace(' gms', '');
+                                $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per 500 Grams)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': parseFloat(Qnty * GramCost).toFixed(2) })
+
+                            }
+                            var m = Qntyy.includes("KG");
+                            if (m == true) {
+                                var Qnty = FinalQuantity.replace('KG', '');
+                                $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per 500 Grams)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': FinalQuantity, 'amount': parseFloat((Qnty) * KiloCost).toFixed(2) })
+                            }
+
+                        }
+
+
+
+
+                        $scope.GrdBinding($scope.DataList);
+
+                        document.getElementById("omschrijving").value = ""
+
+                        $scope.clear();
+
+                        angular.element('#omschrijving').focus();
+                    }
+                }
+            }
+            $scope.clear();
+            angular.element('#omschrijving').focus();
+        }
+
+    }
+
+    function CallValues1(S) {
+
+        var $scope = angular.element(appElement).scope();
+
+        var kk = S;
+        if (kk.length > 0) {
+            re = /^[\0-9\b.]+$/;
+            if (re.test(kk)) {
+
+            }
+
+            else if (kk != null && kk != undefined) {
+
+                var strr = kk.slice(-6);
+                var RRR = "^[0-9]";
+
+                if (strr.match(RRR)) {
+                var Items = $scope.RetailDetailsArray.filter(function (POS) {
+                    return POS.productsequence == strr;
+                    // return POS.productcode == '0100001';
+                });
+
+                if (Items[0].vchuomid == 'NO.' || Items[0].vchuomid == 'NO')
+                {
+
+                    debugger;
+                    var Stock = $scope.AvailableStockDataArray.filter(function (POS) {
+                        return POS.productid == Items[0].productid;
+                    });
+
+                    var Sq = parseInt(Stock[0].availableqty);
+                    //var QntyTY = parseInt(FinalQuantity.replace(' PC', ''));
+                    var QntyTY = 1;
+                    var Pid = Stock[0].productid;
+
+                    if (Sq >= QntyTY)
+                    {
+
+                        $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per Piece)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': 1, 'amount': parseFloat((Items[0].numsalerate)).toFixed(2), 'Measure': Items[0].vchuomid })
+                        UpdateStock(QntyTY, Pid);
+                    }
+                    else
+                    {
+                        alert("No Stock Available in Store");
+                        document.getElementById("omschrijving").value = "";
+                        angular.element('#omschrijving').focus();
+                        return false;
+                    }
+                    //$scope.DataList.push({ 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': 1 , 'amount': parseFloat(Items[0].numsalerate).toFixed(2) })
+                }
+                else if (Items[0].vchuomid == 'KG' && (Items[0].numsalerate == null || Items[0].numsalerate == 0 || Items[0].numsalerate == undefined))
+                {
+                    debugger;
+                    $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': 0, 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per KG)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': 0, 'amount': 0, 'Measure': Items[0].vchuomid })
+                }
+                else
+                {
+                    $scope.DataList.push({ 'Id': i++, 'productid': Items[0].productid, 'productname': Items[0].productname, 'numsalerate': parseFloat(Items[0].numsalerate), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per KG)</i>', 'vchuomid': Items[0].vchuomid, 'productcode': Items[0].productcode, 'quantity': 0, 'amount': 0, 'Measure': Items[0].vchuomid })
+                }
+            }
+            else {
+                debugger;
+                var stc = kk.slice(-3);
+
+                var Items = $scope.RetailDetailsArray.filter(function (POS) {
+                    return POS.combocode == stc;
+                        
+                });
+
+
+                $scope.DataList.push({ 'Id': i++, 'productid': Items[0].combocode, 'productname': Items[0].comboname, 'numsalerate': parseFloat(Items[0].combocost), 'uIndication': '<i style="font-size=0.5px";font-family=smaller> ( Per Pack)</i>', 'vchuomid': Items[0].vchcuomid, 'productcode': Items[0].productcode, 'quantity': 1, 'amount': Items[0].combocost ,'Measure':"COMBO"})
+            }
+
+                $scope.GrdBinding($scope.DataList);
+            }
+
+            $scope.clear();
+
+            angular.element('#omschrijving').focus();
+
+        }
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    app.controller('MMSsaleControler', function ($scope, $http, $rootScope) {
+
+        $scope.POS = {};
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.Is_Saved = '';
+        $rootScope.FormName = "SALE";
+        $rootScope.ModuleName = "MMS Transactions";
+        $scope.$watch('SaleForm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.nah = function () {
+            debugger;
+        }
+
+        $scope.clear = function () {
+            $scope.POS = {};
+            $scope.SaleForm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+            $scope.seticon = 'fa fa-save';
+            $scope.$apply();
+        }
+
+
+
+
+
+
+
+        //// ***** Page load Calling and fills arrays ***////////
+
+
+        $scope.LoadposDetails = function () {
+
+            $http({ method: "GET", url: '/MMSTransaction/GetAllDetails' }).success(function (data, status, headers, config) {
+                $scope.RetailDetailsArray = [];
+                $scope.RetailDetailsArray = data;
+                var Value = '';
+                $scope.GrdBinding(Value);
+            });
+
+            $http({ method: "GET", url: '/MMSTransaction/GetAvailableStock' }).success(function (data, status, headers, config) {
+                debugger;
+                $scope.AvailableStockDataArray = [];
+                $scope.AvailableStockDataArray = data;
+            });
+
+            $http({ method: "GET", url: '/MMSTransaction/GetAllProducts' }).success(function (data, status, headers, config) {
+
+                $scope.ProductTypes = eval('(' + data + ')');
+                var nad = [];
+                for (var i = 0; i < $scope.ProductTypes.length; i++) {
+                    nad.push($scope.ProductTypes[i].producttypename);
+
+                }
+
+
+                $("#omschrijving").autocomplete({
+                    source: nad,
+                    select: function (event, ui) {
+
+                        CallValues1(ui.item.label)
+
+                        this.value = "";
+                        return false;
+
+                    }
+
+
+                });
+            });
+
+        }
+
+
+
+
+
+
+        $scope.DataList = new Array();
+
+        /// Calls on Editing Records of JqGrid ///
+        function calDiscount(value) {
+            debugger;
+
+            var rowid = parseInt(document.getElementById("HdnEditValue").value);
+            var rowData = $("#tblPOS").getRowData(rowid);
+
+            var CostValue = parseFloat(rowData.numsalerate);
+            var Qnti = parseFloat(document.getElementById("" + rowid + "_quantity").value);
+            var Qntity = parseFloat(Qnti).toFixed(3);
+            var Qnttt = parseInt(Qnti);
+            
+
+            var Type = $("#" + rowid + "_Measure option:selected").text();
+
+
+            if (Type == 'KG' || Type == 'GRAMS' || Type == 'NO' || Type == 'Select')
+            {
+                if (rowData.vchuomid == 'KG' || rowData.vchuomid == 'GMS' || rowData.vchuomid == '500GRM' || rowData.vchuomid == 'NO' || rowData.vchuomid == 'NO.')
+                {
+                    if (rowData.vchuomid == 'KG' && Type == 'KG')
+                    {
+                        if (Qntity <= 99)
+                        {
+                            var FinaleValue = Math.round(parseFloat(CostValue * Qntity) * 100) / 100;
+                            rowData.amount = FinaleValue;
+                            $("#tblPOS").jqGrid("setCell", rowid, "amount", FinaleValue.toFixed(2));
+                        }
+                        else if (Qntity > 99)
+                        {
+                            alert("Maximum of 99 KG Only Allowed");
+                            document.getElementById("" + rowid + "_quantity").value = "";
+                            document.getElementById("" + rowid + "_quantity").focus();
+                            return false;
+                        }
+                    }
+                    else if (rowData.vchuomid == 'GMS' && Type == 'KG')
+                    {
+                        var CV = parseFloat(rowData.numsalerate);
+                        var Kvalue = parseFloat(CV * 1000);
+                        if (Qntity <= 99)
+                        {
+                            var FQ = Math.round(parseFloat(Qntity * Kvalue) * 100) / 100;
+                            $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+                        }
+                        else if (Qntity > 99)
+                        {
+                            alert("Maximum of 99 Kg Only Allowed");
+                            document.getElementById("" + rowid + "_quantity").value = "";
+                            document.getElementById("" + rowid + "_quantity").focus();
+                            return false;
+                        }
+                    }
+                    else if (rowData.vchuomid == 'GMS' && Type == 'GRAMS')
+                    {
+                        if (Qntity <= 1000)
+                        {
+                            var Value = parseFloat(CostValue);
+                            var FQ = Math.round(parseFloat(Qntity * Value) * 100) / 100;
+                            $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+                        }
+                        else if (Qntity > 1000)
+                        {
+                            alert("Maximum of 1000 Grams Only Allowed");
+                            document.getElementById("" + rowid + "_quantity").value = "";
+                            document.getElementById("" + rowid + "_quantity").focus();
+                            return false;
+                        }
+                    }
+                    else if (rowData.vchuomid == 'KG' && Type == 'GRAMS')
+                    {
+                        if (Qntity <= 1000)
+                        {
+                            var Value = parseFloat(CostValue / 1000);
+                            var FQ = Math.round(parseFloat(Qntity * Value) * 100) / 100;
+                            $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+                        }
+                        else if (Qntity > 1000)
+                        {
+                            alert("Maximum of 1000 Grams Only Allowed");
+                            document.getElementById("" + rowid + "_quantity").value = "";
+                            document.getElementById("" + rowid + "_quantity").focus();
+                            return false;
+                        }
+                    }
+                    else if (rowData.vchuomid == '500GRM' && Type == 'KG')
+                    {
+                        if (Qntity <= 99)
+                        {
+                            var kvalue = 2 * parseFloat(CostValue);
+                            var FinaleValue = Math.round(parseFloat(kvalue * Qntity) * 100) / 100;
+                            $("#tblPOS").jqGrid("setCell", rowid, "amount", FinaleValue.toFixed(2));
+                        }
+                        else
+                        {
+                            alert("Maximum of 99 KG Only Allowed");
+                            document.getElementById("" + rowid + "_quantity").value = "";
+                            document.getElementById("" + rowid + "_quantity").focus();
+                            return false;
+                        }
+                    }
+                    else if (rowData.vchuomid == '500GRM' && Type == 'GRAMS')
+                    {
+                        if (Qntity <= 1000)
+                        {
+                            var kvalue = 2 * parseFloat(CostValue);
+                            var Value = parseFloat(kvalue / 1000);
+                            var FQ = Math.round(parseFloat(Qntity * Value) * 100) / 100;
+                            $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+                        }
+                        else if (Qntity > 1000)
+                        {
+                            alert("Maximum of 1000 Grams Only Allowed");
+                            document.getElementById("" + rowid + "_quantity").value = "";
+                            document.getElementById("" + rowid + "_quantity").focus();
+                            return false;
+                        }
+                    }
+                    else if ((rowData.vchuomid == 'NO.' || rowData.vchuomid == 'NO') && Type == 'KG') {
+                        alert("UOM of this product is in Numbers (NO)");
+                        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                        $('[name=Measure]').val('0');
+                        return false;
+                    }
+                    else if ((rowData.vchuomid == 'NO.' || rowData.vchuomid == 'NO') && Type == 'GRAMS') {
+                        alert("UOM of this product is in Numbers (NO)");
+                        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                        $('[name=Measure]').val('0');
+                        return false;
+
+                    }
+                    else if ((rowData.vchuomid == 'NO.' || rowData.vchuomid == 'NO') && Type == 'NO') {
+                      var Regex = "^[0-9]*$";
+
+                       // var Regex = "[1-9]\d{0,5}";
+                       // var Regex = /^[0-9]*\.?[0-9]*$/;
+                       // var QQ = Qntity.toString(); 
+                      var QQ = Qnttt.toString();
+                        if (QQ.match(Regex)) {
+                            var $scope = angular.element(appElement).scope();
+                            var VPid = parseInt(rowData.productid);
+                            debugger;
+                            var Stock = $scope.AvailableStockDataArray.filter(function (POS) {
+                                return POS.productid == VPid;
+                            });
+                            // var Aqnty = parseInt(Stock[0].availableqty) + 1;
+                            var AA = parseInt($scope.Availstck);
+                            var Aqnty = parseInt(Stock[0].availableqty) + AA;
+                            if (Qntity == '0') {
+                                alert("Quantity is not Valid");
+                                document.getElementById("" + rowid + "_quantity").focus();
+                                $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                                return false;
+                            }
+                            else if (Qntity <= Aqnty) {
+                                var Famount = Math.round(parseFloat(Qntity * CostValue) * 100) / 100;
+                                //UpdateStock(Qntity, VPid);
+                                $("#tblPOS").jqGrid("setCell", rowid, "amount", Famount.toFixed(2));
+                            }
+                            
+                            else {
+                                alert("Oops ! Stock Not Available in Store");
+                                document.getElementById("" + rowid + "_quantity").value = "";
+                                document.getElementById("" + rowid + "_quantity").focus();
+                                $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                                return false;
+                            }
+                        }
+                        else {
+                            if (document.getElementById("" + rowid + "_quantity").value == "") {
+                                $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                                return false;
+                            }
+                            else {
+                                alert("No Special Characters  are allowed for Numbers");
+                                $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                                 document.getElementById("" + rowid + "_quantity").value = "";
+                                document.getElementById("" + rowid + "_quantity").focus();
+                                return false;
+                            }
+
+                        }
+                    }
+                    else if (rowData.vchuomid == 'KG' && Type == 'NO') {
+                        alert("UOM of this product is in either KG / GRAMS ");
+                        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                        $('[name=Measure]').val('0');
+                        return false;
+
+                    }
+                    else if (rowData.vchuomid == 'GMS' && Type == 'NO') {
+                        alert("UOM of this product is in either KG / GRAMS ");
+                        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                        $('[name=Measure]').val('0');
+                        return false;
+                    }
+                    else if (rowData.vchuomid == '500GRM' && Type == 'NO') {
+                        alert("UOM of this product is in either KG / GRAMS ");
+                        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                        $('[name=Measure]').val('0');
+                        return false;
+                    }
+                    else if (Type == 'Select') {
+                        alert("Please Choose UOM of this Product");
+                        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                        $('[name=Measure]').val('0');
+                        return false;
+                    }
+                }
+
+                //else
+                //{
+                //    alert("Please Choose UOM of this Product");
+                //    $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+                //    $('[name=Measure]').val('0');
+                //}
+
+            }
+            //else if (Type == 'GRAMS') {
+            //    if (Type == rowData.vchuomid || Type == 'KG' || Type == 'GRAMS' || rowData.vchuomid == '500GRM')
+            //    {
+            //        if (Type == rowData.vchuomid)
+            //        {
+            //            if (Qntity <= 1000) {
+            //                var Value = parseFloat(CostValue / 1000);
+            //                var FQ = Math.round(parseFloat(Qntity * Value) * 100) / 100;
+            //                $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+            //            }
+            //            else if (Qntity > 1000) {
+            //                alert("Maximum of 1000 Grams Only Allowed");
+            //                document.getElementById("" + rowid + "_quantity").value = "";
+            //                document.getElementById("" + rowid + "_quantity").focus();
+            //            }
+            //        }
+            //        else if(rowData.vchuomid == '500GRM')
+            //        {
+            //            var kvalue = 2 * parseFloat(CostValue);
+            //            var Value = parseFloat(kvalue / 1000);
+            //            var FQ = Math.round(parseFloat(Qntity * Value) * 100) / 100;
+            //            $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+            //        }
+            //        else if(rowData.vchuomid == 'KG')
+            //        {
+            //            if (Qntity <= 1000) {
+            //                var Value = parseFloat(CostValue / 1000);
+            //                var FQ = Math.round(parseFloat(Qntity * Value) * 100) / 100;
+            //                $("#tblPOS").jqGrid("setCell", rowid, "amount", FQ.toFixed(2));
+            //            }
+            //            else if (Qntity > 1000) {
+            //                alert("Maximum of 1000 Grams Only Allowed");
+            //                document.getElementById("" + rowid + "_quantity").value = "";
+            //                document.getElementById("" + rowid + "_quantity").focus();
+            //            }
+
+            //        }
+
+            //  }
+            //    else
+            //    {
+            //        alert("UOM of this product is either KG or Grams");
+            //        //document.getElementById("" + rowid + "_quantity").value = "";
+            //        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+            //        $('[name=Measure]').val('0');
+            //    }
+            //}
+
+
+
+            //else if (Type == 'NO')
+            //{
+            //    if (Type == rowData.vchuomid || rowData.vchuomid == 'NO' || rowData.vchuomid == 'NO.')
+            //    {
+
+            //        if (Qntity <= 999)
+            //        {
+            //            var Famount = Math.round(parseFloat(Qntity * CostValue) * 100) / 100;
+            //            $("#tblPOS").jqGrid("setCell", rowid, "amount", Famount.toFixed(2));
+            //        }
+            //        else
+            //        {
+            //            alert("Maximum of 999 Pieces are allowed");
+            //            document.getElementById("" + rowid + "_quantity").value = "";
+            //            document.getElementById("" + rowid + "_quantity").focus();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        alert("UOM of this product is in KG/GRAMS");
+            //        //document.getElementById("" + rowid + "_quantity").value = "";
+            //        $("#tblPOS").jqGrid("setCell", rowid, "amount", 0);
+            //        $('[name=Measure]').val('0');
+            //    }
+            //}
+            //else if (Type == 'Select')
+            //{
+            //    alert("Please Choose Measure Of Quantity");
+            //    $("#tblPOS").jqGrid("setCell", rowid, "amount",0);
+            //    return false;
+            //}
+
+        }
+
+        ///  *****  End ******////
+
+
+
+
+
+
+
+        //function GrdBinding(data) {
+
+        $scope.GrdBinding = function (data) {
+
+            var grid_data = data;
+            var grid_selector = "#tblPOS";
+            var pager_selector = "#pagePOS";
+
+
+
+            document.getElementById("BtnPayment").hidden = false;
+            document.getElementById("BtnPayment").style.display = "Block";
+
+            //grid data refresh
+            $("#tblPOS").prepend(grid_data);
+
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            //$(window).on('resize.jqGrid', function () {
+            //    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            //})
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            $('#tblPOS').addClass('th');
+            //apply styles to table(grid)//
+            $(grid_selector).addClass('jqgrid-border');
+
+            $('header').addClass('th');
+            $('#tr').addClass("tr");
+            $('#tblPOS_rn').addClass("div");
+            // $('button').css({ "background-Color": "Blue", "font-family": "Bold" });
+
+
+            jQuery(grid_selector).jqGrid
+                ({
+
+                    data: grid_data,
+                    datatype: "local",
+                    height: 250,
+                    width: 1000,
+                    rowNum: 1000,
+                    rownumbers: true,
+                    colNames: ['Id', 'Id', 'Code', 'Product Name', 'UOM', 'Quantity', 'UOM', 'Unit Rate', '', 'Amount', 'Barcode', ''],
+                    colModel: [
+                        { name: 'Id', dataIndx: 'Id', editable: false, align: 'center', resizable: false,hidden:true },
+                        { name: 'productid', dataIndx: 'productid', editable: false, align: 'center', resizable: false, hidden: true },
+                        { name: 'productcode', dataIndx: 'productcode', editable: false, width: 150, align: 'center', resizable: false, hidden: true },
+                        {
+                            name: 'productname', dataIndx: 'productname', width: 150, align: 'center', resizable: false
+                        },
+                        {
+                            label: 'Measure', name: 'Measure', width: 50, editable: true, edittype: "select", editoptions: {
+                                value: ["Select", "KG", "GRAMS", "NO"],
+                                dataEvents: [
+                                           {
+                                               type: 'change',
+                                               fn: function (e) {
+                                                   debugger;
+                                                   calDiscount(this.value);
+                                               }
+                                           }]
+                            }
+                        },
+                        {
+                            name: 'quantity', dataIndx: 'quantity', width: 100, height: 120, editable: true, sortable: false, search: false, resizable: false, editoptions: {
+
+                                dataEvents: [
+                                           {
+                                               type: 'keyup',
+
+                                               fn: function (e) {
+                                                   debugger;
+                                                   calDiscount(this.value);
+                                               }
+                                           }]
+                            }
+
+                        },
+                        {
+                            name: 'vchuomid', dataIndx: 'vchuomid', hidden: true, width: 100, height: 120, editable: false, search: false, resizable: false
+
+                        },
+                        {
+                            name: 'numsalerate', dataIndx: 'numsalerate', width: 48, height: 120, editable: false, search: false, resizable: false
+
+                        },
+                        {
+                            name: 'uIndication', dataIndx: 'uIndication', width: 80, height: 120, editable: false, search: false, resizable: false
+                        },
+
+                        {
+                            name: 'amount', dataIndx: 'amount', width: 100, height: 120, editable: false, sortable: false, search: false
+
+                        },
+                        {
+                            name: 'barcode', dataIndx: 'barcode', hidden: true, width: 100, height: 120, editable: false, sortable: false, search: false
+                        },
+                        {
+                            name: 'act', index: 'act', width: 150, height: 120, editable: false, sortable: false, search: false
+                        },
+
+                    ],
+
+                    viewrecords: true,
+                    sortorder: "desc",
+                    altRows: true,
+                    ignoreCase: true,
+                    groupCollapse: true,
+                    caption: "Sale  Details ",
+                    toppager: false,
+                    emptyrecords: 'Scan Items to Display',
+                    headertitles: false,
+                    rowcontent: false,
+                    pgbuttons: false,
+                    footerrow: true,
+                    gridComplete: function () {
+
+                        var ids = jQuery(grid_selector).jqGrid('getDataIDs');
+                        //$('#tblPOS').jqGrid('delRowData', ids[0]);
+                        var c;
+                        for (var i = 0; i < ids.length; i++) {
+
+                            var cl = ids[i];
+                            var rowData = $("#tblPOS").getRowData(cl);
+                            var value = rowData.vchuomid;
+                            if (value != "COMBO") {
+                                be = "<button  type='button' id='btnedit' class='btn-grid' onclick='edit(" + cl + ");'><i class='fa fa-pencil'></i><br/></button>";
+                                ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + cl + ");'><i class='fa fa-trash'></i><br/></button>";
+                                jQuery("#tblPOS").jqGrid('setRowData', ids[i], { act: be + ce });
+                            }
+                            else {
+                                ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + cl + ");'><i class='fa fa-trash'></i><br/></button>";
+                                de = "<button  type='button' id='btnview' class='btn-grid'  onclick= 'Showcombo(" + cl + ");'><i class='fa fa-eye' style='color:grey'></i><br/></button>"
+                                jQuery("#tblPOS").jqGrid('setRowData', ids[i], { act: de + ce });
+                            }
+                        }
+
+                        /// *******  Footer Row Enable and display Total Sum of amount  ******////////
+
+
+                        var $grid = $(grid_selector);
+
+
+                        //check total sum of amount,unit price,no of items of that sale//
+
+                        var colSum = $grid.jqGrid('getCol', 'amount', false, 'sum');
+                        var NoofItems = $grid.getGridParam("reccount");
+                        var $scope = angular.element(appElement).scope();
+                        $scope.numsaleamount = colSum;
+
+                        //End//
+
+
+
+                        //$grid.jqGrid('footerData', 'set', { numsalerate: 'Total Amount:', amount: parseInt(Math.round(colSum * 100) / 100) });
+                        $grid.jqGrid('footerData', 'set', { uIndication: 'Total Amount:', amount: parseFloat(Math.round(colSum)).toFixed(2) });
+                        $grid.jqGrid('footerData', 'set', { productname: 'Total Items:', quantity: NoofItems });
+                        //// ******  End  *******////
+
+                        var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+                        document.getElementById("Txtamnt").value = GrdTotal;
+                        var TotalAmount = document.getElementById("Txtamnt").value;
+                        var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+                        document.getElementById('TxtChange').value = balance;
+
+                    }
+                });
+            $("#tblPOS").setGridParam({ sortname: 'ids', sortorder: 'desc' }).trigger('reloadGrid');
+            $(window).triggerHandler('resize.jqGrid');
+
+        };
+
+
+        $scope.ViewGrid = function (data) {
+            var grid_data = data;
+            var grid_selector = "#tblView";
+            var pager_selector = "#pageView";
+            //grid data refresh
+            $("#tblView").prepend(grid_data);
+
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            //$(window).on('resize.jqGrid', function () {
+            //    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            //})
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            $('#tblView').addClass('th');
+            //apply styles to table(grid)//
+            $(grid_selector).addClass('jqgrid-border');
+
+            $('header').addClass('th');
+            $('#tr').addClass("tr");
+            $('#tblView_rn').addClass("div");
+            // $('button').css({ "background-Color": "Blue", "font-family": "Bold" });
+
+
+            jQuery(grid_selector).jqGrid
+                ({
+
+                    data: grid_data,
+                    datatype: "local",
+                    height: 150,
+                    width: 800,
+                    rowNum: 1000,
+                    rownumbers: true,
+                    colNames: ['Id', 'Product Id', 'Product Code', 'Product Name ', 'UOM', 'Quantity', 'Amount', '', 'Rate'],
+                    colModel: [
+                        { name: 'Id', dataIndx: 'Id', editable: false, align: 'center', resizable: false, hidden: true },
+                        { name: 'productid', dataIndx: 'productid', editable: false, align: 'center', resizable: false, hidden: true },
+
+                        { name: 'productcode', dataIndx: 'productcode', editable: false, width: 150, align: 'center', resizable: false },
+                        { name: 'productname', dataIndx: 'productname', editable: false, align: 'center', resizable: false },
+                        {
+                            name: 'uom', dataIndx: 'uom', width: 100, height: 120, editable: false, search: false, resizable: false
+                        },
+                        {
+                            name: 'qafc', dataIndx: 'qafc', width: 100, height: 120, editable: true, search: false, resizable: false
+                        },
+                        {
+                            name: 'amount', dataIndx: 'amount', width: 100, height: 120, editable: false, search: false, resizable: false
+                        },
+                        {
+                            name: 'act', index: 'act', width: 150, height: 120, editable: false, sortable: false, search: false, hidden: true
+                        },
+                        {
+                            name: 'rate', index: 'rate', width: 150, height: 120, hidden: true, editable: false, sortable: false, search: false
+                        },
+
+                    ],
+
+                    viewrecords: true,
+                    sortorder: "desc",
+                    altRows: true,
+                    ignoreCase: true,
+                    groupCollapse: true,
+                    caption: " View Combo Details ",
+                    toppager: false,
+                    headertitles: false,
+                    rowcontent: false,
+                    pgbuttons: false
+
+
+                });
+            // $("#tblProducts").setGridParam({ sortname: 'ids', sortorder: 'desc' }).trigger('reloadGrid');
+            $(window).triggerHandler('resize.jqGrid');
+
+        };
+
+    });
+
+
+    var appElement = document.querySelector('[ ng-controller=MMSsaleControler]');
+    function SaveSaleDetailss1() {
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var TotalAmount = document.getElementById("Txtamnt").value;
+        var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+        var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+
+
+
+        var ids = jQuery("#tblPOS").jqGrid('getDataIDs');
+
+
+        if (ids.length < 1) {
+            window.alert("No Sales are Exist to Proceed");
+            angular.element('#omschrijving').focus();
+            // return false;
+        }
+        else {
+            for (var i = 1; i <= ids.length; i++) {
+                
+                if ($($("#tblPOS").jqGrid("getInd", i, true)).attr("editable") === "1") {
+                    debugger;
+                   alert("Please save Data at Row number "+i+" in Sale details before proceeding further");
+                   return false;
+                }
+                var rowData = $("#tblPOS").getRowData(i);
+                if (rowData.amount == 0 || rowData.quantity == 0 || rowData.Measure == 'Select') {
+                    if (rowData.amount == 0 || rowData.quantity == 0) {
+                        alert("For few items Amount and Quantity are Zero,Please edit desired details of Amount and Quantity Fields  of those products");
+
+                        return false;
+                    }
+                    else if (rowData.Measure == 'Select') {
+                        alert("For Few items UOM is Select,make sure to have valid uom's");
+                        return false;
+                    }
+                }
+                else {
+
+                }
+            }
+
+
+
+            ///////  code changing  ////////////////
+
+            if (document.getElementById("Chkcash").checked == false && document.getElementById("Chkcard").checked == false) {
+                alert("Please Choose Mode of Payment");
+                return false;
+            }
+
+            else if (document.getElementById("Chkcash").checked == true) {
+                var regex = "^[0-9]*$";
+                if (document.getElementById('Txtamnt').value == '' || document.getElementById('Txtamnt').value == null) {
+                    alert("Please Enter Total Amount");
+                    return false;
+                }
+                else {
+                    var VV = document.getElementById('Txtamnt').value;
+                    if (VV.match(regex)) {
+                        if (document.getElementById('Txtamnt').value < GrdTotal) {
+                            alert("Total amount is less than Sale amount");
+                            //document.getElementById('Txtamnt').value = "";
+                            return false;
+                        }
+                    }
+                    else {
+                        alert("No Special Characters are allowed in Amount Field");
+                        document.getElementById('Txtamnt').value = GrdTotal;
+                        document.getElementById('TxtChange').value = 0;
+                        //document.getElementById('Txtamnt').focus();
+                        return false;
+                    }
+                }
+            }
+            else if (document.getElementById("Chkcard").checked == true) {
+                if (document.getElementById("ChkCredit").checked == false && document.getElementById("ChkDedit").checked == false && document.getElementById("ChkMaestroCard").checked == false && document.getElementById("ChkRuPay").checked == false) {
+                    alert("please Choose Card Type");
+                    return false;
+                }
+                else if (document.getElementById("ChkCredit").checked == true || document.getElementById("ChkDedit").checked == true || document.getElementById("ChkMaestroCard").checked == true || document.getElementById("ChkRuPay").checked == true) {
+                    if (document.getElementById("txtcardnumber").value == null || document.getElementById("txtcardnumber").value == '') {
+                        alert("Enter Transaction ID");
+                        return false;
+                    }
+                    else if (document.getElementById("txtcardcode").value == null || document.getElementById("txtcardcode").value == '') {
+                        alert("Enter last 4 digits of the Card");
+                        return false;
+                    }
+                }
+            }
+
+            var type = '';
+            if (document.getElementById("ChkCredit").checked == true) {
+                type = "Visa Card";
+            }
+            else if (document.getElementById("ChkDedit").checked == true) {
+                type = "Master Card";
+            }
+            else if (document.getElementById("ChkMaestroCard").checked == true) {
+                type = "Maestro Card";
+            }
+            else if (document.getElementById("ChkRuPay").checked == true) {
+                type = "RuPay Card";
+            }
+            else {
+                type = "";
+            }
+
+            var paymentmode = '';
+            if (document.getElementById("Chkcash").checked == true) {
+                paymentmode = "Cash";
+            }
+            else if (document.getElementById("Chkcard").checked == true) {
+                paymentmode = "Card";
+            }
+
+            //  if ($scope.tempSaleno !== undefined && $scope.tempSaleno != null && $scope.tempSaleno != "") {
+
+            var POS = ({ vchpaymentmode: paymentmode, numamount: document.getElementById('Txtamnt').value, vchreferenceno: document.getElementById("txtcardnumber").value, vchcardtype: type, vchcard: document.getElementById("txtcardcode").value });
+
+            var ns = JSON.stringify(POS);
+
+
+            ////////  End  ////////////
+
+
+
+
+
+            //document.getElementById("BtnSavePAyment").hidden = false;
+            //document.getElementById("BtnSavePAyment").style.display = "block";
+            //document.getElementById("BtnPayment").hidden = true;
+            //  document.getElementById("BtnBackEvent").hidden = false;
+            // document.getElementById("BtnBackEvent").style.display = "block";
+
+
+            var ss = { numsaleamount: $scope.numsaleamount, vchcustomername: document.getElementById("txtvchcustomername").value, vchcustomermobileno: document.getElementById("txtvchcustomermobileno").value }
+            SaveGridDetails();
+            var data = [];
+            data = $scope.GridDataArray;
+            var savedata = JSON.stringify(data);
+            var CnfrmSave = confirm("Do you want to save this sale details?");
+            if (CnfrmSave) {
+
+                $http.post("/MMSTransaction/SaveSaleDetails", { PaymentDetails: JSON.stringify(POS), JsonString: JSON.stringify(ss), objLmmssalesave: savedata, Gridtotal: $scope.numsaleamount }).success(function (data) {
+
+
+                    $scope.Is_Saved = data;
+                    //document.getElementById("BtnPayment").style.display = "none";
+                    $scope.tempSaleno = data.split('-')[0];
+                    $scope.tempSalenoName = data.split('-')[1];
+                    //document.getElementById('PaymentDiv').style.display = "block";
+
+                    if ($scope.Is_Saved != null && $scope.Is_Saved != undefined && $scope.Is_Saved != '' && $scope.Is_Saved != "Exists") {
+
+                        window.alert('Payment Details Saved Successfully');
+                        debugger;
+                        var NoofItems = $("#tblPOS").getGridParam("reccount");
+                        var QSum = $("#tblPOS").jqGrid('getCol', 'quantity', false, 'sum');
+                        var TQuantity = QSum;
+                        $("#tblPOS").jqGrid("clearGridData", true).trigger("reloadGrid");
+                        hideControls();
+                        $scope.clear();
+                        document.getElementById("PaymentDiv").style.display = "block";
+                        document.getElementById("BtnPayment").style.display = "block";
+                        document.getElementById('AmountDiv').style.display = "none";
+
+                        angular.element('#omschrijving').focus();
+                        $scope.DataList = [];                       
+
+                       // var w = window.open("/POSReports/SaleBillGenerationReport/?SaleNo=" + $scope.tempSalenoName + "&Items=" + NoofItems + "&qnty=" + TQuantity + "", '_blank');
+                       
+                        var w = window.open("/POSReports/SaleBillGenerationReport/?SaleNo=" + $scope.tempSalenoName + "&Items=" + NoofItems + "&qnty=" + TQuantity + "", '_blank', 'width=1,height=1,toolbars=no,scrollbars=no,status=no,visible:none');
+                        debugger;
+                        function closeWindow() {
+                            setTimeout(function () {
+                                w.moveTo(0, 0);
+                                w.close();
+                            }, 200);
+                        }
+                        w.onload = closeWindow();
+
+                        location.reload();
+                    }
+                    else if ($scope.Is_Saved == "Exists") {
+                        alert("Transaction ID Already Exists");
+                        document.getElementById("txtcardnumber").focus();
+                    }
+                    else {
+                        window.alert('Error Occured While Saving Sale Details');
+                        angular.element('#omschrijving').focus();
+                    }
+
+
+
+                });
+                // }
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+
+
+    // Calls and Updates the Stock in Local Array ///
+    function UpdateStock(Quantity, productid) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        for (var i = 0; i < $scope.AvailableStockDataArray.length; i++) {
+            if ($scope.AvailableStockDataArray[i].productid == productid) {
+                debugger;
+                var qnt = parseInt($scope.AvailableStockDataArray[i].availableqty);
+                var Tq = qnt - Quantity;
+                $scope.AvailableStockDataArray[i].availableqty = Tq;
+                break;
+            }
+        }
+    }
+
+    ////// ******  End  ****** ////
+
+
+    //// Update Stock on Delete Products from Grid ////
+
+    function UpdateStockonDelete(Quantity, productid) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        for (var i = 0; i < $scope.AvailableStockDataArray.length; i++) {
+            if ($scope.AvailableStockDataArray[i].productid == productid) {
+                debugger;
+                var qnt = parseInt($scope.AvailableStockDataArray[i].availableqty);
+                var Tq = qnt + Quantity;
+                $scope.AvailableStockDataArray[i].availableqty = Tq;
+                break;
+            }
+        }
+    }
+
+    /////  *******  End  ***** /////
+
+    /// To get all Data from JqGrid to Save ////
+
+    function SaveGridDetails() {
+        var $scope = angular.element(appElement).scope();
+        var GridData = $("#tblPOS").jqGrid('getRowData');
+        $scope.GridDataArray = [];
+        $scope.GridDataArray = GridData;
+        return $scope.GridDataArray;
+
+    }
+
+    /////  End /////
+
+
+    ///  ************  Inline save of Grid Data and calls stock Update function *********//////////
+    function save(row) {
+
+        debugger;
+        var rowdataaa = $("#tblPOS").getRowData(row);
+        var Qntity = parseFloat(document.getElementById("" + row + "_quantity").value);
+        var Type = $("#" + row + "_Measure option:selected").text();
+
+        if (isNaN(Qntity) || Qntity == '' || Qntity == '0' || Type == 'Select' || rowdataaa.amount == '0' || isNaN(rowdataaa.amount)) {
+            if (isNaN(Qntity) || Qntity == '' || Qntity == '0') {
+                alert("Please Enter Quantity before Proceeding Further");
+                document.getElementById("" + row + "_quantity").focus();
+                return false;
+            }
+            else if (Type == 'Select') {
+                alert("Please Choose UOM before Proceeding Further");
+                return false;
+            }
+            else if (rowdataaa.amount == '0' || isNaN(rowdataaa.amount)) {
+                alert("Please Review Amount Once ");
+                return false;
+            }
+
+        }
+        else {
+            var $scope = angular.element(appElement).scope();
+            jQuery('#tblPOS').saveRow(row);
+            $("#tblPOS").jqGrid("setCell", row, "quantity", Qntity);
+
+
+
+            var rowdata = $("#tblPOS").getRowData(row);
+
+            var codeid = rowdata.productcode;
+            var Id=rowdata.Id;
+
+            var quantity = rowdata.quantity;
+            var amount = rowdata.amount;
+            if (rowdata.Measure != "" || rowdata.Measure != undefined || rowdata.Measure != 'Select') {
+                var uom = rowdata.Measure;
+            }
+            // Save particular row data using barcode in array//
+            for (var i = 0; i < $scope.DataList.length; i++)
+            {
+                if ($scope.DataList[i].productcode == codeid && $scope.DataList[i].Id == Id)
+                {
+                    $scope.DataList[i].quantity = quantity;
+                    $scope.DataList[i].amount = amount;
+                    $scope.DataList[i].vchuomid = uom;
+                    break;
+                }
+            }
+
+            ///  Update Stock quantity on local array ///
+
+            // var qnt = parseInt(quantity)-1;
+            if (uom == 'NO.' || uom == 'NO') {
+                var sss = parseInt($scope.Availstck);
+                var qnt = parseInt(quantity) - sss;
+                var productid = rowdata.productid;
+                UpdateStock(qnt, productid);
+            }
+
+            // End //
+
+            be = "<button  type='button' id='btnedit' class='btn-grid' onclick='edit(" + row + ");'><i class='fa fa-pencil'></i><br/></button>";
+            ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + row + ");'><i class='fa fa-trash'></i><br/></button>";
+
+            // be = "<input style='height:22px;width:50px;' type='button' id='btnedit' value='Edit' onclick='edit(" + row + ") '/>";
+            // ce = "<input style='height:22px;width:50px;' type='button' id='btndelete' value='Delete' onclick='Delete(" + row + ")' />";
+            jQuery("#tblPOS").jqGrid('setRowData', row, { act: be + ce });
+
+
+            var grid_selector = "#tblPOS";
+            var pager_selector = "#pagePOS";
+            var $grid = $(grid_selector);
+
+
+            //check total sum of amount,unit price,no of items of that sale//
+            var colSum = $grid.jqGrid('getCol', 'amount', false, 'sum');
+            var NoofItems = $grid.getGridParam("reccount");
+            var $scope = angular.element(appElement).scope();
+            $scope.numsaleamount = colSum;
+
+            //End//
+
+
+
+            $grid.jqGrid('footerData', 'set', { Id: 'Total Amount:', amount: colSum });
+            $grid.jqGrid('footerData', 'set', { Id: 'Total Items:', quantity: NoofItems });
+            $grid.jqGrid().trigger("reloadGrid")
+
+            var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+            document.getElementById("Txtamnt").value = GrdTotal;
+            var TotalAmount = document.getElementById("Txtamnt").value;
+            var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+            document.getElementById('TxtChange').value = balance;
+            angular.element('#omschrijving').focus();
+
+            //// ******  End  *******////
+        }
+    }
+
+    //////// ******  End ********* ////////
+
+
+    ///////  Delete item from Grid and calls stock update function ////////
+
+    function Delete(row) {
+        var grid_selector = "#tblPOS";
+        var pager_selector = "#pagePOS";
+        var $grid = $(grid_selector);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#tblPOS").getRowData(row);
+        var Idd = rowdata.Id;
+        var res = confirm('Are you sure you want to delete this item from list ?');
+        if (res) {
+
+            // static data remove from jqgrid////
+            $('#tblPOS').jqGrid('delRowData', row);
+
+            // Remove Delated Item From array to prevent Rebinding on another Item Adding ///
+            var codeid = rowdata.productcode;
+            var ComboId = rowdata.productid;
+            //for (var i = 0; i < $scope.DataList.length; i++) {
+            //    if ($scope.DataList[i].productcode == codeid && $scope.DataList[i].Id==Idd) {
+            //        $scope.DataList.splice(i, 1);
+            //        break;
+            //    }
+            //}
+
+            for (var i = 0; i < $scope.DataList.length; i++) {
+                if (codeid == "" || codeid == null || codeid == undefined) {
+                    if ($scope.DataList[i].productid == ComboId && $scope.DataList[i].Id == Idd) {
+                        $scope.DataList.splice(i, 1);
+                        break;
+                    }
+                }
+                else {
+                    if ($scope.DataList[i].productcode == codeid && $scope.DataList[i].Id == Idd) {
+                        $scope.DataList.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+
+
+
+
+            ///  Update Stock quantity on local array ///
+            if (rowdata.vchuomid == 'NO.' || rowdata.vchuomid == 'NO') {
+                var Qnty = parseInt(rowdata.quantity);
+                var pid = parseInt(rowdata.productid);
+                UpdateStockonDelete(Qnty, pid);
+            }
+
+
+            // End //
+        }
+        $grid.jqGrid().trigger("reloadGrid")
+        angular.element('#omschrijving').focus();
+    }
+
+    /////// *******  End  ********** /////////
+
+</script>
+
+<script type="text/javascript">
+
+    function Showcombo(row) {
+        debugger;
+        var grid_selector = "#tblPOS";
+        var pager_selector = "#pagePOS";
+        var $grid = $(grid_selector);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#tblPOS").getRowData(row);
+        $scope.cId = rowdata.productid;
+        $scope.ViewArray = [];
+        $http.post("/MMSMaster/GetComboDetailsforUpdate", { ComboId: $scope.cId }).success(function (data) {
+            debugger;
+            for (var j = 0; j < data.length; j++) {
+                $scope.ViewArray.push({ 'Id': i++, 'productid': data[j].productid, 'productcode': data[j].productcode, 'amount': data[j].amount, 'productname': data[j].productname, 'uom': data[j].uom, 'qafc': data[j].qafc, 'rate': data[j].rate })
+            }
+            debugger;
+
+            //// Open Product Details in a Dialog Box On Viewbuttn Click ///
+            var dialog;
+
+            dialog = $("#tblView").dialog({
+
+                autoOpen: true,
+                title: "Combo Details",
+                closeOnEscape: true,
+                width: 800,
+                height: 100,
+                resizable: true,
+                modal: true,
+                draggable: true,
+                dialogClass: "alert",
+                position: { my: "center", at: "center", of: window },
+                buttons: {
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                }
+
+            });
+
+            ////  End  ////
+
+            $scope.ViewGrid($scope.ViewArray);
+        });
+    }
+</script>

@@ -1,0 +1,284 @@
+﻿@{
+    // ViewBag.Title = "CodeMaster";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="CodeMasterController">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmCodemaster" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Item Category <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="CategoryName" id="txtcatname" ng-model="Code.categoryname" placeholder=" Enter Category Name" capitalize
+                               kit-alphabets class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.CategoryName.$dirty || submitted ) && fmCodemaster.CategoryName.$error.required">
+                            CategoryName required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Item SubCategory <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="SubCategory" ng-model="Code.subcategory" placeholder="Enter SubCategory Type" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.SubCategory.$dirty || submitted ) && fmCodemaster.SubCategory.$error.required">
+                            SubCategory required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Item Code <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="ItemCode" ng-model="Code.itemcode" placeholder=" Enter Item Code" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.ItemCode.$dirty || submitted ) && fmCodemaster.ItemCode.$error.required">
+                            ItemCode required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Origin <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="Origin" ng-model="Code.origin" placeholder="Enter Origin" class="form-control" capitalize
+                               type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.Origin.$dirty || submitted ) && fmCodemaster.Origin.$error.required">
+                            Origin required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Section Master <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="SectionCode" ng-model="Code.sectioncode" placeholder=" Enter Section Code" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.SectionCode.$dirty || submitted ) && fmCodemaster.SectionCode.$error.required">
+                            SectionMaster required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Reasons <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="Reason" ng-model="Code.reason" placeholder="Enter Reason" class="form-control" capitalize
+                               type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.Reason.$dirty || submitted ) && fmCodemaster.Reason.$error.required">
+                            Reason required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Voucher Type <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="VoucherType" ng-model="Code.vouchertype" placeholder=" Enter Voucher Type" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.VoucherType.$dirty || submitted ) && fmCodemaster.VoucherType.$error.required">
+                            VoucherType required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Department <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="DepartmentCode" ng-model="Code.departmentcode" placeholder="Enter Department Code " capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.DepartmentCode.$dirty || submitted ) && fmCodemaster.DepartmentCode.$error.required">
+                            Department required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Payment Type <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="PaymentCode" ng-model="Code.paymentcode" placeholder=" Enter Payment Code" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.PaymentCode.$dirty || submitted ) && fmCodemaster.PaymentCode.$error.required">
+                            Payment Type required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Kot Taking <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="KotTaking" ng-model="Code.kottaking" placeholder=" Enter Payment Code" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.kottaking.$dirty || submitted ) && fmCodemaster.kottaking.$error.required">
+                            KotTaking required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        BillGeneration <span style="color: Red">*</span>:
+                    </label>
+                    <div class="col-sm-5">
+                        <input required name="BillGeneration" ng-model="Code.billgeneration" placeholder=" Enter Bill Generation" capitalize
+                               class="form-control" type="text" maxlength="4" ng-blur="CheckDuplicate(Code)">
+                        <span class="error" ng-show="(fmCodemaster.billgeneration.$dirty || submitted ) && fmCodemaster.billgeneration.$error.required">
+                            BillGeneration required!
+                        </span>
+                    </div>
+                </div>
+                <div class=" col-sm-10">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="SaveCodeMaster(Code)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('RMS');
+    app.controller('CodeMasterController', function ($scope, $http, $rootScope) {
+        $scope.Code = {};
+        $rootScope.FormName = "Code Masters";
+        $rootScope.ModuleName = "Masters";
+        $scope.Code.category = "Category"
+        $scope.btnSave = "Save";
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.$watch('fmCodemaster.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+            bindvalus();
+        });
+
+        $scope.items = [];
+        function bindvalus() {
+
+        }
+        function CheckDuplicate(Code) {
+            debugger
+
+            var txtdata = [$scope.Code.categoryname, $scope.Code.subcategory, $scope.Code.itemcode, $scope.Code.origin, $scope.Code.sectioncode, $scope.Code.reason, $scope.Code.vouchertype, $scope.Code.departmentcode, $scope.Code.paymentcode, $scope.Code.kottaking, $scope.Code.billgeneration];
+            var sorted_arr = txtdata.sort();
+            var results = [];
+            for (var i = 0; i < txtdata.length - 1; i++) {
+                if (sorted_arr[i + 1] == sorted_arr[i]) {
+                    results.push(sorted_arr[i]);
+                    alert("Duplicate Value:  " + results);
+                    return false;
+                }
+
+
+            }
+
+
+        }
+
+        function ClearForm1() {
+            $scope.Code = {};
+            $scope.submitted = false;
+
+            $scope.fmCodemaster.$setPristine();
+        }
+
+        $scope.SaveCodeMaster = function (Code) {
+            debugger
+
+
+            if (angular.isDefined(Code.categoryname)) {
+                $scope.items.push({ 'MasterName': 'ItemCategory', 'Prefix': Code.categoryname });
+            }
+            if (angular.isDefined(Code.subcategory)) {
+                $scope.items.push({ 'MasterName': 'ItemSubCategory', 'Prefix': Code.subcategory });
+            }
+            if (angular.isDefined(Code.itemcode)) {
+                $scope.items.push({ 'MasterName': 'Item Code', 'Prefix': Code.itemcode });
+            }
+            if (angular.isDefined(Code.origin)) {
+                $scope.items.push({ 'MasterName': 'Origin', 'Prefix': Code.origin });
+            }
+            if (angular.isDefined(Code.sectioncode)) {
+                $scope.items.push({ 'MasterName': 'Section Master', 'Prefix': Code.sectioncode });
+            }
+            if (angular.isDefined(Code.reason)) {
+                $scope.items.push({ 'MasterName': 'Reasons', 'Prefix': Code.reason });
+            }
+            if (angular.isDefined(Code.vouchertype)) {
+                $scope.items.push({ 'MasterName': 'Voucher Type', 'Prefix': Code.vouchertype });
+            }
+            if (angular.isDefined(Code.departmentcode)) {
+                $scope.items.push({ 'MasterName': 'Department', 'Prefix': Code.departmentcode });
+            }
+            if (angular.isDefined(Code.paymentcode)) {
+                $scope.items.push({ 'MasterName': 'Payment Type', 'Prefix': Code.paymentcode });
+            }
+            if (angular.isDefined(Code.kottaking)) {
+                $scope.items.push({ 'MasterName': 'Kot Taking', 'Prefix': Code.kottaking });
+            }
+            if (angular.isDefined(Code.billgeneration)) {
+                $scope.items.push({ 'MasterName': 'BillGeneration', 'Prefix': Code.billgeneration });
+            }
+
+            debugger
+
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var ans = confirm($rootScope.msgSave);
+                var rpt = CheckDuplicate(Code);
+
+                debugger;
+                if (rpt == false) {
+                    alert("Duplicate Values Not Allowed");
+                }
+                else {
+                    if (ans) {
+                        $http.post('/POSMasters/SaveCodeMaster', $scope.items).success(function (data) {
+
+                            debugger
+                            if (data == true) {
+
+
+                                alert("Item Master Saved Scucessfully !")
+                                ClearForm();
+                            }
+                        });
+                    }
+
+                }
+
+            }
+            $scope.Reset = function () {
+                ClearForm();
+            }
+
+            function ClearForm() {
+                $scope.Code = {};
+                $scope.submitted = false;
+
+                $scope.fmCodemaster.$setPristine();
+            }
+        }
+
+    });
+
+</script>

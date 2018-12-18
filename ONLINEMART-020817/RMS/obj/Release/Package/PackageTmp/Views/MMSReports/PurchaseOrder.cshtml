@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div id="Xyx" class="page-content" ng-controller="PurchaseOrderReportController">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> Purchase Order Report </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" name="fmPurchaseOrderReport" ng-init="LoadVendors()">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Vendor Name <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-model="PO.vendorid" class=" form-control" name="Venodr" ng-options="c.vendorid as c.vchvendorname for c in VendorDetails"
+                                            ng-change="VendorChange(PO);" required>
+                                        <option value="">Select Vendor Name</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmPurchaseOrderReport.Venodr.$dirty || submitted ) && fmPurchaseOrderReport.Venodr.$error.required">
+                                        Vendor Name required!
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    PO No. <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-model="PO.vchpurchaseorderno" class=" form-control" ng-options="c.vchpurchaseorderno as c.vchpurchaseorderno for c in PONoDetails" name="PONo" required>
+                                        <option value="">Select PO No.</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmPurchaseOrderReport.PONo.$dirty || submitted ) && fmPurchaseOrderReport.PONo.$error.required">
+                                        PO No required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="btn btn-success" type="button" ng-click="PurchaseOrdereReport(PO)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('RMS');
+    app.controller('PurchaseOrderReportController', function ($scope, $http, $rootScope) {
+        $scope.PurchaseInvoice = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Purchase Order";
+        $scope.Valid = true;;
+        $scope.isFormValid = false;
+        $scope.submitted = false;
+
+        $scope.$watch('fmPurchaseOrderReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.LoadVendors = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/ShowVendors/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.VendorDetails = eval('(' + data.Data + ')');
+
+            });
+        }
+
+        $scope.VendorChange = function () {
+            debugger;
+            var vendorid = $scope.PO.vendorid;
+            $http({
+                url: '/MMSReports/ShowPONo/',
+                method: "POST",
+                data: { strVendorid: vendorid }
+            }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    $scope.PONoDetails = eval('(' + data.Data + ')');
+                }
+            });
+        };//-
+
+        $scope.PurchaseOrdereReport = function (PO) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+                $scope.PO.vchvendorname = $.grep($scope.VendorDetails, function (c) {
+                    return c.vendorid == $scope.PO.vendorid;
+                })[0].vchvendorname;
+
+                var w = window.open("/MMSReports/PurchaseOrderReport/?pono=" + PO.vchpurchaseorderno + "&vendorname=" + PO.vchvendorname + "&type=Duplicate", '_blank');
+                $scope.PO = {};
+                $scope.fmPurchaseOrderReport.$setPristine();
+                $scope.submitted = false;
+
+            }
+        }
+
+    });
+</script>

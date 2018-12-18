@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsProductwisePurchaseSaleIssueQty" targetNamespace="http://tempuri.org/dsProductwisePurchaseSaleIssueQty.xsd" xmlns:mstns="http://tempuri.org/dsProductwisePurchaseSaleIssueQty.xsd" xmlns="http://tempuri.org/dsProductwisePurchaseSaleIssueQty.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsProductwisePurchaseSaleIssueQty" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsProductwisePurchaseSaleIssueQty" msprop:Generator_UserDSName="dsProductwisePurchaseSaleIssueQty">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ProductWisePurchaseSaleIssueQty" msprop:Generator_TableClassName="ProductWisePurchaseSaleIssueQtyDataTable" msprop:Generator_TableVarName="tableProductWisePurchaseSaleIssueQty" msprop:Generator_RowChangedName="ProductWisePurchaseSaleIssueQtyRowChanged" msprop:Generator_TablePropName="ProductWisePurchaseSaleIssueQty" msprop:Generator_RowDeletingName="ProductWisePurchaseSaleIssueQtyRowDeleting" msprop:Generator_RowChangingName="ProductWisePurchaseSaleIssueQtyRowChanging" msprop:Generator_RowEvHandlerName="ProductWisePurchaseSaleIssueQtyRowChangeEventHandler" msprop:Generator_RowDeletedName="ProductWisePurchaseSaleIssueQtyRowDeleted" msprop:Generator_RowClassName="ProductWisePurchaseSaleIssueQtyRow" msprop:Generator_UserTableName="ProductWisePurchaseSaleIssueQty" msprop:Generator_RowEvArgName="ProductWisePurchaseSaleIssueQtyRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productname" msprop:Generator_ColumnVarNameInTable="columnproductname" msprop:Generator_ColumnPropNameInRow="productname" msprop:Generator_ColumnPropNameInTable="productnameColumn" msprop:Generator_UserColumnName="productname" type="xs:string" minOccurs="0" />
+              <xs:element name="vchuom" msprop:Generator_ColumnVarNameInTable="columnvchuom" msprop:Generator_ColumnPropNameInRow="vchuom" msprop:Generator_ColumnPropNameInTable="vchuomColumn" msprop:Generator_UserColumnName="vchuom" type="xs:string" minOccurs="0" />
+              <xs:element name="purchaseqty" msprop:Generator_ColumnVarNameInTable="columnpurchaseqty" msprop:Generator_ColumnPropNameInRow="purchaseqty" msprop:Generator_ColumnPropNameInTable="purchaseqtyColumn" msprop:Generator_UserColumnName="purchaseqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="purchaserate" msprop:Generator_ColumnVarNameInTable="columnpurchaserate" msprop:Generator_ColumnPropNameInRow="purchaserate" msprop:Generator_ColumnPropNameInTable="purchaserateColumn" msprop:Generator_UserColumnName="purchaserate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="saleqty" msprop:Generator_ColumnVarNameInTable="columnsaleqty" msprop:Generator_ColumnPropNameInRow="saleqty" msprop:Generator_ColumnPropNameInTable="saleqtyColumn" msprop:Generator_UserColumnName="saleqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="salerate" msprop:Generator_ColumnVarNameInTable="columnsalerate" msprop:Generator_ColumnPropNameInRow="salerate" msprop:Generator_ColumnPropNameInTable="salerateColumn" msprop:Generator_UserColumnName="salerate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="issueqty" msprop:Generator_ColumnVarNameInTable="columnissueqty" msprop:Generator_ColumnPropNameInRow="issueqty" msprop:Generator_ColumnPropNameInTable="issueqtyColumn" msprop:Generator_UserColumnName="issueqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="purchasedate" msprop:Generator_ColumnVarNameInTable="columnpurchasedate" msprop:Generator_ColumnPropNameInRow="purchasedate" msprop:Generator_ColumnPropNameInTable="purchasedateColumn" msprop:Generator_UserColumnName="purchasedate" type="xs:string" minOccurs="0" />
+              <xs:element name="saledate" msprop:Generator_ColumnVarNameInTable="columnsaledate" msprop:Generator_ColumnPropNameInRow="saledate" msprop:Generator_ColumnPropNameInTable="saledateColumn" msprop:Generator_UserColumnName="saledate" type="xs:string" minOccurs="0" />
+              <xs:element name="issuedate" msprop:Generator_ColumnVarNameInTable="columnissuedate" msprop:Generator_ColumnPropNameInRow="issuedate" msprop:Generator_ColumnPropNameInTable="issuedateColumn" msprop:Generator_UserColumnName="issuedate" type="xs:string" minOccurs="0" />
+              <xs:element name="returnqty" msprop:Generator_ColumnVarNameInTable="columnreturnqty" msprop:Generator_ColumnPropNameInRow="returnqty" msprop:Generator_ColumnPropNameInTable="returnqtyColumn" msprop:Generator_UserColumnName="returnqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="returnrate" msprop:Generator_ColumnVarNameInTable="columnreturnrate" msprop:Generator_ColumnPropNameInRow="returnrate" msprop:Generator_ColumnPropNameInTable="returnrateColumn" msprop:Generator_UserColumnName="returnrate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="returnamount" msprop:Generator_ColumnVarNameInTable="columnreturnamount" msprop:Generator_ColumnPropNameInRow="returnamount" msprop:Generator_ColumnPropNameInTable="returnamountColumn" msprop:Generator_UserColumnName="returnamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="saleamount" msprop:Generator_ColumnVarNameInTable="columnsaleamount" msprop:Generator_ColumnPropNameInRow="saleamount" msprop:Generator_ColumnPropNameInTable="saleamountColumn" msprop:Generator_UserColumnName="saleamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="purchaseamount" msprop:Generator_ColumnVarNameInTable="columnpurchaseamount" msprop:Generator_ColumnPropNameInRow="purchaseamount" msprop:Generator_ColumnPropNameInTable="purchaseamountColumn" msprop:Generator_UserColumnName="purchaseamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="issueamount" msprop:Generator_ColumnVarNameInTable="columnissueamount" msprop:Generator_ColumnPropNameInRow="issueamount" msprop:Generator_ColumnPropNameInTable="issueamountColumn" msprop:Generator_UserColumnName="issueamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="openingqty" msprop:Generator_ColumnVarNameInTable="columnopeningqty" msprop:Generator_ColumnPropNameInRow="openingqty" msprop:Generator_ColumnPropNameInTable="openingqtyColumn" msprop:Generator_UserColumnName="openingqty" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

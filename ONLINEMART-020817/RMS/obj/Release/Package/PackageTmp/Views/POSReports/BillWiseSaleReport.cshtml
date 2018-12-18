@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "BillWiseSaleReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div id="Xyx" class="page-content" ng-controller="BillwiseReportController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> BILL WISE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="BillwiseReportController" name="fmbillwiseReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="bill.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmbillwiseReport.FromDate.$dirty || submitted ) && fmbillwiseReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="ToDate" type="text" id="datepicker" class=" form-control" ng-model="bill.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmbillwiseReport.ToDate.$dirty || submitted ) && fmbillwiseReport.ToDate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Bill No. :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="bill.Billno=0" id="Billno" ng-model="bill.Billno" class=" form-control" name="Billno" ng-options="c.recordid as c.vchbillno for c in BillnoDetails" required>
+                                        @*<select ng-model="bill.Billno" class=" form-control" name="Billno" required>
+                                            <option value="">Select Name</option>
+                                            <option value="1">All</option>*@
+                                    </select>
+                                    <br />
+                                    <span class="error" ng-show="(fmbillwiseReport.Billno.$dirty || submitted ) && fmbillwiseReport.Billno.$error.required">
+                                        Bill No required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintBillReport(bill)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('BillwiseReportController', function ($scope, $http, $rootScope) {
+        $scope.bill = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Bill Wise";
+
+        $scope.isFormValid = false;
+
+        $scope.$watch('fmbillwiseReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/POSReports/GetBillNos/',
+
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.BillnoDetails = eval('(' + data.Data + ')');
+
+            });
+        }
+        $scope.checkDate = function (date1, date2) {
+           
+                if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+              
+            return false;
+            else
+                return true;
+        }
+        $scope.PrintBillReport = function (bill) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+                    debugger;
+                    var billnumber = $('#Billno option:selected').text();
+                    var w = window.open("/POSReports/BillWiseReport/?fromdate=" + changedate(bill.fromdate) + "&todate=" + changedate(bill.todate) + "&BillNo=" + billnumber+ "", '_blank');
+                    $scope.bill = {};
+                    $scope.fmbillwiseReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.bill.Billno = 0;
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+        }
+    });
+</script>

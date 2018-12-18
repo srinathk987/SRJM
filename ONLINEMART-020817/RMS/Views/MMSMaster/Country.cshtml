@@ -1,0 +1,312 @@
+﻿@{
+    //ViewBag.Title = "Country";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script src="../../Scripts/angular.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('CountryCtrl', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Country";
+        $rootScope.ModuleName = "MMS Masters";
+
+        $scope.LoadData = function () {
+            $http({
+                url: '/MMSMaster/ShowCountryDetails/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                LoadGrid(data);
+
+            })
+            //    .error(function () {
+            //    alert("Error Occuerd");
+
+            //});
+        }
+        $scope.$watch('Countryfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.Save = function (country) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http.post('/MMSMaster/SaveCountry', country).success(function (data) {
+                            debugger
+                            if (data == "True") {
+                                alert("Country Details Saved Successfully");
+                                $scope.LoadData();
+                                $('grdCountry').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                            }
+                            else {
+                                alert("Country Name Already Exist");
+                            }
+                        })
+                            //.error(function (data) { alert("Error found"); });
+                    }
+                }
+                else if ($scope.btnSave == "Update") {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        debugger;
+                        $http.post('/MMSMaster/UpdateCountry', country).success(function (data) {
+                            debugger
+                            if (data == "True") {
+                                alert("Country Details Updated Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+                            }
+                            else {
+                                alert("Country Name Already Exist");
+                            }
+                        })
+                    }
+                }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $scope.country = {};
+            $scope.btnSave = "Save";
+            $scope.Countryfrm.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function LoadGrid(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdCountry";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                // return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'Country Id', name: 'CountryId', width: 75, hidden: true },
+            { label: 'Country Name', name: 'CountryName', width: 90 },
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                caption: "Countries <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+    });
+</script>
+
+<style>
+    input {
+        padding: 5px;
+        border: 1px solid #A5A5A5;
+    }
+
+        input.ng-dirty.ng-invalid {
+            border: 1px solid red;
+            background-color: rgb(255, 244, 244);
+        }
+
+    .error {
+        color: red;
+    }
+
+    .animate-enter, .animate-leave {
+        -webkit-transition: 750ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        -moz-transition: 750ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        -ms-transition: 750ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        -o-transition: 750ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+        transition: 750ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    }
+
+    .animate-enter {
+        top: -100%;
+    }
+
+        .animate-enter.animate-enter-active {
+            top: 0;
+        }
+
+    .animate-leave {
+        top: 0;
+    }
+
+        .animate-leave.animate-leave-active {
+            top: 100%;
+        }
+</style>
+
+
+<div ng-controller="CountryCtrl" ng-init="LoadData()" ng-app="RMS">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="Countryfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                            Country Name <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-5">
+
+                            <input type="text" name="CountryName" id="CountryName" placeholder="Enter Country Name" ng-model="country.CountryName" maxlength="100" kit-alpha-numeric autofocus
+                                   class="form-control" required data-index="1" kt-focus />
+                            <span class="error" ng-show="(Countryfrm.CountryName.$dirty || submitted) && Countryfrm.CountryName.$error.required">
+                                Country Name Required!
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class=" col-sm-8">
+                        <div class="pull-right">
+                            <button class="btn btn-success" data-index="2" type="button" ng-click="Save(country)" >
+                                <i class=" ace-icon fa fa-plus bigger-110">
+                                </i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table id="grdCountry"></table>
+        <div id="grid-pager">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=CountryCtrl]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdCountry"))
+    }
+
+    function edit(row) {
+        debugger;
+        debugger;
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdCountry").getRowData(row);
+       
+
+        //var rowdata = jQuery('#grdCountry').jqGrid('getRowData', row);
+        //var $scope = angular.element(appElement).scope();
+        //var copy = Object.assign({}, rowdata);
+        $http.post('/MMSMaster/CheckCountry', rowdata).success(function (data) {
+          
+            debugger;
+            if (data == 1) {
+                //$scope.country = copy;
+                //$scope.btnSave = "Update";
+                //$scope.$apply();
+                $scope.btnSave = "Update";
+                $scope.country = rowdata;
+                $scope.$apply();
+                
+            }
+            else {
+                alert("Cannot Update Country as it is in use by the application");
+            }
+        })
+    }
+    function Delete(row) {
+        debugger
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdCountry").getRowData(row);
+        if ($scope.btnSave == "Save") {
+            $http.post('/MMSMaster/CheckCountry', rowdata).success(function (data) {
+                debugger;
+                if (data == 1) {
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+                    debugger;
+                    if (ans) {
+                        var $http = angular.element(appElement).injector().get('$http');
+                        $http.post('/MMSMaster/DeleteCountry', rowdata).success(function (data) {
+
+                            if (data == "True") {
+                                alert("Country Details Deleted Successfully");
+                                $('#grdCountry').jqGrid('delRowData', row);
+                                $scope.LoadData();
+                            }
+                            else {
+                                alert("Deletion Failed");
+                            }
+                        })
+                    }
+                }
+                else {
+                    alert("Cannot Delete Country as it is in use by the application");
+                }
+            })
+        }
+        else {
+            alert("Cannot Delete Country in editable mode");
+        }
+    }
+
+</script>
+
+
+
+
+

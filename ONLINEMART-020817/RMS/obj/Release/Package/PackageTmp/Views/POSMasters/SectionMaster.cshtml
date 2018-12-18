@@ -1,0 +1,331 @@
+﻿@{
+    //ViewBag.Title = "SectionMaster";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div class="page-content" ng-controller="SectionController" ng-init="LoadData()">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmSection" novalidate>
+
+                <div class="form-group" hidden>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                        Section Code <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="SectionCode" ng-model="Sec.SectionCode" placeholder=" Enter Section Code" kit-alpha-numeric maxlength="10"
+                               class="form-control" type="text" />
+                        <span class="error" ng-show="(fmSection.SectionCode.$dirty || submitted) && fmSection.SectionCode.$error.required">
+                            Section Code required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Section Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="SectionName123" ng-model="Sec.SectionName123" placeholder="Enter Section Name" kit-alpha-numeric maxlength="100"
+                               class="form-control" required autofocus type="text" />
+                        <span class="error" ng-show="(fmSection.SectionName123.$dirty || submitted ) && fmSection.SectionName123.$error.required">
+                            Section Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="Save(Sec)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpSection"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=SectionController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpSection"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#gpSection").getRowData(row);
+        var $http = angular.element(appElement).injector().get('$http');
+        var Sec = JSON.stringify(rowdata);
+        $scope.SectionName123Ch = rowdata.SectionName123;
+        $http({
+            url: '/POSMasters/UpdateSection/',
+            method: "POST",
+            data: { JsonData: Sec }
+
+        }).success(function (data) {
+            debugger;
+            if (data == 1) {
+                $scope.btnSave = "Update"
+
+                debugger;
+                $scope.Sec = rowdata;
+                $scope.Sec.SectionName = rowdata.SectionName123;
+                $scope.$apply();
+                //alert("Section Name  Already Exist");
+
+
+            }
+            else {
+
+                alert("Cannot Update Section Details  as it is in use by the application");
+            }
+        }).error(function (data) {
+            alert("Error found");
+        });
+
+
+
+
+
+
+
+
+
+
+
+    }
+    function Delete(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnSave == "Save") {
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#gpSection").getRowData(row);
+            debugger;
+
+            $http.post('/POSMasters/DeleteSection', { Id: rowdata.SectionId }).success(function (data) {
+                if (data == true) {
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+                    if (ans) {
+                        alert("Section Details Deleted Successfully");
+                        $('#gpSection').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                }
+
+                else if (data == false) {
+                    alert("Cannot Delete Section Details  as it is in use by the application");
+                }
+            }).error(function (data) { alert("Error Occuerd"); });
+            // }
+        }
+        else {
+            alert("Cannot Delete Section Details In Edit Mode");
+        }
+    }
+
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('SectionController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Section Master";
+        $rootScope.ModuleName = "Masters";
+
+        $scope.Sec = { SectionName123: "" };
+        $scope.$watch('fmSection.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSMasters/ShowSection/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+        $scope.Save = function (Sec) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+              
+                if ($scope.btnSave == "Save") {
+                    Sec = JSON.stringify(Sec);
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+
+
+
+
+
+                        $http({
+                            url: '/POSMasters/SaveItemCategory1/',
+                            method: "POST",
+                            data: { JsonData: Sec }
+
+                        }).success(function (data) {
+                            debugger;
+                            if (data == 0) {
+                                alert("Section Master Details Saved Successfully");
+                                $scope.LoadData();
+                                $('gpSection').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                            }
+                            else {
+                                alert("Section Name  Already Exist");
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+                }
+                else {
+                    debugger;
+                    if ($scope.SectionName123Ch != Sec.SectionName123) {
+                        Sec = JSON.stringify(Sec);
+                        $http({
+                            url: '/POSMasters/UpdateSection/',
+                            method: "POST",
+                            data: { JsonData: Sec }
+
+                        }).success(function (data) {
+                            debugger;
+                            if (data > 0) {
+
+                                alert("Section Name  Already Exist");
+
+
+                            }
+                            else {
+                                var ans = confirm($rootScope.msgUpdate);
+                                if (ans) {
+                                    alert("Section Master Details Updated Successfully");
+                                    $scope.LoadData();
+                                    ClearForm();
+                                }
+
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+
+                    }
+                    else {
+
+                        alert("Section Master Details Updated Successfully");
+                        $scope.LoadData();
+                        ClearForm();
+                    }
+
+                    // }
+
+                }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $scope.Sec = {};
+            $scope.btnSave = "Save";
+            $scope.fmSection.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#gpSection";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 15, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                //  return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'SectionId', name: 'SectionId', width: 75, hidden: true },
+                        { label: 'Section Code', name: 'SectionCode', width: 60 },
+			{ label: 'Section Name', name: 'SectionName123', width: 75 },
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Sections <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+
+    });
+</script>

@@ -1,0 +1,16 @@
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\bin\Debug\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\bin\Debug\RMS.Core.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.csprojResolveAssemblyReference.cache
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Core\bin\Debug\RMS.Core.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Core\bin\Debug\RMS.Core.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.csprojResolveAssemblyReference.cache
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Core\bin\Debug\RMS.Core.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Core\bin\Debug\RMS.Core.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Core\bin\Debug\Mono.Security.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Core\bin\Debug\Npgsql.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Core\obj\Debug\RMS.Core.pdb

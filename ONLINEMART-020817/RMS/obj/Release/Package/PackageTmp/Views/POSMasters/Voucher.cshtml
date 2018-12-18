@@ -1,0 +1,432 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script src="../../assets/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<div class="page-content" ng-controller="VoucherController" ng-init="LoadData();LoadVoucherTypes()">
+    <!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmVoucher" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Voucher Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="Name" ng-model="Vhr.VoucherName" placeholder="Enter Voucher Name" class="form-control" id="txtVoucherName" data-index="1" kt-focus
+                               maxlength="100" required autofocus type="text">
+                        <span class="error" ng-show="(fmVoucher.Name.$dirty || submitted ) && fmVoucher.Name.$error.required">
+                            Voucher Name required!
+                        </span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" hidden>
+                        Voucher Code <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4" hidden>
+                        <input name="Code" ng-model="Vhr.VoucherCode" placeholder=" Enter Voucher Code" class="form-control" id="txtVoucherCode"
+                               maxlength="100" autofocus type="text">
+
+                        <span class="error" ng-show="(fmVoucher.Code.$dirty || submitted ) && fmVoucher.Code.$error.required">
+                            Voucher Code required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Voucher Type <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4">
+                        <select ng-model="Vhr.VoucherType" class="form-control" name="Type" required ng-options="v.VoucherTypeName as v.VoucherTypeName for v in VoucherTypes" data-index="2" kt-focus>
+                            <option value="">Select Voucher Type</option>
+                        </select>
+                        <span class="error" ng-show="(fmVoucher.Type.$dirty || submitted ) && fmVoucher.Type.$error.required">
+                            Voucher Type required!
+                        </span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Amount <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="Amount" ng-model="Vhr.Amount" placeholder="Enter Amount" data-index="3" kt-focus id="Amount"
+                               maxlength="13" class="form-control text-right" type="text" id="txtPercentage" kit-amount required />
+                        <span class="error" ng-show="(fmVoucher.Amount.$dirty || submitted ) && fmVoucher.Amount.$error.required">
+                            Amount required!
+                        </span>
+
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Payment Value <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select ng-model="Vhr.Type" class="form-control" ng-change="SelectVoucherType(Vhr)"
+                                    name="type" required>
+                                <option value="">Select</option>
+                                <option value="Amount">Amount </option>
+                                <option value="Percentage">Percentage </option>
+                            </select>
+                            <span class="error" ng-show="(fmVoucher.type.$dirty || submitted ) && fmVoucher.type.$error.required">
+                                Payment Value required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-show="Vhr.Type!=Select">
+                            {{Vhr.Type}} <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input name="Amount" ng-model="Vhr.Amount" placeholder="Enter Amount" ng-hide="VhrPercentage"
+                                   maxlength="13" class="form-control" type="text" ng-blur="CheckZero()" id="txtPercentage" kit-amount required>
+                            <span class="error" ng-show="(fmVoucher.Percentage.$dirty || submitted ) && fmVoucher.Percentage.$error.required">
+                                Percentage required!
+                            </span>
+                            <input name="Percentage" ng-model="Vhr.Percentage" placeholder="Enter Percentage" class="form-control" onkeypress="return CheckPercentage(event)" ng-hide="VhrAmount" id="txtAmount"
+                                   maxlength="5" kit-amount type="text" required>
+                            <span class="error" ng-show="(fmVoucher.Amount.$dirty || submitted ) && fmVoucher.Amount.$error.required">
+                                {{Vhr.Type}} required!
+                            </span>
+                        </div>
+                    </div>*@
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Validation period :
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="ValidPeriod" ng-model="Vhr.ValidPeriod" placeholder="Enter No. of Days" data-index="4" kt-focus
+                               maxlength="3" kit-digits class="form-control" type="text">
+                        <span class="error" ng-show="(fmVoucher.ValidPeriod.$dirty || submitted ) && fmVoucher.ValidPeriod.$error.required">
+                            Validation period required!
+                        </span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Validation Upto :
+                    </label>
+                    <div class="col-sm-4">
+                        <input class="form-control date-picker" id="dtValidUpto" name="dtValidUpto" type="text" data-date-format="dd-mm-yyyy" ng-model="Vhr.ValidUpto" data-index="5" kt-focus
+                               kit-date required />
+                        <span class="error" ng-show="(fmVoucher.dtValidUpto.$dirty || submitted ) && fmVoucher.dtValidUpto.$error.required">
+                            Validation Upto required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Description :
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea name="Description" rows="2" cols="50" ng-model="Vhr.Description" placeholder="Enter Voucher Details" style="resize:none" data-index="6" kt-focus
+                                  maxlength="500" class="form-control"></textarea>
+                        <span class="error" ng-show="(fmVoucher.Description.$dirty || submitted ) && fmVoucher.Description.$error.required">
+                            Description required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Terms and Conditions :
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea name="TermsandConditions" rows="2" cols="50" ng-model="Vhr.TermsandConditions" style="resize:none" data-index="7" kt-focus
+                                  maxlength="500" placeholder="Enter Terms and Conditions" class="form-control"></textarea>
+                        <span class="error" ng-show="(fmVoucher.TermsandConditions.$dirty || submitted )
+                    && fmVoucher.TermsandConditions.$error.required">T&C required!</span>
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="Save(Vhr)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpVoucher"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script type="text/javascript">
+    $('.date-picker').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        startDate: 'today'
+    })
+</script>
+
+<script type="text/javascript">
+    debugger
+    // var test = document.querySelector("#txtVoucherName");
+    var appElement = document.querySelector('[ ng-controller=VoucherController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpVoucher"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#gpVoucher").getRowData(row);
+        $scope.btnSave = "Update"
+        $scope.Vhr = rowdata;
+        debugger;
+        $scope.$apply();
+    }
+    function Delete(row) {
+        debugger
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnSave == "Save") {
+
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#gpVoucher").getRowData(row);
+
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+            if (ans) {
+                $http.post('/POSMasters/DeleteVoucher', rowdata).success(function (data) {
+                    if (data) {
+                        alert("Voucher Details Deleted Successfully");
+                        $('#gpVoucher').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                }).error(function (data) { alert("Error Occuerd"); });
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('VoucherController', function ($scope, $http, $rootScope) {
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Voucher";
+        $rootScope.ModuleName = "Masters";
+        $scope.VhrPercentage = true;
+        $scope.VhrAmount = true;
+
+        $scope.sri = false;
+
+
+        $scope.CheckZero = function () {
+            debugger
+            if ($scope.Vhr.Type == "Amount") {
+                var amt = $scope.Vhr.Amount;
+                if (parseFloat($scope.Vhr.Amount) <= 0) {
+                    $scope.Vhr.Amount = '';
+                    $('#txtAmount').focus();
+                }
+            }
+            else {
+                if (parseFloat($scope.Vhr.Percentage) <= 0) {
+                    $scope.Vhr.Percentage = '';
+                    $('#txtPercentage').focus();
+                }
+            }
+        }
+
+        $scope.LoadVoucherTypes = function () {
+            $http({
+                url: '/POSMasters/ShowVoucherType/',
+                method: "get"
+            }).success(function (data) {
+                $scope.VoucherTypes = data;
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSMasters/ShowVoucher/',
+                method: "get"
+
+            }).success(function (data) {
+                OriginGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+            });
+        }
+
+        $scope.SelectVoucherType = function (Vhr) {
+            debugger;
+            if (Vhr.Type == "Amount") {
+                $scope.VhrAmount = true;
+                $scope.VhrPercentage = false;
+                $scope.Vhr.Amount = null;
+                $scope.Vhr.Percentage = 0;
+            }
+            else {
+                $scope.VhrAmount = false;
+                $scope.VhrPercentage = true;
+                $scope.Vhr.Percentage = null;
+                $scope.Vhr.Amount = 0;
+            }
+            $scope.fmVoucher.$setPristine();
+            $scope.submitted = false;
+        }
+
+        $scope.$watch('fmVoucher.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Save = function (Vhr) {
+            debugger;
+            $scope.submitted = true;
+            $scope.Vhr.Type = "Amount";
+            $scope.Vhr.Percentage = 0;
+            if ($scope.isFormValid) {
+                debugger;
+                if (parseFloat(Vhr.Amount) > 0) {
+
+                    if ($scope.btnSave == "Save") {
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+                            $http.post('/POSMasters/SaveVoucher', Vhr).success(function (data) {
+
+                                if (data == 0) {
+                                    alert("Voucher Details Saved Successfully");
+                                    $scope.LoadData();
+                                    $('gpVoucher').trigger("reloadGrid", [{ page: 2 }])
+                                    ClearForm();
+                                }
+                                else {
+                                    alert("Voucher Name  Already Exist");
+                                }
+                            }).error(function (data) { alert("Error found"); });
+                        }
+                    }
+                    else {
+                        var ans = confirm($rootScope.msgUpdate);
+                        if (ans) {
+                            $http.post('/POSMasters/UpdateVoucher', Vhr).success(function (data) {
+                                if (data == 0) {
+                                    alert("Voucher Details Updated Successfully");
+                                    $scope.LoadData();
+                                    ClearForm();
+                                }
+                                else {
+                                    alert("Voucher Name  Already Exist");
+                                }
+                            }).error(function (data) { alert("Error found"); });
+                        }
+                    }
+                }
+                else {
+                    alert('Amount Should be greater than Zero');
+                    $('#Amount').focus();
+
+                }
+
+
+
+            }
+        }
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $('#txtVoucherName').focus();
+            $scope.Vhr = {};
+            $scope.VoucherTypes = {};
+            $scope.btnSave = "Save";
+            $scope.fmVoucher.$setPristine();
+            $scope.submitted = false;
+            $scope.LoadVoucherTypes();
+            $scope.VhrPercentage = true;
+            $scope.VhrAmount = true;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#gpVoucher";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 40, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                // return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+            { label: 'VoucherId', name: 'VoucherId', width: 100, hidden: true },
+             { label: 'Voucher Code', name: 'VoucherCode', width: 75 },
+            { label: 'Voucher Name', name: 'VoucherName', width: 75 },
+            { label: 'Voucher Type', name: 'VoucherType', width: 75 },
+            { label: 'Percentage', name: 'Percentage', width: 90, hidden: true },
+            { label: 'Amount', name: 'Amount', width: 75, hidden: true },
+            { label: 'Valid Periode', name: 'ValidPeriod', width: 90, hidden: true },
+            { label: 'Valid Upto', name: 'ValidUpto', width: 90, hidden: true },
+            { label: 'Amount', name: 'Total', width: 65, align: 'right' },
+            { label: 'Description', name: 'Description', width: 90 },
+            { label: 'Terms and Conditions', name: 'TermsandConditions', width: 90 },
+            { label: 'Type', name: 'Type', width: 90, hidden: true }
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Vouchers <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+        }
+
+    });
+</script>

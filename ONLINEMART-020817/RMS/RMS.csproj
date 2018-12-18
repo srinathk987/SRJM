@@ -1,0 +1,1720 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B9596EB6-EBFA-41EA-8BCF-3C0AACF93021}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RMS</RootNamespace>
+    <AssemblyName>RMS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Design, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\angucomplete-alt.css" />
+    <Content Include="assets\Css\ajax-jquery.ui-1.11.1-themes-start-jquery-ui.css" />
+    <Content Include="assets\Css\animate.css" />
+    <Content Include="assets\Css\images\edit-button-blue-hi.png" />
+    <Content Include="assets\Css\images\Edit.png" />
+    <Content Include="assets\Css\images\Edit_Icon.png" />
+    <Content Include="assets\Css\images\save-btn.png" />
+    <Content Include="assets\Css\images\plus_minus_icons.png" />
+    <Content Include="assets\Css\images\Save_new.png" />
+    <Content Include="assets\Css\images\Save_new1.png" />
+    <Content Include="assets\Css\images\serving-lunch-icon.png" />
+    <Content Include="assets\Css\images\small-logo.png" />
+    <Content Include="assets\Css\images\thirdparty-vendors\faasos.png" />
+    <Content Include="assets\Css\images\thirdparty-vendors\Foodpanda.png" />
+    <Content Include="assets\Css\images\thirdparty-vendors\swiggy.png" />
+    <Content Include="assets\Css\images\thirdparty-vendors\tinyowl.png" />
+    <Content Include="assets\Css\images\thirdparty-vendors\zomoto.png" />
+    <Content Include="assets\Css\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="assets\Css\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="assets\Css\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="assets\Css\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="assets\Css\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="assets\Css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="assets\Css\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="assets\Css\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="assets\Css\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="assets\Css\images\ui-icons_0078ae_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_222222_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_e0fdff_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="assets\Css\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="assets\Css\set1.css" />
+    <Content Include="assets\font-awesome.css" />
+    <Content Include="assets\font-awesome.min.css" />
+    <Content Include="assets\font-awesome\4.2.0\css\font-awesome.css" />
+    <Content Include="assets\Images\307741.jpg" />
+    <Content Include="assets\Images\416_1zinc.jpg" />
+    <Content Include="assets\Images\416_1zinc.jpg.jpg" />
+    <Content Include="assets\Images\edit.png" />
+    <Content Include="assets\Images\HOME-DELIVERY.png" />
+    <Content Include="assets\Images\host-bg.jpg" />
+    <Content Include="assets\Images\1416_1zinc.jpg" />
+    <Content Include="assets\Images\arrows-1.png" />
+    <Content Include="assets\Images\arrows.png" />
+    <Content Include="assets\Images\bill-cancel.png" />
+    <Content Include="assets\Images\buildings.png" />
+    <Content Include="assets\Images\connection.png" />
+    <Content Include="assets\Images\cooking.png" />
+    <Content Include="assets\Images\cup.png" />
+    <Content Include="assets\Images\delete-1.png" />
+    <Content Include="assets\Images\delete.png" />
+    <Content Include="assets\Images\drink-1.png" />
+    <Content Include="assets\Images\drink-2.png" />
+    <Content Include="assets\Images\drink-3.png" />
+    <Content Include="assets\Images\drink.png" />
+    <Content Include="assets\Images\food-1.png" />
+    <Content Include="assets\Images\food-10.png" />
+    <Content Include="assets\Images\food-11.png" />
+    <Content Include="assets\Images\food-2.png" />
+    <Content Include="assets\Images\food-3.png" />
+    <Content Include="assets\Images\food-4.png" />
+    <Content Include="assets\Images\food-5.png" />
+    <Content Include="assets\Images\food-6.png" />
+    <Content Include="assets\Images\food-7.png" />
+    <Content Include="assets\Images\food-8.png" />
+    <Content Include="assets\Images\food-9.png" />
+    <Content Include="assets\Images\food.png" />
+    <Content Include="assets\Images\game.png" />
+    <Content Include="assets\Images\HRIS.png" />
+    <Content Include="assets\Images\interface.png" />
+    <Content Include="assets\Images\kit-logo.jpg" />
+    <Content Include="assets\Images\kot-change.png" />
+    <Content Include="assets\Images\logo.png" />
+    <Content Include="assets\Images\man-1.png" />
+    <Content Include="assets\Images\man.png" />
+    <Content Include="assets\Images\meal.png" />
+    <Content Include="assets\Images\MERCHANDISE.png" />
+    <Content Include="assets\Images\money-1.png" />
+    <Content Include="assets\Images\money-2.png" />
+    <Content Include="assets\Images\money.png" />
+    <Content Include="assets\Images\paper.png" />
+    <Content Include="assets\Images\pen.png" />
+    <Content Include="assets\Images\people-1.png" />
+    <Content Include="assets\Images\people-2.png" />
+    <Content Include="assets\Images\people.png" />
+    <Content Include="assets\Images\photo-1.png" />
+    <Content Include="assets\Images\photo.png" />
+    <Content Include="assets\Images\restaurant-1.png" />
+    <Content Include="assets\Images\restaurant-2.png" />
+    <Content Include="assets\Images\restaurant-3.png" />
+    <Content Include="assets\Images\restaurant-4.png" />
+    <Content Include="assets\Images\restaurant.png" />
+    <Content Include="assets\Images\Save_new1.png" />
+    <Content Include="assets\Images\sea.png" />
+    <Content Include="assets\Images\search-icon.png" />
+    <Content Include="assets\Images\serving-lunch.png" />
+    <Content Include="assets\Images\small-logo.png" />
+    <Content Include="assets\Images\table-change.png" />
+    <Content Include="assets\Images\table.png" />
+    <Content Include="assets\Images\TAKE-AWAY.png" />
+    <Content Include="assets\Images\THIRD PARTY.png" />
+    <Content Include="assets\Images\time.png" />
+    <Content Include="assets\Images\two.png" />
+    <Content Include="assets\Images\ui-icons_222222_256x240.png" />
+    <Content Include="assets\Images\Vegetables_Tomatoes_456609.jpg" />
+    <Content Include="assets\Images\vintage.png" />
+    <Content Include="assets\Images\write.png" />
+    <Content Include="assets\jquery-migrate-1.3.0.js" />
+    <Content Include="assets\jquery.maskedinput-1.3.min.js" />
+    <Content Include="assets\js\google_pi.js" />
+    <Content Include="assets\js\google_visual.js" />
+    <Content Include="assets\js\jsautcompleted.js" />
+    <Content Include="Content\Css\jquery-ui-1.10.3.css" />
+    <Content Include="Content\Css\jquery.FlowupLabels.css" />
+    <Content Include="Content\Css\jquery.stepy.css" />
+    <Content Include="Content\Css\style-responsive.css" />
+    <Content Include="Content\Css\style.css" />
+    <Content Include="Content\Css\table-responsive.css" />
+    <Content Include="Content\Images\login-bg.jpg" />
+    <Content Include="Content\select2.css" />
+    <Content Include="Content\selectize.default.css" />
+    <Content Include="Content\ui-select.css" />
+    <Content Include="packages.config" />
+    <Content Include="DataSets\dsBillGeneration.xss" />
+    <Content Include="DataSets\CategorywiseDs.xsc">
+      <DependentUpon>CategorywiseDs.xsd</DependentUpon>
+    </Content>
+    <Content Include="assets\font-awesome\4.2.0\fornts\fontawesome-webfont.woff2" />
+    <Content Include="assets\font-awesome\4.2.0\fornts\FontAwesome.otf" />
+    <Content Include="assets\font-awesome\4.2.0\css\font-awesome.css.map" />
+    <Content Include="assets\font-awesome\4.2.0\less\animated.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\bordered-pulled.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\core.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\fixed-width.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\font-awesome.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\icons.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\larger.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\list.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\mixins.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\path.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\rotated-flipped.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\stacked.less" />
+    <Content Include="assets\font-awesome\4.2.0\less\variables.less" />
+    <Content Include="assets\font-awesome\4.2.0\scss\font-awesome.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_animated.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_bordered-pulled.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_core.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_fixed-width.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_icons.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_larger.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_list.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_mixins.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_path.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_rotated-flipped.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_stacked.scss" />
+    <Content Include="assets\font-awesome\4.2.0\scss\_variables.scss" />
+    <Content Include="DataSets\billwisesaleDS.xsc">
+      <DependentUpon>billwisesaleDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\BillNoDetailsReportDs.xsc">
+      <DependentUpon>BillNoDetailsReportDs.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\BillGenarationReportDS.xsc">
+      <DependentUpon>BillGenarationReportDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="assets\fontawesome-webfont.eot" />
+    <Content Include="assets\fontawesome-webfont.woff" />
+    <Content Include="assets\fontawesome-webfont.woff2" />
+    <None Include="DataSets\BillGenarationReportDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BillGenarationReportDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\BillGenarationReportDS.xss">
+      <DependentUpon>BillGenarationReportDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\BillNoDetailsReportDs.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BillNoDetailsReportDs.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\BillNoDetailsReportDs.xss">
+      <DependentUpon>BillNoDetailsReportDs.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\billwisesaleDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>billwisesaleDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\billwisesaleDS.xss">
+      <DependentUpon>billwisesaleDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\CategorywiseDs.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CategorywiseDs.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\CategorywiseDs.xss">
+      <DependentUpon>CategorywiseDs.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\KotreportDs.xsc">
+      <DependentUpon>KotreportDs.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsSalesrpt.xsc">
+      <DependentUpon>dsSalesrpt.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsItemCancel.xsc">
+      <DependentUpon>dsItemCancel.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\ComlementaryReportDS.xsc">
+      <DependentUpon>ComlementaryReportDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\ComlementaryReportDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ComlementaryReportDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\ComlementaryReportDS.xss">
+      <DependentUpon>ComlementaryReportDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\DayWiseSaleDS.xsc">
+      <DependentUpon>DayWiseSaleDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DayWiseSaleDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DayWiseSaleDS.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DayWiseSaleDS.xss">
+      <DependentUpon>DayWiseSaleDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsDaywiseWastage.xsc">
+      <DependentUpon>dsDaywiseWastage.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsDaywiseWastage.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsDaywiseWastage.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\dsDaywiseWastage.xss">
+      <DependentUpon>dsDaywiseWastage.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsGRNReport.xsc">
+      <DependentUpon>dsGRNReport.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsGRNReport.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsGRNReport.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\dsGRNReport.xss">
+      <DependentUpon>dsGRNReport.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsItemCancel.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsItemCancel.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsItemCancel.xss">
+      <DependentUpon>dsItemCancel.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsPurchaseItemstatement.xsc">
+      <DependentUpon>dsPurchaseItemstatement.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsOutWardStatement.xsc">
+      <DependentUpon>dsOutWardStatement.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsMMsSalesReport.xsc">
+      <DependentUpon>dsMMsSalesReport.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsMMsSalesReport.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsMMsSalesReport1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsMMsSalesReport.xss">
+      <DependentUpon>dsMMsSalesReport.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsOutWardStatement.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsOutWardStatement.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsOutWardStatement.xss">
+      <DependentUpon>dsOutWardStatement.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsProductwisePurchaseSaleIssueQty.xsc">
+      <DependentUpon>dsProductwisePurchaseSaleIssueQty.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsProductwisePurchaseSaleIssueQty.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsProductwisePurchaseSaleIssueQty.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsProductwisePurchaseSaleIssueQty.xss">
+      <DependentUpon>dsProductwisePurchaseSaleIssueQty.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsProductWiseStockLedger.xsc">
+      <DependentUpon>dsProductWiseStockLedger.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsProductWiseStockLedger.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsProductWiseStockLedger1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsProductWiseStockLedger.xss">
+      <DependentUpon>dsProductWiseStockLedger.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsPurchaseItemstatement.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsPurchaseItemstatement.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsPurchaseItemstatement.xss">
+      <DependentUpon>dsPurchaseItemstatement.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsPurchaseStatement.xsc">
+      <DependentUpon>dsPurchaseStatement.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsPurchaseStatement.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsPurchaseStatement.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsPurchaseStatement.xss">
+      <DependentUpon>dsPurchaseStatement.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsSalesrpt.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsSalesrpt.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsSalesrpt.xss">
+      <DependentUpon>dsSalesrpt.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsTablewise.xsc">
+      <DependentUpon>dsTablewise.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsSubcategorywisepurchase.xsc">
+      <DependentUpon>dsSubcategorywisepurchase.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsStockreportBetweenDates.xsc">
+      <DependentUpon>dsStockreportBetweenDates.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsStockreportBetweenDates.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsStockreportBetweenDates.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\dsStockreportBetweenDates.xss">
+      <DependentUpon>dsStockreportBetweenDates.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\DsStockUpdate.xsc">
+      <DependentUpon>DsStockUpdate.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\DsStockUpdate.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DsStockUpdate.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\DsStockUpdate.xss">
+      <DependentUpon>DsStockUpdate.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsSubcategorywisepurchase.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsSubcategorywisepurchase.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsSubcategorywisepurchase.xss">
+      <DependentUpon>dsSubcategorywisepurchase.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsSubcategoryWisePurchaseAndSale.xsc">
+      <DependentUpon>dsSubcategoryWisePurchaseAndSale.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsSubcategoryWisePurchaseAndSale.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsSubcategoryWisePurchaseAndSale1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsSubcategoryWisePurchaseAndSale.xss">
+      <DependentUpon>dsSubcategoryWisePurchaseAndSale.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsTablewise.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsTablewise.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsTablewise.xss">
+      <DependentUpon>dsTablewise.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\ItemConsumptionDs.xsc">
+      <DependentUpon>ItemConsumptionDs.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsVendorDetails.xsc">
+      <DependentUpon>dsVendorDetails.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsVendorDetails.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsVendorDetails.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsVendorDetails.xss">
+      <DependentUpon>dsVendorDetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\dsVendorItemList.xsc">
+      <DependentUpon>dsVendorItemList.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\dsVendorItemList.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsVendorItemList.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\dsVendorItemList.xss">
+      <DependentUpon>dsVendorItemList.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\ItemConsumptionDs.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ItemConsumptionDs.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\ItemConsumptionDs.xss">
+      <DependentUpon>ItemConsumptionDs.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\KotreportDs.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>KotreportDs.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\KotreportDs.xss">
+      <DependentUpon>KotreportDs.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\ShiftWiseSaleDS.xsc">
+      <DependentUpon>ShiftWiseSaleDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\PurchaseOrderDS.xsc">
+      <DependentUpon>PurchaseOrderDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\PurchaseBillStatement.xsc">
+      <DependentUpon>PurchaseBillStatement.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\productindentds.xsc">
+      <DependentUpon>productindentds.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\mmscategoryreportDS.xsc">
+      <DependentUpon>mmscategoryreportDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\MMSBetweenDatesReportds.xsc">
+      <DependentUpon>MMSBetweenDatesReportds.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\MMSBetweenDatesReportds.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMSBetweenDatesReportds.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\MMSBetweenDatesReportds.xss">
+      <DependentUpon>MMSBetweenDatesReportds.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\mmscategoryreportDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>mmscategoryreportDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\mmscategoryreportDS.xss">
+      <DependentUpon>mmscategoryreportDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\mmsproductwisereportDS.xsc">
+      <DependentUpon>mmsproductwisereportDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\mmsproductwisereportDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>mmsproductwisereportDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\mmsproductwisereportDS.xss">
+      <DependentUpon>mmsproductwisereportDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\ProductdetailsreportDS.xsc">
+      <DependentUpon>ProductdetailsreportDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\MMSSaleReportDS.xsc">
+      <DependentUpon>MMSSaleReportDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\MMSSaleReportDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMSSaleReportDS.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\MMSSaleReportDS.xss">
+      <DependentUpon>MMSSaleReportDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\ProductdetailsreportDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ProductdetailsreportDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\ProductdetailsreportDS.xss">
+      <DependentUpon>ProductdetailsreportDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\productindentds.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>productindentds.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\productindentds.xss">
+      <DependentUpon>productindentds.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\PurchaseBillStatement.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseBillStatement.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\PurchaseBillStatement.xss">
+      <DependentUpon>PurchaseBillStatement.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\PurchaseOrderDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseOrderDS.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\PurchaseOrderDS.xss">
+      <DependentUpon>PurchaseOrderDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\SaleDetailsBillWise.xsc">
+      <DependentUpon>SaleDetailsBillWise.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\SaleDetailsBillWise.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SaleDetailsBillWise.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\SaleDetailsBillWise.xss">
+      <DependentUpon>SaleDetailsBillWise.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\ShiftWiseSaleDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ShiftWiseSaleDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSets\ShiftWiseSaleDS.xss">
+      <DependentUpon>ShiftWiseSaleDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\StockDS.xsc">
+      <DependentUpon>StockDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\StockDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StockDS.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\StockDS.xss">
+      <DependentUpon>StockDS.xsd</DependentUpon>
+    </Content>
+    <Content Include="DataSets\StockLedgerDS.xsc">
+      <DependentUpon>StockLedgerDS.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSets\StockLedgerDS.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StockLedgerDS.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="DataSets\StockLedgerDS.xss">
+      <DependentUpon>StockLedgerDS.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\Web.pubxml" />
+    <Content Include="Scripts\32px.png" />
+    <Content Include="Scripts\angucomplete-alt.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\jquery-1.12.2-ui.js" />
+    <Content Include="Scripts\jquery.maskedinput.js" />
+    <Content Include="Scripts\jstree.min.js" />
+    <Content Include="Scripts\layout\angular-sanitize.js" />
+    <Content Include="Scripts\layout\jquery.min.js" />
+    <Content Include="Scripts\layout\select.js" />
+    <Content Include="Scripts\lodash.min.js" />
+    <Content Include="Scripts\ParamQuery\gridFilter.js" />
+    <Content Include="Scripts\ParamQuery\jquery-ui.css" />
+    <Content Include="Scripts\ParamQuery\jquery-ui.min.js" />
+    <Content Include="Scripts\ParamQuery\jquery.min.js" />
+    <Content Include="Scripts\ParamQuery\jquery.ui.touch-punch.js" />
+    <Content Include="Scripts\ParamQuery\jquery.ui.touch-punch.min.js" />
+    <Content Include="Scripts\ParamQuery\pqgrid.min.css" />
+    <Content Include="Scripts\ParamQuery\pqgrid.min.js" />
+    <Content Include="Scripts\style.min.css" />
+    <Content Include="Views\POSMasters\VoucherType.cshtml" />
+    <Content Include="Views\POSMasters\TaxDetails.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Trans_LayoutPage.cshtml" />
+    <Content Include="Views\POSTransaction\KotTaking.cshtml" />
+    <Content Include="Views\POSTransaction\KotChange.cshtml" />
+    <Content Include="Views\POSTransaction\KotReprint.cshtml" />
+    <Content Include="Views\POSTransaction\TableChange.cshtml" />
+    <Content Include="Views\POSTransaction\MergeTable.cshtml" />
+    <Content Include="Views\POSTransaction\BillGeneration.cshtml" />
+    <Content Include="Views\POSTransaction\BillEdit.cshtml" />
+    <Content Include="Views\POSTransaction\BillReprint.cshtml" />
+    <Content Include="Views\POSTransaction\BillSettlement.cshtml" />
+    <Content Include="Views\POSTransaction\ReprintSettledBill.cshtml" />
+    <Content Include="Views\POSTransaction\IssueVoucher.cshtml" />
+    <Content Include="Views\POSTransaction\KotCancel.cshtml" />
+    <Content Include="Views\POSTransaction\DashBoard.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\POSReports\categorywiseReport.cshtml" />
+    <Content Include="Views\POSReports\CreateItemwiseReport.cshtml" />
+    <Content Include="Views\POSReports\CreateSubcategorywiseReport.cshtml" />
+    <Content Include="Views\POSReports\SalesReport.cshtml" />
+    <Content Include="Views\POSReports\TableWiseSale.cshtml" />
+    <Content Include="Views\POSReports\WaiterwiseSale.cshtml" />
+    <Content Include="Views\POSReports\CreateWeeklyWiseReport.cshtml" />
+    <Content Include="Views\POSReports\SectionWiseSale.cshtml" />
+    <Content Include="Views\POSMasters\CodeMaster.cshtml" />
+    <Content Include="Views\Login\NewForm.cshtml" />
+    <Content Include="Views\Login\UserRights.cshtml" />
+    <Content Include="Views\POSReports\ItemCancel.cshtml" />
+    <Content Include="Views\POSTransaction\BillCancel.cshtml" />
+    <Content Include="Views\POSTransaction\KotTransfer.cshtml" />
+    <Content Include="Views\POSReports\BillWiseSaleReport.cshtml" />
+    <Content Include="Views\POSReports\ShiftWiseSaleReport.cshtml" />
+    <Content Include="Views\POSReports\ItemConsumptionSaleReport.cshtml" />
+    <Content Include="Views\POSReports\BillNoDetailsReport.cshtml" />
+    <Content Include="Views\POSReports\ComplementaryReport.cshtml" />
+    <Content Include="Views\MMSMaster\ProductCategory.cshtml" />
+    <Content Include="Views\MMSMaster\SubCategory.cshtml" />
+    <Content Include="Views\MMSMaster\ProductType.cshtml" />
+    <Content Include="Views\MMSMaster\ProductMaster.cshtml" />
+    <Content Include="Views\MMSMaster\VendorDetails.cshtml" />
+    <Content Include="Views\MMSMaster\StorageLocation.cshtml" />
+    <Content Include="Views\MMSMaster\RestaurantLocation.cshtml" />
+    <Content Include="Views\MMSMaster\UOM.cshtml" />
+    <Content Include="Views\MMSMaster\Tax.cshtml" />
+    <Content Include="Views\MMSMaster\Country.cshtml" />
+    <Content Include="Views\MMSMaster\State.cshtml" />
+    <Content Include="Views\MMSMaster\City.cshtml" />
+    <Content Include="Views\MMSMaster\Shelf.cshtml" />
+    <Content Include="Views\MMSMaster\POTandC.cshtml" />
+    <Content Include="Views\MMSMaster\POCostMaster.cshtml" />
+    <Content Include="Views\MMSTransaction\IndentRelease.cshtml" />
+    <Content Include="Views\TakeAway\NewOrder.cshtml" />
+    <Content Include="Views\TakeAway\PhoneDelivery.cshtml" />
+    <Content Include="Views\MMSMaster\CreateProductOrder.cshtml" />
+    <Content Include="Views\MMSTransaction\GRN.cshtml" />
+    <Content Include="Views\host\host.cshtml" />
+    <Content Include="Views\POSTransaction\Indent.cshtml" />
+    <Content Include="Views\POSMasters\TableSelection.cshtml" />
+    <Content Include="Views\TakeAway\DeliveryCharges.cshtml" />
+    <Content Include="Views\TakeAway\TakeAwayAtHotel.cshtml" />
+    <Content Include="Views\TakeAway\TakeAwayAtHotelNewOrder.cshtml" />
+    <Content Include="Views\MMSTransaction\PhysicalStockUpdate.cshtml" />
+    <Content Include="Views\MMSReports\StockReport.cshtml" />
+    <Content Include="Views\MMSReports\PurchaseReport.cshtml" />
+    <Content Include="Views\MMSTransaction\Indent.cshtml" />
+    <Content Include="Views\MMSReports\OutwardReport.cshtml" />
+    <Content Include="Views\POSReports\BillReprint.cshtml" />
+    <Content Include="Views\MMSTransaction\PurchaseReturn.cshtml" />
+    <Content Include="Views\MMSTransaction\MaterialReturn.cshtml" />
+    <Content Include="Views\MMSTransaction\VendorPayment.cshtml" />
+    <Content Include="Views\POSMasters\DaySpecial.cshtml" />
+    <Content Include="Views\Employee\EmployeeDetails.cshtml" />
+    <Content Include="Views\EmployeeMasters\Designation.cshtml" />
+    <Content Include="Views\Shared\_HRMSLayoutPage.cshtml" />
+    <Content Include="Views\Login\changepassword.cshtml" />
+    <Content Include="Views\TakeAway\ThirdPartyDetails.cshtml" />
+    <Content Include="Views\TakeAway\ThirdPartyNewOrders.cshtml" />
+    <Content Include="Views\TakeAway\ThirdPartyBillSettlement.cshtml" />
+    <Content Include="Views\Employee\AssignShift.cshtml" />
+    <Content Include="Views\EmployeeMasters\ShiftMaster.cshtml" />
+    <Content Include="Views\RMSMasters\ShowRmsManagement.cshtml" />
+    <Content Include="Views\Employee\EditShift.cshtml" />
+    <Content Include="Views\POSMasters\ShowDeliveryBoyDeatils.cshtml" />
+    <Content Include="Views\MMSReports\PurchaseInvoiceReport.cshtml" />
+    <Content Include="Views\MMSReports\CategoryReport.cshtml" />
+    <Content Include="Views\MMSReports\VendorItemListReport.cshtml" />
+    <Content Include="Views\MMSReports\PurchaseOrder.cshtml" />
+    <Content Include="Views\POSReports\DayWiseSale.cshtml" />
+    <Content Include="Views\MMSTransaction\MMSSale.cshtml" />
+    <Content Include="Views\MMSTransaction\SaleCancel.cshtml" />
+    <Content Include="Views\MMSReports\MMSSalesReport.cshtml" />
+    <Content Include="Views\MMSReports\MmsBetweenDatesReport.cshtml" />
+    <Content Include="Views\MMSReports\ProductWisePurchaseSaleIssueQty.cshtml" />
+    <Content Include="Views\MMSReports\ProductwiseStockLedger.cshtml" />
+    <Content Include="Views\MMSReports\MMSSaleBillReceipt.cshtml" />
+    <Content Include="Views\MMSReports\DayWiseWastageReport.cshtml" />
+    <Content Include="Views\MMSReports\BillwiseSalesReport.cshtml" />
+    <Content Include="Views\MMSReports\MMSGRNReport.cshtml" />
+    <Content Include="Views\MMSMaster\CreateCombo.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\Css\bootstrap-datetimepicker.min.css" />
+    <Content Include="assets\Css\bootstrap-duallistbox.min.css" />
+    <Content Include="assets\Css\bootstrap-editable.min.css" />
+    <Content Include="assets\Css\bootstrap-multiselect.min.css" />
+    <Content Include="assets\Css\bootstrap-timepicker.min.css" />
+    <Content Include="assets\Css\bootstrap.min.css" />
+    <Content Include="assets\Css\chosen-sprite%402x.png" />
+    <Content Include="assets\Css\chosen-sprite.png" />
+    <Content Include="assets\Css\chosen.min.css" />
+    <Content Include="assets\Css\colorbox.min.css" />
+    <Content Include="assets\Css\colorpicker.css" />
+    <Content Include="assets\Css\colorpicker.min.css" />
+    <Content Include="assets\Css\datepicker.min.css" />
+    <Content Include="assets\Css\daterangepicker.min.css" />
+    <Content Include="assets\Css\dropzone.min.css" />
+    <Content Include="assets\Css\font-awesome.min.css" />
+    <Content Include="assets\Css\fullcalendar.min.css" />
+    <Content Include="assets\Css\jquery-ui.custom.min.css" />
+    <Content Include="assets\Css\jquery-ui.min.css" />
+    <Content Include="assets\Css\jquery.gritter.min.css" />
+    <Content Include="assets\Css\malaka-rtl.min.css" />
+    <Content Include="assets\Css\malaka.css" />
+    <Content Include="assets\Css\malaka.min.css" />
+    <Content Include="assets\Css\malakat2.min.css" />
+    <Content Include="assets\Css\prettify.min.css" />
+    <Content Include="assets\Css\select2-spinner.gif" />
+    <Content Include="assets\Css\select2.min.css" />
+    <Content Include="assets\Css\select2.png" />
+    <Content Include="assets\Css\select2x2.png" />
+    <Content Include="assets\Css\ui.jqgrid.css" />
+    <Content Include="assets\Css\ui.jqgrid.min.css" />
+    <Content Include="assets\font-awesome\4.1.0\css\font-awesome.min.css" />
+    <Content Include="assets\font-awesome\4.1.0\fornts\fontawesome-webfont.svg" />
+    <Content Include="assets\font-awesome\4.2.0\css\font-awesome.min.css" />
+    <Content Include="assets\font-awesome\4.2.0\fornts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\fonts.googleapis.com.css" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\Images\Demographic_Chart_-_Age.png" />
+    <Content Include="assets\Images\email1.png" />
+    <Content Include="assets\Images\email2.png" />
+    <Content Include="assets\Images\email3.png" />
+    <Content Include="assets\Images\email4.png" />
+    <Content Include="assets\Images\header-bg.png" />
+    <Content Include="assets\Images\login-bg.png" />
+    <Content Include="assets\Images\malaka.png" />
+    <Content Include="assets\Images\spritemap%402x.png" />
+    <Content Include="assets\Images\spritemap.png" />
+    <Content Include="assets\Images\user.png" />
+    <Content Include="assets\js\ace-editable.min.js" />
+    <Content Include="assets\js\ace-elements.min.js" />
+    <Content Include="assets\js\ace-extra.min.js" />
+    <Content Include="assets\js\ace.min.js" />
+    <Content Include="assets\js\additional-methods.min.js" />
+    <Content Include="assets\js\bootbox.min.js" />
+    <Content Include="assets\js\bootstrap-colorpicker.min.js" />
+    <Content Include="assets\js\bootstrap-datepicker.min.js" />
+    <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\bootstrap-editable.min.js" />
+    <Content Include="assets\js\bootstrap-markdown.min.js" />
+    <Content Include="assets\js\bootstrap-multiselect.min.js" />
+    <Content Include="assets\js\bootstrap-tag.min.js" />
+    <Content Include="assets\js\bootstrap-timepicker.min.js" />
+    <Content Include="assets\js\bootstrap-wysiwyg.min.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\chosen.jquery.min.js" />
+    <Content Include="assets\js\dataTables.colVis.min.js" />
+    <Content Include="assets\js\dataTables.tableTools.min.js" />
+    <Content Include="assets\js\daterangepicker.min.js" />
+    <Content Include="assets\js\dropzone.min.js" />
+    <Content Include="assets\js\excanvas.min.js" />
+    <Content Include="assets\js\fuelux.spinner.min.js" />
+    <Content Include="assets\js\fuelux.tree.min.js" />
+    <Content Include="assets\js\fuelux.wizard.min.js" />
+    <Content Include="assets\js\fullcalendar.min.js" />
+    <Content Include="assets\js\grid.locale-en.js" />
+    <Content Include="assets\js\html5shiv.min.js" />
+    <Content Include="assets\js\jquery-ui.custom.min.js" />
+    <Content Include="assets\js\jquery-ui.min.js" />
+    <Content Include="assets\js\jquery.1.11.1.min.js" />
+    <Content Include="assets\js\jquery.2.1.1.min.js" />
+    <Content Include="assets\js\jquery.autosize.min.js" />
+    <Content Include="assets\js\jquery.bootstrap-duallistbox.min.js" />
+    <Content Include="assets\js\jquery.colorbox-min.js" />
+    <Content Include="assets\js\jquery.colorbox.min.js" />
+    <Content Include="assets\js\jquery.dataTables.bootstrap.js" />
+    <Content Include="assets\js\jquery.dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\jquery.dataTables.min.js" />
+    <Content Include="assets\js\jquery.easypiechart.min.js" />
+    <Content Include="assets\js\jquery.flot.min.js" />
+    <Content Include="assets\js\jquery.flot.pie.min.js" />
+    <Content Include="assets\js\jquery.flot.resize.min.js" />
+    <Content Include="assets\js\jquery.gritter.min.js" />
+    <Content Include="assets\js\jquery.hotkeys.min.js" />
+    <Content Include="assets\js\jquery.inputlimiter.1.3.1.min.js" />
+    <Content Include="assets\js\jquery.jqGrid.min.js" />
+    <Content Include="assets\js\jquery.knob.min.js" />
+    <Content Include="assets\js\jquery.maskedinput.min.js" />
+    <Content Include="assets\js\jquery.min.js" />
+    <Content Include="assets\js\jquery.mobile.custom.min.js" />
+    <Content Include="assets\js\jquery.nestable.min.js" />
+    <Content Include="assets\js\jquery.raty.min.js" />
+    <Content Include="assets\js\jquery.slimscroll.min.js" />
+    <Content Include="assets\js\jquery.sparkline.min.js" />
+    <Content Include="assets\js\jquery.ui.touch-punch.min.js" />
+    <Content Include="assets\js\jquery.validate.min.js" />
+    <Content Include="assets\js\jquery1x.min.js" />
+    <Content Include="assets\js\markdown.min.js" />
+    <Content Include="assets\js\moment.min.js" />
+    <Content Include="assets\js\prettify.min.js" />
+    <Content Include="assets\js\respond.min.js" />
+    <Content Include="assets\js\select2.min.js" />
+    <Content Include="assets\js\spin.min.js" />
+    <Content Include="assets\js\typeahead.jquery.min.js" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\Css\vssver.scc" />
+    <Content Include="assets\font-awesome\4.1.0\css\vssver.scc" />
+    <Content Include="assets\font-awesome\4.1.0\fornts\fontawesome-webfont.eot" />
+    <Content Include="assets\font-awesome\4.1.0\fornts\fontawesome-webfont.ttf" />
+    <Content Include="assets\font-awesome\4.1.0\fornts\fontawesome-webfont.woff" />
+    <Content Include="assets\font-awesome\4.1.0\fornts\vssver.scc" />
+    <Content Include="assets\font-awesome\4.2.0\css\vssver.scc" />
+    <Content Include="assets\font-awesome\4.2.0\fornts\fontawesome-webfont.eot" />
+    <Content Include="assets\font-awesome\4.2.0\fornts\fontawesome-webfont.ttf" />
+    <Content Include="assets\font-awesome\4.2.0\fornts\fontawesome-webfont.woff" />
+    <Content Include="assets\font-awesome\4.2.0\fornts\vssver.scc" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\vssver.scc" />
+    <Content Include="assets\Images\vssver.scc" />
+    <Content Include="assets\js\vssver.scc" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\jquery.highlight-5.js" />
+    <Content Include="Web.config" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_LayoutPage.cshtml" />
+    <Content Include="Views\web.config" />
+    <Content Include="Views\POSMasters\Origin.cshtml" />
+    <Content Include="Views\POSMasters\ItemCategory.cshtml" />
+    <Content Include="Views\POSMasters\ItemSubCategory.cshtml" />
+    <Content Include="Views\POSMasters\ItemMaster.cshtml" />
+    <Content Include="Views\POSMasters\SectionMaster.cshtml" />
+    <Content Include="Views\POSMasters\TableandCovers.cshtml" />
+    <Content Include="Views\POSMasters\SessionMaster.cshtml" />
+    <Content Include="Views\POSMasters\Reasons.cshtml" />
+    <Content Include="Views\POSMasters\Voucher.cshtml" />
+    <Content Include="Views\POSMasters\Department.cshtml" />
+    <Content Include="Views\POSMasters\PaymentType.cshtml" />
+    <Content Include="Views\POSMasters\Printer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\EmployeeMastersController.cs" />
+    <Compile Include="Controllers\hostController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MMSMasterController.cs" />
+    <Compile Include="Controllers\MMSReportsController.cs" />
+    <Compile Include="Controllers\MMSTransactionController.cs" />
+    <Compile Include="Controllers\POSMastersController.cs" />
+    <Compile Include="Controllers\POSReportsController.cs" />
+    <Compile Include="Controllers\POSTransactionController.cs" />
+    <Compile Include="Controllers\RMSMastersController.cs" />
+    <Compile Include="Controllers\TakeAwayController.cs" />
+    <Compile Include="DataSets\BillGenarationReportDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BillGenarationReportDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\BillNoDetailsReportDs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BillNoDetailsReportDs.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\billwisesaleDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>billwisesaleDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\CategorywiseDs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CategorywiseDs.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\ComlementaryReportDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ComlementaryReportDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\DayWiseSaleDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DayWiseSaleDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsDaywiseWastage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsDaywiseWastage.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsGRNReport.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsGRNReport.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsItemCancel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsItemCancel.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsMMsSalesReport1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsMMsSalesReport.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsOutWardStatement.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsOutWardStatement.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsProductwisePurchaseSaleIssueQty.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsProductwisePurchaseSaleIssueQty.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsProductWiseStockLedger1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsProductWiseStockLedger.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsPurchaseItemstatement.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsPurchaseItemstatement.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsPurchaseStatement.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsPurchaseStatement.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsSalesrpt.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsSalesrpt.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsStockreportBetweenDates.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsStockreportBetweenDates.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\DsStockUpdate.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DsStockUpdate.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsSubcategorywisepurchase.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsSubcategorywisepurchase.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsSubcategoryWisePurchaseAndSale1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsSubcategoryWisePurchaseAndSale.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsTablewise.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsTablewise.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsVendorDetails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsVendorDetails.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\dsVendorItemList.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsVendorItemList.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\ItemConsumptionDs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemConsumptionDs.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\KotreportDs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KotreportDs.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\MMSBetweenDatesReportds.cs">
+      <DependentUpon>MMSBetweenDatesReportds.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataSets\MMSBetweenDatesReportds.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMSBetweenDatesReportds.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\mmscategoryreportDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>mmscategoryreportDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\mmsproductwisereportDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>mmsproductwisereportDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\MMSSaleReportDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMSSaleReportDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\ProductdetailsreportDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductdetailsreportDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\productindentds.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>productindentds.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\PurchaseBillStatement.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseBillStatement.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\PurchaseOrderDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseOrderDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\SaleDetailsBillWise.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SaleDetailsBillWise.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\ShiftWiseSaleDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ShiftWiseSaleDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\StockDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSets\StockLedgerDS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockLedgerDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BillNoDetailsReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BillNoDetailsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\BillWiseSaleReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BillWiseSaleReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Categorywisereport1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Categorywisereport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ComplementaryReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ComplementaryReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\DayWiseSaleReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DayWiseSaleReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ItemCosumptionreport .cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemCosumptionreport .rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ItemwiseSalereport1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemwiseSalereport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\KotiChangeSlipReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KotiChangeSlipReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\KotiSlipReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KotiSlipReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\mmscategoryReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>mmscategoryReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MMSDaywiseSalesReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMSDaywiseSalesReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\mmsproductwiseReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>mmsproductwiseReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\OuwardItemStatement.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OuwardItemStatement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductdetailsReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductdetailsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ProductIndentReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductIndentReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PurchaseBillStatement.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseBillStatement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PurchaseInvoiceBillStatement.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseInvoiceBillStatement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PurchaseItemReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseItemReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PurchaseOrder.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseOrder.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\PurchaseStatement.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseStatement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptBillGeneration.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptBillGeneration.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptBillReprint.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptBillReprint.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptDaywisewastage.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptDaywisewastage.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptGRNReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptGRNReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptItemCancle.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptItemCancle.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptMMSDuplicateSaleBill.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptMMSDuplicateSaleBill.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptMMSSaleBetweenDates.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptMMSSaleBetweenDates.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptMMSSaleDetails.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptMMSSaleDetails.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptProductwisePurchaseSaleIssueQty.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptProductwisePurchaseSaleIssueQty.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptProductwiseStockLedger.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptProductwiseStockLedger.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptStockBetweenDates.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptStockBetweenDates.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptStockReportBetweenDates.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptStockReportBetweenDates.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptStockUpdate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptStockUpdate.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptSubcategorywisepurchase.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptSubcategorywisepurchase.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptSubcategorywisePurchaseAndSale.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptSubcategorywisePurchaseAndSale.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptTableWise.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptTableWise.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptVendorDetails.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptVendorDetails.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptVendorItemList.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptVendorItemList.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptWaiterwise.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptWaiterwise.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\saledetailsbillwise.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>saledetailsbillwise.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Salesrpt.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Salesrpt.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Sectionwisereport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Sectionwisereport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ShiftWiseSaleReport 2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ShiftWiseSaleReport 2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ShiftWiseSaleReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ShiftWiseSaleReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\StockLedgerReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockLedgerReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\StockReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SubCategorywisereport1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SubCategorywisereport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\VendorPurchaseStatement.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VendorPurchaseStatement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\WeeklywiseReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WeeklywiseReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+    <Folder Include="thirdparty-vendors\" />
+    <Folder Include="Views\MMSMasters\" />
+    <Folder Include="Views\MMS\" />
+    <Folder Include="Views\TakeAwayThroughPhone\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RMS.Core\RMS.Core.csproj">
+      <Project>{8274ac38-fc99-4ed7-85ed-284b89473dcd}</Project>
+      <Name>RMS.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RMS.Infrastructure\RMS.Infrastructure.csproj">
+      <Project>{a8258908-b6e7-4645-981f-452336dc2631}</Project>
+      <Name>RMS.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\BillNoDetailsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BillNoDetailsReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\BillWiseSaleReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BillWiseSaleReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Categorywisereport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Categorywisereport1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ComplementaryReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ComplementaryReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\DayWiseSaleReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DayWiseSaleReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ItemCosumptionreport .rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ItemCosumptionreport .cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ItemwiseSalereport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ItemwiseSalereport1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\KotiChangeSlipReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>KotiChangeSlipReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\KotiSlipReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>KotiSlipReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\mmscategoryReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>mmscategoryReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MMSDaywiseSalesReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MMSDaywiseSalesReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\mmsproductwiseReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>mmsproductwiseReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\OuwardItemStatement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>OuwardItemStatement.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductdetailsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductdetailsReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ProductIndentReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ProductIndentReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PurchaseBillStatement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PurchaseBillStatement.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PurchaseInvoiceBillStatement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PurchaseInvoiceBillStatement.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PurchaseItemReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PurchaseItemReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PurchaseOrder.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PurchaseOrder.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\PurchaseStatement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PurchaseStatement.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptBillGeneration.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptBillGeneration.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptBillReprint.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptBillReprint.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptDaywisewastage.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptDaywisewastage.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptGRNReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptGRNReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptItemCancle.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptItemCancle.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptMMSDuplicateSaleBill.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptMMSDuplicateSaleBill.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptMMSSaleBetweenDates.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptMMSSaleBetweenDates.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptMMSSaleDetails.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptMMSSaleDetails.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptProductwisePurchaseSaleIssueQty.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptProductwisePurchaseSaleIssueQty.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptProductwiseStockLedger.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptProductwiseStockLedger.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptStockBetweenDates.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptStockBetweenDates.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptStockReportBetweenDates.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptStockReportBetweenDates.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptStockUpdate.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptStockUpdate.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptSubcategorywisepurchase.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptSubcategorywisepurchase.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptSubcategorywisePurchaseAndSale.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptSubcategorywisePurchaseAndSale.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptTableWise.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptTableWise.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptVendorDetails.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptVendorDetails.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptVendorItemList.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptVendorItemList.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptWaiterwise.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptWaiterwise.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\saledetailsbillwise.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>saledetailsbillwise.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Salesrpt.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Salesrpt.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Sectionwisereport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Sectionwisereport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ShiftWiseSaleReport 2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ShiftWiseSaleReport 2.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ShiftWiseSaleReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ShiftWiseSaleReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\StockLedgerReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StockLedgerReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\StockReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StockReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SubCategorywisereport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SubCategorywisereport1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\VendorPurchaseStatement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>VendorPurchaseStatement.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\WeeklywiseReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>WeeklywiseReport.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>49245</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:49246/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

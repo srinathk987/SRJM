@@ -1,0 +1,1275 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<h2></h2>
+
+<style>
+    .vakata-context {
+        z-index: 1100;
+    }
+
+    .jstree-node, .jstree-children, .jstree-container-ul {
+        width: 100% !important;
+    }
+</style>
+@*//JQ*@
+
+
+
+
+
+<body>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+
+            <div class="page-content" ng-controller="SessionController" ng-init="Paretnodes()">
+                <!-- /.ace-settings-container -->
+
+
+
+                <div class="col-xs-12 col-sm-6 widget-container-col ui-sortable">
+                    <div class="widget-box widget-color-orange ui-sortable-handle">
+                        <div class="widget-header widget-header-small ">
+                            <h6 class="widget-title bigger-160  " style="line-height:40px;">Day Special</h6>
+                        </div>
+                    </div>
+                    <div class="widget-box widget-color-orange">
+
+                        <div class="widget-body">
+                            <div class="widget-main" style="display:inline-block">
+                                <!-- PAGE CONTENT BEGINS -->
+                                <form class="form-horizontal" role="form" name="fmSession" novalidate>
+                                    <div class="form-group">
+
+
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Date <span style="color: Red">*</span> :
+                                        </label>
+                                        <div class="col-sm-9">
+
+
+
+                                            <div class="col-sm-3">
+                                                <input name="FromDate" type="text" ng-model="Res.SessionName"
+                                                       class="form-control" required id="calendar" data-date-format="dd/mm/yyyy" ng-change="GetPreviousDaySpecial(Res.SessionName)" />
+                                                <span class="error" ng-show="(fmSession.FromDate.$dirty || submitted ) && fmSession.FromDate.$error.required">
+                                                    Select Date!
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="form-group">
+
+                                            <label class="col-sm-3 control-label  " for="form-field-2">
+                                                From <span style="color: Red">*</span> :
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <div>
+                                                    <input type="text" class="form-control timepicker" id="timepicker1" name="fromdate" placeholder="hh:mm"
+                                                           ng-model="Res.datstartdate" required onkeyup="validateFromTime()" />
+                                                    <span class="error" ng-show="(fmSession.fromdate.$dirty || submitted) && fmSession.fromdate.$error.required">
+                                                        From Time!
+                                                    </span>
+
+                                                </div>
+                                            </div>
+
+                                            <label class="col-sm-3 control-label " for="form-field-2">
+                                                To <span style="color: Red">*</span> :
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <div>
+                                                    <input placeholder="hh:mm" type="text" class="form-control timepicker" id="timepicker2" onkeyup="validateToTime()" name="Todate"
+                                                           ng-model="Res.datTodate" required />
+                                                    <span class="error" ng-show="(fmSession.Todate.$dirty || submitted) && fmSession.Todate.$error.required">
+                                                        To Time!
+                                                    </span>
+
+                                                </div>
+                                            </div>
+
+                                        </div>*@
+
+                                    <div id="AddDiv" class=" col-sm-12 right">
+
+                                        <div class="pull-right">
+                                            <button class="btn btn-success" type="button" ng-click="Save(Res)">
+                                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                            </button>
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn orange" type="reset" ng-click="Reset(Res)">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                            </button>
+                                        </div>
+
+
+                                        <br />
+                                        <div>
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <div>
+                                                        <input type="text" id="txtSearch" class="form-control ace-icon fa fa-search nav-search-icon" placeholder='Search ...' />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="jstree">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                @*<div class="row">
+                        <div class="col-xs-12 col-sm-6 widget-container-col ui-sortable">
+
+
+
+
+
+                            <table id="grid-table_Session"></table>
+                            <div id="grid-pager__Session">
+                            </div>
+
+                        </div>
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    $(function () {
+        $('#calendar').datepicker({ autoclose: true });
+
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('SessionController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $scope.TREEDATA = '';
+        $scope.Res = { SessionName: "", datstartdate: "", datTodate: "" }
+        $rootScope.FormName = "Day Special";
+        $rootScope.ModuleName = "Masters";
+        $scope.$watch('fmSession.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Save = function (Res) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                text = $scope.btnSave;
+                ses = JSON.stringify(Res);
+                enter = 0;
+
+
+                for (var WWW = 0; WWW < $scope.TreeDataHave.length; WWW++) {
+
+                    var ret = $scope.TreeDataHave[WWW]["Selected"];
+                    if (ret === true) {
+                        enter++;
+                    }
+
+                }
+
+
+
+                if (text == "Save") {
+                    var Count = 0;
+
+                    debugger;
+
+
+                    debugger;
+
+                    if (enter > 0) {
+                        var data = $scope.TreeDataHave;
+                        data = JSON.stringify(data);
+                        var ans = window.confirm("Are you sure?Do you want to Save?");
+                        if (ans) {
+                            $http({
+                                url: '/POSMasters/CreateDayspecial/',
+                                method: "POST",
+                                data: { JsonData: data, JsonDatatab1: ses }
+
+                            }).success(function (data) {
+                                debugger;
+                                if (data.TrF == true) {
+
+                                    debugger;
+                                    alert("Day Special Saved Successfully !");
+                                    $scope.Reset();
+                                    $scope.fmSession.$setPristine();
+                                    $scope.SessionGridBinding(data);
+                                }
+                                else {
+
+                                    alert("Day Special Already Exist!");
+                                }
+
+                            });
+                        }
+                    }
+                    else {
+
+                        alert("Select items");
+
+                    }
+
+
+
+
+
+
+
+                }
+                else if (text == "Update") {
+                    debugger;
+
+                    debugger;
+
+
+                    var data123 = $scope.TreeDataHave;
+                    var compare = $scope.UpdatedTreeData
+                    if (compare.length > 0) {
+                        for (var YfYY = 0; YfYY < compare.length; YfYY++) {
+
+                            var iN = compare[YfYY].itemname;
+                            for (var SSSSSW = 0; SSSSSW < data123.length; SSSSSW++) {
+
+                                var iNS = data123[SSSSSW].itemname;
+                                if (iN == iNS) {
+
+                                    var itsnnn = data123[SSSSSW]["Selected"]
+                                    if (itsnnn === undefined) {
+                                        data123[SSSSSW]["Selected"] = true;
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                    }
+
+                    for (var WWW = 0; WWW < data123.length; WWW++) {
+
+                        var ret = data123[WWW]["Selected"];
+                        if (ret === true) {
+                            enter++;
+                        }
+
+                    }
+                    if (enter > 0) {
+                        datanew = JSON.stringify(data123);
+                        $scope.SID
+                        var ans = window.confirm("Are you sure?Do you want to Update?");
+                        if (ans) {
+                            $http({
+                                url: '/POSMasters/UpdateDaySpecial/',
+                                method: "POST",
+                                data: { JsonData: datanew, JsonDatatab1: ses, SId: $scope.Res.SessionName }
+
+                            }).success(function (data) {
+                                debugger;
+                                if (data.TrF == true) {
+
+                                    debugger;
+                                    alert("Session Updated  Successfully !");
+                                    $scope.SessionGridBinding(data);
+                                    $scope.Reset();
+                                    $scope.btnSave = "Save";
+                                    $scope.fmSession.$setPristine();
+                                   
+
+                                }
+                                else {
+
+                                    alert("Session  Already Exist !");
+                                }
+
+                            });
+
+                        }
+
+                    }
+                    else {
+
+                        alert("Select items");
+
+                    }
+
+
+
+
+
+                }
+
+
+            }
+
+        }
+
+        $scope.Reset = function (res) {
+            debugger;
+
+            $scope.Res.SessionName = "";
+
+            $('#jstree').jstree(true).deselect_all();
+            for (var SS = 0; SS < $scope.TreeDataHave.length; SS++) {
+                $scope.TreeDataHave[SS]["Selected"] = false;
+                delete $scope.TreeDataHave[SS]["Selected"]
+            }
+
+            $scope.btnSave = "Save";
+            document.getElementById("timepicker1").value = "";
+            document.getElementById("timepicker2").value = "";
+            $scope.Res.datstartdate = "";
+            $scope.Res.datTodate = "";
+            $scope.submitted = false;
+            var k = document.getElementById("timepicker1").value
+            $scope.fmSession.$setPristine();
+
+
+
+        }
+
+        function bindTree(data) {
+
+
+            var data123 = data.Data;
+            var TreelistCount = eval("(" + data.Data + ")");
+
+
+            for (var XYZ = 0; XYZ < TreelistCount.length; XYZ++) {
+                debugger;
+
+                var SubNameEmpty = TreelistCount[XYZ].subcategoryname;
+                if (SubNameEmpty == "") {
+
+                    TreelistCount[XYZ].subcategoryname = null;
+                }
+            }
+
+            $scope.TreeDataHave = TreelistCount;
+
+            $scope.CategoryNames = data.categotyitems;
+
+            var jsonffff = "";
+            var fff = [];
+            var subcatpush = [];
+            var kk = 0;
+            var childs = "";
+            var childitems = "";
+            var withoutSubCatechilditems = "";
+            var TotalstringforAllchailds = "";
+
+            for (var i = 0; i < data.lengthofCate; i++) {
+
+                var subcategoryname = "";
+                var categoryname = "";
+                var Category = data.categotyitems[i];
+
+                var caterrr = Category.charAt(0);
+                if (caterrr == " ") {
+                    Category = Category.substring(1);
+                }
+                var ITS = [];
+                var subCategory = TreelistCount[i].subcategoryname;
+                var itemslist = [];
+                var suuu = [];
+
+
+                for (var M = 0; M < TreelistCount.length; M++) {
+
+                    if (TreelistCount[M].subcategoryname == null && TreelistCount[M].categoryname == Category) {
+
+                        withoutSubCatechilditems = withoutSubCatechilditems + "," + "{" + '"' + "text" + '"' + ":" + '"' + TreelistCount[M].itemname + '"' + "," + '"' + "icon" + '"' + ":" + '"' + "fa fa-star" + '"' + "}";
+                        subcategoryname = TreelistCount.filter(function (v) {
+                            return v.itemname === TreelistCount[M].itemname;
+                        })[0].subcategoryname;
+
+                    }
+
+                }
+
+                for (var x = 0; x < TreelistCount.length; x++) {
+
+                    if (TreelistCount[x].categoryname === Category) {
+
+                        itemslist.push(TreelistCount[x].itemname);
+
+                    }
+
+                }
+                for (var z = 0; z < itemslist.length; z++) {
+
+                    for (var t = 0; t < TreelistCount.length; t++) {
+
+                        if (TreelistCount[t].itemname === itemslist[z]) {
+
+                            suuu.push(TreelistCount[t].subcategoryname);
+
+                        }
+                    }
+                }
+                var uniqueArray = suuu.filter(function (elem, pos) {
+                    return suuu.indexOf(elem) == pos;
+                });
+
+                var temp = [];
+                var i;
+                for (C = 0; C < uniqueArray.length; C++) {
+                    if (uniqueArray[C] != null) {
+                        temp.push(uniqueArray[C]);
+                    }
+                }
+                uniqueArray = temp;
+
+
+                for (var y = 0; y < uniqueArray.length; y++) {
+
+                    for (var d = 0; d < TreelistCount.length; d++) {
+
+                        if (TreelistCount[d].subcategoryname === uniqueArray[y] && TreelistCount[d].categoryname == Category) {
+
+                            childs = childs + "," + "{" + '"' + "text" + '"' + ":" + '"' + TreelistCount[d].itemname + '"' + "," + '"' + "icon" + '"' + ":" + '"' + "fa fa-star" + '"' + "}";
+                        }
+
+                    }
+
+                    childitems = childs.substring(1);
+                    childitems = '"' + "children" + '"' + ":" + "[" + childitems + "]";
+
+                    var stttt = "{" + '"' + "text" + '"' + ":" + '"' + uniqueArray[y] + '"' + "," + '"' + "icon" + '"' + ":" + '"' + "glyphicon glyphicon-folder-open" + '"' + "," + childitems;
+                    TotalstringforAllchailds = TotalstringforAllchailds + "," + stttt + "}"
+                    childs = "";
+
+                }
+
+
+                if (withoutSubCatechilditems == "") {
+                    withoutSubCatechilditems = "%";
+                }
+                Dataneed = TotalstringforAllchailds.substring(1) + withoutSubCatechilditems;
+
+                Dataneed = Dataneed.replace(',%', '');
+                Dataneed = Dataneed.replace('%', '');
+
+                Dataneed = "[" + Dataneed + "]"
+                Dataneed = eval("(" + Dataneed + ")");
+                var cat = { "text": Category, "icon": "fa fa-university", "state": { "opened": true }, "children": Dataneed };
+                fff.push(cat);
+                withoutSubCatechilditems = "";
+                stttt = "";
+                childitems = "";
+                TotalstringforAllchailds = "";
+                Dataneed = "";
+
+                $("#jstree").bind("select_node.jstree", function (e, data) {
+
+                    debugger;
+                    var loMainSelected = data;
+                    var it = uiGetParents(loMainSelected);
+                    var n = it.indexOf(">");
+                    if (n > 0) {
+                        it = it.substring(0, it.length - 2);
+                    }
+                    else {
+
+                        it = it.substring(0, it.length - 1);
+                    }
+                    it = it.split('>');
+
+                    if (it.length == 1) {
+
+
+
+                        var dddd = it[0].charAt(0);
+                        if (dddd == " ") {
+                            catess = it[0].substring(1);
+                        }
+                        else {
+
+                            catess = it[0];
+                        }
+
+                        for (var R = 0; R < $scope.TreeDataHave.length; R++) {
+
+                            Ct = $scope.TreeDataHave[R].categoryname
+                            if (Ct == catess) {
+
+                                $scope.TreeDataHave[R]["Selected"] = true;
+                            }
+
+
+                        }
+
+
+                    }
+                    else if (it.length == 2) {
+
+                        var subcats = it[0];
+                        subcats = subcats.substring(0, subcats.length - 1);
+                        catcat = it[1];
+
+
+                        for (var W = 0; W < $scope.TreeDataHave.length; W++) {
+
+                            objsub = $scope.TreeDataHave[W].subcategoryname;
+                            if (objsub == null) {
+
+                                var itsnames = $scope.TreeDataHave[W].itemname;
+                            }
+                            objCat = $scope.TreeDataHave[W].categoryname;
+
+                            if (objsub == subcats && objCat == catcat) {
+
+                                $scope.TreeDataHave[W]["Selected"] = true;
+
+                            }
+                            if (objsub == null && itsnames == subcats) {
+
+                                $scope.TreeDataHave[W]["Selected"] = true;
+
+                            }
+                        }
+
+
+                    }
+                    else {
+
+                        var itnameaa = it[0];
+                        itnameaa = itnameaa.substring(0, itnameaa.length - 1);
+
+                        var itSubcat = it[1];
+                        itSubcat = itSubcat.substring(0, itSubcat.length - 1);
+
+                        var itCatcat = it[2];
+                        itCatcat = itCatcat.substring(1);
+
+                        for (var E = 0; E < $scope.TreeDataHave.length; E++) {
+
+                            objsub = $scope.TreeDataHave[E].subcategoryname;
+                            objCat = $scope.TreeDataHave[E].categoryname;
+                            objItem = $scope.TreeDataHave[E].itemname;
+
+                            if (objCat == itCatcat && objsub == itSubcat && objItem == itnameaa) {
+
+                                $scope.TreeDataHave[E]["Selected"] = true;
+
+                            }
+
+                        }
+
+
+
+                    }
+
+                });
+
+                $("#jstree").bind("deselect_node.jstree", function (e, data) {
+
+                    debugger;
+                    var loMainSelected = data;
+                    var it = uiGetParents(loMainSelected);
+                    var n = it.indexOf(">");
+                    if (n > 0) {
+                        it = it.substring(0, it.length - 2);
+                    }
+                    else {
+
+                        it = it.substring(0, it.length - 1);
+                    }
+                    it = it.split('>');
+
+                    if (it.length == 1) {
+
+
+
+                        var dddd = it[0].charAt(0);
+                        if (dddd == " ") {
+                            catess = it[0].substring(1);
+                        }
+                        else {
+
+                            catess = it[0];
+                        }
+
+                        for (var R = 0; R < $scope.TreeDataHave.length; R++) {
+
+                            Ct = $scope.TreeDataHave[R].categoryname
+                            if (Ct == catess) {
+
+                                $scope.TreeDataHave[R]["Selected"] = false;
+                            }
+
+
+                        }
+
+
+                    }
+                    else if (it.length == 2) {
+
+                        var subcats = it[0];
+                        subcats = subcats.substring(0, subcats.length - 1);
+                        catcat = it[1];
+
+
+                        for (var W = 0; W < $scope.TreeDataHave.length; W++) {
+
+                            objsub = $scope.TreeDataHave[W].subcategoryname;
+                            if (objsub == null) {
+
+                                var itemsnsns = $scope.TreeDataHave[W].itemname;
+                            }
+                            objCat = $scope.TreeDataHave[W].categoryname;
+
+                            if (objsub == subcats && objCat == catcat) {
+
+                                $scope.TreeDataHave[W]["Selected"] = false;
+
+                            }
+                            if (objsub == null && itemsnsns == subcats) {
+
+                                $scope.TreeDataHave[W]["Selected"] = false;
+
+                            }
+                        }
+
+
+                    }
+                    else {
+
+                        var itnameaa = it[0];
+                        itnameaa = itnameaa.substring(0, itnameaa.length - 1);
+
+                        var itSubcat = it[1];
+                        itSubcat = itSubcat.substring(0, itSubcat.length - 1);
+
+                        var itCatcat = it[2];
+                        itCatcat = itCatcat.substring(1);
+
+                        for (var E = 0; E < $scope.TreeDataHave.length; E++) {
+
+                            objsub = $scope.TreeDataHave[E].subcategoryname;
+                            objCat = $scope.TreeDataHave[E].categoryname;
+                            objItem = $scope.TreeDataHave[E].itemname;
+
+                            if (objCat == itCatcat && objsub == itSubcat && objItem == itnameaa) {
+
+                                $scope.TreeDataHave[E]["Selected"] = false;
+
+                            }
+
+                        }
+
+
+
+                    }
+
+                });
+
+
+
+            }
+            return fff;
+        }
+
+        $('#txtSearch').keyup(function () {
+            debugger;
+            var v = document.getElementById("txtSearch").value;
+            $('#jstree').jstree(true).search(v);
+
+        });
+
+        $scope.SessionGridBinding = function (data) {
+
+            var grid_data = eval('(' + data.Data + ')');
+            $scope.GridDataNeed = grid_data;
+            var grid_selector = "#grid-table_Session";
+            var pager_selector = "#grid-pager__Session";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            $(grid_selector).sortGrid('fromtime', false, 'asc');
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+
+                data: grid_data,
+                datatype: "local",
+                height: 250,
+                autowidth: true,
+                colModel: [
+                        {
+                            label: ' ', autowidth: true, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button><button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ");'  ><i class='fa fa-trash'></i><br/></button>";
+                            }
+                        },
+                       // , hidden: true
+			            { label: 'Session ID', name: 'sessionid', autowidth: true },
+			            { label: 'Session Name', name: 'sessionname', autowidth: true },
+			            { label: 'From', name: 'fromtime', autowidth: true },
+                        { label: 'To', name: 'totime', autowidth: true }
+                ],
+                viewrecords: true,
+                rowNum: 10,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                sortable: true,
+                sortname: "fromtime",
+                sortorder: "asc",
+                ignoreCase: true,
+                altRows: true,
+                loadComplete: function () {
+                    var table = this;
+
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                },
+                caption: "Sessions<span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            //$(window).triggerHandler('resize.jqGrid');
+
+        }
+
+        $scope.Paretnodes = function () {
+            debugger;
+
+
+            $http({
+                url: '/POSMasters/ShowSession/',
+                method: "GET",
+
+            }).success(function (returnData) {
+                debugger;
+                $scope.SessionGridBinding(returnData);
+            });
+
+
+
+            $scope.btnSave = "Save";
+            $http({
+                url: '/POSMasters/GetTreeData/',
+                method: "POST",
+                data: { btnPress: $scope.btnSave }
+            }).success(function (data) {
+                debugger;
+                var dataAvail = eval("(" + data.Data + ")");
+                if (dataAvail.length > 0) {
+                    Treeview = bindTree(data);
+                    $scope.TreeGenerated = Treeview;
+                    $('#jstree').jstree({
+
+                        'core': {
+                            'data': Treeview
+                        },
+                        "plugins": ["themes", "json_data", "ui", "checkbox", "contextmenu", "search", "sort"]
+                    });
+                }
+
+
+
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+
+        $scope.GetPreviousDaySpecial = function (Date) {
+            debugger;
+
+            $http({
+                url: '/POSMasters/GetTreeData/',
+                method: "POST",
+                data: { btnPress: "DaySpecial", SessionId: Date }
+            }).success(function (data) {
+                debugger;
+
+                var Treelist = eval("(" + data.Data + ")");
+
+                if (Treelist.length == 0) {
+
+                    $scope.btnSave = "Save"
+                }
+                else {
+                    $scope.btnSave = "Update"
+                }
+
+                $scope.UpdatedTreeData = Treelist;
+                var dataTreeGene = [];
+                dataTreeGene = $scope.TreeGenerated;
+                debugger;
+
+
+                for (var CH = 0; CH < dataTreeGene.length; CH++) {
+
+                    var itNameslength = dataTreeGene[CH]["children"].length;
+                    for (var FFFFF = 0; FFFFF < itNameslength; FFFFF++) {
+
+                        var itsitle = dataTreeGene[CH]["children"][FFFFF]["children"];
+                        if (itsitle === undefined) {
+
+                            itsitle = 0;
+                        }
+                        else {
+                            itsitle = itsitle.length;
+                        }
+
+                        if (itsitle > 0) {
+                            for (var lele = 0; lele < itsitle; lele++) {
+
+                                dataTreeGene[CH]["children"][FFFFF]["children"][lele]["state"] = { "selected": false };
+
+                            }
+                        }
+                        else {
+
+                            dataTreeGene[CH]["children"][FFFFF]["state"] = { "selected": false };
+
+                        }
+
+                    }
+                }
+
+
+
+                for (var LL = 0; LL < Treelist.length; LL++) {
+
+                    var itSName = Treelist[LL].itemname;
+
+                    for (var VVVV = 0; VVVV < dataTreeGene.length; VVVV++) {
+
+                        var itNameslength = dataTreeGene[VVVV]["children"].length;
+                        for (var DDDD = 0; DDDD < itNameslength; DDDD++) {
+
+                            var itsitle = dataTreeGene[VVVV]["children"][DDDD]["children"];
+                            if (itsitle === undefined) {
+
+                                itsitle = 0;
+                            }
+                            else {
+                                itsitle = itsitle.length;
+                            }
+                            if (itsitle > 0) {
+                                for (var lele = 0; lele < itsitle; lele++) {
+                                    var tt = dataTreeGene[VVVV]["children"][DDDD]["children"][lele].text;
+
+                                    if (tt == itSName) {
+
+                                        dataTreeGene[VVVV]["children"][DDDD]["children"][lele]["state"] = { "selected": true };
+
+                                    }
+
+                                }
+                            }
+                            else {
+
+                                var itsitsNames = dataTreeGene[VVVV]["children"][DDDD].text
+
+                                if (itsitsNames == itSName) {
+
+                                    dataTreeGene[VVVV]["children"][DDDD]["state"] = { "selected": true };
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+
+                }
+
+                $('#jstree').remove();
+                $('#AddDiv').append('<div id="jstree"></div>');
+                $('#jstree').jstree({
+
+                    'core': {
+                        'data': dataTreeGene
+                    },
+                    "plugins": ["themes", "json_data", "ui", "checkbox", "contextmenu", "search", "sort"]
+                });
+                $("#jstree").bind("select_node.jstree", function (e, data) {
+
+                    debugger;
+                    var loMainSelected = data;
+                    var it = uiGetParents(loMainSelected);
+                    var n = it.indexOf(">");
+                    if (n > 0) {
+                        it = it.substring(0, it.length - 2);
+                    }
+                    else {
+
+                        it = it.substring(0, it.length - 1);
+                    }
+                    it = it.split('>');
+
+                    if (it.length == 1) {
+
+
+
+                        var dddd = it[0].charAt(0);
+                        if (dddd == " ") {
+                            catess = it[0].substring(1);
+                        }
+                        else {
+
+                            catess = it[0];
+                        }
+
+                        for (var R = 0; R < $scope.TreeDataHave.length; R++) {
+
+                            Ct = $scope.TreeDataHave[R].categoryname
+                            if (Ct == catess) {
+
+                                $scope.TreeDataHave[R]["Selected"] = true;
+                            }
+
+
+                        }
+
+
+                    }
+                    else if (it.length == 2) {
+
+                        var subcats = it[0];
+                        subcats = subcats.substring(0, subcats.length - 1);
+                        catcat = it[1];
+
+
+                        for (var W = 0; W < $scope.TreeDataHave.length; W++) {
+
+                            objsub = $scope.TreeDataHave[W].subcategoryname;
+                            if (objsub == null) {
+
+                                var itssubnameundef = $scope.TreeDataHave[W].itemname;
+
+                            }
+                            objCat = $scope.TreeDataHave[W].categoryname;
+
+                            if (objsub == subcats && objCat == catcat) {
+
+                                $scope.TreeDataHave[W]["Selected"] = true;
+
+                            }
+                            if (objsub == null && subcats == itssubnameundef) {
+
+                                $scope.TreeDataHave[W]["Selected"] = true;
+
+                            }
+                        }
+
+
+                    }
+                    else {
+
+                        var itnameaa = it[0];
+                        itnameaa = itnameaa.substring(0, itnameaa.length - 1);
+
+                        var itSubcat = it[1];
+                        itSubcat = itSubcat.substring(0, itSubcat.length - 1);
+
+                        var itCatcat = it[2];
+                        itCatcat = itCatcat.substring(1);
+
+                        for (var E = 0; E < $scope.TreeDataHave.length; E++) {
+
+                            objsub = $scope.TreeDataHave[E].subcategoryname;
+                            objCat = $scope.TreeDataHave[E].categoryname;
+                            objItem = $scope.TreeDataHave[E].itemname;
+
+                            if (objCat == itCatcat && objsub == itSubcat && objItem == itnameaa) {
+
+                                $scope.TreeDataHave[E]["Selected"] = true;
+
+                            }
+
+                        }
+
+
+
+                    }
+
+                });
+
+                $("#jstree").bind("deselect_node.jstree", function (e, data) {
+
+                    debugger;
+                    var loMainSelected = data;
+                    var it = uiGetParents(loMainSelected);
+                    var n = it.indexOf(">");
+                    if (n > 0) {
+                        it = it.substring(0, it.length - 2);
+                    }
+                    else {
+
+                        it = it.substring(0, it.length - 1);
+                    }
+                    it = it.split('>');
+
+                    if (it.length == 1) {
+
+
+
+                        var dddd = it[0].charAt(0);
+                        if (dddd == " ") {
+                            catess = it[0].substring(1);
+                        }
+                        else {
+
+                            catess = it[0];
+                        }
+
+                        for (var R = 0; R < $scope.TreeDataHave.length; R++) {
+
+                            Ct = $scope.TreeDataHave[R].categoryname
+                            if (Ct == catess) {
+
+                                $scope.TreeDataHave[R]["Selected"] = false;
+                            }
+
+
+                        }
+
+
+                    }
+                    else if (it.length == 2) {
+
+                        var subcats = it[0];
+                        subcats = subcats.substring(0, subcats.length - 1);
+                        catcat = it[1];
+
+
+                        for (var W = 0; W < $scope.TreeDataHave.length; W++) {
+
+                            objsub = $scope.TreeDataHave[W].subcategoryname;
+                            if (objsub == null) {
+
+                                var itsunde = $scope.TreeDataHave[W].itemname
+
+                            }
+                            objCat = $scope.TreeDataHave[W].categoryname;
+
+                            if (objsub == subcats && objCat == catcat) {
+
+                                $scope.TreeDataHave[W]["Selected"] = false;
+
+                            }
+                            if (objsub == null && subcats == itsunde) {
+
+                                $scope.TreeDataHave[W]["Selected"] = false;
+
+                            }
+
+                        }
+
+
+                    }
+                    else {
+
+                        var itnameaa = it[0];
+                        itnameaa = itnameaa.substring(0, itnameaa.length - 1);
+
+                        var itSubcat = it[1];
+                        itSubcat = itSubcat.substring(0, itSubcat.length - 1);
+
+                        var itCatcat = it[2];
+                        itCatcat = itCatcat.substring(1);
+
+                        for (var E = 0; E < $scope.TreeDataHave.length; E++) {
+
+                            objsub = $scope.TreeDataHave[E].subcategoryname;
+                            objCat = $scope.TreeDataHave[E].categoryname;
+                            objItem = $scope.TreeDataHave[E].itemname;
+
+                            if (objCat == itCatcat && objsub == itSubcat && objItem == itnameaa) {
+
+                                $scope.TreeDataHave[E]["Selected"] = false;
+
+                            }
+
+                        }
+
+
+
+                    }
+
+                });
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+
+
+        }
+
+    });
+
+    function uiGetParents(loSelectedNode) {
+        try {
+            var lnLevel = loSelectedNode.node.parents.length;
+            var lsSelectedID = loSelectedNode.node.id;
+            var loParent = $("#" + lsSelectedID);
+            var lsParents = loSelectedNode.node.text + ' >';
+            for (var ln = 0; ln <= lnLevel - 1 ; ln++) {
+                var loParent = loParent.parent().parent();
+                if (loParent.children()[1] != undefined) {
+                    lsParents += loParent.children()[1].text + " > ";
+                }
+            }
+            if (lsParents.length > 0) {
+                lsParents = lsParents.substring(0, lsParents.length - 1);
+            }
+            return lsParents;
+        }
+        catch (err) {
+            alert('Error in uiGetParents');
+        }
+    }
+
+    var appElement = document.querySelector('[ ng-controller=SessionController]');
+
+
+
+    function Delete(row) {
+        debugger;
+
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#grid-table_Session").getRowData(row);
+        ID = rowdata.sessionid;
+        if ($scope.btnSave == "Save") {
+            var ans = window.confirm("Are you sure?Do you want to Delete?");
+            if (ans) {
+                $http({
+                    url: '/POSMasters/DeleteSession/',
+                    method: "POST",
+                    data: { SessionId: ID }
+                }).success(function (data) {
+                    debugger;
+                    if (data.TrF == true) {
+                        debugger;
+                        $("#grid-table_Session").jqGrid("delRowData", row);
+                        $scope.SessionGridBinding(data);
+                        alert("Session Deleted Successfully !");
+                    }
+                    else {
+
+                        alert("Session Is In Use !");
+                    }
+                });
+            }
+        }
+        else {
+
+            alert("Session Unable to Delete While Editing !");
+        }
+    }
+    function GridSearch() {
+        debugger
+        JqCustomSearch($("#globalSearchText").val().toUpperCase(), $("#grid-table_Session"))
+    }
+    function validateFromTime() {
+        debugger;
+        var enterValue = document.getElementById("timepicker1").value;
+        enterValue = enterValue.split(':');
+        enterValue = enterValue[0];
+
+        if (enterValue == "24" || enterValue == "25" || enterValue == "26" || enterValue == "27" || enterValue == "28" || enterValue == "29") {
+            debugger;
+            document.getElementById("timepicker1").value = ""
+        }
+
+
+    }
+    function validateToTime() {
+        debugger;
+        var enterValue = document.getElementById("timepicker2").value;
+        enterValue = enterValue.split(':');
+        enterValue = enterValue[0];
+
+        if (enterValue == "24" || enterValue == "25" || enterValue == "26" || enterValue == "27" || enterValue == "28" || enterValue == "29") {
+            debugger;
+            document.getElementById("timepicker2").value = ""
+        }
+
+
+    }
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        //$('#timepicker1').timepicker({
+        //    minuteStep: 1,
+        //    defaultTime: 'current',
+        //    showMeridian: false,
+        //    showInputs: false,
+        //    disableFocus: false
+        //}).next().on(ace.click_event, function () {
+        //    $(this).prev().focus();
+        //});
+
+        //$('#timepicker2').timepicker({
+        //    minuteStep: 1,
+        //    defaultTime: 'current',
+        //    showMeridian: false,
+        //    showInputs: false,
+        //    disableFocus: false
+        //}).next().on(ace.click_event, function () {
+        //    $(this).prev().focus();
+        //});
+
+
+        $.mask.definitions['H'] = "[0-2]";
+        $.mask.definitions['h'] = "[0-9]";
+        $.mask.definitions['M'] = "[0-5]";
+        $.mask.definitions['m'] = "[0-9]";
+        $.mask.definitions['P'] = "[AaPp]";
+        $.mask.definitions['p'] = "[Mm]";
+
+        $(".timepicker").mask("Hh:Mm");
+
+    });
+
+
+</script>

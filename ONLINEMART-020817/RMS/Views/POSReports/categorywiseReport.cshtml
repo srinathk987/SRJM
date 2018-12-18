@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "categorywiseReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div id="Xyx" class="page-content" ng-controller="categorywiseReportController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> CATEGORY WISE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="categorywiseReportController" name="fmcategorywiseReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="category.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmcategorywiseReport.FromDate.$dirty || submitted ) && fmcategorywiseReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="ToDate" type="text" id="datepicker" class=" form-control" ng-model="category.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmcategorywiseReport.ToDate.$dirty || submitted ) && fmcategorywiseReport.ToDate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Category Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="category.categoryName=0" ng-model="category.categoryName" class=" form-control" name="categoryName" ng-options="c.categoryid as c.itemcategoryname for c in categoryDetails" required>
+                                        @*<option value="">Select Name</option>
+                                            <option value="1">All</option>*@
+                                    </select>
+                                    <span class="error" ng-show="(fmcategorywiseReport.categoryName.$dirty || submitted ) && fmcategorywiseReport.categoryName.$error.required">
+                                        Category Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintcategoryReport(category)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+
+
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('categorywiseReportController', function ($scope, $http, $rootScope) {
+        $scope.category = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Category Wise";
+
+        $scope.isFormValid = false;
+        $scope.category.categoryName = 0;
+        $scope.$watch('fmcategorywiseReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/POSReports/GetCategorynames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.categoryDetails = eval('(' + data.Data + ')');
+            });
+        }
+        $scope.checkDate = function (date1, date2) {
+            //if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                // if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+        //$scope.test = function () {
+
+        //    $scope.category.categoryName = 0;
+        //}
+
+        $scope.PrintcategoryReport = function (category) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+                    var w = window.open("/POSReports/NewcategorywiseReport/?fromdate=" + changedate(category.fromdate) + "&todate=" + changedate(category.todate) + "&Category=" + category.categoryName + "", '_blank');
+                    $scope.category = {};
+                    $scope.fmcategorywiseReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.category.categoryName = 0;
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+        }
+    });
+</script>

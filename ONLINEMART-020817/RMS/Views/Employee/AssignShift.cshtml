@@ -1,0 +1,623 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@*ng-init="LoadEmpData()"*@
+<div ng-controller="AssignShiftcontroller">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="AssignShiftfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label  " for="form-field-2">
+                            Shift <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-2">
+                            <div>
+                                <select class=" form-control" name="Shift" ng-model="AssignShift.ShiftId" ng-options="s.ShiftId as s.Shiftname for s in Shiftdetails"
+                                        id="ddlShift" ng-change="getShiftTiming(AssignShift)" required>
+                                    <option value="">Select Shift</option>
+                                </select>
+                                <span class="error" ng-show="(AssignShiftfrm.Shift.$dirty || submitted) && AssignShiftfrm.Shift.$error.required">
+                                    Shift required!
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <label class="col-sm-2 control-label " for="form-field-2">
+                            Shift Time <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-2">
+                            <div>
+                                @*<select class=" form-control" name="Time" ng-model="AssignShift.ShiftTime" ng-options="s.ShiftTime as s.ShiftTime for s in ShiftTimings"
+                                            id="ddlTime" required>
+                                        <option value="">Select Shift Time </option>
+                                    </select>
+                                    <span class="error" ng-show="(AssignShiftfrm.Time.$dirty || submitted) && AssignShiftfrm.Time.$error.required">
+                                        Shift Time required!
+                                    </span>*@
+                                <input type="text" name="Time" ng-model="AssignShift.ShiftTime" disabled
+                                       class="form-control" id="Time" maxlength="45" data-index="3" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label  " for="form-field-2">
+                            From Date <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-2">
+                            <div>
+                                <input name="FromDate" type="text" ng-model="AssignShift.FromDate" placeholder="From Date" class=" form-control" ng-change="ClearToDate(AssignShift)" id="fromDate" data-date-format="dd/mm/yyyy" required />
+                                <span class="error" ng-show="(AssignShiftfrm.FromDate.$dirty || submitted ) && AssignShiftfrm.FromDate.$error.required">
+                                    From Date required!
+                                </span>
+                            </div>
+                        </div>
+
+                        <label class="col-sm-2 control-label " for="form-field-2">
+                            To Date <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-2">
+                            <div>
+                                <input name="ToDate" type="text" ng-model="AssignShift.ToDate" class=" form-control" placeholder="To Date" ng-change="LoadEmpData(AssignShift)" id="toDate" data-date-format="dd/mm/yyyy" required />
+                                <span class="error" ng-show="(AssignShiftfrm.ToDate.$dirty || submitted ) && AssignShiftfrm.ToDate.$error.required">
+                                    To Date required!
+                                </span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <table id="grdAssignShift"></table>
+                    <div id="grid-pager">
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="submit" ng-click="SaveAssignShift(AssignShift)" data-index="4">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset" type="button">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#fromDate").datepicker({
+            startDate: '+0d'
+
+        });
+        $("#toDate").datepicker({
+            startDate: '+0d'
+
+        });
+    });
+
+
+</script>
+@*<link rel="stylesheet" type="text/css" href="http://www.ok-soft-gmbh.com/jqGrid/jquery.jqGrid-4.3.3/css/ui.jqgrid.css" />
+     <link rel="stylesheet" type="text/css" href="http://www.ok-soft-gmbh.com/jqGrid/jquery-ui-multiselect/1.12/jquery.multiselect.css" />
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.20/jquery-ui.min.js"></script>
+     <script type="text/javascript" src="http://www.ok-soft-gmbh.com/jqGrid/jquery.jqGrid-4.3.3/js/i18n/grid.locale-en.js"></script>
+     <script type="text/javascript" src="http://www.ok-soft-gmbh.com/jqGrid/jquery.jqGrid-4.3.3/js/jquery.jqGrid.min.js"></script>
+     <script type="text/javascript" src="http://www.ok-soft-gmbh.com/jqGrid/jquery-ui-multiselect/1.12/jquery.multiselect.js"></script>*@
+
+<link href="~/assets/Css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/assets/Css/bootstrap-timepicker.min.css" rel="stylesheet" />
+<script src="~/assets/js/bootstrap-timepicker.min.js"></script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('AssignShiftcontroller', function ($scope, $http, $rootScope) {
+        debugger;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Assign Shift";
+        $rootScope.ModuleName = "Employee";
+
+        //Validations
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.$watch('AssignShiftfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+
+        });
+
+        $http.get('/Employee/ShowShift/').success(function (data) {
+            debugger
+            $scope.Shiftdetails = data;
+        });
+
+        //$scope.getShiftTiming = function (AssignShift) {
+        //    debugger;
+        //    var id = AssignShift.ShiftId
+        //    $http({ url: '/Employee/ShowShiftTimings/', method: "POST", data: { strShiftId: id } }).success(function (data) {
+        //        debugger
+
+        //        var ROWS = "SELECT:SELECT;";
+        //        var Length123 = data.length;
+        //        for (var i = 0; i < Length123; i++) {
+        //            ROWS = ROWS + data[i].ShiftTime.replace(/:|_/g, '-') + ':' + data[i].ShiftTime.replace(/:|_/g, '-') + ';';
+        //        }
+        //        var result = removeLastChar(ROWS + '"', ';"');
+        //        $scope.ShiftTimings = result;
+        //        $scope.$apply();
+        //        jQuery("#grdAssignShift").setColProp('ShiftTime', { editoptions: { value: result } });
+        //        editRow(selr);
+        //    });
+        //}
+
+        $scope.ClearToDate = function (AssignShift) {
+            debugger;
+            $('#grdAssignShift').jqGrid('clearGridData');
+            $scope.AssignShift.ToDate = '';
+        }
+
+
+
+        $scope.getShiftTiming = function (AssignShift) {
+            debugger;
+            $('#grdAssignShift').jqGrid('clearGridData');
+            $scope.AssignShift.FromDate = '';
+            $scope.AssignShift.ToDate = '';
+
+            var id = AssignShift.ShiftId;
+            $http({ url: '/Employee/ShowShiftTimings/', method: "POST", data: { strShiftId: id } }).success(function (data) {
+                debugger
+                //$scope.ShiftTimings = data;
+                $scope.AssignShift.ShiftTime = data[0].ShiftTime;
+                $('#Time').val(data[0].ShiftTime);
+                $scope.$apply();
+            });
+        }
+
+        $scope.LoadEmpData = function (AssignShift) {
+            debugger;
+            //$http({
+            //    url: '/Employee/GetEmployees/',
+            //    method: "get"
+            $('#grdAssignShift').jqGrid('clearGridData');
+            var id = AssignShift.ShiftId;
+            var fromDate = AssignShift.FromDate;
+            var toDate = AssignShift.ToDate;
+            $http({ url: '/Employee/GetEmployees/', method: "POST", data: { strShiftId: id, strFromDate: fromDate, strToDate: toDate } }).success(function (data) {
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+            });
+
+            $http({
+                url: '/Employee/ShowWorkStations/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                var ROWS = "SELECT:SELECT;";
+                var Length123 = data.length;
+                for (var i = 0; i < Length123; i++) {
+                    ROWS = ROWS + data[i].WorkStationId + ":" + data[i].WorkStation + ";";
+                }
+                var result = removeLastChar(ROWS + '"', ';"');
+                $scope.WorkStations = result;
+                $scope.$apply();
+                jQuery("#grdAssignShift").setColProp('WorkStation', { editoptions: { value: result } });
+                editRow(selr);
+            });
+
+
+
+            //}).error(function () {
+            //    debugger;
+            //    alert("Error Occuerd");
+
+            //});
+
+        }
+
+
+        var removeLastChar = function (value, char) {
+            var lastChar = value.slice(-2);
+            if (lastChar == char) {
+                value = value.slice(0, -2);
+            }
+            return value;
+        }
+
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdAssignShift";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: "Select",
+                            name: 'CheckSelect',
+                            editable: true,
+                            sortable: false,
+                            align: "Left",
+                            formatter: "checkbox",
+                            editoptions: { value: "Y:N" },
+                            formatoptions: { disabled: false }, width: 25,
+                            edittype: "checkbox"
+                        },
+                        { label: 'Employee', name: 'Employeeid', width: 75, hidden: true },
+                        { label: 'Employee', name: 'vchEmployeeid', width: 75, hidden: true },
+                        { label: 'Employee', name: 'Name', width: 75 },
+                        { label: 'Designation', name: 'Designation', width: 75 },
+                        { label: 'Type of Employment', name: 'EmploymentType', width: 70 },
+                        { label: 'Work Type', name: 'WorkType', width: 70 },
+                        { label: 'Preferred Time of Work', name: 'PreferredTimeofWork', width: 70 },
+                        {
+                            label: 'Work Station', name: 'WorkStation', width: 75, editable: true, sortable: true, edittype: "select", editoptions:
+                           {
+                               value: $scope.WorkStations,
+                               dataInit: function (elem) {
+                                   debugger;
+                                   setTimeout(function () {
+                                       debugger;
+                                       $(elem).multiselect({
+                                           minWidth: 100, //'auto',
+                                           height: "auto",
+                                           selectedList: 2,
+                                           checkAllText: "all",
+                                           uncheckAllText: "no",
+                                           noneSelectedText: "Any",
+                                           open: function () {
+                                               var $menu = $(".ui-multiselect-menu:visible");
+                                               $menu.width("auto");
+                                               return;
+                                           }
+                                       });
+                                   }, 150);
+                               },
+                               multiple: true,
+                               //defaultValue: 'IN'
+                           }
+                        },
+                         {
+                             label: 'Break From Time ', name: 'BreakFromTime', width: 70, editable: true, editoptions: {
+                                 dataInit: function (el) {
+                                     debugger;
+                                     setTimeout(function () {
+                                         $(el).timepicker({
+                                             showInputs: false,
+                                             showMeridian: false,
+                                             defaultTime: 'value',
+                                             autoclose: true,
+                                         });
+                                     }, 150);
+                                 },
+                                 dataEvents: [{
+                                     type: 'keypress', // keydown
+                                     fn: function (e) {
+                                         return false;
+                                         //Splecial Keys Preventing
+                                         //if (e.keyCode >= 48 && e.keyCode <= 57) {
+                                         //    return false;
+                                         //} else {
+                                         //    return true;
+                                         //}
+                                     }
+                                 }],
+                             },
+                         },
+
+                         {
+                             label: 'Break To Time', name: 'BreakToTime', width: 70, editable: true, editoptions: {
+                                 dataInit: function (el) {
+                                     setTimeout(function () {
+                                         debugger;
+                                         $(el).timepicker({
+                                             showInputs: false,
+                                             showMeridian: false,
+                                             defaultTime: 'value'
+                                         });
+                                     }, 150);
+                                 },
+                                 dataEvents: [{
+                                     type: 'keypress', // keydown
+                                     fn: function (e) {
+                                         return false;
+                                         //Splecial Keys Preventing
+                                         //if (e.keyCode >= 48 && e.keyCode <= 57) {
+                                         //    return false;
+                                         //} else {
+                                         //    return true;
+                                         //}
+                                     }
+                                 }],
+                             },
+                         },
+                { label: 'Mobile Number', name: 'MobileNumber', width: 70 }
+
+                ],
+                onSelectRow: editRow,
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Employee Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+
+        }
+        $scope.lastSelection = "";
+        function editRow(id) {
+            debugger;
+            var grid = $("#grdAssignShift");
+            debugger;
+            $(this).jqGrid("setCell", id, "CheckSelect", "Y", "");
+            grid.jqGrid('saveRow', $scope.lastSelection);
+            grid.jqGrid("editRow", id, {
+                keys: true,
+                aftersavefunc: function (id) {
+                    debugger;
+                    //var receivedqty = $(this).jqGrid("getCell", id, "receivedqty");
+                    //var returnqty = $(this).jqGrid("getCell", id, "returnqty");
+                    var storagelocation = $(this).jqGrid("getCell", id, "WorkStation");
+                    var indexOfColumn;
+                    if (storagelocation === "0" || storagelocation === "SELECT") {
+                        $(this).jqGrid("setCell", id, "WorkStation", "", "ui-state-error ui-state-error-text");
+                    } else {
+                        // reomove
+                        indexOfColumn = getColumnIndexByName("WorkStation");
+                        $(this.rows.namedItem(id).cells[indexOfColumn]).removeClass("ui-state-error ui-state-error-text");
+                    }
+                    $scope.$apply();
+                }
+
+            });
+            $scope.lastSelection = id;
+        }
+
+        $scope.SaveAssignShift = function (AssignShift) {
+            debugger;
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                $scope.AssignShift.Shiftname = $.grep($scope.Shiftdetails, function (c) {
+                    return c.ShiftId == $scope.AssignShift.ShiftId;
+                })[0].Shiftname;
+                $('#grdAssignShift').jqGrid('saveRow', $scope.lastSelection);
+                var Grid_data = $('#grdAssignShift').jqGrid('getRowData');
+                var res = $scope.checkDate($("#fromDate").val(), $("#toDate").val());
+                if (res) {
+                    CheckGridValues();
+                    if ($scope.btnSave == 'Save' && $scope.submitted == true) {
+                        debugger;
+                        var result = confirm('Are You Sure? Do You Want To Save?');
+                        if (result) {
+                            $scope.Griddata = Grid_data;
+                            $http({ method: 'POST', data: { AssignShiftDTO: AssignShift, lstAssignShift: Grid_data }, url: '/Employee/CreateAssignShift/' }).success(function (data, status) {
+                                debugger;
+                                if (data == 'True') {
+                                    debugger;
+                                    alert('Assign Shift Saved Sucessfully');
+                                    ClearForm();
+                                    $scope.LoadEmpData();
+                                }
+                                else {
+                                    alert("Shift Already Assigned Between These Dates");
+                                    ClearForm();
+                                }
+                            });
+
+                        }
+                    }
+                } else {
+                    alert("To Date Should Be GreterThan or Equal to From Date");
+                }
+            }
+
+        };
+
+        //function GridChceck() {
+        //    var IsValid = true;
+        //    var Grid_data = $('#grdAssignShift').jqGrid('getRowData');
+        //    var len = Grid_data.length;
+        //    var indexOfColumn = 0, rowid;
+
+        //    if (parseFloat(indexOfColumn) == 0) {
+        //        IsValid = false;
+        //        if (Grid_data[0].grnrate == "" || Grid_data[0].grnrate == "0.00") {
+        //            IsValid = false;
+        //            $('#grdAssignShift').jqGrid("setCell", 1, "grnrate", "", "ui-state-error ui-state-error-text");
+        //        }
+        //        if (Grid_data[0].receivedqty == "" || Grid_data[0].receivedqty == "0.000" || parseFloat(Grid_data[0].receivedqty) === 0) {
+        //            $('#grdAssignShift').jqGrid("setCell", 1, "receivedqty", "", "ui-state-error ui-state-error-text");
+        //        }
+
+        //        alert('Please Enter Values in Grid!');
+        //    }
+        //    return IsValid;
+        //}
+
+
+
+
+        $scope.checkDate = function (date1, date2) {
+            debugger;
+            // if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                //if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+
+
+
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        //****************** Clear Details *******************************//
+        function ClearForm() {
+            debugger;
+            $scope.AssignShift = {};
+            $scope.AssignShiftfrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+            $('#grdAssignShift').jqGrid('clearGridData');
+        }
+        function CheckGridValues() {
+
+            var Grid_data = $('#grdAssignShift').jqGrid('getRowData');
+            var grid = $('#grdAssignShift');
+            var strgrnlen = Grid_data.length;
+            var count = 0, brcheck = 0, rowid = 0;
+            var dtShiftTime = $scope.AssignShift.ShiftTime.split('-');
+            var dtFromShift = dtShiftTime[0];
+            var dtToShift = dtShiftTime[1];
+            var dtFromShiftMin = (parseFloat(dtFromShift.split(':')[0]) * 60) + (parseFloat(dtFromShift.split(':')[1]));
+            var dtToShiftMin = (parseFloat(dtToShift.split(':')[0]) * 60) + (parseFloat(dtToShift.split(':')[1]));
+            for (var i = 0; i < strgrnlen; i++) {
+                rowid++;
+                if (Grid_data[i].CheckSelect == 'Y') {
+                    if ((Grid_data[i].BreakFromTime == "0:00" || Grid_data[i].BreakFromTime == "") && (Grid_data[i].BreakToTime == "0:00" || Grid_data[i].BreakToTime == "")) {
+                        $scope.submitted = false;
+                        alert("Please Check Break Times in Grid");
+                        grid.jqGrid('setCell', rowid, "BreakFromTime", "", "ui-state-error ui-state-error-text");
+                        grid.jqGrid('setCell', rowid, "BreakToTime", "", "ui-state-error ui-state-error-text");
+                        return false;
+                    } else if ((Grid_data[i].BreakFromTime != "0:00" && Grid_data[i].BreakFromTime != "") && (Grid_data[i].BreakToTime == "0:00" || Grid_data[i].BreakToTime == "")) {
+                        $scope.submitted = false;
+                        alert("Break To Time Should not Be Empty or 12 AM  in Grid");
+                        var indexOfColumn = getColumnIndexByName("BreakFromTime"), tr = grid[0].rows.namedItem(rowid), td = tr.cells[indexOfColumn];
+                        $(td).removeClass("ui-state-error ui-state-error-text");
+                        Grid_data.jqGrid('setCell', i + 1, "BreakToTime", "", "ui-state-error ui-state-error-text");
+                        return false;
+                    } else if ((Grid_data[i].BreakToTime != "0:00" && Grid_data[i].BreakToTime != "") && (Grid_data[i].BreakFromTime == "0:00" || Grid_data[i].BreakFromTime == "")) {
+                        $scope.submitted = false;
+                        alert("Break From Time Should not Be Empty or 12 AM  in Grid");
+                        var indexOfColumn = getColumnIndexByName("BreakToTime"), tr = grid[0].rows.namedItem(rowid), td = tr.cells[indexOfColumn];
+                        $(td).removeClass("ui-state-error ui-state-error-text");
+                        grid.jqGrid('setCell', i + 1, "BreakFromTime", "", "ui-state-error ui-state-error-text");
+                        return false;
+                    } else if ((Grid_data[i].BreakToTime == "0:00" || Grid_data[i].BreakToTime == "")) {
+                        $scope.submitted = false;
+                        var indexOfColumn = getColumnIndexByName("BreakFromTime"), tr = grid[0].rows.namedItem(rowid), td = tr.cells[indexOfColumn];
+                        $(td).removeClass("ui-state-error ui-state-error-text");
+                        grid.jqGrid('setCell', i + 1, "BreakToTime", "", "ui-state-error ui-state-error-text");
+                        alert("Break To Time Should not Be 12:00 AM in Grid");
+                        return false;
+                    } else if ((Grid_data[i].BreakFromTime != "0:00" && Grid_data[i].BreakFromTime != "") && (Grid_data[i].BreakToTime != "0:00" && Grid_data[i].BreakToTime != "")) {
+                        debugger
+                        var timeto = Grid_data[i].BreakToTime.split(':');
+                        var timeFrom = Grid_data[i].BreakFromTime.split(':');
+                        var F = parseInt(timeFrom[0]) * 60;
+                        F = F + parseInt(timeFrom[1]);
+                        var T = parseInt(timeto[0]) * 60;
+                        T = T + parseInt(timeto[1]);
+                        if (dtFromShiftMin > F || dtToShiftMin < F) {
+                            $scope.submitted = false;
+                            alert("Break From Time Should be with in the Shift Time in Grid");
+                            //var indexOfColumn = getColumnIndexByName("BreakFromTime"), tr = grid[0].rows.namedItem(rowid), td = tr.cells[indexOfColumn];
+                            //$(td).removeClass("ui-state-error ui-state-error-text");
+                            grid.jqGrid('setCell', i + 1, "BreakFromTime", "", "ui-state-error ui-state-error-text");
+
+                        } else if (dtFromShiftMin > T || dtToShiftMin < T) {
+                            $scope.submitted = false;
+                            alert("Break To Time Should be with in the Shift Time in Grid");
+                            grid.jqGrid('setCell', i + 1, "BreakToTime", "", "ui-state-error ui-state-error-text");
+                        } else if (T <= F) {
+                            $scope.submitted = false;
+                            alert("Break To Time Should Be GreaterThan Break From Time in Grid");
+                            var indexOfColumn = getColumnIndexByName("BreakFromTime"), tr = grid[0].rows.namedItem(rowid), td = tr.cells[indexOfColumn];
+                            $(td).removeClass("ui-state-error ui-state-error-text");
+                            grid.jqGrid('setCell', i + 1, "BreakToTime", "", "ui-state-error ui-state-error-text");
+                            return false;
+                        }
+                        brcheck++;
+                    }
+                    count = 1;
+                    break;
+                }
+            }
+            if (count == 0) {
+                $scope.submitted = false;
+                alert("Select Atleast One Item in Grid");
+            } else if (brcheck == 0) {
+                $scope.submitted = false;
+                alert("Please Check Break Times in Grid");
+            } else {
+                var indexOfColumn = getColumnIndexByName("BreakFromTime"), tr = grid[0].rows.namedItem(rowid), td = tr.cells[indexOfColumn];
+                $(td).removeClass("ui-state-error ui-state-error-text");
+                indexOfColumn = getColumnIndexByName("BreakToTime");
+                tr = grid[0].rows.namedItem(rowid);
+                td = tr.cells[indexOfColumn];
+                $(td).removeClass("ui-state-error ui-state-error-text");
+                //Grid_data.jqGrid('setCell', i + 1, "BreakToTime", "", "ui-state-error ui-state-error-text");
+            }
+        }
+        getColumnIndexByName = function (columnName) {
+            var cm = $("#grdAssignShift").jqGrid("getGridParam", "colModel"), i, l = cm.length;
+            for (i = 0; i < l; i++) {
+                if (cm[i].name === columnName) {
+                    return i; // return the index
+                }
+            }
+            return -1;
+        };
+    });
+</script>

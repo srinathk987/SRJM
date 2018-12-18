@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="MMSSaleBillReceiptcontroller" ng-init="ngInitBindComboBoxes()">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> Bill Receipt </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="MMSSaleBillReceiptcontroller" name="fmSaleBillReceipt"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Sale No. <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select id="SaleNo" ng-model="sale.saleno" class=" form-control" name="saleno" ng-options="c.saleid as c.saleno for c in SaleNos" required></select>
+                                    <span class="error" ng-show="(fmSaleBillReceipt.saleno.$dirty || submitted ) && fmSaleBillReceipt.saleno.$error.required">
+                                        Sale No. required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintSaleDetails(sale)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+
+<script>
+    var app = angular.module('RMS');
+    app.controller('MMSSaleBillReceiptcontroller', function ($scope, $http, $rootScope) {
+        $scope.sale = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Sale Bill Receipt";
+        $scope.isFormValid = false;
+        $scope.sale.saleno = 0;
+        $scope.$watch('fmSaleBillReceipt.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/GetSaleNos/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.SaleNos = eval('(' + data.Data + ')');
+            });
+        }
+
+
+        $scope.PrintSaleDetails = function (sale) {
+            debugger
+            $scope.submitted = true;
+            $scope.NoofItems = "0";
+            $scope.TQuantity = "0";
+            var SN = 'SA' + sale.saleno;
+           // var SN = sale.saleno;
+            if ($scope.sale.saleno == 0) {
+                alert("Please select SaleNo to get Report");
+                document.getElementById("SaleNo").focus();
+
+            }
+            else {
+                if ($scope.isFormValid) {
+                    var w = window.open("/MMSReports/DuplicateSaleBillGenerationReport/?SaleNo=" + SN + "&Items=" + $scope.NoofItems + "&qnty=" + $scope.TQuantity + "", '_blank');
+                    $scope.sale = {};
+                    $scope.fmSaleBillReceipt.$setPristine();
+                    $scope.submitted = false;
+                    $scope.sale.saleno = 0;
+                }
+            }
+
+        }
+
+
+
+    });
+
+</script>
+
+
+
+
+

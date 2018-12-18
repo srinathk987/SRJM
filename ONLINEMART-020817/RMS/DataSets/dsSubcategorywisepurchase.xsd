@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsSubcategorywisepurchase" targetNamespace="http://tempuri.org/dsSubcategorywisepurchase.xsd" xmlns:mstns="http://tempuri.org/dsSubcategorywisepurchase.xsd" xmlns="http://tempuri.org/dsSubcategorywisepurchase.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsSubcategorywisepurchase" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsSubcategorywisepurchase" msprop:Generator_UserDSName="dsSubcategorywisepurchase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtSubcategorywisepurchase" msprop:Generator_TableClassName="dtSubcategorywisepurchaseDataTable" msprop:Generator_TableVarName="tabledtSubcategorywisepurchase" msprop:Generator_TablePropName="dtSubcategorywisepurchase" msprop:Generator_RowDeletingName="dtSubcategorywisepurchaseRowDeleting" msprop:Generator_RowChangingName="dtSubcategorywisepurchaseRowChanging" msprop:Generator_RowEvHandlerName="dtSubcategorywisepurchaseRowChangeEventHandler" msprop:Generator_RowDeletedName="dtSubcategorywisepurchaseRowDeleted" msprop:Generator_UserTableName="dtSubcategorywisepurchase" msprop:Generator_RowChangedName="dtSubcategorywisepurchaseRowChanged" msprop:Generator_RowEvArgName="dtSubcategorywisepurchaseRowChangeEvent" msprop:Generator_RowClassName="dtSubcategorywisepurchaseRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productcategoryid" msprop:Generator_ColumnVarNameInTable="columnproductcategoryid" msprop:Generator_ColumnPropNameInRow="productcategoryid" msprop:Generator_ColumnPropNameInTable="productcategoryidColumn" msprop:Generator_UserColumnName="productcategoryid" type="xs:int" minOccurs="0" />
+              <xs:element name="categoryname" msprop:Generator_ColumnVarNameInTable="columncategoryname" msprop:Generator_ColumnPropNameInRow="categoryname" msprop:Generator_ColumnPropNameInTable="categorynameColumn" msprop:Generator_UserColumnName="categoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="productsubcategoryid" msprop:Generator_ColumnVarNameInTable="columnproductsubcategoryid" msprop:Generator_ColumnPropNameInRow="productsubcategoryid" msprop:Generator_ColumnPropNameInTable="productsubcategoryidColumn" msprop:Generator_UserColumnName="productsubcategoryid" type="xs:int" minOccurs="0" />
+              <xs:element name="subcategoryname" msprop:Generator_ColumnVarNameInTable="columnsubcategoryname" msprop:Generator_ColumnPropNameInRow="subcategoryname" msprop:Generator_ColumnPropNameInTable="subcategorynameColumn" msprop:Generator_UserColumnName="subcategoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="baiscamount" msprop:Generator_ColumnVarNameInTable="columnbaiscamount" msprop:Generator_ColumnPropNameInRow="baiscamount" msprop:Generator_ColumnPropNameInTable="baiscamountColumn" msprop:Generator_UserColumnName="baiscamount" type="xs:double" minOccurs="0" />
+              <xs:element name="othercharges" msprop:Generator_ColumnVarNameInTable="columnothercharges" msprop:Generator_ColumnPropNameInRow="othercharges" msprop:Generator_ColumnPropNameInTable="otherchargesColumn" msprop:Generator_UserColumnName="othercharges" type="xs:double" minOccurs="0" />
+              <xs:element name="tax" msprop:Generator_ColumnVarNameInTable="columntax" msprop:Generator_ColumnPropNameInRow="tax" msprop:Generator_ColumnPropNameInTable="taxColumn" msprop:Generator_UserColumnName="tax" type="xs:double" minOccurs="0" />
+              <xs:element name="discount" msprop:Generator_ColumnVarNameInTable="columndiscount" msprop:Generator_ColumnPropNameInRow="discount" msprop:Generator_ColumnPropNameInTable="discountColumn" msprop:Generator_UserColumnName="discount" type="xs:double" minOccurs="0" />
+              <xs:element name="date" msprop:Generator_ColumnVarNameInTable="columndate" msprop:Generator_ColumnPropNameInRow="date" msprop:Generator_ColumnPropNameInTable="dateColumn" msprop:Generator_UserColumnName="date" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

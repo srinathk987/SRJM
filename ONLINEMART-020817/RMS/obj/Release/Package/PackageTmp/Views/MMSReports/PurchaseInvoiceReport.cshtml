@@ -1,0 +1,178 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div id="Xyx" class="page-content" ng-controller="PurchaseInvoiceReportController">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> Purchase Invoice Report </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" name="fmPurchaseInvoiceReport" ng-init="LoadVendors()">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="PurchaseInvoice.fromdate" id="calendar" placeholder="Select From Date" class=" form-control" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmPurchaseInvoiceReport.FromDate.$dirty || submitted ) && fmPurchaseInvoiceReport.FromDate.$error.required">
+                                        From Date Reqired !
+                                    </span>
+                                </div>
+                                <div ng-hide="showandhide">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        To Date <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="ToDate" type="text" id="datepicker" ng-model="PurchaseInvoice.todate" placeholder="Select To Date" class=" form-control" data-date-format="dd/mm/yyyy" ng-required="Valid" />
+                                        <span class="error" ng-show="(fmPurchaseInvoiceReport.ToDate.$dirty || submitted ) && fmPurchaseInvoiceReport.ToDate.$error.required">
+                                            To Date Reqired !
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Vendor Name <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="PurchaseInvoice.vendorid=0" ng-model="PurchaseInvoice.vendorid" class=" form-control" name="Venodr" ng-options="c.vendorid as c.vchvendorname for c in VendorDetails"
+                                            ng-change="VendorChange(PurchaseInvoice);" required>
+                                        <option value="">Select Vendor Name</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmPurchaseInvoiceReport.Venodr.$dirty || submitted ) && fmPurchaseInvoiceReport.Venodr.$error.required">
+                                        Vendor Name required!
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Invoice No <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-model="PurchaseInvoice.vchinvoiceno" class=" form-control" ng-options="c.vchinvoiceno as c.vchinvoiceno for c in InvoiceNoDetails" name="InvoiceNo" required>
+                                        <option value="">Select Invoice No</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmPurchaseInvoiceReport.InvoiceNo.$dirty || submitted ) && fmPurchaseInvoiceReport.InvoiceNo.$error.required">
+                                        Invoice No required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="btn btn-success" type="button" ng-click="PurchaseInvoiceReport(PurchaseInvoice)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('PurchaseInvoiceReportController', function ($scope, $http, $rootScope) {
+        $scope.PurchaseInvoice = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Purchase";
+        $scope.Valid = true;;
+        $scope.isFormValid = false;
+        $scope.submitted = false;
+
+        $scope.$watch('fmPurchaseInvoiceReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.LoadVendors = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/ShowVendors/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.VendorDetails = eval('(' + data.Data + ')');
+                $scope.VendorChange();
+            });
+        }
+
+        $scope.VendorChange = function () {
+            debugger;
+            var vendorid = $scope.PurchaseInvoice.vendorid;
+            $http({
+                url: '/MMSReports/ShowInvoiceNo/',
+                method: "POST",
+                data: { strVendorid: vendorid }
+            }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    $scope.InvoiceNoDetails = eval('(' + data.Data + ')');
+                }
+            });
+        };//-
+
+        $scope.checkDate = function (date1, date2) {
+            debugger;
+            // if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                //if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+
+
+        $scope.PurchaseInvoiceReport = function (PurchaseInvoice) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+
+                    $scope.PurchaseInvoice.vchvendorname = $.grep($scope.VendorDetails, function (c) {
+                        return c.vendorid == $scope.PurchaseInvoice.vendorid;
+                    })[0].vchvendorname;
+
+                    var w = window.open("/MMSReports/PurchaseInvoiceReports/?fromdate=" + (PurchaseInvoice.fromdate) + "&todate=" + (PurchaseInvoice.todate) + "&InvoiceNo=" + PurchaseInvoice.vchinvoiceno + "&Vendorname=" + PurchaseInvoice.vchvendorname + "", '_blank');
+                    $scope.PurchaseInvoice = {};
+                    $scope.fmPurchaseInvoiceReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.PurchaseInvoice.vendorid = 0;
+                }
+
+                else {
+                    alert("To Date Should Be GreterThan or Equal to From Date");
+                }
+            }
+        }
+
+    });
+</script>
+

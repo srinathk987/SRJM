@@ -1,0 +1,970 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div ng-controller="VendorPaymentController">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+
+                <form class="form-horizontal" role="form" name="VendorPaymentfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Vendor Name<span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="VendorName" id="VendorName" ng-model="details.VendorName" class="form-control" ng-options="v.vendorid as v.vchvendorname for v in VendorNames" required ng-change="updates()">
+                                <option value="" selected>Select</option>
+                            </select>
+                            <span class="error" ng-show="(VendorPaymentfrm.VendorName.$dirty|| submitted) && VendorPaymentfrm.VendorName.$error.required">
+                                Vendor Name Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-2">
+                            Date <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input name="VPDate" type="text" ng-model="details.VPDate" class=" form-control" id="VPDate" data-date-format="dd/mm/yyyy" required disabled="true" />
+
+                            <span class="error" ng-show="(VendorPaymentfrm.VPDate.$dirty || submitted) && VendorPaymentfrm.VPDate.$error.required">
+                                Date Required!
+                            </span>
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <table id="grdVendorPaymentdetails"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+
+                    <div class="row">
+                        <span style="height:10px;"><label></label></span>
+                    </div>
+                    <div class="col-xs-12 col-sm-12">
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                Mode Of Payment <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-4 ">
+                                <select name="PaymentMode" id="PaymentMode" ng-model="details.PaymentMode" class="form-control" required ng-change="update()">
+                                    <option value="" selected>Select</option>
+                                    <option value="Cash" selected>Cash</option>
+                                    <option value="Cheque" selected>Cheque</option>
+                                    <option value="Draft" selected>Draft</option>
+                                </select>
+                                <span class="error" ng-show="(VendorPaymentfrm.PaymentMode.$dirty|| submitted) && VendorPaymentfrm.PaymentMode.$error.required">
+                                    Mode Of Payment Required!
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div ng-if="details.PaymentMode==='Cheque'">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Bank Name <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-4 ">
+
+
+
+                                    <select name="BankName" id="BankName" ng-model="details.BankName" class="form-control" ng-options="v.recordid as v.vchbankname for v in BankNames" required ng-change="GetCheques()">
+                                        <option value="" selected>Select</option>
+                                    </select>
+                                    <span class="error" ng-show="(VendorPaymentfrm.BankName.$dirty|| submitted) && VendorPaymentfrm.BankName.$error.required">
+                                        Bank Name Required!
+                                    </span>
+
+
+
+
+
+                                </div>
+
+                                <label class="col-sm-2 control-label">
+                                    Cheque Date <span style="color: Red">*</span> :
+                                </label>
+
+                                <div class="col-sm-4">
+                                    <input name="ChqDate" type="text" ng-model="$parent.details.ChqDate" is-open="$parent.opened" class=" form-control" id="ChqDate" data-date-format="dd/mm/yyyy" required datepicker ng-blur="CheckDate($parent.details.ChqDate)" />
+
+                                    <span class="error" ng-show="(VendorPaymentfrm.ChqDate.$dirty || submitted) && VendorPaymentfrm.ChqDate.$error.required">
+                                        Cheque Date Required!
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+
+                                <label class="col-sm-2 control-label">
+                                    Cheque No. <span style="color: Red">*</span> :
+                                </label>
+
+                                <div class="col-sm-4 ">
+
+
+
+                                    <select name="ChequeNo" id="ChequeNo" ng-model="details.ChequeNo" class="form-control" ng-options="v.chequenumber as v.chequenumber for v in ChequeNos" required>
+                                        <option value="" selected>Select</option>
+                                    </select>
+                                    <span class="error" ng-show="(VendorPaymentfrm.ChequeNo.$dirty|| submitted) && VendorPaymentfrm.ChequeNo.$error.required">
+                                        Cheque No. Required!
+                                    </span>
+
+
+
+
+
+                                </div>
+
+
+
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" data-index="3" ng-click="Save(details)" ng-disabled="isdisabled">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+
+
+                </form>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        $('#VPDate').datepicker('setDate', 'today');
+        $("#VPDate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script>
+
+
+
+
+
+
+
+    $(function () {
+
+        var nowDate = new Date();
+        var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+
+        $('#ChqDate').datepicker({ startDate: today });
+
+    });
+    $(function () {
+
+        $("form").bind("keypress", function (e) {
+            if (e.keyCode == 13) return false;
+        });
+
+    });
+
+
+</script>
+
+
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=VendorPaymentController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdVendorPaymentdetails"))
+    }
+
+
+</script>
+
+
+
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.directive('datepicker', function () {
+        return function ($scope, element) {
+            console.log(element);
+            element.datepicker({
+
+                minDate: new Date(),
+                onSelect: function (y) {
+                    var edate = element.siblings('.edate');
+                    edate.datepicker('setDate', 'today');
+                    edate.datepicker('option', 'minDate', element.datepicker("getDate"));
+                }
+            });
+        };
+    });
+    app.controller('VendorPaymentController', function ($scope, $http, $rootScope) {
+
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $scope.isdisabled = true;
+        $rootScope.FormName = "Vendor Payment";
+        $rootScope.ModuleName = "Transaction";
+        // $scope.IsShow = true;
+        var myNewData = [];
+
+        $scope.details = {};
+
+        $scope.CheckDate = function (SelectedDate) {
+
+            debugger;
+
+            var EnteredDate = SelectedDate;
+            var date = EnteredDate.substring(0, 2);
+            var month = EnteredDate.substring(3, 5);
+            var year = EnteredDate.substring(6, 10);
+
+            var myDate = new Date(year, month - 1, date);
+
+            var today = new Date();
+
+            var date1 = today.getDate()
+            var month1 = today.getMonth() + 1;
+            var year1 = today.getFullYear();
+            var myDate1 = new Date(year1, month1 - 1, date1);
+
+            if (myDate < myDate1) {
+
+                alert("Entered date should not less than today's date ");
+                document.getElementById('ChqDate').value = "";
+            }
+
+        }
+
+
+
+
+        $scope.$watch('VendorPaymentfrm.$valid', function (newValue) {
+
+            $scope.isFormValid = newValue;
+        });
+
+
+        function mysum(val, name, record) {
+            return parseFloat(val || 0) + parseFloat((record[name] || 0));
+        }
+
+        $scope.Save = function (details) {
+
+            $scope.submitted = true;
+
+
+
+            if ($scope.isFormValid) {
+
+
+
+                for (var i = 0; i < $scope.lenth ; i++) {
+                    jQuery('#grdVendorPaymentdetails').saveRow(i);
+                }
+
+
+                debugger;
+                // var griddata = jQuery('#grid').jqGrid('getGridParam', 'selarrrow');
+
+                var griddata = $('#grdVendorPaymentdetails').jqGrid('getGridParam', 'data');
+
+                for (var i = 0; i < griddata.length; i++) {
+                    //
+
+                    if (griddata[i].PaidAmount != 0) {
+
+                        if (griddata[i].PaidAmount > griddata[i].DueAmount || griddata[i].PaidAmount == "") {
+                            jQuery('#grdVendorPaymentdetails').editRow(i);
+                            alert("Paid Amount Must Be Less than Or Equal To Due Amount");
+
+                        }
+                        else {
+
+                            var d = griddata[i];
+
+
+                            myNewData.push(d);
+                        }
+
+                    }
+
+
+                }
+
+
+
+                if ($scope.btnSave == "Save") {
+                    debugger;
+
+
+                    var mydata = myNewData;
+
+                    var length = mydata.length;
+
+
+
+
+                    if (mydata.length == 0) {
+
+
+                        alert("Please Select Purchase Order No Or GRN NO And Enter Valid Paid Amount")
+
+                    }
+
+
+
+
+
+
+
+
+
+                    else {
+
+
+
+
+
+
+
+
+
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+
+                            $http({
+
+                                url: '/MMSTransaction/SaveVendorPayment/',
+                                method: "POST",
+
+                                data: { lstTotalDetails: JSON.stringify(details), lstInvDetails: JSON.stringify(mydata) }
+                            }).success(function (data) {
+
+                                debugger;
+                                if (data) {
+
+                                    alert("Vendor Payment Details Saved Successfully");
+                                    location.reload();
+
+                                }
+                            })
+                         .error(function (data) {
+
+                             alert('Unexpected Error');
+                         });
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $scope.GetCheques = function () {
+            debugger;
+            var BankId = $scope.details.BankName;
+
+            $http.post('/MMSTransaction/GetChequesData', { id: BankId }).success(function (data) {
+
+
+                $scope.ChequeNos = eval('(' + data.Data + ')');
+
+            });
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $scope.updates = function () {
+
+
+
+            var Vendor = $("#VendorName option:selected").text();
+
+            $http.post('/MMSTransaction/ShowVendorPayment', { VendorName: Vendor }).success(function (data) {
+
+
+
+
+                debugger;
+                JqgridBinding(data.griddetails);
+                $scope.lenth = data.griddetails.length;
+
+                var $grid1 = $('#grdVendorPaymentdetails');
+                sum = $grid1.jqGrid('getCol', 'PaidAmount', false, 'sum');
+
+                $grid1.jqGrid('footerData', 'set', { DueAmount: 'Total:', PaidAmount: 0 });
+
+
+
+
+
+
+            });
+
+
+        }
+
+
+
+
+        $scope.Reset = function () {
+
+
+
+            location.reload();
+
+
+        }
+        $http({
+            url: '/MMSTransaction/GetVendorData/',
+            method: "get"
+        }).success(function (data) {
+
+
+            $scope.VendorNames = eval('(' + data.Data + ')');
+
+            var mydata = [];
+            // var data = null;
+            JqgridBinding(mydata);
+
+
+
+        });
+
+        $scope.update = function () {
+
+            var ModeOfPayment = $("#PaymentMode option:selected").text();
+            if (ModeOfPayment == "Cheque") {
+
+
+
+                $http({
+                    url: '/MMSTransaction/GetBanksData/',
+                    method: "get"
+                }).success(function (data) {
+
+
+                    $scope.BankNames = eval('(' + data.Data + ')');
+
+
+
+
+
+                });
+
+                $scope.isdisabled = false;
+
+
+
+
+            }
+            if (ModeOfPayment == "Cash" || ModeOfPayment == "Draft") {
+
+                $http({
+                    url: '/MMSTransaction/GetAccbalance/',
+                    method: "get"
+                }).success(function (data) {
+
+                    var $grid1 = $('#grdVendorPaymentdetails');
+                    sum = $grid1.jqGrid('getCol', 'PaidAmount', false, 'sum');
+                
+                    if (sum > data)
+                    {
+                        debugger;
+                        alert("Paid Amount Must Be Less than Or Equal To Available Cash");
+
+                        $scope.details.PaymentMode = '';
+                        $scope.isdisabled = true;
+                    }
+                    else
+                    {
+                        $scope.isdisabled = false;
+                    }
+                  
+
+
+                });
+
+            }
+
+        }
+
+
+
+        function checkVal(value, e) {
+
+            var tr = $(e.target).closest('tr');
+            var rowData = $("#grdVendorPaymentdetails").getRowData(tr[0].id);
+
+            if (parseFloat(value) > rowData.DueAmount) {
+
+
+                alert("Paid Amount Must Be Less than Or Equal To Due Amount");
+
+            }
+
+            else {
+
+
+                jQuery('#grdVendorPaymentdetails').saveRow(tr[0].id);
+                var $grid1 = $('#grdVendorPaymentdetails');
+                sum = $grid1.jqGrid('getCol', 'PaidAmount', false, 'sum');
+
+
+                $grid1.jqGrid('footerData', 'set', { DueAmount: 'Total:', PaidAmount: sum });
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function mysum(val, name, record) {
+            return parseFloat(val || 0) + parseFloat((record[name] || 0));
+        }
+
+        function JqgridBinding(data) {
+            var grid_data = data;
+            var grid_selector = "#grdVendorPaymentdetails";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('clearGridData')
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 300,
+                rownumbers: true,
+                rowNum: 100000,
+                shrinkToFit: true,
+                forceFit: true,
+                colModel: [
+                        {
+                            name: "Select", width: 70, align: "center",
+                            formatter: "checkbox", formatoptions: { disabled: false },
+                            edittype: "checkbox", editoptions: { value: "Yes:No", defaultValue: "Yes" },
+                            stype: "select", searchoptions: {
+                                sopt: ["eq", "ne"],
+                                value: ":Any;true:Yes;false:No"
+                            }
+                        },
+
+                { label: 'Purchase Order No.', name: 'PurchaseOrderNo', index: 'PurchaseOrderNo', width: 250, sortable: false },
+
+                  { label: 'GRN No.', name: 'GrnNo', index: 'GrnNo', width: 250, sortable: false },
+
+
+                     { label: 'GRN Date', name: 'PurchaseOrderDate', index: 'PurchaseOrderDate', width: 250, sortable: false },
+                      { label: 'Invoice No.', name: 'InvoiceNo', index: 'InvoiceNo', width: 250, sortable: false },
+                    { label: 'Amount', name: 'Amount', align: "Right", index: 'Amount', width: 250 },
+                     { label: 'Due Amount', name: 'DueAmount', align: "Right", index: 'DueAmount', width: 250 },
+
+
+
+                {
+                    label: 'Paid Amount', name: 'PaidAmount', width: 250, align: "Right", summaryType: mysum, editable: true, editoptions: {
+                        dataEvents: [{
+                            type: 'blur', fn: function (e) {
+
+                                var value = (this.value);
+
+                                res = /^[0-9\b]+$/;
+
+
+
+                                // re = /^\d+(?:\.\d{0,2})$/;
+
+
+
+
+                                if (res.test(value)) {
+
+                                    checkVal(this.value, e);
+
+
+
+
+
+                                }
+
+
+
+                                else {
+
+                                    alert("Enter Valid Amount");
+                                    var tr = $(e.target).closest('tr');
+
+
+                                    var rowData = $("#grdVendorPaymentdetails").getRowData(tr[0].id);
+                                    document.getElementById("" + tr[0].id + "_PaidAmount").value = "";
+
+
+
+
+
+
+
+
+                                }
+
+
+
+
+                            }
+
+
+                        }]
+                    }
+                }],
+                viewrecords: true,
+                rowNum: 1000,
+
+
+
+                search: true,
+
+                ignoreCase: true,
+
+                footerrow: true,
+
+                onSelectRow: function (id) {
+
+                    var $self = $(this);
+                    localData = $self.jqGrid("getLocalRow", id);
+                    if (localData.closed == true) {
+
+                        jQuery('#grdVendorPaymentdetails').editRow(id, true);
+
+                    }
+
+                },
+
+
+                beforeSelectRow: function (rowid, e) {
+
+
+
+                    var $self = $(this),
+                        iCol = $.jgrid.getCellIndex($(e.target).closest("td")[0]),
+                        cm = $self.jqGrid("getGridParam", "colModel"),
+                        localData = $self.jqGrid("getLocalRow", rowid);
+                    if (cm[iCol].name === "Select") {
+                        localData.closed = $(e.target).is(":checked");
+
+                        if (localData.closed == true) {
+
+
+
+
+
+                            jQuery('#grdVendorPaymentdetails').editRow(rowid);
+                            $('#grdVendorPaymentdetails').jqGrid('setRowData', rowid, false, { 'background-color': 'Silver' });
+
+
+
+                            var $grid1 = $('#grdVendorPaymentdetails');
+                            sum = $grid1.jqGrid('getCol', 'PaidAmount', false, 'sum');
+
+
+                            $grid1.jqGrid('footerData', 'set', { DueAmount: 'Total:', PaidAmount: sum });
+
+                        }
+                        if (localData.closed == false) {
+
+                            jQuery('#grdVendorPaymentdetails').saveRow(rowid);
+                            $("#grdVendorPaymentdetails").jqGrid('setCell', rowid, 'PaidAmount', 0);
+                            $('#grdVendorPaymentdetails').jqGrid('setRowData', rowid, false, { 'background-color': 'White' });
+
+
+                            var $grid1 = $('#grdVendorPaymentdetails');
+                            sum = $grid1.jqGrid('getCol', 'PaidAmount', false, 'sum');
+
+                            $grid1.jqGrid('footerData', 'set', { DueAmount: 'Total:', PaidAmount: sum });
+
+                        }
+
+
+                    }
+
+                    return true; // allow selection
+                },
+
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+
+                caption: "Vendor Payment Details"
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+
+
+
+
+
+
+
+        }
+
+
+        function cboxFormatter(cellvalue, options, rowObject) {
+
+
+
+
+
+
+
+            return '<input type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+                'onclick="alert(' + cellvalue + ')"/>';
+
+
+
+
+
+
+
+        }
+
+
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

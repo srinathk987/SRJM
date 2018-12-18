@@ -1,0 +1,727 @@
+﻿@{
+    //ViewBag.Title = "ItemMaster";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div id="Xyx" class="page-content" ng-controller="ItemMasterController" ng-init="ngInitBindComboBoxes()">
+
+    <!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmItemMaster" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Department  <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-3">
+                        <select id="departmentid" ng-model="IM.departmentid" class=" form-control" name="DepartmentName" ng-options="c.departmentid as c.departmentname for c in DepartmentDetails"
+                                required data-index="1" kt-focus ng-disabled="all">
+                            <option value="" selected>Select Department</option>
+                        </select>
+                        <span class="error" ng-show="(fmItemMaster.DepartmentName.$dirty || submitted ) && fmItemMaster.DepartmentName.$error.required">
+                            Department required!
+                        </span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Category <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-3">
+                        <select ng-model="IM.categoryid" class=" form-control" name="Categoryname" ng-options="c.categoryid as c.itemcategoryname for c in CategoryDetails"
+                                ng-change="CategorySelect(IM)" required data-index="2" kt-focus ng-disabled="all">
+                            <option value="" selected>Select Category</option>
+                        </select>
+                        <span class="error" ng-show="(fmItemMaster.Categoryname.$dirty || submitted ) && fmItemMaster.Categoryname.$error.required">
+                            Category required!
+                        </span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Subcategory :
+                    </label>
+                    <div class="col-sm-3">
+                        <select ng-model="IM.subcategoryid" class=" form-control" name="subCategoryname" data-index="3" kt-focus
+                                ng-options="c.subcategoryid as c.itemsubcategoryname for c in SubCategoryDetails" ng-disabled="all">
+                            <option value="" selected>Select Subcategory</option>
+                        </select>
+                        <span class="error" ng-show="(fmItemMaster.subCategoryname.$dirty || submitted ) && fmItemMaster.subCategoryname.$error.required">
+                            Subcategory required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Item Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-3">
+                        <input id="ItNameEnter" required name="ItemName" ng-model="IM.itemname" placeholder=" Enter Item Name" class="form-control"
+                               type="text" data-index="4" kt-focus ng-disabled="all">
+                        <span class="error" ng-show="(fmItemMaster.ItemName.$dirty || submitted ) && fmItemMaster.ItemName.$error.required">
+                            Item Name required!
+                        </span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" hidden>
+                        Item Code <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-3" hidden>
+                        <input kit-alpha-numeric name="ItemCode" ng-model="IM.itemcode" placeholder="Enter Code" class="form-control"
+                               maxlength="15" type="text" ng-disabled="all">
+                        <span class="error" ng-show="(fmItemMaster.ItemCode.$dirty || submitted ) && fmItemMaster.ItemCode.$error.required">
+                            Item Code required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Rate Without Taxes <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-3">
+                        <input maxlength="13" kit-amount name="Ratewithouttaxes" ng-model="IM.numratewithouttaxes" placeholder="Enter Rate Without Taxes" data-index="5" kt-focus
+                               class="form-control" type="text" ng-keyup="calculateTax(IM)" required style="text-align:right;">
+                        <span class="error" ng-show="(fmItemMaster.Ratewithouttaxes.$dirty || submitted ) && fmItemMaster.Ratewithouttaxes.$error.required">
+                            Item Rate required!
+                        </span>
+                        <span class="error" ng-show="(fmItemMaster.Ratewithouttaxes254.$dirty || submitted ) && fmItemMaster.Ratewithouttaxes254.$error.required">
+                        </span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Origin: :
+                    </label>
+                    <div class="col-sm-3">
+                        <select class=" form-control" ng-model="IM.originid" name="Originname" ng-options="c.originid as c.originname for c in OriginDetails" data-index="6" kt-focus ng-disabled="all">
+                            <option value="" selected>Select Origin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                    </label>
+                    <div class="col-sm-3">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                            Tax
+                        </label>
+                        <input type="checkbox" id="TEST" class="ace ace-switch ace-switch-5" ng-model="IM.taxapplicable" data-index="7" kt-focus ng-disabled="all" />
+                        <span class="lbl"></span>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-show="IM.taxapplicable">
+                        Tax Type <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-3" ng-show="IM.taxapplicable">
+                        @*    <multiselectdropdown maxlenghttoshowselectedvalues="100" onchangeeventofcheckbox="setTabDirty()"
+                            model="selectedOptions" multiselectoptions="options"></multiselectdropdown>*@
+                        <select ng-model="IM.taxid" class=" form-control" name="taxtype" ng-options="c.numpercentage as c.taxname for c in Taxdetails"
+                                ng-change="calculateTax(IM)" ng-required="IM.taxapplicable" ng-disabled="all">
+                            <option value="">Select Tax Type</option>
+                        </select>
+                        <span class="error" ng-show="(fmItemMaster.taxtype.$dirty || submitted) && fmItemMaster.taxtype.$error.required">
+                            Tax Type required!
+                        </span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Recommended Drink :
+                    </label>
+                    <div class="col-sm-3">
+                        <select ng-model="IM.recid" class=" form-control" ng-options="X.recid as X.recdrink for X in RecommendedDrinkDetails" ng-disabled="all">
+                            <option value="">Select Recommended Drink</option>
+                        </select>
+
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-show="IM.taxapplicable">
+                        Tax Amount :
+                    </label>
+                    <div class="col-sm-3" ng-show="IM.taxapplicable">
+                        <input name="TaxAmount" ng-model="numtaxamount" class="form-control" ng-disabled="true"
+                               type="text" style="text-align:right;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-show="IM.taxapplicable">
+                        Total Amount :
+                    </label>
+                    <div class="col-sm-3" ng-show="IM.taxapplicable">
+                        <input name="TotalAmount" ng-model="totalamount" class="form-control" ng-disabled="true"
+                               type="text" style="text-align:right;" ng-disabled="all">
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Description :
+                    </label>
+                    <div class="col-sm-3">
+                        <input maxlength="100" kit-alpha-numeric name="Description" ng-model="IM.description" placeholder="Enter Description"
+                               class="form-control" type="text" ng-disabled="all">
+                        <span class="error" ng-show="(fmItemMaster.Description.$dirty || submitted ) && fmItemMaster.Description.$error.required">
+                            Description required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Printers :
+                    </label>
+                    <div class="col-sm-3">
+                        <select required ng-model="IM.vchprintername" class=" form-control" name="printername" ng-options="c.printername as c.printername for c in PrinterSdetails" ng-disabled="all">
+                            <option value="" selected>Select printer Name</option>
+                        </select>
+                        <span class="error" ng-show="(fmItemMaster.printername.$dirty || submitted ) && fmItemMaster.printername.$error.required">
+                            printer Name !
+                        </span>
+                    </div>
+
+                </div>
+                <div class=" col-sm-10">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="SaveItemMaster(IM)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="button" ng-click="Reset(IM)">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="grid-ItemMaster"></table>
+    <div id="grid-ItemMasterpager">
+    </div>
+
+    <script>
+
+        var appElement = document.querySelector('[ ng-controller=ItemMasterController]');
+
+
+        function edit(row) {
+            debugger;
+
+
+            var $scope = angular.element(appElement).scope();
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#grid-ItemMaster").getRowData(row);
+
+
+
+            $scope.IM.vchprintername = rowdata.vchprintername;
+            $scope.IM.departmentid = parseInt(rowdata.departmentid);
+            $scope.IM.itemid = rowdata.itemid;
+            $scope.IM.itemname = rowdata.itemname;
+            $scope.IM.itemcode = rowdata.itemcode;
+            $scope.IM.categoryid = parseInt(rowdata.categoryid);
+            $scope.CategorySelect($scope.IM);
+            $scope.IM.subcategoryid = parseInt(rowdata.subcategoryid);
+            $scope.IM.taxid = parseFloat(rowdata.taxpercentage);
+            $scope.IM.originid = parseInt(rowdata.originid);
+            $scope.IM.numratewithouttaxes = parseFloat(rowdata.numratewithouttaxes);
+            $scope.numtaxamount = rowdata.numtaxamount;
+            $scope.IM.numtaxamount = parseFloat($scope.numtaxamount);
+            $scope.IM.description = rowdata.description;
+            $scope.IM.recid = parseInt(rowdata.recdrinkid);
+            $scope.totalamount = rowdata.numrate;
+            if (rowdata.taxapplicable == "TRUE") {
+                $scope.IM.taxapplicable = true;
+            }
+            if (rowdata.taxapplicable == "FALSE") {
+                $scope.IM.taxapplicable = false;
+                $scope.IM.numtaxamount = 0;
+                $scope.IM.taxid = "";
+            }
+            $scope.btnSave = "Update";
+            $scope.all = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //$http({
+            //    url: '/POSMasters/CountUpdateItemMaster/',
+            //    method: "POST",
+            //    data: { ItemName: rowdata.itemname }
+
+            //}).success(function (data) {
+            //    debugger
+            //    if (data == 0) {
+
+            //        $scope.IM.vchprintername = rowdata.vchprintername;
+            //        $scope.IM.departmentid = parseInt(rowdata.departmentid);
+            //        $scope.IM.itemid = rowdata.itemid;
+            //        $scope.IM.itemname = rowdata.itemname;
+            //        $scope.IM.itemcode = rowdata.itemcode;
+            //        $scope.IM.categoryid = parseInt(rowdata.categoryid);
+            //        $scope.CategorySelect($scope.IM);
+            //        $scope.IM.subcategoryid = parseInt(rowdata.subcategoryid);
+            //        $scope.IM.taxid = parseFloat(rowdata.taxpercentage);
+            //        $scope.IM.originid = parseInt(rowdata.originid);
+            //        $scope.IM.numratewithouttaxes = parseFloat(rowdata.numratewithouttaxes);
+            //        $scope.numtaxamount = rowdata.numtaxamount;
+            //        $scope.IM.numtaxamount = parseFloat($scope.numtaxamount);
+            //        $scope.IM.description = rowdata.description;
+            //        $scope.IM.recid = parseInt(rowdata.recdrinkid);
+            //        $scope.totalamount = rowdata.numrate;
+            //        if (rowdata.taxapplicable == "TRUE") {
+            //            $scope.IM.taxapplicable = true;
+            //        }
+            //        if (rowdata.taxapplicable == "FALSE") {
+            //            $scope.IM.taxapplicable = false;
+            //            $scope.IM.numtaxamount = 0;
+            //            $scope.IM.taxid = "";
+            //        }
+            //        $scope.btnSave = "Update";
+            //        $http({
+            //            url: '/POSMasters/ItemNameExist/',
+            //            method: "POST",
+            //            data: { ItemName: rowdata.itemname }
+
+            //        }).success(function (data) {
+            //            debugger;
+            //            if (data.count > 0) {
+
+            //                document.getElementById("ItNameEnter").disabled = true;
+            //            }
+            //            else {
+
+            //                document.getElementById("ItNameEnter").disabled = false;
+            //            }
+            //        });
+            //        $scope.$apply();
+
+            //    }
+            //    else {
+
+            //        alert("Cannot Update Item Master Details as it is in use by the application");
+            //        //alert("Tax Name Already Exist");
+            //    }
+            //}).error(function (data) { alert("Error found"); });
+
+
+
+
+
+
+        }
+
+        function Delete(row) {
+            debugger;
+
+            var $scope = angular.element(appElement).scope();
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#grid-ItemMaster").getRowData(row);
+
+            var $scope = angular.element(appElement).scope();
+            if ($scope.btnSave == "Save") {
+
+                $http({
+                    url: '/POSMasters/DeleteItemMaster/',
+                    method: "POST",
+                    data: { Id: rowdata.itemid, Name: rowdata.itemname }
+
+                }).success(function (data) {
+                    debugger;
+                    if (data.TorF == true) {
+                        var ans = window.confirm("Are you sure?Do you want to Delete Record?");
+                        if (ans) {
+                            $('#grid-ItemMaster').jqGrid('delRowData', row);
+                            ItemMasterGridBinding(data.Data);
+                            alert("Item Master Details Deleted successfully !");
+                        }
+                    }
+                    else if (data.TorF == false) {
+                        alert("Cannot Delete Item Master Details as it is in use by the application");
+                    }
+                });
+            } else {
+                alert("Cannot Delete Item Master Details In Edit Mode");
+            }
+            // }
+        }
+
+        function GridSearch() {
+
+            JqCustomSearch($("#globalSearchText").val().toUpperCase(), $("#grid-ItemMaster"))
+
+        }
+
+    </script>
+
+    <script>
+
+
+        var app = angular.module('RMS');
+        app.controller('ItemMasterController', function ($scope, $http, $rootScope) {
+            debugger
+            $('#departmentid').focus();
+            $scope.IM = {};
+            $scope.TaxAmounts = 0;
+            $scope.btnSave = "Save";
+            $scope.submitted = false;
+            $scope.isFormValid = false;
+            $rootScope.FormName = "Item Master";
+            $rootScope.ModuleName = "Masters";
+            $scope.all = false;
+
+            $scope.$watch('fmItemMaster.$valid', function (newValue) {
+                debugger
+                $scope.isFormValid = newValue;
+            });
+
+            $scope.ngInitBindComboBoxes = function () {
+                debugger;
+
+                $http.get('/POSMasters/getPrinters').success(function (data) {
+                    debugger;
+                    $scope.PrinterSdetails = eval('(' + data.Data + ')');
+
+
+                });
+
+                $http({
+                    url: '/POSMasters/GetCategoryComboData/',
+                    method: "get"
+                }).success(function (data) {
+                    debugger;
+                    $scope.CategoryDetails = eval('(' + data.Data + ')');
+                });
+
+                $http({
+                    url: '/POSMasters/GetOriginComboData/',
+                    method: "get"
+                }).success(function (data) {
+                    debugger;
+                    $scope.OriginDetails = eval('(' + data.Data + ')');
+                });
+
+                $http({
+                    url: '/POSMasters/GetDepartmentComboData/',
+                    method: "get"
+                }).success(function (data) {
+                    debugger;
+                    $scope.DepartmentDetails = eval('(' + data.Data + ')');
+                });
+
+                $http.get('/POSMasters/GetTaxComboData').success(function (data) {
+                    debugger;
+                    $scope.Taxdetails = eval('(' + data.Data + ')');
+
+
+                });
+                $http.get('/POSMasters/ShowItemMaster').success(function (data) {
+                    debugger;
+                    ItemMasterGridBinding(data.Data);
+
+                });
+
+                $http({
+                    url: '/POSMasters/GetRecommendedDrinkComboData/',
+                    method: "get"
+                }).success(function (data) {
+                    debugger;
+                    $scope.RecommendedDrinkDetails = eval('(' + data.Data + ')');
+                });
+
+            }
+            $scope.CategorySelect = function (IM) {
+                debugger;
+                $http({
+                    url: '/POSMasters/GetSubCategoryComboData/',
+                    method: "POST",
+                    data: { Id: IM.categoryid }
+
+                }).success(function (data) {
+                    debugger;
+                    $scope.SubCategoryDetails = eval('(' + data.Data + ')');
+                });
+
+
+            }
+
+            $scope.calculateTax = function (IM) {
+                debugger;
+                if (IM["taxid"] == undefined) {
+
+                    $scope.IM.numtaxamount = 0;
+                    $scope.totalamount = 0;
+                    $scope.numtaxamount = 0;
+                    $scope.IM.taxtype = 0;
+
+                }
+
+                var taxper = parseFloat(IM.numratewithouttaxes);
+                $scope.IM.taxtype = $scope.IM.taxid;
+
+                if ($scope.IM.taxtype === undefined) {
+
+                    res = (taxper);
+                    $scope.numtaxamount = 0;
+                }
+                else {
+                    res = (taxper * $scope.IM.taxtype) / 100;
+                    $scope.numtaxamount = res.toFixed(2);
+                }
+
+                debugger;
+                if (isNaN($scope.numtaxamount)) {
+
+                    $scope.numtaxamount = 0;
+                }
+                $scope.IM.numtaxamount = $scope.numtaxamount;
+                var AmountEnterd = parseFloat($scope.IM.numratewithouttaxes).toFixed(2);
+                $scope.totalamount = Math.round((parseFloat(AmountEnterd) + parseFloat($scope.numtaxamount)).toFixed(2));
+                if (isNaN($scope.totalamount)) {
+
+                    $scope.totalamount = 0;
+                }
+            }
+            $scope.SaveItemMaster = function (IM) {
+                debugger;
+                $scope.submitted = true;
+                if ($scope.isFormValid) {
+
+                    var kkk = ["originid", "subcategoryid", "recid", "taxid", "numrate"];
+
+                    for (var P = 0; P < kkk.length; P++) {
+
+                        var ii = kkk[P];
+                        var iddd = IM[ii]
+                        if (iddd === undefined || iddd == null) {
+
+                            IM[ii] = 0;
+                        }
+                    }
+
+
+
+
+                    $scope.IM.departmentname = $.grep($scope.DepartmentDetails, function (c) {
+                        return c.departmentid == $scope.IM.departmentid;
+                    })[0].departmentname;
+
+                    $scope.IM.itemcategoryname = $.grep($scope.CategoryDetails, function (c) {
+                        return c.categoryid == $scope.IM.categoryid;
+                    })[0].itemcategoryname;
+
+                    if ($scope.IM.subcategoryid != 0 && $scope.IM.subcategoryid != null) {
+
+                        $scope.IM.itemsubcategoryname = $.grep($scope.SubCategoryDetails, function (c) {
+
+                            return c.subcategoryid == $scope.IM.subcategoryid;
+                        })[0].itemsubcategoryname;
+                    }
+                    if ($scope.IM.originid != 0 && $scope.IM.originid != null) {
+
+                        $scope.IM.originname = $.grep($scope.OriginDetails, function (c) {
+                            return c.originid == $scope.IM.originid;
+                        })[0].originname;
+                    }
+                    if ($scope.IM.recid != 0 && $scope.IM.recid != null) {
+                        $scope.IM.RecommendedDrink = $.grep($scope.RecommendedDrinkDetails, function (c) {
+                            return c.recid == $scope.IM.recid;
+                        })[0].recdrink;
+                    }
+                    debugger;
+
+                    var tid = $scope.IM.taxid;
+                    if (isNaN($scope.IM.taxid)) {
+                        $scope.IM.taxid = 0;
+                    }
+
+                    if (!isNaN($scope.IM.taxid) && $scope.IM.taxid != "" && parseFloat($scope.IM.taxid) != 0 && ($scope.IM.taxid != null || typeof $scope.IM.taxid !== undefined)) {
+
+                        $scope.IM.taxtype = $.grep($scope.Taxdetails, function (c) {
+                            return c.numpercentage == $scope.IM.taxid;
+                        })[0].taxname;
+                    }
+                    if ($scope.IM.taxapplicable == false) {
+
+                        $scope.totalamount = 0;
+                        $scope.IM.taxtype = "";
+                        $scope.IM.numtaxamount = 0;
+                        $scope.IM.numrate = $scope.IM.numratewithouttaxes;
+                    }
+                    else {
+                        $scope.IM.numrate = $scope.totalamount;
+                    }
+
+                    var IMdetails = JSON.stringify(IM);
+                    var text = $scope.btnSave;
+                    //Save
+                    if (text == "Save") {
+                        var ans = window.confirm("Are you sure?Do you want to Save?");
+                        if (ans) {
+
+
+                            $http({
+                                url: '/POSMasters/CreateItemMaster/',
+                                method: "POST",
+                                data: { JsonData: IMdetails }
+
+                            }).success(function (data) {
+                                debugger;
+                                if (data.TorF == true) {
+                                    ItemMasterGridBinding(data.Data);
+                                    $scope.Reset();
+                                    alert("Item Master Details Saved Scucessfully !")
+                                }
+                                else {
+
+                                    alert("Item Name Already Exit!")
+                                }
+                            });
+                        }
+                    }
+                    if (text == "Update") {
+
+                        var ans = window.confirm("Are you sure?Do you want to Update?");
+                        if (ans) {
+
+                            $http({
+                                url: '/POSMasters/UpdateItemMaster/',
+                                method: "POST",
+                                data: { JsonData: IMdetails }
+
+                            }).success(function (data) {
+                                debugger;
+                                if (data.TorF == true) {
+                                    ItemMasterGridBinding(data.Data);
+                                    $scope.Reset();
+                                    alert("Item Master Details Updated Successfully !")
+                                    $scope.btnSave = "Save";
+                                    document.getElementById("ItNameEnter").disabled = false;
+                                    $scope.all = false;
+                                }
+                                else {
+
+                                    alert("Item Name Already Exit!")
+                                }
+
+
+                            });
+
+                        }
+
+
+                    }
+                }
+
+            }
+
+            $scope.Reset = function (IM) {
+
+                debugger;
+                $scope.btnSave = "Save";
+                $scope.SubCategoryDetails = {};
+                $scope.IM = {};
+                $scope.numtaxamount = "";
+                $scope.fmItemMaster.$setPristine();
+                $scope.submitted = false;
+                document.getElementById("ItNameEnter").disabled = false;
+
+            }
+        });
+
+        function ItemMasterGridBinding(data) {
+
+            var grid_data = eval('(' + data + ')');
+            var grid_selector = "#grid-ItemMaster";
+            var pager_selector = "#grid-ItemMasterpager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+
+                data: grid_data,
+                datatype: "local",
+                height: 250,
+                colModel: [
+                        {
+                            label: ' ', sortable: false, width: 60, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button><button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                 //   hidden: true
+                        { label: 'Item ID', name: 'itemid', width: 60, hidden: true },
+                        { label: 'Category ID', name: 'categoryid', width: 60, hidden: true },
+                        { label: 'Subcategory ID', name: 'subcategoryid', width: 60, hidden: true },
+                        { label: 'Origin ID', name: 'originid', width: 60, hidden: true },
+                        { label: 'Tax ID', name: 'taxpercentage', width: 60, hidden: true },
+                        { label: 'Tax Applicable', name: 'taxapplicable', width: 60, hidden: true },
+                        { label: 'Department ID', name: 'departmentid', width: 60, hidden: true },
+                         { label: 'rec ID', name: 'recdrinkid', width: 60, hidden: true },
+
+                        { label: 'Department', name: 'departmentname', width: 100 },
+                        { label: 'Item Code', name: 'itemcode', width: 60 },
+                        { label: 'Item Name', name: 'itemname', width: 75 },
+                        { label: 'Category', name: 'categoryname', width: 90 },
+                        { label: 'Sub Category', name: 'subcategoryname', width: 90 },
+                        { label: 'Origin', name: 'originname', width: 60 },
+                        {
+                            label: 'Rate without Taxes', name: 'numratewithouttaxes', width: 75, align: "right", formatter: 'currency',
+                            formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                        },
+                        {
+                            label: 'Tax Amount', name: 'numtaxamount', width: 75, align: "right", formatter: 'currency',
+                            formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                        },
+                        { label: 'Recommended Drink', name: 'recommendeddrink', width: 75 },
+                        {
+                            label: 'Total Amount', name: 'numrate', width: 75, align: "right", formatter: 'currency',
+                            formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                        },
+                        { label: 'Printer Name', name: 'vchprintername', width: 90 },
+                        { label: 'Description', name: 'description', width: 90 }
+
+                ],
+                viewrecords: true,
+                rowNum: 10,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                ignoreCase: true,
+                loadComplete: function () {
+                    var table = this;
+
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                },
+                caption: "Items <span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+
+    </script>
+

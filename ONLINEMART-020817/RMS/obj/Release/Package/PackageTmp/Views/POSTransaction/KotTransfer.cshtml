@@ -1,0 +1,606 @@
+﻿@{
+
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<div ng-controller="KotTransferController" ng-init="ngInitBindComboBoxes();GetTableName();">
+    <div class="page-content">
+
+        <div class="row">
+
+            <div class=" col-sm-12 col-xs-12">
+                <div class="page-header">
+                    <h1 style="width:auto; float:left">
+                        KOT Transfer<small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                    </h1>
+
+                </div>
+                <!-- PAGE CONTENT BEGINS -->
+                @*<div class="alert alert-block alert-success">
+                        <i class="ace-icon fa fa-check green"></i> Welcome Mr. <strong class="green"> {{Host|uppercase}} ,</strong>
+                    </div>*@
+            </div>
+        </div>
+        <!-- /.page-header ends -->
+        <div class="row">
+            <div class="col-xs-12">
+
+
+
+
+
+
+
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="frmkottransfer" novalidate>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Table No. :
+                                </label>
+
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="tableNo" ng-model="tableNo" required disabled="true" />
+
+
+                                </div>
+
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Host :
+                                </label>
+
+
+                                @*<div class="col-sm-4">
+                                        <select ng-model="Kot.username" class=" form-control" name="username" ng-options="c.userid as c.username for c in CategoryDetails" required>
+                                            <option value="">Select Host</option>
+                                        </select>
+                                        <span class="error" ng-show="(frmkottransfer.username.$dirty || submitted ) && frmkottransfer.username.$error.required">
+                                            Host Name required!
+                                        </span>
+                                    </div>*@
+
+
+                                <div class="col-sm-4">
+
+                                    <input type="text" class="form-control" placeholder="Host Name" name="Host" ng-model="Kot.Host" required disabled="true" />
+                                    <span class="error" ng-show="(frmkottransfer.Host.$dirty || submitted) && frmkottransfer.Host.$error.required">
+                                        Host Name Required!
+                                    </span>
+
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Time :
+                                </label>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-model="Kot.Time">
+                                        {{cdate | date:'hh:mm'}}
+                                    </label>*@
+
+                            @*<input type="time" class="form-control" name="Time" ng-model="Kot.Time" value="{{time}}" required />*@
+                            @*<input type="text" class="form-control" name="Time" ng-model="{{cdate | date:'hh:mm'}}"  required />*@
+
+                            @*<span class="error" ng-show="(frmkottransfer.Time.$dirty || submitted) && frmkottransfer.Time.$error.required">
+                                    Enter Time!
+                                </span>*@
+
+
+                            @*</div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Date :
+                                </label>
+                                <div class="col-sm-4">
+
+
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-model="Kot.Date">
+                                        {{cdate | date:'dd/MM/yyyy'}}
+                                    </label>*@
+
+                            @*<input type="date" class="form-control" id="Date" name="Date" ng-model="Kot.Date" value="{{date}}" required />*@
+
+                            @*<input type="text" class="form-control" name="Date" ng-model="{{cdate | date:'dd/MM/yyyy'}}"  required />*@
+                            @*<span class="error" ng-show="(frmkottransfer.Date.$dirty || submitted) && frmkottransfer.Date.$error.required">
+                                            Enter Date!
+                                        </span>
+
+                                    </div>
+                                </div>*@
+
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Transfer To :
+                                </label>
+
+                                <div class="col-sm-4">
+                                    <select class="form-control" name="totableid" required ng-options="v.totableid as v.totableid for v in totables" ng-model="Kot.totableid" ng-change="update()">
+
+
+                                        <option value="" selected>select</option>
+
+                                    </select>
+
+                                    <span class="error" ng-show="(frmkottransfer.totableid.$dirty || submitted) && frmkottransfer.totableid.$error.required">
+                                        Transfer To Required!
+                                    </span>
+                                </div>
+
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+
+                                </label>
+                                <div class="col-sm-4">
+
+                                    <button class="btn btn-success" type="button" id="btnTransfer" ng-click="Transfer(Kot)">
+                                        <i class="ace-icon fa fa-plus bigger-110"></i>{{btnTransfer}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <table id="grdKOTTransfer"></table>
+
+        <div id="grid-pager">
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+
+
+
+
+    var app = angular.module('RMS');
+
+    app.controller('KotTransferController', function ($scope, $http, $rootScope) {
+
+       
+        $scope.cdate = new Date();
+
+        $scope.btnTransfer = "Transfer";
+    
+        var VDate = new Date().toLocaleDateString('en-GB');
+
+        var VTime = new Date().toLocaleTimeString('en-GB', {
+            hour: "numeric",
+            minute: "numeric"
+        });
+
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.table = {};
+
+        $scope.$watch('frmkottransfer.$valid', function (newValue) {
+
+            $scope.isFormValid = newValue;
+
+        });
+
+
+        $scope.ngInitBindComboBoxes = function () {
+            $http({
+                url: '/POSTransaction/GetCashierComboData/',
+
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.CategoryDetails = eval('(' + data.Data + ')');
+            });
+        }
+
+
+        // Transefer Button code
+
+
+        $scope.Transfer = function (Kot) {
+
+
+            $scope.submitted = true;
+            var id = $scope.tableNo;
+
+           
+            //var tablenoss = $scope.tableNo;
+
+
+            if ($scope.isFormValid) {
+                if ($scope.btnTransfer == "Transfer") {
+                    var checkboxes = document.getElementsByClassName('groupHeader');
+                    var KotId = "";;
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i].checked) {
+                            (checkboxes[i].value);
+                            KotId = KotId + "," + "'" + checkboxes[i].value + "'";
+
+
+
+
+                        }
+                    }
+                    KotId = KotId.substring(1);
+
+
+
+
+
+                    if (KotId == "") {
+                        alert("Please Select Kot Id");
+                    }
+                    else {
+
+
+                        $http({
+
+
+
+
+                            url: '/POSTransaction/KOTTransfereDetailsList/',
+                            method: "POST",
+                            //data: { KotTransferDto: KotId, TablesId: Kot.totableid, date: VDate, time: VTime, hostname: Kot.Host}
+                            data: { KotTransferDto: KotId, TablesId: Kot.totableid, date: VDate, time: VTime, hostname: $scope.Kot.Host, tttablesid: ($scope.tableNo) }
+                        }).success(function (data) {
+
+
+
+                            if (data.Success) {
+                                alert("Kot Transferred Successfully");
+
+
+                                var url = '@Url.Action("../POSTransaction/DashBoard")';
+                                window.location.href = url;
+
+
+
+
+
+
+
+
+
+                            }
+
+                        });
+                    }
+
+
+                }
+
+            }
+
+
+
+
+        }
+
+
+
+
+
+
+        $scope.GetTableName = function () {
+
+
+
+            $http({
+                url: '/POSTransaction/getData/',
+                method: "get"
+            }).success(function (data) {
+
+
+                $scope.tableNo = data.split('-')[0];
+
+
+
+               
+
+                BindToTable(data.split('-')[0]);
+
+
+
+                bindkotdeatils(data.split('-')[0]);
+
+              
+                //bindkotdetailsbyid(data.split('-')[1]);
+
+            });
+        }
+
+        //function bindhostdefaultby(tableid) {
+        //    debugger;
+
+        //    $http.post('/POSTransaction/GetCashierComboDataBinding', { tableidm: tableid }).success(function (data) {
+
+        //        var k = eval('(' + data.Data + ')');;
+        //        var j = k[0]["vchhostname"];
+
+        //        debugger;
+
+        //        $scope.Host = j;
+               
+
+
+
+
+
+
+        //        // KotTransferGridBinding(data);
+
+
+        //    });
+        //}
+
+        //complete
+        function bindkotdeatils(tableid) {
+
+            $http.post('/POSTransaction/ShowKotTransferDetails', { TableId: tableid }).success(function (data) {
+
+
+                KotTransferGridBinding(data);
+
+
+            });
+        }
+
+        $scope.update = function () {
+
+            debugger;
+
+            var id = $scope.Kot.totableid;
+
+            $http.post('/POSTransaction/GetCashierComboDataBinding', { tableidm: id }).success(function (data) {
+                
+                var k = eval('(' + data.Data + ')');;
+                var j = k[0]["vchhostname"];
+
+                debugger;
+               
+                $scope.Kot.Host = j;
+                $scope.$apply();
+               
+
+
+               
+              
+
+                // KotTransferGridBinding(data);
+
+
+            });
+
+
+        }
+
+
+        //function bindkotdetailsbyid(tableid) {
+        //    debugger;
+        //    $http.post('/POSTransaction/ShowKotDetailsbyTableid', { TableId: tableid }).success(function (data) {
+
+
+        //        $scope.Host = data.Host;
+        //    });
+        //}
+
+
+
+
+        function BindToTable(tableId) {
+            debugger;
+            $http.post('/POSTransaction/ShowTableDetailsrunningKotTransfer', { Table: tableId }).success(function (data) {
+                debugger;
+                var x = [];
+                for (var i = 0; i < data.lstTableChange.length; i++) {
+                    var y = { totableid: data.lstTableChange[i].TableName };
+                    x.push(y);
+                }
+                $scope.ALLTableData = data.lstTableChange;
+                $scope.totables = x;
+
+                //Merging Tables
+
+                var FromTables = [];
+                for (var i = 0; i < data.lstTablesandMerge.length; i++) {
+                    var y = { totableid: data.lstTablesandMerge[i].TableName };
+                    FromTables.push(y);
+                }
+                // $scope.ALLTableData = data.lstTableChange;
+                $scope.FromTableslist = FromTables;
+
+
+            });
+        }
+
+
+
+
+
+        function mysum(val, name, record) {
+            return parseFloat(val || 0) + parseFloat((record[name] || 0));
+        }
+
+
+
+
+
+
+
+        function KotTransferGridBinding(data) {
+
+
+            var grid_data = data;
+            var grid_selector = "#grdKOTTransfer";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+
+            jQuery(grid_selector).jqGrid({
+
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+
+                rownumbers: true,
+
+                colModel: [
+
+                        //{
+                        //    name: "KOT NO", width: 25,
+                        //    formatter: "checkbox", formatoptions: { disabled: false },
+                        //    edittype: "checkbox", editoptions: { value: "Yes:No", defaultValue: "Yes" },
+                        //    stype: "KotName", searchoptions: {
+                        //        sopt: ["eq", "ne"],
+                        //        value: ":Any;true:Yes;false:No"
+                        //    }
+                        //},
+
+
+			{
+			    label: 'KOT NO', name: 'KotName', width: 50, hidden: true
+			},
+            { label: 'Item Name', name: 'ItemName', width: 50 },
+            { label: 'Quantity', name: 'Quantity', width: 50, formatter: 'number' },
+			{ label: 'Rate', name: 'Rate', width: 50, formatter: 'number', hidden: true },
+
+                {
+                    label: 'Rate', name: 'Price', width: 10, align: 'right', formatter: 'currency', summaryType: mysum,
+                    formatoptions: { prefix: '₹ ', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                }
+
+
+                ],
+
+                beforeSelectRow: function (rowid, e) {
+                    var $self = $(this),
+                        iCol = $.jgrid.getCellIndex($(e.target).closest("td")[0]),
+                        cm = $self.jqGrid("getGridParam", "colModel"),
+                        localData = $self.jqGrid("getLocalRow", rowid);
+                    if (cm[iCol].name === "closed") {
+                        localData.closed = $(e.target).is(":checked");
+                    }
+
+                    return true; // allow selection
+                },
+                viewrecords: true,
+                rowNum: 100000,
+                //rowList: [8, 16, 25, 100],
+                //pager: pager_selector,
+                altRows: true,
+                //search: true,
+                groupSummary: [true],
+                ignoreCase: true,
+                //groupCollapse: false,
+                grouping: true,
+                groupCollapse: true,
+                groupingView: { groupField: ['KotName'], groupColumnShow: [false], groupText: ['<input type="checkbox"  class="groupHeader"  value="{0}" /> <b>{0} - {1} ITEM(s)</b>'] },
+                footerrow: true,
+                // userDataOnFooter: true,
+
+
+
+                gridComplete: function () {
+
+
+
+                    var $grid1 = $("#grdKOTTransfer");
+                    sum = $grid1.jqGrid('getCol', 'Price', false, 'sum');
+                    // $grid1.jqGrid('footerData', 'set', { Price: 'Total:', Price: sum });
+
+                    $grid1.jqGrid('footerData', 'set', { Quantity: 'Total:', Price: sum });
+                },
+
+
+
+                //caption: "KOT TRANSFER <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+                caption: "KOT TRANSFER "
+
+
+            });
+
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+
+
+    });
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

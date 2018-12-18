@@ -1,0 +1,1318 @@
+﻿@{
+    //ViewBag.Title = "CreateCity";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@* JQGrid*@
+<script type="text/javascript">
+    $(function () {
+        //-----====================User Access Grid Binding ==================-----//
+        UserAccessBind = function (data) {
+            jQuery("#jqGrid").jqGrid({
+                //url: '/EmployeeMasters/BindJQGridModel/',
+                data: data,
+                datatype: "local",
+                //multiselect: true,
+                colNames: ['Function ID', 'Status', 'Function Name', 'Function URL', 'Module Id', 'Module Name'],
+                colModel: [
+                            {
+                                label: 'Function Id', name: 'functionid',
+                                width: 250,
+                                key: true,
+                                editable: false,
+                                hidden: true,
+                                editrules: { required: true }
+                            },
+                            {
+                                label: 'FunctionStatus', name: 'chkStatus',
+                                width: 250,
+                                editable: false, // must set editable to true if you want to make the field editable
+                                formatter: "checkbox", formatoptions: { disabled: false }
+                            },
+                            {
+                                label: 'Function Name', name: 'functionname',
+                                width: 250,
+                                editable: false // must set editable to true if you want to make the field editable
+                            },
+                            {
+                                label: 'Function URL', name: 'functionurl',
+                                width: 250,
+                                editable: false
+
+                            },
+                            {
+                                label: 'Module Id', name: 'Moduleid',
+                                width: 250,
+                                hidden: true,
+                                editable: false
+                            },
+                            {
+                                label: 'Module Name', name: 'modulename',
+                                width: 250,
+                                editable: false
+                            },
+                ],
+                rowNum: 200,
+                width: '100%',
+                height: 260,
+                //pager: '#jqGridPager',
+                sortname: 'modulename',
+                viewrecords: true,
+                sortorder: "desc",
+                caption: "Functions",
+                //grouping: true,
+                //groupingView: {
+                //    groupField: ['modulename'],
+                //    groupColumnShow: [true],
+                //    groupText: ['<b>{1}</b>'],
+                //    groupCollapse: true,
+                //    groupOrder: ['asc'],
+                //    groupSummary: [true],
+                //    groupDataSorted: false
+                //},
+                grouping: true,
+                groupingView: {
+                    groupField: ['modulename'],
+                    groupColumnShow: [true],
+                    groupText: ['<b>{0}</b>'],
+                    groupCollapse: true
+                },
+                //hidegrid: false,
+            });
+            //jQuery("#jqGrid").jqGrid('navGrid', '#jqGridPager', { add: false, edit: false, del: false });
+            jQuery('#jqGrid').jqGrid('clearGridData');
+            jQuery('#jqGrid').jqGrid('setGridParam', { data: data });
+            jQuery('#jqGrid').trigger('reloadGrid');
+        }
+        //-----==================== Functions Old Order Grid Binding ==================-----//
+        BindGrid = function (data) {
+            debugger;
+            var grid = $("#grid_functions");
+            grid.jqGrid({
+                datatype: "local",
+                multiselect: true,
+                data: data,
+                colNames: ['ID', 'FunctionName', 'FunctionStatus', 'Module Id'],
+                colModel: [
+                    { name: 'FunctionId', index: 'FunctionId', hidden: true },
+                    { name: 'FunctionName', index: 'FunctionName', align: 'center', },
+                    { name: 'FunctionStatus', index: 'FunctionStatus', hidden: true },
+                    { name: 'Moduleid', index: 'Moduleid', hidden: true }
+                ],
+                rowNum: 100,
+                caption: "Old Order Functions",
+                hidegrid: false,
+                //rowList: [5, 10, 20],
+                viewrecords: true,
+                sortorder: "desc",
+                height: "100%",
+                width: '250',
+                localReader: {
+                    repeatitems: true,
+                    cell: "",
+                    id: 0
+                }
+            });
+            jQuery('#grid_functions').jqGrid('clearGridData');
+            jQuery('#grid_functions').jqGrid('setGridParam', { data: data });
+            jQuery('#grid_functions').trigger('reloadGrid');
+        }
+
+        //-----==================== Functions New Order Grid Binding ==================-----//
+        BindFunctionGrid = function (data) {
+            debugger;
+            var grid = $("#grid_Function_Order");
+            grid.jqGrid({
+                datatype: "local",
+                multiselect: true,
+                hidegrid: false,
+                data: data,
+                caption: "New Order Functions",
+                colNames: ['ID', 'FunctionName', 'FunctionStatus', 'FunctionOrder', 'Module Id'],
+                colModel: [
+                    { name: 'FunctionId', index: 'FunctionId', hidden: true },
+                    { name: 'FunctionName', index: 'FunctionName', align: 'center', editable: false },
+                    { name: 'FunctionStatus', index: 'FunctionStatus', hidden: true },
+                    { name: 'FunctionOrder', index: 'FunctionOrder', hidden: true },
+                    { name: 'Moduleid', index: 'Moduleid', hidden: true }
+                ],
+                rowNum: 100,
+                //rowList: [5, 10, 20],
+                viewrecords: true,
+                sortorder: "desc",
+                Selection: true,
+                height: "100%",
+                width: '250',
+                localReader: {
+                    repeatitems: true,
+                    cell: "",
+                    id: 0
+                }
+            });
+            jQuery('#grid_Function_Order').jqGrid('clearGridData');
+            jQuery('#grid_Function_Order').jqGrid('setGridParam', { data: data });
+            jQuery('#grid_Function_Order').trigger('reloadGrid');
+        }
+        //-----==================== Calling Grid Binging Functions on page Load with Empty Data ==================-----//
+        debugger;
+        UserAccessBind([]);
+        BindGrid([]);
+        BindFunctionGrid([]);
+    });
+</script>
+<style>
+    .jqgroup .ui-icon {
+        background-image: url(../../assets/Images/ui-icons_222222_256x240.png) !important /*{iconsContent}*/;
+        /* background-size: 20px !important; */
+        height: 17px;
+        width: 17px;
+    }
+
+    .ui-icon-circlesmall-plus {
+        background-position: -16px 111px;
+    }
+
+    .ui-icon-circlesmall-minus {
+        background-position: -48px 110px;
+    }
+
+    input[type=checkbox], input[type=radio] {
+        /* box-sizing: border-box; */
+        padding: 0;
+        width: 17px !important;
+        height: 17px;
+    }
+</style>
+@* END JQGrid*@
+
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('UserRightsCtrl', function ($scope, $http, $rootScope) {
+        debugger;
+        $scope.NewUser = {};
+        $scope.ChangeUser = {};
+        $scope.Function = {};
+        $scope.M = {};
+        $scope.UserAccess = {};
+        $rootScope.FormName = "User Rights";
+        $rootScope.ModuleName = "Login";
+        $scope.UserChange = false;
+
+        //Validations
+        $scope.Modulesubmitted = false;
+        $scope.ChangeUsersubmitted = false;
+        $scope.Functionsubmitted = false;
+        $scope.UserAccesssubmitted = false;
+        $scope.NewUsersubmitted = false;
+
+
+        $scope.isNewFormValid = false;
+        $scope.isChangeUserFormValid = false;
+        $scope.isFunctionFormValid = false;
+        $scope.isModuleFormValid = false;
+        $scope.isUserAccessformFormValid = false;
+
+        $scope.chkStatus = false; //Add Module Form CheckBox Status
+
+        //$scope.$watch('UserRightsfrm.$valid', function (newValue) {
+        //    debugger;
+        //    $scope.isUserRightsCtrlFormValid = newValue;
+        //});
+        $scope.$watch('Userform.$valid', function (newValue) {
+            debugger;
+            $scope.isNewFormValid = newValue;
+        });
+        $scope.$watch('ChangePasswordform.$valid', function (newValue) {
+            debugger;
+            $scope.isChangeUserFormValid = newValue;
+        });
+        $scope.$watch('Functionfrm.$valid', function (newValue) {
+            debugger;
+            $scope.isFunctionFormValid = newValue;
+        });
+        $scope.$watch('Moduleform.$valid', function (newValue) {
+            debugger;
+            $scope.isModuleFormValid = newValue;
+        });
+        $scope.$watch('UserAccessform.$valid', function (newValue) {
+            debugger;
+            $scope.isUserAccessformFormValid = newValue;
+        });
+
+        //-----==================== Data Bindings When form Load ==================-----//
+        //$http.get('/Login/ShowParentModules/').success(function (data) {
+        //    debugger
+        //    $scope.Modules = data;
+        //});
+
+
+
+        $http.get('/Login/ShowEmployeeName/').success(function (data) {
+            debugger;
+            $scope.Employees = eval('(' + data.Data + ')');
+        });
+        $http.get('/Login/ShowUserName/').success(function (data) {
+            debugger;
+            $scope.EmployeeList = data;
+        });
+        //$http.get('/Login/ShowModuleName/').success(function (data) {
+        //    debugger;
+        //    $scope.ModuleList = data;
+        //});
+
+        $scope.Forms = function () {
+            $http.get('/Login/getDirPath/').success(function (data) {
+                debugger;
+                TreeGrid(data);
+            });
+        }
+        //-----==================== calling after New User Saving for User Names==================-----//
+        $scope.Users = function () {
+            $http.get('/Login/ShowUserName/').success(function (data) {
+                debugger;
+                $scope.EmployeeList = data;
+            });
+        };
+        //-----==================== calling after New Module Saving for Module Names==================-----//
+        $scope.Module = function () {
+            $http.get('/Login/ShowModuleName/').success(function (data) {
+                debugger;
+                $scope.ModuleList = data;
+            });
+        };
+        //-----==================== calling When Module Type Change in Function and Module Forms Saving for Module Names==================-----//
+        $scope.ModuetypeChange = function (Form) {
+            var type = '';
+            if (Form == "MODULE") {
+                type = $scope.M.ModuleType;
+            } else {
+                type = $scope.Function.ModuleType;
+            }
+            if (type !== null && type !== undefined && type !== '' && Form !== null && Form !== undefined && Form !== '') {
+                $http({ url: '/Login/ModueTypeChange/', method: "POST", data: { Type: type, Form: Form } }).success(function (data) {
+                    debugger;
+                    if (data != null) {
+                        $scope.ParentModules = data;
+                    }
+                });
+            }
+        }
+        //-----==================== calling when Parent ModuleChange==================-----//
+        $scope.ParentModuleChange = function (Form) {
+            debugger;
+            var ID = '';
+            var ModuleType = '';
+            $scope.Modules = {};
+            $scope.ModuleList = {};
+            if (Form == "MODULE") {
+                ID = $scope.M.parentModuleId;
+                ModuleType = $scope.M.ModuleType;
+            } else {
+                ID = $scope.Function.parentModuleId;
+                ModuleType = $scope.Function.ModuleType;
+            }
+            if (ID !== null && ID !== undefined && ID !== '' && Form !== null && Form !== undefined && Form !== '') {
+                $http({ url: '/Login/ShowMainModules/', method: "POST", data: { ID: ID, Form: Form, ModuleType: ModuleType } }).success(function (data) {
+                    debugger;
+                    if (data != null) {
+                        if (Form == "MODULE") {
+                            $scope.Modules = data;
+                        } else {
+                            $scope.ModuleList = data;
+                        }
+                    }
+                });
+            }
+        }
+        //-----==================== calling when Module change in Add Function form for Functions binding to Grid==================-----//
+        $scope.ModuleChange = function () {
+            debugger;
+            var name = $scope.Function.Moduleid;
+            if (typeof name != 'undefined') {
+                $http({ url: '/Login/ShowModuleName/', method: "POST", data: { ModuleName: name } }).success(function (data) {
+                    debugger
+                    $scope.Function.Moduleid = name;
+                    BindGrid(data);
+                    BindFunctionGrid([]);
+                });
+            }
+        };
+        //-----==================== calling when User change in User Access form for Functions binding to Grid==================-----//
+        $scope.AccessUserChange = function () {
+            debugger;
+            var ID = $scope.UserAccess.UserID;
+            $http({ url: '/Login/ShowRoleFunctions/', method: "POST", data: { ID: ID } }).success(function (data) {
+                debugger;
+                UserAccessBind(data);
+                $scope.UserAccess.UserAccess = ID;
+                if (ID == null) {
+                    UserAccessBind([]);
+                }
+            });
+            if (ID == null) {
+                UserAccessBind([]);
+            }
+        };
+        // Reset Add User Form
+        $scope.ResetNewUser = function () {
+            debugger;
+            $scope.NewUser = {};
+            $scope.Userform.$setPristine();
+            $scope.NewUsersubmitted = false;
+            $('#Password').val('');
+            $('#ConfirmPassword').val('');
+        }
+        // Reset Change User Password User Form
+        $scope.ResetChangeData = function () {
+            debugger;
+            $scope.ChangeUser = {};
+            $scope.ChangePasswordform.$setPristine();
+            $scope.ChangeUsersubmitted = false;
+            $('#chgNewPassword').val('');
+            $('#chgConfirmPassword').val('');
+            $('#chgOldPassword').val('');
+        }
+        // Reset Add Function Form
+        $scope.ResetFunctionData = function () {
+            debugger;
+            $scope.Function = {};
+            $scope.ModuleList = {};
+            $scope.ParentModules = {};
+            $scope.Functionfrm.$setPristine();
+            $scope.Functionsubmitted = false;
+            BindGrid([]);
+            BindFunctionGrid([]);
+            $('#FunctionUrl').val('');
+            $('#FunctionName').val('');
+        }
+        // Reset Add Module Form
+        $scope.ClearModule = function () {
+            debugger;
+            $scope.M = {};
+            $scope.Modules = {};
+            $scope.ParentModules = {};
+            $scope.Moduleform.$setPristine();
+            $scope.Modulesubmitted = false;
+            $scope.chkStatus = false;
+            $('#Modulename').val('');
+        }
+        // Reset User Access Form
+        $scope.ResetAccessUser = function () {
+            debugger;
+            $scope.UserAccess = {};
+            $scope.UserAccessform.$setPristine();
+            $scope.UserAccesssubmitted = false;
+            $('#UserID').val('');
+            ////var rowData = { status: true, functionid: "12", functionname: "12", functionurl: "12", Moduleid: "12", modulename: "12" };
+            //var Row = [];
+            //Row.push(rowData);
+            UserAccessBind([]);
+        }
+        //-----==================== Saving New User==================-----//
+        $scope.SaveNewUser = function (NewUser) {
+            debugger;
+            $scope.NewUsersubmitted = true;
+            $scope.NewUser.Empname = $('#EmployeeID option:selected').text();
+            if ($scope.isNewFormValid) {
+                //Save
+                debugger;
+                if (NewUser.Password == NewUser.ConfirmPassword) {
+                    var ans = window.confirm("Are you sure?Do you want to Save?");
+                    if (ans) {
+                        $http({
+                            url: '/Login/SaveNewUser/',
+                            method: "POST",
+                            data: NewUser
+                        }).success(function (data) {
+                            debugger;
+                            if (data == 'True') {
+                                $scope.ResetNewUser();
+                                $scope.NewUsersubmitted = false;
+                                alert("New User Saved Successfully !");
+                                //BindGrid(data.Data);
+                                $scope.Users();
+                            }
+                            else {
+                                alert("User Id Already Exist to This Employee!");
+                            }
+                        });
+                    }
+                } else {
+                    alert("Password and ConfirmPassword should be Same!");
+                    $('#Password').val('');
+                    $('#ConfirmPassword').val('');
+                }
+            }
+        }
+        //-----==================== Saving Change User Password ==================-----//
+        $scope.SaveChangeUser = function (ChangeUser) {
+            debugger;
+            $scope.ChangeUsersubmitted = true;
+            if ($scope.isChangeUserFormValid) {
+                //Save
+                debugger;
+                if (ChangeUser.NewPassword == ChangeUser.ConfirmPassword) {
+                    var ans = window.confirm("Are you sure?Do you want to Save?");
+                    if (ans) {
+                        $http({
+                            url: '/Login/SaveChangeUserPassword/',
+                            method: "POST",
+                            data: ChangeUser
+                        }).success(function (data) {
+                            debugger;
+                            if (data == 'True') {
+                                $scope.ResetChangeData();
+                                $scope.ChangeUsersubmitted = false;
+                                alert("User Password Updated Successfully !");
+                                //BindGrid(data.Data);
+                            }
+                            else {
+                                alert(" Error While Updating Password!");
+                            }
+                        });
+                    }
+                } else {
+                    alert("Password and ConfirmPassword should be Same!");
+                    $('#chgNewPassword').val('');
+                    $('#chgConfirmPassword').val('');
+                }
+            }
+        }
+        //-----==================== Saving New Function ==================-----//
+        $scope.SaveFunction = function (Function) {
+            debugger;
+            $scope.Functionsubmitted = true;
+            if ($scope.isFunctionFormValid) {
+                //Save
+                debugger;
+                var ans = window.confirm("Are you sure?Do you want to Save?");
+                if (ans) {
+                    $http({
+                        url: '/Login/SaveFunction/',
+                        method: "POST",
+                        data: Function
+
+                    }).success(function (data) {
+                        debugger;
+                        if (data == 'True') {
+                            $scope.ResetFunctionData();
+                            $scope.Functionsubmitted = false;
+                            alert("Function Saved Successfully !");
+                        }
+                        else {
+                            alert(" Error While Saving Function!");
+                        }
+                    });
+                }
+            }
+        }
+        //-----==================== Saving Function Order ==================-----//
+        $scope.SaveFunctionOrder = function () {
+            debugger;
+            var IsSave = false;
+            var NEWFUNCTION = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+            if (parseInt(NEWFUNCTION.data.length) > 0) {
+                //Sort Order
+                debugger;
+                var OLDFUNCTION = jQuery('#grid_functions').jqGrid('getGridParam');
+                if (OLDFUNCTION.data.length == 0) {
+                    IsSave = true;
+                } else {
+                    if (confirm('Some functions are there in Old Function Grid! Do you want to Proceed to Sort?')) {
+                        IsSave = true;
+                    }
+                }
+                if (IsSave) {
+                    var ans = window.confirm("Are you sure?Do you want to Save?");
+                    if (ans) {
+                        $http({
+                            url: '/Login/SaveFunctionOrder/',
+                            method: "POST",
+                            data: NEWFUNCTION.data
+                        }).success(function (data) {
+                            debugger;
+                            if (data == 'True') {
+                                $scope.ResetFunctionData();
+                                $scope.Functionsubmitted = false;
+                                alert("Function Sorting Saved Successfully !");
+                                //BindGrid(data.Data);
+                            }
+                            else {
+                                alert(" Error While Sorting Function!");
+                            }
+                        });
+                    }
+                }
+            } else {
+                alert('Please Add Functions to New Order Functions Grid');
+            }
+        }
+        //-----==================== Saving Module ==================-----//
+        $scope.SaveModule = function (M) {
+            debugger;
+            $scope.Modulesubmitted = true;
+            if ($scope.isModuleFormValid) {
+                //Save
+                debugger;
+                var ans = window.confirm("Are you sure?Do you want to Save?");
+                if (ans) {
+                    M.ParentModulename = $('#parentModuleId option:selected').text();
+                    debugger;
+                    $http({
+                        url: '/Login/ModuleSave/',
+                        method: 'POST',
+                        data: M
+                    }).success(function (data) {
+                        debugger;
+                        if (data == 'True') {
+                            $scope.ClearModule();
+                            $scope.Modulesubmitted = false;
+                            alert("Module Saved Successfully !");
+                        }
+                        else {
+                            alert(" Module Already Exist !");
+                        }
+                    });
+                }
+            }
+        }
+        //-----==================== Saving User Access(Permissions) ==================-----//
+        $scope.SaveAccessUser = function () {
+            debugger;
+            var Grid = jQuery('#jqGrid').jqGrid('getGridParam');
+            var IsSave = false;
+            if (typeof $('#UserID').val() != 'undefined' && $('#UserID').val() != '') {
+                var rowIDs = jQuery("#jqGrid").jqGrid('getDataIDs');
+                if (Grid.data.length > 0) {
+                    var ROWS = [];
+                    for (var x = 0; x < rowIDs.length; x++) {
+                        //                        var RD = Grid.data[x];
+                        //                        var RD = ('#jqGrid').jqGrid('getRowData', x);
+                        var rowID = rowIDs[x];
+                        var RD = jQuery('#jqGrid').jqGrid('getRowData', rowID);
+                        if (RD.chkStatus == "Yes") {
+                            var rowData = { functionid: RD.functionid, functionname: RD.functionname, functionurl: RD.functionurl, Moduleid: RD.Moduleid, modulename: RD.modulename };
+                            ROWS.push(rowData);
+                        }
+                    }
+                    var IsOk = false;
+                    if (ROWS.length == 0) {
+                        IsOk = confirm('Are you Sure Do you want to Remove All Permisssions To This User?');
+                    } else {
+                        IsOk = true;
+                    }
+                    if (IsOk) {
+                        if (confirm('Are you Sure? Do You Want to Proceed!')) {
+                            var jlst = JSON.stringify(ROWS);
+                            $http({ url: '/Login/SaveUserAuthentication/', method: "POST", data: { jsonData: jlst, UserID: $scope.UserAccess.UserID } }).success(function (data) {
+                                debugger;
+                                if (data == 'True') {
+                                    //if (ROWS.length == 0) {
+                                    //    alert("Data Saved Successfully !");
+                                    //} else {
+                                    alert("Data Saved Successfully !");
+                                    //}
+                                    UserAccessBind([]);
+                                    $scope.ResetAccessUser();
+                                }
+                                else {
+                                    alert(" Error While Saving!");
+                                }
+                            });
+                        }
+                    } else {
+                        alert('Please Select Rows in Grid!');
+                    }
+                }
+                //    var selRowIds = jQuery('#jqGrid').jqGrid('getGridParam', 'selarrrow');
+                //    if (parseInt(selRowIds.length) == 0) {
+                //        alert('Please Select Rows in Grid!');
+                //    } else {
+                //        var ROWS = [];
+                //        for (var x = 0; x < selRowIds.length; x++) {
+                //            var RD = jQuery('#jqGrid').jqGrid("getRowData", selRowIds[x]);
+                //            var rowData = { functionid: RD.functionid, functionname: RD.functionname, functionurl: RD.functionurl, Moduleid: RD.Moduleid, modulename: RD.modulename };
+                //            ROWS.push(rowData);
+                //        }
+                //        if (ROWS.length == Grid.data.length) {
+                //            IsSave = true;
+                //        }
+                //        else {
+                //            if (window.confirm('Some rows are not seleted do you want to Continue?')) {
+                //                IsSave = true;
+                //            }
+                //        }
+                //        debugger;
+                //        if (IsSave) {
+                //            var jlst = JSON.stringify(ROWS);
+                //            $http({ url: '/Login/SaveUserAuthentication/', method: "POST", data: { jsonData: jlst, UserID: $scope.UserAccess.UserID } }).success(function (data) {
+                //                debugger;
+                //                if (data == 'True') {
+                //                    alert("Data Saved Successfully !");
+                //                    UserAccessBind([]);
+                //                    $scope.ResetAccessUser();
+                //                }
+                //                else {
+                //                    alert(" Error While Saving!");
+                //                }
+                //            });
+                //        }
+                //    }
+                //} else {
+                //    alert('No data in Grid! Please Select User Name!');
+                //}
+            } else {
+                alert('Please Select User Name!');
+            }
+        }
+    });
+    //-----==================== Adding to Functions to New Function Order Grid from Old Function Order Grid in Add Function Form ==================-----//
+    function ForwardData() {
+        debugger;
+        var Grid = jQuery('#grid_functions').jqGrid('getGridParam');
+        if (Grid.data.length > 0) {
+            var selRowIds = jQuery('#grid_functions').jqGrid('getGridParam', 'selarrrow');
+            var selRows = jQuery('#grid_Function_Order').jqGrid('getRowData');
+            if (parseInt(selRowIds.length) > 0) {
+                var ROWS = [];
+                var roworder = 1, rowinsert = 1;
+                if (selRows.length > 0) {
+                    roworder = selRows.length + 1;
+                    for (var x = 0; x < selRows.length; x++) {
+                        var RD = selRows[x];
+                        var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: rowinsert, Moduleid: RD.Moduleid }; //empty row template
+                        ROWS.push(rowData);
+                        rowinsert++;
+                    }
+                }
+                for (var x = 0; x < selRowIds.length; x++) {
+                    var RD = jQuery('#grid_functions').jqGrid("getRowData", selRowIds[x]);
+                    var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: roworder, Moduleid: RD.Moduleid }; //empty row template
+                    ROWS.push(rowData);
+                    roworder++;
+                }
+                BindFunctionGrid(ROWS);
+                for (var i = selRowIds.length - 1; i >= 0; i--) {
+                    $('#grid_functions').jqGrid('delRowData', selRowIds[i]);
+                }
+                var myData = jQuery('#grid_functions').jqGrid('getRowData');
+                BindGrid(myData);
+                //jQuery('#grid_functions').trigger('reloadGrid');
+            }
+            else {
+                alert('Select Functions in Old Function Grid!');
+            }
+        } else {
+            var Grid1 = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+            if (Grid.data.length == 0 && Grid1.data.length > 0) {
+                alert('No data in Old Function Grid All Data is Moved to New Function Grid!');
+            } else {
+                alert('No data in Old Function Grid!');
+            }
+        }
+    }
+    //-----==================== Adding to Functions to Old Function Order Grid from New Functions Grid in Add Function Form ==================-----//
+    function BackwordData() {
+        debugger;
+        var Grid = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+        if (Grid.data.length > 0) {
+            var selRowIds = jQuery('#grid_Function_Order').jqGrid('getGridParam', 'selarrrow');
+            var selRows = jQuery('#grid_functions').jqGrid('getRowData');
+            if (parseInt(selRowIds.length) > 0) {
+                var ROWS = [];
+                var roworder = 1;
+                if (selRows.length > 0) {
+                    roworder = selRows.length + 1;
+                    for (var x = 0; x < selRows.length; x++) {
+                        var RD = selRows[x];
+                        var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: x + 1, Moduleid: RD.Moduleid }; //empty row template
+                        ROWS.push(rowData);
+                    }
+                }
+                for (var x = 0; x < selRowIds.length; x++) {
+                    var RD = jQuery('#grid_Function_Order').jqGrid("getRowData", selRowIds[x]);
+                    var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: roworder, Moduleid: RD.Moduleid }; //empty row template
+                    ROWS.push(rowData);
+                    roworder++;
+                }
+                BindGrid(ROWS);
+                for (var i = selRowIds.length - 1; i >= 0; i--) {
+                    $('#grid_Function_Order').jqGrid('delRowData', selRowIds[i]);
+                }
+                //jQuery('#grid_Function_Order').trigger('reloadGrid');
+                var myData = jQuery('#grid_Function_Order').jqGrid('getRowData');
+                BindFunctionGrid(myData);
+            }
+            else {
+                alert('Select Functions in New Function Grid!');
+            }
+        } else {
+            var Grid1 = jQuery('#grid_functions').jqGrid('getGridParam');
+            if (Grid.data.length == 0 && Grid1.data.length > 0) {
+                alert('No data in New Function Grid All Data is Moved to Old Function Grid!');
+            } else {
+                alert('No data in New Function Grid!');
+            }
+        }
+    }
+</script>
+<div class="panel-collapse" ng-controller="UserRightsCtrl">
+    @*<div class="panel-body">
+        @* <form name="UserRightsfrm" novalidate class="form-horizontal" id='UserRightsfrm'>*@
+    <div class="page-content">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs padding-12 tab-color-blue background-blue">
+                        <li class="active">
+                            <a aria-expanded="false" data-toggle="tab" href="#useraccess" ng-click="ResetAccessUser()">User Access</a>
+                        </li>
+
+                        <li class="">
+                            <a aria-expanded="false" data-toggle="tab" href="#addnewuser" ng-click="ResetNewUser()">Add New User</a>
+                        </li>
+
+                        <li>
+                            <a aria-expanded="true" data-toggle="tab" href="#changepassword" ng-click="ResetChangeData()">Change Password</a>
+                        </li>
+
+                        <li>
+                            <a aria-expanded="true" data-toggle="tab" href="#addnewmodule" ng-click="ClearModule()">Add New Module</a>
+                        </li>
+                        <li>
+                            <a aria-expanded="true" data-toggle="tab" href="#addfunction" ng-click="ResetFunctionData();">Add Function</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        @*User Access*@
+                        <div id="useraccess" class="tab-pane active">
+                            <div class="row">
+                                <form name="UserAccessform" novalidate class="form-horizontal">
+                                    <div class="col-md-12">
+                                        <div>
+                                            @*<header class="panel-heading">
+                                                    User Access
+                                                </header>*@
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        <span style="color: Black">User Name</span> <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <select ng-model="UserAccess.UserID" id="UserID" class="form-control" name="UserID"
+                                                                ng-options="I.UserID as I.UserName for I in EmployeeList" ng-change="AccessUserChange()">
+                                                            <option value="">Select User Name</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(UserAccessform.UserID.$dirty || UserAccesssubmitted) && UserAccessform.UserID.$error.required">
+                                                            User Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <div class="col-md-3 ">
+                                                </div>
+                                                <div class="col-md-8 text-right">
+                                                    <button ng-click="SaveAccessUser()" class="btn btn-success" type="button">
+                                                        <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                                                    </button>
+                                                    <button ng-click="ResetAccessUser()" class="btn btn-danger">
+                                                        <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <table id="jqGrid"></table>
+                                            <div id="jqGridPager">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @*addnewuser*@
+                        <div id="addnewuser" class="tab-pane">
+                            <div class="row">
+                                <form name="Userform" novalidate class="form-horizontal">
+                                    <div class="col-md-12">
+                                        <div>
+                                            @*<header class="panel-heading">
+                                                    Add New User
+                                                </header>*@
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        <span style="color: Black">Employee Name</span> <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <select ng-model="NewUser.EmployeeID" id="EmployeeID" class="form-control" name="EmployeeID"
+                                                                ng-options="I.employeeid as I.employeename for I in Employees" required>
+                                                            <option value="" selected>Select Employee Name</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Userform.EmployeeID.$dirty || NewUsersubmitted) && Userform.EmployeeID.$error.required">
+                                                            Employee required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        <span style="color: Black">User Name</span> <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="100" id="UserName" ng-model="NewUser.UserName"
+                                                               type="text" name="UserName" placeholder="Enter User Name" required kit-alpha-numeric />
+                                                        <span class="error" ng-show="(Userform.UserName.$dirty || NewUsersubmitted) && Userform.UserName.$error.required">
+                                                            User Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Password <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="25" ng-model="NewUser.Password" type="password"
+                                                               placeholder="Enter Password" name="Password" id="Password" required  />
+                                                        <div>
+                                                            <span class="error" ng-show="(Userform.Password.$dirty || NewUsersubmitted)  && Userform.Password.$error.required">
+                                                                Password required!
+                                                            </span>
+
+                                                            
+                                                           
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Confirm Password <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="25" id="ConfirmPassword" ng-model="NewUser.ConfirmPassword" 
+                                                               type="password" placeholder="Enter ConfirmPassword" name="ConfirmPassword" required
+                                                               />
+                                                        @*ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/"*@
+                                                        <div>
+                                                            <span class="error" ng-show="(Userform.ConfirmPassword.$dirty || NewUsersubmitted) && Userform.ConfirmPassword.$error.required">
+                                                                Confirm Password required!
+                                                            </span>
+                                                          
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <div class="col-md-3 ">
+                                                </div>
+                                                <div class="col-md-8 text-right">
+                                                    <button ng-click="SaveNewUser(NewUser)" class="btn btn-success" type="button">
+                                                        <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                                                    </button>
+                                                    <button ng-click="ResetNewUser()" class="btn btn-danger">
+                                                        <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @*changepassword*@
+                        <div id="changepassword" class="tab-pane ">
+                            <div class="row">
+                                <form name="ChangePasswordform" novalidate class="form-horizontal">
+                                    <div class="col-md-12">
+                                        <div>
+                                            @*<header class="panel-heading">
+                                                    Change Password
+                                                </header>*@
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        <span style="color: Black">User Name</span> <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <select ng-model="ChangeUser.UserID" id="UserID" class="form-control" name="UserID"
+                                                                required ng-options="I.UserID as I.UserName for I in EmployeeList">
+                                                            <option value="">Select User Name</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(ChangePasswordform.UserID.$dirty || ChangeUsersubmitted) && ChangePasswordform.UserID.$error.required">
+                                                            User Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Old Password <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="25" ng-model="ChangeUser.OldPassword" type="text"
+                                                               placeholder="Enter Old Password" id="chgOldPassword" name="chgOldPassword" required
+                                                               ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/" />
+                                                        <div>
+                                                            <span class="error" ng-show="(ChangePasswordform.chgOldPassword.$dirty || ChangeUsersubmitted) && ChangePasswordform.chgOldPassword.$error.required">
+                                                                Old Password required!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        New Password <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="25" id="chgNewPassword" ng-model="ChangeUser.NewPassword"
+                                                               type="text" placeholder="Enter New Password" name="chgNewPassword" required ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/" />
+                                                        <div>
+                                                            <span class="error" ng-show="(ChangePasswordform.chgNewPassword.$dirty || ChangeUsersubmitted) && ChangePasswordform.chgNewPassword.$error.required">
+                                                                New Password required!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Confirm Password <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="25" ng-model="ChangeUser.ConfirmPassword"
+                                                               type="text" placeholder="Enter Confirm Password" name="chgConfirmPassword" required
+                                                               id="chgConfirmPassword" ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/" />
+                                                        <div>
+                                                            <span class="error" ng-show="(ChangePasswordform.chgConfirmPassword.$dirty || ChangeUsersubmitted) && ChangePasswordform.chgConfirmPassword.$error.required">
+                                                                Confirm Password required!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="form-group">
+                                                <div class="col-md-8">
+                                                    <div class="col-md-3 ">
+                                                    </div>
+                                                    <div class="col-md-8 text-right">
+                                                        <button ng-click="SaveChangeUser(ChangeUser)" class="btn btn-success" type="button">
+                                                            <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                                                        </button>
+                                                        <button ng-click="ResetChangeData()" class="btn btn-danger">
+                                                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @*addnewmodule*@
+                        <div id="addnewmodule" class="tab-pane ">
+                            <div class="row">
+                                <form name="Moduleform" novalidate class="form-horizontal">
+                                    <div class="col-md-12">
+                                        <div>
+                                            @*<header class="panel-heading">
+                                                    Add New Module
+                                                </header>*@
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">
+                                                    Module Type<span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <div class="pull-middle">
+                                                        <select id="ModuleType" ng-model="M.ModuleType" class="form-control" required name="ModuleType" ng-change="ModuetypeChange('MODULE')">
+                                                            <option value="">Select Module Type</option>
+                                                            <option value="RMS">RMS</option>
+                                                            @*<option value="HRMS">HRMS</option>*@
+                                                        </select>
+                                                        <span class="error" ng-show="(Moduleform.ModuleType.$dirty || Modulesubmitted) && Moduleform.ModuleType.$error.required">
+                                                            Module Type required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label">
+                                                    Parent Module Name <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" name="parentModuleId" ng-model="M.parentModuleId" ng-required="!checked"
+                                                            ng-options="c.ModuleId as c.ParentModulename  for c in ParentModules" id="parentModuleId" ng-change="ParentModuleChange('MODULE')">
+                                                        <option value="">Select Parent Module</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(Moduleform.parentModuleId.$dirty || Modulesubmitted) && Moduleform.parentModuleId.$error.required">
+                                                        Module Name required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @*<div class='form-group'>
+                                                    <label class="col-md-2 control-label">
+                                                        Module Name <span style="color: Red">*</span> :
+                                                    </label>
+                                                    <div class="col-md-6">
+                                                        <select class="form-control" name="ModuleId" ng-model="M.ModuleId" ng-required="!checked"
+                                                                ng-options="c.ModuleId as c.ParentModulename  for c in Modules" id="ModuleId">
+                                                            <option value="">Select Module Name</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Moduleform.ModuleId.$dirty || Modulesubmitted) && Moduleform.ModuleId.$error.required">
+                                                            Module Name required!
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                    </div>
+                                                </div>*@
+                                            <div class='form-group'>
+                                                <label class="col-md-2 control-label">
+                                                    Module Name <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class=" form-control" name="Modulename" maxlength="50" ng-model="M.Modulename"
+                                                           placeholder="Enter Module Name" required kit-alpha-numeric id="Modulename" />
+                                                    <span class="error" ng-show="(Moduleform.Modulename.$dirty || Modulesubmitted) && Moduleform.Modulename.$error.required">
+                                                        Module Name required!
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                </div>
+                                            </div>
+                                            <br />
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-8">
+                                                <div class="pull-right">
+                                                    <button ng-click="SaveModule(M)" class="btn btn-success" type="submit">
+                                                        <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                                                    </button>
+                                                    <button ng-click="Clear()" class="btn btn-danger">
+                                                        <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @*addfunction*@
+                        <div id="addfunction" class="tab-pane">
+                            <div class="row">
+                                <form name="Functionfrm" novalidate class="form-horizontal">
+                                    <div class="col-md-12">
+                                        <div>
+                                            @*<header class="panel-heading">
+                                                    Function
+                                                </header>*@
+                                            <div class="form-group">
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Module Type <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <select id="ModuleType" ng-model="Function.ModuleType" class="form-control" required name="ModuleType" ng-change="ModuetypeChange('FUNCTION')">
+                                                            <option value="">Select Module Type</option>
+                                                            <option value="RMS">RMS</option>
+                                                            @* <option value="HRMS">HRMS</option>*@
+                                                        </select>
+                                                        <span class="error" ng-show="(Functionfrm.ModuleType.$dirty || Functionsubmitted) && Functionfrm.ModuleType.$error.required">
+                                                            Module Type required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Parent Module Name <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <select class="form-control" name="parentModuleId" ng-model="Function.parentModuleId" ng-required="!checked" ng-change="ParentModuleChange('FUNCTION')"
+                                                                ng-options="c.ModuleId as c.ParentModulename  for c in ParentModules" id="parentModuleId">
+                                                            <option value="">Select Parent Module</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Functionfrm.parentModuleId.$dirty || Functionsubmitted) && Functionfrm.parentModuleId.$error.required">
+                                                            Module Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        <span style="color: Black">Module Name</span><span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <select ng-model="Function.Moduleid" class="form-control" name="Moduleid" id="Moduleid"
+                                                                ng-options="I.Moduleid as I.Modulename for I in ModuleList" required ng-change="ModuleChange()">
+                                                            <option value="">Select Module Name</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Functionfrm.Moduleid.$dirty || Functionsubmitted) && Functionfrm.Moduleid.$error.required">
+                                                            Module Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Function Name <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        <input class="form-control" maxlength="100" ng-model="Function.FunctionName" type="text"
+                                                               placeholder="Enter Function Name" name="FunctionName" id="FunctionName" required
+                                                               kit-alpha-numeric ng-pattern="/[0-9a-zA-Z]$/" />
+                                                        <div>
+                                                            <span class="error" ng-show="(Functionfrm.FunctionName.$dirty || Functionsubmitted) && Functionfrm.FunctionName.$error.required">
+                                                                Function required!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        Url Ex:<span style="color: Blue; height: 5px; text-decoration:double;font-weight:900;font-size:xx-small;">..</span><span style="color: Blue; height: 5px;">/ControllerName/ViewName</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-8 ">
+                                                    <label class="col-md-3 control-label FullWidth">
+                                                        Function URL <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-8 FullWidth">
+                                                        @*ng-pattern="/^([a-zA-Z0-9]+)(?:\/[a-zA-Z0-9]+)(?=.*[/])?$/"*@
+                                                        <input class="form-control" maxlength="100" id="FunctionUrl" ng-model="Function.FunctionUrl"
+                                                               type="text" placeholder="Enter Function URL" name="FunctionUrl" required />
+                                                        <div>
+                                                            <span class="error" ng-show="(Functionfrm.FunctionUrl.$dirty || Functionsubmitted) && Functionfrm.FunctionUrl.$error.required">
+                                                                Function url required!
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <div class="col-md-12 FullWidth">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="form-group">
+                                                <div class="col-md-8">
+                                                    <div class="col-md-3 ">
+                                                    </div>
+                                                    <div class="col-md-8 text-right">
+                                                        <button ng-click="SaveFunction(Function)" class="btn btn-success" type="submit">
+                                                            <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                                                        </button>
+                                                        <button ng-click="ResetFunctionData()" class="btn btn-danger">
+                                                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel">
+                                                <header class="panel-heading">
+                                                    Function Details
+                                                </header>
+                                                <div class="panel-collapse">
+                                                    <div class="col-sm-3">
+                                                        <table id="grid_functions" style="width:100%"></table>
+                                                    </div>
+                                                    <div class="col-sm-1">
+                                                        <br />
+                                                        <div class="form-group">
+                                                            <button id="btnforward" class="btn btn-info" onclick="ForwardData()">
+                                                                <i class="fa fa-chevron-right"></i>
+                                                            </button>
+
+                                                            <button id="btnbackword" class="btn btn-warning" onclick="BackwordData()">
+                                                                <i class="fa fa-chevron-left"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <table id="grid_Function_Order" style="width:100%"></table>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <br />
+                                        <div class="row">
+                                            <div align="right" class="col-lg-7">
+                                                <button ng-click="SaveFunctionOrder()" class="btn btn-primary" id="SaveFunctionOrder"
+                                                        type="submit">
+                                                    <i class="ace-icon fa fa-refresh bigger-110"></i>SwapOrder
+                                                </button>
+                                                <button ng-click="ModuleChange()" class="btn btn-danger">
+                                                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*</form>*@
+        </div>
+    </div>
+    @*</div>*@
+</div>

@@ -1,0 +1,725 @@
+﻿@{
+    // ViewBag.Title = "MaterialReturn";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+}
+
+<div ng-controller="MaterialReturnController" ng-init="LoadData()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="MaterialReturnfrm" novalidate>
+
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label>
+
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>
+                                <input type="radio" name="type" value="Direct" id="Direct" ng-model="MR.type" checked ng-click="databind()" />Direct
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>
+                                <input type="radio" name="type" value="MaterialIndent" id="MaterialIndent" ng-model="MR.type" ng-click="databind()" />Material Indent
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>
+                                <input type="radio" name="type" value="MaterialIssue" id="MaterialIssue" ng-model="MR.type" ng-change="databind()" />Material Issue
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-hide="isDirect">
+                            Indent/Issue No. <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4" ng-hide="isDirect">
+                            <select name="Number" id="Number" ng-model="MR.Number" placeholder="Issue No." ng-options="c.recordid as c.Number for c in Issuenumbers"
+                                    class="form-control" kt-focus data-index="1" ng-change="Issuenumberchange()" ng-required="isReqired">
+                                <option value="">Select Indent/Issue No.</option>
+                            </select>
+                            <span class="error" ng-show="(MaterialReturnfrm.Number.$dirty || submitted) && MaterialReturnfrm.Number.$error.required">
+                                Indent/Issue No. Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Return Date <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="Date" name="Date" ng-model="MR.Date" data-index="2"
+                                   placeholder="Enter Date " class="form-control" required />
+                            <span class="error" ng-show="(MaterialReturnfrm.Date.$dirty || submitted) && MaterialReturnfrm.Date.$error.required">
+                                Return Date Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Return By. <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="Returnby" id="Returnby" ng-model="MR.Returnby" placeholder="Verified by" ng-options="c.Userid as c.Username for c in Stock"
+                                    class="form-control" required kt-focus data-index="3">
+                                <option value="">Select Return By</option>
+                            </select>
+                            <span class="error" ng-show="(MaterialReturnfrm.Returnby.$dirty || submitted) && MaterialReturnfrm.Returnby.$error.required">
+                                Return By Required!
+                            </span>
+                        </div>
+
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Received By<span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="Recivedby" id="Recivedby" ng-model="MR.Recivedby" placeholder="select Received by" ng-options="c.Userid as c.Username for c in Stock"
+                                    class="form-control" required kt-focus data-index="4">
+                                <option value="">Select Received By</option>
+                            </select>
+                            <span class="error" ng-show="(MaterialReturnfrm.Recivedby.$dirty || submitted) && MaterialReturnfrm.Recivedby.$error.required">
+                                Received By Required!
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div ng-show="isDirect">
+            <a class="btn btn-primary" id="collapseExamplea" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-disabled="isdisabled">
+                <i class="fa fa-plus" style="color:#fff;"></i> Add Product
+            </a>
+
+        </div>
+
+
+
+        <div class="collapse widget-box" id="collapseExample" ng-show="isDirect">
+            <form class="form-horizontal" role="form" name="fmProductDetails">
+                <div class="widget-header widget-header-flat widget-header-small">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>  PRODUCT DETAILS </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="form-field-1"> Product Name <span style="color: Red">*</span>:</label>
+                                    <div class="col-sm-6">
+                                        <select id="productname" ng-change="Product_Change(BS.productname);" ng-keypress="myFunction($event,'storagelocationname')" class=" form-control" name="productname" ng-model="BS.productname" ng-options="c.productname as c.productname for c in productss"
+                                                required ng-disabled="isdisabled" kt-focus data-index="1">
+                                            <option value="">Select Product Name</option>
+                                        </select>
+                                        <span class="error" ng-show="(fmProductDetails.productname.$dirty || submittedAdd) && fmProductDetails.productname.$error.required">
+                                            Product Name Required!
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <fieldset class="scheduler-border">
+                                        @*<legend class="scheduler-border">Prodcuts</legend>*@
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1">Category :</label>
+                                        <label class="col-sm-2 padding-0 control-label" ng-model="BS.lblCategory" for="form-field-1" name="lblCategory" id="lblCategory">{{lblCategory}}</label>
+
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1">Subcategory :</label>
+                                        <label class="col-sm-2  padding-0 control-label" for="form-field-1" ng-model="BS.lblsubcategory" name="lblsubcategory" id="lblsubcategory">{{lblsubcategory}}</label>
+
+                                        <label class="col-sm-2  padding-0 control-label" for="form-field-1">Product Type :</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" name="lblproducttype" id="lblproducttype" ng-model=" bs.lblproducttype">{{lblproducttype}}</label>
+
+                                        @* Hidden Fields *@
+
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductid" id="lblproductid" ng-model=" bs.lblproductid">{{lblproductid}}</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductcode" id="lblproductcode" ng-model=" bs.lblproductcode">{{lblproductcode}}</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductcategoryid" id="lblproductcategoryid" ng-model=" bs.lblproductcategoryid">{{lblproductcategoryid}}</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductsubcategoryid" id="lblproductsubcategoryid" ng-model=" bs.lblproductsubcategoryid">{{lblproductsubcategoryid}}</label>
+                                    </fieldset>
+                                </div>
+                                <div class="form-group">
+                                    <fieldset class="scheduler-border">
+                                        @*<legend class="scheduler-border">Prodcuts</legend>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">UOM :</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" ng-model="BS.uomname" name="uomname" id="uomname">{{lbluom}}</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1">Min. Stock :</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" name="minqty" ng-model="BS.minqty" name="minqty" id="minqty">{{lblminstock}}</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1">Max. Stock:</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" name="maxqty" ng-model="BS.maxqty" name="maxqty" id="maxqty">{{lblmaxstock}}</label>
+                                    </fieldset>
+                                </div>
+                                <div class="form-group">
+                                    <fieldset class="scheduler-border">
+                                        @*<legend class="scheduler-border">Prodcuts</legend>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">Storage Area <span style="color: Red">*</span>:</label>
+                                        <div class="col-sm-2">
+                                            <select class=" form-control" name="storagelocationname" autofocus id="storagelocationname" ng-keypress="myFunction($event,'shelfname')" ng-change="Storagechage(BS.storagelocationname)" ng-model="BS.storagelocationname" ng-options=" c.storagelocationcode as c.storagelocationname for c in Storages" required kt-focus data-index="2">
+                                                <option value="">Select Storage Area</option>
+                                            </select>
+                                            <span class="error" ng-show="(fmProductDetails.storagelocationname.$dirty || submittedAdd) && fmProductDetails.storagelocationname.$error.required">
+                                                Storage Area Required!
+                                            </span>
+                                        </div>
+                                        <label class="col-sm-2 control-label" for="form-field-1">Shelf Name :</label>
+                                        <div class="col-sm-2">
+                                            <select class=" form-control" name="shelfname" id="shelfname" ng-keypress="myFunction($event,'indentqty')" ng-change="Shelfchanged(BS.shelfname)" ng-model="BS.shelfname" ng-options="c.shelfname as c.shelfname for c in selfnamecmb" kt-focus data-index="3">
+                                                <option value="">Select Shelf Name</option>
+                                            </select>
+                                            <span class="error" ng-show="(fmProductDetails.shelfname.$dirty || submittedAdd) && fmProductDetails.shelfname.$error.required">
+                                                Shelf Name Required!
+                                            </span>
+                                        </div>
+
+                                    </fieldset>
+                                </div>
+                                <div class="form-group" id="divself">
+                                    <fieldset class="scheduler-border">
+
+                                        <label class="col-sm-2 control-label" for="form-field-1">Return Qty. <span style="color:red">*</span>:</label>
+                                        <div class="col-sm-2">
+                                            <input kit-liter-qty name="indentqty" min="0" maxlength="8" id="indentqty" placeholder="Enter Return Qty" autofocus class="form-control" type="text" ng-model="BS.indentqty" required kt-focus data-index="4">
+                                            <span class="error" ng-show="(fmProductDetails.indentqty.$dirty || submittedAdd) && fmProductDetails.indentqty.$error.required">
+                                                Return Quantity Required!
+                                            </span>
+                                        </div>
+
+                                        <div class="pull-right">
+                                            <button class="btn btn-success " type="button" ng-click="AddProductDetalis(BS)" kt-focus data-index="5"> <i class="ace-icon fa fa-save bigger-110"></i> {{btnAdd}}</button>
+                                            <button class="btn orange" type="button" ng-click="GridClear();">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>Clear
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+
+        <table id="grdMaterialreturn"></table>
+        <div id="grid-pager">
+        </div>
+        @*<div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                    Reson<span style="color: Red"></span> :
+                </label>
+                <input type="text" id="Reson" name="Reson" ng-model="MR.Reson" data-index="5"
+                       placeholder="Enter Reson " class="form-control" />
+            </div>*@
+        <br />
+        <div class="col-sm-12">
+            <div class="pull-right">
+                <button class="btn btn-success" type="button" data-index="6" ng-click="SaveMaterialReturn(MR)">
+                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn orange" ng-click="Reset()" id="Reset">
+                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#Date").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var appElement = document.querySelector('[ ng-controller=MaterialReturnController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdMaterialreturn"))
+    }
+
+</script>
+
+<script type="text/javascript">
+    app.controller('MaterialReturnController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.MR = [];
+        $scope.BS = {};
+        $scope.isDirect = false;
+        $scope.isFormValidAdd = false;
+        $scope.MR.type = 'MaterialIndent';
+        numbersbind();
+        $('#productcategory').focus();
+        $scope.submitted = false;
+        $scope.submittedAdd = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $scope.btnAdd = "Add"
+        $rootScope.FormName = "Material Return";
+        $rootScope.ModuleName = "Transaction";
+
+        $scope.$watch('MaterialReturnfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.$watch('fmProductDetails.$valid', function (newValue) {
+            $scope.isFormValidAdd = newValue;
+        });
+
+        $scope.LoadData = function () {
+            debugger;
+
+            var issuenumber = 0;
+            var returntype = $scope.MR.type;
+            debugger;
+            // $http({ method: 'post', url: "/MMSTransaction/ShowStockupdate/", data: { locationid: storagelocid } }).success(function (data) {
+            $http({ method: 'post', url: "/MMSTransaction/ShowMaterialReturn/", data: { Number: issuenumber, Returntype: returntype } }).success(function (data) {
+                MaterialReturnGridBinding(data);
+
+            }).error(function () {
+                console.log("Error Occuerd in LoadData");
+            });
+
+            $http({
+                url: '/MMSTransaction/ShowStockusers/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.Stock = data;
+            });
+
+
+        }
+
+        function numbersbind() {
+            $("#grdMaterialreturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+            if ($scope.MR.type == 'MaterialIndent') {
+                $scope.isDirect = false;
+                $scope.isReqired = true;
+                $http({
+                    url: '/MMSTransaction/ShowIndentnumbers/',
+                    method: "get"
+
+                }).success(function (data) {
+                    debugger;
+
+                    $scope.Issuenumbers = data;
+
+                });
+            }
+            else if ($scope.MR.type == 'MaterialIssue') {
+                $scope.isDirect = false;
+                $scope.isReqired = true;
+                $http({
+                    url: '/MMSTransaction/ShowIssuenumbers/',
+                    method: "get"
+
+                }).success(function (data) {
+                    debugger;
+
+                    $scope.Issuenumbers = data;
+
+
+                });
+            }
+            else {
+                $scope.isDirect = true;
+                $scope.isReqired = false;
+                $http({
+                    url: '/MMSTransaction/ShowIndentProducts/',
+                    method: "get"
+
+                }).success(function (data) {
+                    debugger;
+                    $scope.productss = data.products;
+                    $scope.Storages = data.storages;
+                    $scope.Requestedby = data.Requestedby;
+                    $scope.Deportments = data.deportments;
+
+                    $scope.Hiddendata = data.products;
+                    da = [];
+                    console.log(data);
+                    OriginGridBinding(da);
+                });
+
+            }
+        }
+
+        $scope.databind = function () {
+            debugger;
+            numbersbind();
+
+        };
+
+
+
+        $(function () {
+            $("#Date").datepicker({
+                endDate: '+0d'
+
+            });
+        });
+
+        $scope.Issuenumberchange = function () {
+            debugger;
+
+            var issuenumber = $('#Number option:selected').text();
+            var returntype = $scope.MR.type;
+            debugger;
+            $http({ method: 'post', url: "/MMSTransaction/ShowMaterialReturn/", data: { Number: issuenumber, Returntype: returntype } }).success(function (data) {
+                debugger;
+                $("#grdMaterialreturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+                MaterialReturnGridBinding(data);
+
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+
+        };
+
+        $scope.BindStorageArea = function (storageareavalue) {
+            $http({
+                url: '/MMSTransaction/BindStorageAreas/',
+                method: "POST",
+                data: { 'storageareavalue': storageareavalue }
+            }).success(function (data) {
+                debugger;
+                $scope.Storages = data.storages;
+                da = [];
+                OriginGridBinding(da);
+            });
+
+
+        }
+
+
+        $scope.Storagechage = function (storagelocationcode) {
+            debugger;
+            var storagelocationcode = storagelocationcode;
+            var productid = $scope.BS.lblproductid;
+            var productname = $scope.BS.productname;
+            var storagelocationname = storagelocationname;
+            var uomname = $scope.lbluom;
+            if (storagelocationcode.indexOf(':') !== -1) {
+
+                storagelocationcode = storagelocationcode.split(':')[1];
+            }
+
+            $http({
+                method: 'POST',
+                url: '/MMSTransaction/GetSelfNames',
+                data: { 'showroomselected': storagelocationcode }
+            }).success(function (data) {
+                debugger;
+                $scope.selfnamecmb = data.selfnames;
+                angular.forEach(data.selfnames, function (tab) {
+                    if (storagelocationcode == tab.storagecode) {
+                        $scope.selfnamecmb.shelfname = tab.shelfname;
+                    }
+                })
+            }).error(function (data) {
+                $scope.message = 'Unexpected Error';
+            });
+        }
+
+
+        $scope.GridClear = function () {
+            debugger;
+            $scope.BS = {};
+            $scope.lblCategory = '';
+            $scope.lblmaxstock = '';
+            $scope.lblminstock = '';
+            $scope.lbluom = '';
+            $scope.lblsubcategory = '';
+            $scope.lblproducttype = '';
+            $scope.btnAdd = "Add";
+            $scope.isdisabled = false;
+            $scope.submittedAdd = false;
+            $scope.fmProductDetails.$setPristine();
+        }
+
+
+
+
+        $scope.AddProductDetalis = function (BS) {
+            debugger;
+            // Checking Grdi Duplicate data
+            $scope.submittedAdd = true;
+            var griddata = $('#grdMaterialreturn').jqGrid('getGridParam', 'data');
+            var chekcproductname = $scope.BS.productname;
+            var grdcount = 0;
+            if ($scope.btnAdd != "Update") {
+                for (var i = 0; i < griddata.length; i++) {
+                    var gridproductdata = griddata[i].productname;
+
+                    if (chekcproductname == gridproductdata) {
+                        grdcount++;
+                    }
+                }
+                if (grdcount <= 0) {
+                    Externalgridadd(BS);
+                } else {
+                    alert("Product " + chekcproductname + " Already Existed. Please Add Another Product");
+                    $scope.GridClear();
+                }
+            }
+
+
+            if ($scope.btnAdd == "Update") {
+                Externalgridadd(BS);
+            }
+
+        }
+
+
+        function Externalgridadd(BS) {
+            debugger;
+            BS["categoryname"] = $scope.lblCategory;
+            BS["maxqty"] = $scope.lblmaxstock;
+            BS["minqty"] = $scope.lblminstock;
+            BS["uom"] = $scope.lbluom;
+            BS["subcategoryname"] = $scope.lblsubcategory;
+            BS["producttype"] = $scope.lblproducttype;
+            BS["productid"] = BS.lblproductid;
+            BS["productcode"] = BS.lblproductcode;
+            BS["productcategoryid"] = BS.lblproductcategoryid;
+            BS["productsubcategoryid"] = BS.lblproductsubcategoryid;
+            debugger;
+            $scope.submittedAdd = true;
+            var storagearestxt = $("#storagelocationname option:selected").text();
+            var storagearesvalue = $("#storagelocationname option:selected").val();
+            var shiftname = $("#shelfname option:selected").text();
+            var rowcount2 = $('#grdMaterialreturn');
+            var rowcount = $('#grdMaterialreturn')[0].rows.length;
+            if ($scope.isFormValidAdd) {
+                if (angular.isDefined(BS.row)) {
+                    row = parseInt(BS.row) + 1;
+                }
+                if ($scope.btnAdd == "Add") {
+                    console.log($scope.BS.indentqty);
+                    BS["Storagelocation"] = storagearestxt;
+                    BS["storagevalue"] = storagearesvalue;
+                    BS["Shelfname"] = shiftname;
+                    BS["convertionvalue"] = 1;
+                    BS["Returnqty"] = $scope.BS.indentqty;;
+                    rowcount = rowcount + 1;
+                    $("#grdMaterialreturn").jqGrid('addRowData', $("#grdCard").getGridParam("reccount") + 1, BS);
+
+                }
+
+                $scope.GridClear();
+            }
+        }
+
+        $scope.Product_Change = function (productchaged) {
+            debugger;
+
+            var productslctd = productchaged;
+            var found = false;
+            var val = $("#productname option:selected").text();
+            angular.forEach($scope.productss, function (tag) {
+                if (val.indexOf(tag.productname) !== -1) {
+                    $scope.lblCategory = tag.categoryname;
+                    $scope.lblmaxstock = tag.maxqty || 0;
+                    $scope.lblminstock = tag.minqty || 0;
+                    $scope.lbluom = tag.uomname;
+                    $scope.lblsubcategory = tag.subcategoryname;
+                    $scope.lblproducttype = tag.producttype;
+                    //hidden fields to save
+                    $scope.BS.lblproductid = tag.productid;
+                    $scope.BS.lblproductcode = tag.productcode;
+                    $scope.BS.lblproductcategoryid = tag.productcategoryid;
+                    $scope.BS.lblproductsubcategoryid = tag.productsubcategoryid;
+
+                    //$scope.BS.shelfname = tag.shelfname;
+                    $scope.BindStorageArea(tag.storageareavalue);
+                    var strstoragelocationarea = $scope.BS.storagelocationname;
+                    var strstoragedata = $scope.Storages;
+                    var storageloen = strstoragedata.length;
+                    debugger;
+                    var storagearea = '';
+                    for (var i = 0; i < storageloen; i++) {
+                        if (strstoragedata[i].storagelocationcode === strstoragelocationarea) {
+                            storagearea = strstoragedata[i].storagelocationname;
+                        }
+                    }
+
+                    var productid = $scope.BS.lblproductid;
+                    $scope.productname = tag.productname;
+
+                    //  $scope.GetAvailaibilityQty(tag.productid, tag.productname, $scope.lbluom, storagearea, $scope.BS.shelfname);
+
+                }
+            })
+            return found;
+        }
+
+
+
+        $scope.SaveMaterialReturn = function (MR) {
+            debugger;
+            $scope.submitted = true;
+            var issueno = $('#Number option:selected').text();
+            var returntype = $scope.MR.type;
+            var Returndby = $('#Returnby option:selected').text();
+            var Recivedby = $('#Recivedby option:selected').text();
+            var Date = $("#Date").val();
+            var row123 = { Recivedby: Recivedby, issueno: issueno, returntype: returntype, Date: Date, Returndby: Returndby };
+            //var verifiedbyname = $("#Userid option:selected").text();
+            var Grid_data = $('#grdMaterialreturn').jqGrid('getRowData');
+            var grdlenth = Grid_data.length;
+            var grddata = [];
+            debugger;
+            for (var i = 0; i < grdlenth; i++) {
+                if (Grid_data[i].Returnqty != 0) {
+                    var row = Grid_data[i];
+                    grddata.push(row);
+                }
+            }
+            debugger;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+
+                        $http({ method: 'POST', data: { MaterialReturnDTO: row123, lstMaterialReturn: grddata }, url: '/MMSTransaction/SaveMaterialReturn/' }).success(function (data) {
+                            debugger
+                            if (data === true) {
+                                alert("Material Return Details Saved Sucessfully");
+                                $scope.MR = {};
+                                ClearForm();
+                                $("#grdMaterialreturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+                            } else {
+                                alert("Error While Saving....");
+                            }
+                        })
+                    }
+                }
+                else {
+
+                }
+            }
+        }
+
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+
+            $scope.MR = {};
+            $scope.MaterialReturnfrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+            $scope.MR.type = 'MaterialIndent';
+            numbersbind();
+            $("#grdMaterialreturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+        }
+        $scope.lastsel2 = 0;
+        //****************** JQ Grid  *******************************//
+        function MaterialReturnGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdMaterialreturn";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        //{
+                        //    label: ' ', width: 40, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                        //        return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        //    }
+                        //},
+                         { label: 'Product', name: 'productname', width: 100 },
+                         { label: 'Product Id', name: 'productid', width: 80, hidden: true },
+                         { label: 'UOM', name: 'uom', width: 80 },
+                         { label: 'Return UOM', name: 'uom', width: 80 },
+                          { label: 'Convertion Value', name: 'convertionvalue', width: 90 },
+                         { label: 'Storage Location', name: 'Storagelocation', width: 110 },
+                         { label: 'shelfid', name: 'Shelfid', hidden: true },
+                         { label: 'Shelf Name', name: 'Shelfname', width: 100 },
+                          { label: 'Issue/Indent Qty', name: 'qty', width: 100 },
+                         { label: 'Return QTY', name: 'Returnqty', width: 100, formatter: Number, align: 'right', editable: true }
+                
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                onSelectRow: function (id) {
+                    jQuery('#grdMaterialreturn').jqGrid('restoreRow', $scope.lastsel2);
+                    jQuery('#grdMaterialreturn').jqGrid('editRow', id, {
+                        keys: true,
+
+                    });
+                    $scope.lastsel2 = id;
+
+                },
+                caption: "Material Return <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+
+
+    });
+</script>
+

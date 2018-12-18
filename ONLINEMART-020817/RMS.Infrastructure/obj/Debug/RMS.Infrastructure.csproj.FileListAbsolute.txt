@@ -1,0 +1,23 @@
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Infrastructure.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Infrastructure.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Core.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.csprojResolveAssemblyReference.cache
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Infrastructure.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Infrastructure.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Core.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Core.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.csprojResolveAssemblyReference.cache
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Infrastructure.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Infrastructure.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\Mono.Security.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\Npgsql.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Core.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\bin\Debug\RMS.Core.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.csprojResolveAssemblyReference.cache
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS.Infrastructure\obj\Debug\RMS.Infrastructure.pdb

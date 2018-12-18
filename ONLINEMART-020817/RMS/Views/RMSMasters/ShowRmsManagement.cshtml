@@ -1,0 +1,895 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+
+<div ng-controller="RMSManagementController as ctrl" ng-init="Load()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+
+                <form class="form-horizontal" role="form" name="RMSManagementfrm" novalidate>
+
+                    @*<div ng-if="Product">*@
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Item Name <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-10">
+                            <select name="ItemName" id="ItemName" ng-model="$parent.rmsdata.ItemName" class="form-control" ng-options="v.itemname as v.itemname for v in ItemNames" required ng-change="updates()">
+                                <option value="" selected>Select Item Name</option>
+                            </select>
+
+                            <span class="error" ng-show="(RMSManagementfrm.ItemName.$dirty || submitted) && RMSManagementfrm.ItemName.$error.required">
+                                Item Name Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Category <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="CategoryName" ng-model="CategoryName" placeholder="Category" class="form-control" required disabled="true" />
+                            <span class="error" ng-show="(RMSManagementfrm.CategoryName.$dirty || submitted) && RMSManagementfrm.CategoryName.$error.required">
+                                Category Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Sub Category <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="SubCategory" ng-model="SubCategory" placeholder="Sub Category" class="form-control" required disabled="true" />
+                            <span class="error" ng-show="(RMSManagementfrm.SubCategory.$dirty || submitted) && RMSManagementfrm.SubCategory.$error.required">
+                                Sub Category Required!
+                            </span>
+                        </div>
+                    </div>
+
+                    @*</div>*@
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+
+                        </label>
+                        <div class="col-sm-10">
+
+
+
+                            <span>
+                                <input type="checkbox" id="test1" value="Product" ng-model="Product" ng-change="change()" />
+                                <label for="test1">Products</label>
+                            </span>
+                            <label class="col-sm-4 control-label no-padding-right" for="form-field-1">
+
+                            </label>
+                            <span>
+                                <input type="checkbox" id="test2" value="Item" ng-model="Item" ng-change="change()" />
+                                <label for="test2">Item</label>
+                            </span>
+
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div ng-if="Product">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                Products <span style="color: Red">*</span> :
+                            </label>
+                            <div class="col-sm-10">
+
+
+
+                                <ui-select name="Products" required multiple ng-model="ctrl.Products.selected" class="form-control" on-remove="SelectProduct($item.productcode, $model, ctrl.Products.selected.productcode)" on-select="    SelectProduct($item.productcode, $model, ctrl.Products.selected)">
+                                    <ui-select-match placeholder="Select Products">{{$item.productname}}</ui-select-match>
+                                    <ui-select-choices repeat="Products in ProductNames | propsFilter: {productname: $select.search}">
+                                        <div ng-bind-html="Products.productname | highlight: $select.search"></div>
+
+                                    </ui-select-choices>
+                                </ui-select>
+
+
+
+                                <span class="error" ng-show="(RMSManagementfrm.Products.$dirty || submitted) && RMSManagementfrm.Products.$error.required">
+                                    Products Required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="Item">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                Items <span style="color: Red">*</span> :
+                            </label>
+                            <div class="col-sm-10">
+
+
+                                <ui-select name="Items" required multiple ng-model="ctrl.Items.selected" class="form-control" on-remove="SelectProduct($item.vchrmsno, $model, ctrl.Items.selected.vchrmsno)" on-select="    SelectProduct($item.vchrmsno, $model, ctrl.Items.selected)">
+                                    <ui-select-match placeholder="Select Items">{{$item.vchitemname}}</ui-select-match>
+                                    <ui-select-choices repeat="Items in ItemNamesFromRMS | propsFilter: {vchitemname: $select.search}">
+                                        <div ng-bind-html="Items.vchitemname | highlight: $select.search"></div>
+
+                                    </ui-select-choices>
+                                </ui-select>
+
+
+
+
+
+
+                                <span class="error" ng-show="(RMSManagementfrm.Items.$dirty || submitted) && RMSManagementfrm.Items.$error.required">
+                                    Items Required!
+                                </span>
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" ng-click="AddRms()" data-index="3">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnAdd}}
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <table id="grdrmsdetails"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+
+                    @*<div ng-if="Product">*@
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Steps To Prepare <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-10">
+
+                            <textarea id="PreparationSteps" placeholder="Enter  Steps To Prepare" ng-model="rmsdata.PreparationSteps" class="col-xs-12"
+                                      style="resize:none" rows="5" name="PreparationSteps" maxlength="475"></textarea>
+
+
+                            @*<span class="error" ng-show="(RMSManagementfrm.PreparationSteps.$dirty || submitted) && RMSManagementfrm.PreparationSteps.$error.required">
+                                    Steps To Prepare Required!
+                                </span>*@
+
+                        </div>
+                    </div>
+                    @*</div>*@
+                    <div class="col-sm-12">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" data-index="3" ng-click="SaveRms(rmsdata)">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('RMSManagementController', function ($scope, $http, $rootScope) {
+        debugger
+        var vm = this;
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnAdd = "Add";
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Recipe Management";
+        $rootScope.ModuleName = "RMS Masters";
+        // $scope.Product = true;
+        $scope.$watch('RMSManagementfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+
+
+
+
+        $scope.Reset = function () {
+
+
+
+            location.reload();
+
+        }
+
+
+
+        $scope.change = function () {
+            debugger;
+
+            if ($scope.Product == false) {
+                jQuery('#grdrmsdetails').jqGrid('clearGridData');
+
+
+
+                $scope.ctrl.Products.selected = undefined;
+
+
+
+
+
+
+            }
+            if ($scope.Item == false) {
+                jQuery('#grdrmsdetails').jqGrid('clearGridData');
+
+                $scope.ctrl.Items.selected = undefined;
+
+
+            }
+
+
+        }
+
+
+        $scope.SaveRms = function (rmsdata) {
+
+
+            if ($scope.Product == true || $scope.Item == true) {
+
+                $scope.submitted = true;
+
+                var rowIds = $('#grdrmsdetails').jqGrid('getDataIDs');
+                for (idIndex = 0; idIndex < rowIds.length; ++idIndex) {
+                    jQuery("#grdrmsdetails").jqGrid('saveRow', rowIds[idIndex]);
+                }
+
+
+                debugger;
+                var griddata = $('#grdrmsdetails').jqGrid('getGridParam', 'data');
+
+
+
+                if ($scope.isFormValid) {
+
+                    if ($scope.btnSave == "Save") {
+
+
+
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+
+                            $http({
+
+                                url: '/RMSMasters/SaveRMSManagement/',
+                                method: "POST",
+
+                                data: { lstRMSDTO: JSON.stringify(rmsdata), lstRMSDTODetails: JSON.stringify(griddata) }
+                            }).success(function (data) {
+
+                                debugger;
+                                if (data) {
+
+                                    alert("RMS Details Saved Successfully");
+                                    location.reload();
+
+                                }
+                            })
+                         .error(function (data) {
+
+                             alert('Unexpected Error');
+                         });
+                        }
+
+
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+                }
+
+            }
+            else {
+
+                alert("Please Select Product or Item");
+            }
+
+
+
+        }
+
+        $scope.AddRms = function () {
+
+
+
+            debugger;
+
+            if ($scope.Product == true || $scope.Item == true) {
+
+
+                $scope.submitted = true;
+                if ($scope.isFormValid) {
+
+
+
+
+
+
+
+                    if ($scope.Product == true) {
+                        var ProNames = vm.Products.selected.map(function (l, f, d) {
+                            return l.productname;
+                        });
+
+                        $scope.namessss = ProNames.toString();
+                    }
+                    else {
+                        $scope.namessss = null;
+                    }
+
+
+
+
+
+                    if ($scope.Item == true) {
+                        var ItemsFromRMS = vm.Items.selected.map(function (l, f, d) {
+                            return l.vchitemname;
+                        });
+                        $scope.INames = ItemsFromRMS.toString();
+                    }
+                    else {
+                        $scope.INames = null;
+
+                    }
+
+
+
+
+
+
+
+
+
+
+                    if ($scope.btnAdd == "Add") {
+
+                        if ($scope.namessss != null && $scope.INames == null) {
+
+                            $http.post('/RMSMasters/ShowProducts', { ProductNames: $scope.namessss }).success(function (data) {
+                                debugger;
+
+                                JqgridBinding(data.lstDetails);
+
+                                $scope.lenth = data.lstDetails.length;
+                            });
+                        }
+
+                        if ($scope.INames != null && $scope.namessss == null) {
+                            $http.post('/RMSMasters/ShowItms', { ItmName: $scope.INames }).success(function (data) {
+                                debugger;
+
+                                JqgridBinding(data.lstDetails);
+
+                                $scope.lenth = data.lstDetails.length;
+                            });
+                        }
+
+                        if ($scope.INames == null && $scope.namessss == null) {
+                            alert("Please Select Product Or Items");
+                        }
+
+
+
+
+
+                        if ($scope.INames != null && $scope.namessss != null) {
+
+
+
+                            $http.post('/RMSMasters/ShowItms', { ItmName: $scope.INames }).success(function (data) {
+
+
+
+
+                                $scope.ItemNamesdata = data.lstDetails;
+
+
+
+                            });
+
+
+                            $http.post('/RMSMasters/ShowProducts', { ProductNames: $scope.namessss }).success(function (data) {
+
+
+
+
+                                if ($scope.ItemNamesdata.length > 0) {
+
+                                    $scope.pro = data.lstDetails;
+
+
+
+
+                                    $scope.ItemNamesdata.push.apply($scope.ItemNamesdata, $scope.pro);
+                                    JqgridBinding($scope.ItemNamesdata);
+
+                                }
+
+
+
+                            });
+
+
+
+
+
+
+
+                        }
+
+
+
+
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                }
+            }
+            else {
+                alert("Please Select Product or Item");
+            }
+
+            // alert(ctrl.Products.selected);
+        }
+
+
+        $scope.SelectProduct = function (x, model, items) {
+            debugger
+
+
+            var ty = items.map(function (l, f, d) {
+                return l.productcode;
+            })
+            var test = ty.toString();
+
+        }
+
+        $scope.Load = function () {
+
+            $http({
+                url: '/RMSMasters/GetItemNames/',
+                method: "get"
+            }).success(function (data) {
+
+
+                $scope.ItemNames = eval('(' + data.Data + ')');
+
+
+                $scope.getItemsfromrms();
+
+
+            });
+
+            var mydata = [];
+
+            JqgridBinding(mydata);
+
+
+        }
+
+        function loadUOMS() {
+            var UOMSList = ":Select;";
+            $.ajax({
+                url: '/MMSMaster/BindUOM/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                data: '',
+                success: function (data) {
+                    debugger
+
+
+                    // $scope.UomNames = eval('(' + data.Data + ')');
+                    var msg = eval('(' + data.Data + ')');
+
+                    if (msg != undefined && msg.length > 0) {
+                        for (var i = 0; i < msg.length; i++) {
+                            if (i == msg.length - 1) {
+                                UOMSList += "" + msg[i].uomid + ":" + msg[i].uom + "";
+                            }
+                            else {
+                                UOMSList += "" + msg[i].uomid + ":" + msg[i].uom + ";";
+                            }
+                        }
+                    }
+                }
+
+            });
+            return UOMSList;
+        }
+
+
+
+        $scope.updates = function () {
+
+            debugger;
+
+            var ItemNamess = $scope.rmsdata.ItemName;
+
+            $http.post('/RMSMasters/Getcategoryandsub', { name: ItemNamess }).success(function (data) {
+
+
+                debugger;
+
+
+                $scope.book = eval('(' + data.Data + ')');
+
+
+                for (var i = 0; i < $scope.book.length; i++) {
+
+                    $scope.CategoryName = $scope.book[i].categoryname;
+                    $scope.SubCategory = $scope.book[i].subcategoryname;
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+            });
+
+
+
+
+            $scope.Getproducts();
+
+
+
+        }
+
+
+
+
+        $scope.getItemsfromrms = function () {
+
+
+
+            $http({
+                url: '/RMSMasters/GetItemsRMS',
+                method: "get"
+            }).success(function (data) {
+
+
+                $scope.ItemNamesFromRMS = eval('(' + data.Data + ')');
+
+
+
+
+
+            });
+
+
+
+
+
+
+        }
+
+
+        $scope.Getproducts = function () {
+            $http({
+                url: '/RMSMasters/GetProductsNames',
+                method: "get"
+            }).success(function (data) {
+
+
+                $scope.ProductNames = eval('(' + data.Data + ')');
+
+
+
+
+
+            });
+
+
+
+
+        }
+
+
+
+
+
+        function JqgridBinding(data) {
+            var grid_data = data;
+            var grid_selector = "#grdrmsdetails";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('clearGridData')
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 300,
+                rownumbers: true,
+                rowNum: 100000,
+                shrinkToFit: true,
+                forceFit: true,
+                colModel: [
+                    {
+                        label: 'DetailsID', name: 'Detailsid', width: 50, hidden: true
+                    },
+                    {
+                        label: 'RMS  No', name: 'RMSNO', width: 50, hidden: true
+                    },
+                       {
+                           label: 'Item Name', name: 'ItemName', width: 50, hidden: true
+                       },
+                    {
+                        label: 'Group Name', name: 'GroupName', width: 50, hidden: true
+                    },
+                    { label: 'Product Code', name: 'ProductCode', index: 'ProductCode', width: 250, sortable: false, hidden: true },
+                    { label: 'Product Name', name: 'ProductName', index: 'ProductName', width: 250, sortable: false },
+                     { label: 'UOM', name: 'UOM', index: 'UOM', width: 250, sortable: false },
+                    //{ label: 'Receipe UOM', name: 'ReceipeUOM', index: 'ReceipeUOM', width: 250 },
+
+
+
+                    {
+                        label: 'Receipe UOM', name: 'ReceipeUOM', index: 'ReceipeUOM', width: 250, editable: true, edittype: "select", editoptions: {
+                            value: loadUOMS,
+                            dataEvents: [
+                                    {
+                                        type: 'change',
+                                        fn: function (e) {
+                                            var row = $(e.target).closest('tr.jqgrow');
+                                            var rowId = row.attr('id');
+                                            jQuery("#grdrmsdetails").saveRow(rowId, false, 'clientArray');
+                                        }
+                                    }
+                            ]
+                        }
+                    },
+
+
+
+
+                     {
+                         label: 'Qty.', name: 'Qty', index: 'Qty', width: 250, editable: true, editoptions: {
+                             dataEvents: [{
+                                 type: 'blur', fn: function (e) {
+
+                                     var value = (this.value);
+
+                                     res = /^[0-9\b]+$/;
+
+
+
+                                     re = /^\d+(?:\.\d{0,2})$/;
+
+
+
+
+                                     if (re.test(value) || res.test(value)) {
+
+                                         //  checkVal(this.value, e);
+
+
+
+
+
+                                     }
+
+
+
+                                     else {
+
+                                         alert("Enter Valid Qty");
+                                         var tr = $(e.target).closest('tr');
+
+
+                                         var rowData = $("#grdrmsdetails").getRowData(tr[0].id);
+                                         document.getElementById("" + tr[0].id + "_Qty").value = "";
+
+
+
+
+
+
+
+
+                                     }
+
+
+
+
+                                 }
+
+
+                             }]
+                         }
+                     },
+                      //{ label: 'Conversion', name: 'ConversionUom', index: 'ConversionUom', width: 250 }
+
+
+
+
+                {
+                label: 'Conversion', name: 'ConversionUom', index: 'ConversionUom', width: 250, editable: true, edittype: "select", editoptions: {
+                value:loadUOMS,
+                dataEvents: [
+                        {
+                            type: 'change',
+                            fn: function (e) {
+                                var row = $(e.target).closest('tr.jqgrow');
+                                var rowId = row.attr('id');
+                                jQuery("#grdrmsdetails").saveRow(rowId, false, 'clientArray');
+                            }
+                        }
+                ]
+            }
+        }
+
+
+
+
+
+
+
+                     // { label: 'Receipe UOM', name: 'UOM', index: 'UOM', width: 250 },
+                    // { label: 'Qty.', name: 'Qty', index: 'Qty', width: 250 , editable:true},
+                    //  { label: 'Conversion', name: 'UOM', index: 'UOM', width: 250}
+
+
+                ],
+                viewrecords: true,
+                // rowNum: 10,
+                // rowList: [10, 20, 30, 100],
+                pager: pager_selector,
+
+
+                search: true,
+
+                ignoreCase: true,
+                saveAfterSelect: true,
+                grouping: true,
+                groupingView: { groupField: ['GroupName'], groupColumnShow: [false], groupText: ['<b>{0} </b>'] },
+
+                onSelectRow: function (id) {
+
+                    jQuery('#grdrmsdetails').editRow(id, true);
+                },
+
+                caption: "Recipe Management Details"
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,137 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div id="Xyx" ng-controller="daywiseReportController">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+
+
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat widget-header-large">
+                        <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i>DAY WISE SALE </h5>
+                        <div class="widget-toolbar">
+                          
+
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-up"></i>
+                            </a>
+                             </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <form class="form-horizontal" role="form" ng-controller="daywiseReportController" name="fmdaywiseReport"
+                                  ng-init="ngInitBindComboBoxes()" novalidate>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        From Date :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="FromDate" type="text" ng-model="daywise.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                        <span class="error" ng-show="(fmdaywiseReport.FromDate.$dirty || submitted ) && fmdaywiseReport.FromDate.$error.required">
+                                            From Date required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        To Date :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="ToDate" type="text" id="datepicker" class=" form-control " ng-model="daywise.todate" data-date-format="dd/mm/yyyy" required />
+                                        <span class="error" ng-show="(fmdaywiseReport.ToDate.$dirty || submitted ) && fmdaywiseReport.ToDate.$error.required">
+                                            To Date required!
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button class="btn btn-success" type="button" ng-click="PrintdaywiseReport(daywise)">
+                                            <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                        </button>
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+        });
+    });
+
+
+
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker(
+            {
+                endDate: '+0d'
+            });
+    });
+</script>
+<script>
+
+    var app = angular.module('RMS');
+    app.controller('daywiseReportController', function ($scope, $http, $rootScope) {
+        $scope.daywise = {};
+
+        var date = new Date();
+        var dt = date.toLocaleDateString("en-au", { year: "numeric", day: "numeric", month: "numeric" }).replace(/\s/g, '-')
+        //$scope.subcategory.fromdate = dt;
+        //$scope.subcategory.todate = dt;
+        // $('.date-picker').datepicker('setDate', new Date(   ));
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Day Wise Sale";
+        $scope.isFormValid = false;
+        $scope.$watch('fmdaywiseReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+       
+
+        $scope.checkDate = function (date1, date2) {
+            // if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                // if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+        $scope.PrintdaywiseReport = function (daywise) {
+            debugger
+
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+                    var w = window.open("/POSReports/daywisesaleReport/?fromdate=" + changedate(daywise.fromdate) + "&todate=" + changedate(daywise.todate) + "", '_blank');
+                    $scope.daywise = {};
+                    $scope.fmdaywiseReport.$setPristine();
+                    $scope.submitted = false;
+                  
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+        }
+    });
+</script>
+
+

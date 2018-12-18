@@ -1,0 +1,400 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .pq-toolbar-search input[type=text] {
+        padding: 5px;
+        float: right;
+    }
+
+    .pq-toolbar-search input[type=text], .pq-grid-footer input[type=text] {
+        width: auto !important;
+    }
+</style>
+
+<div ng-controller="Shiftcontroller" ng-init="LoadShiftData()">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="Shiftfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Shift Name<span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-5">
+                            <input type="text" name="ShiftName" ng-model="Shift.Shiftname" placeholder="Enter Shift Name" ng-readonly="ShiftName"
+                                   class="form-control" id="ShiftName" maxlength="50" required kt-focus data-index="3" />
+                            <span class="error" ng-show="(Shiftfrm.ShiftName.$dirty || submitted) && Shiftfrm.ShiftName.$error.required">
+                                Shift Name Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label  " for="form-field-2">
+                            From <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-2">
+                            <div>
+                                <input type="text" class="form-control timepicker" id="timepicker1" name="fromdate" placeholder="hh:mm"
+                                       ng-model="Shift.FromTime" required onkeyup="validateFromTime()" />
+                                <span class="error" ng-show="(Shiftfrm.fromdate.$dirty || submitted) && Shiftfrm.fromdate.$error.required">
+                                    From Time Required!
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <label class="col-sm-1 control-label " for="form-field-2">
+                            To <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-2">
+                            <div>
+                                <input placeholder="hh:mm" type="text" class="form-control timepicker" id="timepicker2" onkeyup="validateToTime()" name="Todate"
+                                       ng-model="Shift.ToTime" required />
+                                <span class="error" ng-show="(Shiftfrm.Todate.$dirty || submitted) && Shiftfrm.Todate.$error.required">
+                                    To Time Required!
+                                </span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="submit" ng-click="SaveShift(Shift)" data-index="4">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset" type="button">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="clearfix"></div>
+                <table id="grdShift"></table>
+                <div id="grid-pager">
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    var app = angular.module('RMS');
+    app.controller('Shiftcontroller', function ($scope, $http, $rootScope) {
+        debugger;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Shift";
+        $rootScope.ModuleName = "Employee Masters";
+
+        //Validations
+        //$scope.ShiftName = false;
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.$watch('Shiftfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+
+        });
+
+
+
+        $scope.LoadShiftData = function () {
+            debugger;
+            $http({
+                url: '/EmployeeMasters/ShowShiftDetails/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+            });
+            //}).error(function () {
+            //    debugger;
+            //    alert("Error Occuerd");
+
+            //});
+        }
+
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdShift";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                // return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'ShiftId', name: 'ShiftId', width: 75, hidden: true },
+            { label: 'Shift Name', name: 'Shiftname', width: 75 },
+            { label: 'From', name: 'FromTime', width: 70 },
+            { label: 'To', name: 'ToTime', width: 70 }
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Taxes <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+
+        }
+
+
+        $scope.SaveShift = function (Shift) {
+            debugger;
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                debugger;
+
+                var timeto = $scope.Shift.ToTime.split(':');
+                var timeFrom = $scope.Shift.FromTime.split(':');
+
+                var F = parseInt(timeFrom[0]) * 60;
+                F = F + parseInt(timeFrom[1]);
+
+                var T = parseInt(timeto[0]) * 60;
+                T = T + parseInt(timeto[1]);
+
+                var strShiftName = Shift.Shiftname;
+
+                if (T > F) {
+                    if ($scope.btnSave == 'Save') {
+                        debugger;
+                        var Count = 0;
+                        $http({
+                            url: '/EmployeeMasters/GetShiftExist/',
+                            method: "POST",
+                            data: { From: F, To: T, ShiftName: strShiftName }
+
+                        }).success(function (data) {
+                            debugger;
+                            Count = parseInt(data.Data);
+
+                            debugger;
+                            if (Count == 0) {
+                                var result = confirm('Are You Sure? Do You Want To Save?');
+                                if (result) {
+                                    $http.post("/EmployeeMasters/CreateShift/", Shift).success(function (data, status) {
+                                        debugger;
+                                        if (data.Success === true) {
+                                            debugger;
+                                            alert('Shift Saved Sucessfully');
+                                            ClearForm();
+                                            $scope.LoadShiftData();
+                                        }
+                                        else {
+                                            alert("Shift Name Already Exist");
+                                            ClearForm();
+                                        }
+                                    });
+
+                                }
+                            }
+                            else {
+                                alert('Shift already Exist');
+                            }
+                        });
+                    }
+
+                    if ($scope.btnSave == 'Update') {
+
+                        var Count = 0;
+                        $http({
+                            url: '/EmployeeMasters/GetShiftExist/',
+                            method: "POST",
+                            data: { From: F, To: T, ShiftName: strShiftName }
+
+                        }).success(function (data) {
+                            debugger;
+                            Count = parseInt(data.Data);
+
+                            debugger;
+                            if (Count == 0) {
+
+                                var result = confirm('Are You Sure? Do You Want To Update?');
+                                if (result) {
+                                    $http({ method: 'POST', data: Shift, url: '/EmployeeMasters/UpdateShift' }).success(function (data) {
+                                        debugger;
+                                        if (data == 'True') {
+                                            alert('Shift Updated Successfully');
+                                            $scope.LoadShiftData();
+                                        }
+                                        else {
+                                            alert("Shift Name Already Exist");
+                                            ClearForm();
+                                        }
+                                    });
+                                    ClearForm();
+                                }
+                            }
+                            else {
+                                alert('Shift already Exist');
+                            }
+                        });
+
+                    }
+                }
+                else {
+
+                    alert('Enter Valid Time');
+                }
+            }
+
+        };
+
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        //****************** Clear Details *******************************//
+        function ClearForm() {
+            debugger;
+            $scope.Shift = {};
+            $scope.Shiftfrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+            //$scope.ShiftName = false;
+
+        }
+
+
+        $(document).ready(function () {
+            $.mask.definitions['H'] = "[0-2]";
+            $.mask.definitions['h'] = "[0-9]";
+            $.mask.definitions['M'] = "[0-5]";
+            $.mask.definitions['m'] = "[0-9]";
+            $.mask.definitions['P'] = "[AaPp]";
+            $.mask.definitions['p'] = "[Mm]";
+
+            $(".timepicker").mask("Hh:Mm");
+
+        });
+
+    });
+</script>
+
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=Shiftcontroller]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdShift"))
+    }
+    function edit(row) {
+        debugger;
+        //var rowdata = jQuery('#grdCity').jqGrid('getRowData', row);
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = jQuery("#grdShift").jqGrid('getRowData', row);
+        //var rowdata = jQuery('#grdCity').jqGrid('getRowData', row);
+
+        var copy = Object.assign({}, rowdata);
+        $http.post('/EmployeeMasters/CheckShift', rowdata).success(function (data) {
+            debugger;
+            if (data == 'True') {
+                $scope.btnSave = "Update";
+                $scope.Shift = copy;
+                //$scope.CountryChange();
+                $scope.$apply();
+            }
+            else {
+                //$scope.ShiftName = true;
+                alert("Cannot Edit Shift as it is in use by the application");
+
+            }
+        })
+
+    }
+    function Delete(row) {
+        debugger
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = jQuery("#grdShift").jqGrid('getRowData', row);
+        debugger;
+        if ($scope.btnSave == "Save") {
+            $http.post('/EmployeeMasters/CheckShift', rowdata).success(function (data) {
+                debugger;
+                if (data == 'True') {
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+                    if (ans) {
+                        $http.post('/EmployeeMasters/DeleteShift', rowdata).success(function (data) {
+                            debugger;
+                            if (data == 'True') {
+                                alert("Shift Deleted Successfully");
+                                $('#grdShift').jqGrid('delRowData', row);
+                                //$scope.LoadShiftData();
+                            }
+                            else if (data == 'False') {
+                                alert("Cannot Delete Shift as it is in use by the application");
+                            }
+                        })
+                    }
+                }
+                else {
+                    alert("Cannot Delete Shift as it is in use by the application");
+                }
+            })
+        }
+        else {
+            alert("Cannot Delete Shift as it is in Edit Mode!");
+        }
+    }
+</script>

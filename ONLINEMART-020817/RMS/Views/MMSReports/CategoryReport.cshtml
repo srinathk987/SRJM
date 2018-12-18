@@ -1,0 +1,482 @@
+﻿@{
+    //ViewBag.Title = "CategoryReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="categoryReportController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> CATEGORY WISE PURCHASE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="categoryReportController" name="fmcategoryReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="category.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmcategoryReport.FromDate.$dirty || submitted ) && fmcategoryReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="ToDate" type="text" id="datepicker" class=" form-control" ng-model="category.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmcategoryReport.ToDate.$dirty || submitted ) && fmcategoryReport.ToDate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Category Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="category.categoryName=0" ng-model="category.categoryName" class=" form-control" name="categoryName" ng-options="c.productcategoryid as c.productcategoryname for c in categoryDetails" required></select>
+                                    <span class="error" ng-show="(fmcategoryReport.categoryName.$dirty || submitted ) && fmcategoryReport.categoryName.$error.required">
+                                        Category Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintcategoryReport(category)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> SUBCATEGORY WISE PURCHASE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="categoryReportController" name="fmsubcategoryReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="subFromDate" type="text" ng-model="subcategory.fromdate" class=" form-control" id="subfromdate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmsubcategoryReport.subFromDate.$dirty || submitted ) && fmsubcategoryReport.subFromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="subTodate" type="text" id="subtodate" class=" form-control" ng-model="subcategory.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmsubcategoryReport.subTodate.$dirty || submitted ) && fmsubcategoryReport.subTodate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Category Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="subcategory.categoryid=0" ng-model="subcategory.categoryid" class=" form-control" name="categoryName" ng-options="c.productcategoryid as c.productcategoryname for c in categoryDetails" ng-change="categoryChange(subcategory.categoryid)" required></select>
+                                    <span class="error" ng-show="(fmsubcategoryReport.categoryName.$dirty || SubCategorysubmitted ) && fmsubcategoryReport.categoryName.$error.required">
+                                        Category Name required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Subcategory Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="subcategory.subcategoryid=0" ng-model="subcategory.subcategoryid" class=" form-control" name="subcategoryName" ng-options="c.productsubcategoryid as c.productsubcategoryname for c in SubcategoryDetails" required></select>
+                                    <span class="error" ng-show="(fmsubcategoryReport.subcategoryName.$dirty || SubCategorysubmitted ) && fmsubcategoryReport.subcategoryName.$error.required">
+                                        Subcategory Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-2 pull-right">
+                                    <button class="btn btn-success" type="button" ng-click="PrintSubcategoryReport(subcategory)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> PRODUCT WISE PURCHASE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="categoryReportController" name="fmproductReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="prdFromDate" type="text" ng-model="product.fromdate" class=" form-control" id="prdfromdate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmproductReport.prdFromDate.$dirty || submitted ) && fmproductReport.prdFromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="prdTodate" type="text" id="prdtodate" class=" form-control" ng-model="product.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmproductReport.prdTodate.$dirty || submitted ) && fmproductReport.prdTodate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Product Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="product.productName=0" ng-model="product.productName" class=" form-control" name="productName" ng-options="c.productid as c.productname for c in productdetails" required></select>
+                                    <span class="error" ng-show="(fmproductReport.productName.$dirty || submitted ) && fmproductReport.productName.$error.required">
+                                        product Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintproductReport(product)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> SUBCATEGORY WISE PURCHASE AND SALE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="categoryReportController" name="fmsubcategoryPurchaseansSaleReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="scategory.fromdate" class=" form-control" id="spfromdate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmsubcategoryPurchaseansSaleReport.FromDate.$dirty || submitted ) && fmsubcategoryPurchaseansSaleReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="Todate" type="text" id="sptodate" class=" form-control" ng-model="scategory.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmsubcategoryPurchaseansSaleReport.Todate.$dirty || submitted ) && fmsubcategoryPurchaseansSaleReport.Todate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Category Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="scategory.categoryid=0" ng-model="scategory.categoryid" class=" form-control" name="scategoryName" ng-options="c.productcategoryid as c.productcategoryname for c in categoryDetails" ng-change="categoryChange(scategory.categoryid)" required></select>
+                                    @*<select ng-init="scategory.categoryid=0" ng-model="scategory.categoryid" class=" form-control" name="scategoryName" ng-options="c.productcategoryid as c.productcategoryid for c in categoryDetails" ng-change="categoryChange(scategory.categoryid)" required></select>*@
+                                    <span class="error" ng-show="(fmsubcategoryPurchaseansSaleReport.scategoryName.$dirty || SubCategorysubmitted ) && fmsubcategoryPurchaseansSaleReport.scategoryName.$error.required">
+                                        Category Name required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Subcategory Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="scategory.subcategoryid=0" ng-model="scategory.subcategoryid" class=" form-control" name="ssubcategoryName" ng-options="c.productsubcategoryid as c.productsubcategoryname for c in SubcategoryDetails" required></select>
+                                    <span class="error" ng-show="(fmsubcategoryPurchaseansSaleReport.ssubcategoryName.$dirty || SubCategorysubmitted ) && fmsubcategoryPurchaseansSaleReport.ssubcategoryName.$error.required">
+                                        Subcategory Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-2 pull-right">
+                                    <button class="btn btn-success" type="button" ng-click="PrintSubcategoryPurchaseandSaleReport(scategory)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#subfromdate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#subtodate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#prdfromdate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#prdtodate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#sptodate").datepicker({
+            endDate: '+0d'
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#spfromdate").datepicker({
+            endDate: '+0d'
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('categoryReportController', function ($scope, $http, $rootScope) {
+        $scope.category = {};
+        $scope.product = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Category Wise";
+
+        $scope.isFormValid = false;
+        $scope.category.categoryName = 0;
+        $scope.$watch('fmcategoryReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.product.productName = 0;
+        $scope.$watch('fmproductReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.$watch('fmsubcategoryReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.$watch('fmsubcategoryPurchaseansSaleReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/GetmmsCategorynames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.categoryDetails = eval('(' + data.Data + ')');
+                var subcat = 0;
+                $scope.categoryChange(subcat);
+            });
+
+            $http({
+                url: '/MMSReports/Getmmsproductnames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.productdetails = eval('(' + data.Data + ')');
+            });
+
+        }
+        $scope.checkDate = function (date1, date2) {
+
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+
+                return false;
+            else
+                return true;
+        }
+
+        $scope.PrintcategoryReport = function (category) {
+            debugger
+            $scope.submitted = true;
+            debugger;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+
+                    var w = window.open("/MMSReports/MmsCategoryReport/?fromdate=" + changedate(category.fromdate) + "&todate=" + changedate(category.todate) + "&Category=" + category.categoryName + "", '_blank');
+                    $scope.category = {};
+                    $scope.fmcategoryReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.category.categoryName = 0;
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+
+        }
+
+        $scope.PrintproductReport = function (product) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var w = window.open("/MMSReports/mmsproductReport/?fromdate="+changedate(product.fromdate)+"&todate="+changedate(product.todate)+"&product=" + product.productName + "", '_blank');
+                $scope.product = {};
+                $scope.fmproductReport.$setPristine();
+                $scope.submitted = false;
+                $scope.product.productName = 0;
+            }
+        }
+
+        $scope.PrintSubcategoryPurchaseandSaleReport = function (subcategory) {
+            debugger;
+            $scope.submitted = true;
+            if (subcategory.categoryid != undefined && subcategory.categoryid != null) {
+                if (subcategory.categoryid == 'ALL' || subcategory.categoryid == 0) {
+                    subcategory.categoryid = 'ALL';
+                    subcategory.subcategoryid = '';
+                }
+                else {
+                    if (subcategory.subcategoryid != undefined && subcategory.subcategoryid != null) {
+                        if (subcategory.categoryid == 'ALL' || subcategory.categoryid == 0) {
+                            subcategory.subcategoryid = 'ALL';
+                        }
+                    }
+                    else {
+                        subcategory.subcategoryid = 'ALL'
+                    }
+                }
+                if ($scope.isFormValid) {
+                    var sub = $scope.checkDate($("#spfromdate").val(), $("#sptodate").val());
+                    if (sub) {
+                        var w = window.open("/MMSReports/SubcategoryPurchaseandSaleReport/?Categoryid=" + subcategory.categoryid + "&SubCategoryid=" + subcategory.subcategoryid + "&FromDate=" + subcategory.fromdate + "&ToDate=" + subcategory.todate + "", '_blank');
+                        $scope.scategory = {};
+                        $scope.fmsubcategoryPurchaseansSaleReport.$setPristine();
+                        $scope.submitted = false;
+                        $scope.scategory.categoryid = 0;
+                        $scope.scategory.subcategoryid = 0;
+                    }
+                }
+                $scope.scategory.categoryid = 0;
+                $scope.scategory.subcategoryid = 0;
+            }
+        }
+
+        $scope.PrintSubcategoryReport = function (subcategory) {
+            debugger;
+            $scope.submitted = true;
+            if (subcategory.categoryid != undefined && subcategory.categoryid != null) {
+                if (subcategory.categoryid == 'ALL' || subcategory.categoryid == 0) {
+                    subcategory.categoryid = 'ALL';
+                    subcategory.subcategoryid = '';
+                } else {
+                    if (subcategory.subcategoryid != undefined && subcategory.subcategoryid != null) {
+                        if (subcategory.subcategoryid == 'ALL' || subcategory.subcategoryid == 0) {
+                            subcategory.subcategoryid = 'ALL';
+                        }
+                    } else {
+                        subcategory.subcategoryid = 'ALL'
+                    }
+                }
+                if ($scope.isFormValid) {
+                    var sub = $scope.checkDate($("#subfromdate").val(), $("#subtodate").val());
+                    if (sub) {
+
+                        var w = window.open("/MMSReports/SubcategorywisepurchaseReport/?Categoryid=" + subcategory.categoryid + "&SubCategoryid=" + subcategory.subcategoryid + "&FromDate=" + subcategory.fromdate + "&ToDate=" + subcategory.todate + "", '_blank');
+                        $scope.subcategory = {};
+                        $scope.fmsubcategoryReport.$setPristine();
+                        $scope.submitted = false;
+                        $scope.subcategory.categoryid = 0;
+                        $scope.subcategory.subcategoryid = 0;
+                    }
+                }
+                $scope.subcategory.categoryid = 0;
+                $scope.subcategory.subcategoryid = 0;
+            }
+        }
+        $scope.categoryChange = function (CategoryID) {
+            debugger;
+            // if (CategoryID != null && CategoryID != "ALL" && CategoryID != undefined && CategoryID != "")
+            $http.post('/MMSReports/getSubcategoryNames', { CategoryID: CategoryID }).success(function (data) {
+                if (data != null) {
+                    $scope.SubcategoryDetails = eval('(' + data.Data + ')');
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,287 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/ParamQuery/jquery-ui.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div ng-controller="SaleCancelController">
+        <div class="page-content">
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- PAGE CONTENT BEGINS -->
+                    <form class="form-horizontal" role="form" name="SaleCancelControllerfrm" novalidate>
+
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                Sale No <span style="color: Red">*</span> :
+                            </label>
+                            <div class="col-sm-4">
+
+                                <input class="form-control" name="selected" auto-complete id="omschrijving" ng-model="selected" onkeyup="CallValues()" autofocus="autofocus" required>
+                                <span class="error" ng-show="(SaleCancelControllerfrm.selected.$dirty|| submitted) && SaleCancelControllerfrm.selected.$error.required">
+                                    Sale No Required!
+                                </span>
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-success" type="button" data-index="3" ng-click="Cancel()">
+                                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                </button>
+                                &nbsp; &nbsp; &nbsp;
+                                <button class="btn orange" ng-click="Reset()" id="Reset">
+                                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+                            <div>
+                                <table id="grdSaleCancel"></table>
+                                <div id="grid-pager"></div>
+                            </div>
+                     
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+
+    app.controller('SaleCancelController', function ($scope, $http, $rootScope) {
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Cancel";
+        var myNewData = [];
+
+        var uncheckedmyNewData = [];
+        $scope.$watch('SaleCancelControllerfrm.$valid', function (newValue) {
+
+            $scope.isFormValid = newValue;
+        });
+
+        $http({
+            url: '/MMSTransaction/GetSaleNos/',
+            method: "get"
+
+        }).success(function (data) {
+            var mydata = [];         
+            JqgridBinding(mydata);          
+            $scope.SaleNos = eval('(' + data.Data + ')');
+            var saleNoPush = [];
+            for (var i = 0; i < $scope.SaleNos.length; i++) {
+
+                saleNoPush.push($scope.SaleNos[i].saleno)
+            }
+     
+            $("#omschrijving").autocomplete({
+                source: saleNoPush,
+                select: function (event, ui) {
+                                    var SaleNo = ui.item.label;
+                    $http.post('/MMSTransaction/GetSaleNoItems', { Id: SaleNo }).success(function (data) {                
+                        JqgridBinding(data.griddetails);
+                    });
+                }
+                         
+            });
+
+        });
+ 
+        $scope.Cancel=function()
+        {
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var griddata = $('#grdSaleCancel').jqGrid('getGridParam', 'data');
+                for (var i = 0; i < griddata.length; i++) {
+                    debugger;
+                    if (griddata[i].closed == true) { 
+                        var d = griddata[i];
+                        myNewData.push(d);
+                    }
+
+                    else {
+                        var fn = griddata[i];
+                        uncheckedmyNewData.push(fn);
+                    }
+                }
+            }
+
+            if ($scope.btnSave == "Cancel") {               
+                var mydata = myNewData;
+                var mynewdatauncheck = uncheckedmyNewData;
+                var length = mydata.length;
+                if (mydata.length == 0) {
+
+                    alert("Please Select Product To Cancel");
+
+                }
+                else {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+
+                        $http({
+
+                            url: '/MMSTransaction/SaveSaleCancel/',
+                            method: "POST",
+
+                            data: { SaleNo: $scope.selected, lstInvDetails: JSON.stringify(mydata), uncheckddata: JSON.stringify(mynewdatauncheck) }
+                        }).success(function (data) {
+                            if (data) {
+
+                                alert("Sale Cancelled Successfully");
+                                location.reload();
+
+                            }
+                        })
+                     .error(function (data) {
+
+                         alert('Unexpected Error');
+                     });
+                    }
+                }
+            }
+            
+        }
+            function JqgridBinding(data) {
+                var grid_data = data;
+                var grid_selector = "#grdSaleCancel";
+                var pager_selector = "#grid-pager";
+
+                //grid data refresh
+                jQuery(grid_selector).jqGrid('clearGridData')
+                jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+                //resize to fit page size
+                $(window).on('resize.jqGrid', function () {
+                    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+                })
+                //resize on sidebar collapse/expand
+                var parent_column = $(grid_selector).closest('[class*="col-"]');
+                $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                    if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                        //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                        setTimeout(function () {
+                            $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                        }, 0);
+                    }
+                })
+
+                jQuery(grid_selector).jqGrid({
+                    data: grid_data,
+                    datatype: "local",
+                    height: 300,
+                    rownumbers: true,
+                    rowNum: 100000,
+                    shrinkToFit: true,
+                    forceFit: true,
+                    colModel: [
+                            {
+                                name: "Select", width: 70, align: "center",
+                                formatter: "checkbox", formatoptions: { disabled: false },
+                                edittype: "checkbox", editoptions: { value: "Yes:No", defaultValue: "Yes" },
+                                stype: "select", searchoptions: {
+                                    sopt: ["eq", "ne"],
+                                    value: ":Any;true:Yes;false:No"
+                                }
+                            },
+                             { label: 'Product Id', name: 'vchproductid', width: 250, sortable: false },
+
+                    { label: 'Product Name', name: 'vchproductname', width: 250, sortable: false },
+
+                      { label: 'Qty', name: 'numquantity', width: 250, sortable: false },
+
+
+                         { label: 'Uom', name: 'vchuom', width: 250, sortable: false },
+                          { label: 'Unit Rate', name: 'numunitrate', width: 250, sortable: false },
+                        { label: 'Sale Amount', name: 'numsaleamount', align: "Right", width: 250 }
+                       
+
+
+
+                    
+                    ],
+                    viewrecords: true,
+                    rowNum: 1000,
+
+
+
+                    search: true,
+
+                    ignoreCase: true,
+
+                    footerrow: true,
+
+                    
+                    //onSelectRow: function (id) {
+
+                    //    var $self = $(this);
+                    //    localData = $self.jqGrid("getLocalRow", id);
+                    //    if (localData.closed == true) {
+
+                    //        jQuery('#grdSaleCancel').editRow(id, true);
+
+                    //    }
+
+                    //},
+
+
+                    beforeSelectRow: function (rowid, e) {
+                        var $self = $(this),
+                            iCol = $.jgrid.getCellIndex($(e.target).closest("td")[0]),
+                            cm = $self.jqGrid("getGridParam", "colModel"),
+                            localData = $self.jqGrid("getLocalRow", rowid);
+                        if (cm[iCol].name === "Select") {
+                            localData.closed = $(e.target).is(":checked");
+
+                            if (localData.closed == true) {
+
+                                       $('#grdSaleCancel').jqGrid('setRowData', rowid, false, { 'background-color': 'Silver' });                             
+                            }
+                            if (localData.closed == false) {                        
+                                $('#grdSaleCancel').jqGrid('setRowData', rowid, false, { 'background-color': 'White' });                           
+                            }
+                        }
+
+                        return true; 
+                    },
+
+               
+                    loadComplete: function (id) {
+                        var table = this;
+                        setTimeout(function () {
+                            styleCheckbox(table);
+
+                            updateActionIcons(table);
+                            updatePagerIcons(table);
+                            enableTooltips(table);
+                        }, 0);
+                    },
+
+
+
+                    caption: "Sale Cancel Details"
+
+
+                });
+                $(window).triggerHandler('resize.jqGrid');
+
+
+
+
+
+
+
+
+
+            }  
+
+    });
+</script>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsItemCancel" targetNamespace="http://tempuri.org/dsItemCancel.xsd" xmlns:mstns="http://tempuri.org/dsItemCancel.xsd" xmlns="http://tempuri.org/dsItemCancel.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsItemCancel" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsItemCancel" msprop:Generator_UserDSName="dsItemCancel">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dsItemCancel" msprop:Generator_TableClassName="dsItemCancelDataTable" msprop:Generator_TableVarName="tabledsItemCancel" msprop:Generator_RowChangedName="dsItemCancelRowChanged" msprop:Generator_TablePropName="_dsItemCancel" msprop:Generator_RowDeletingName="dsItemCancelRowDeleting" msprop:Generator_RowChangingName="dsItemCancelRowChanging" msprop:Generator_RowEvHandlerName="dsItemCancelRowChangeEventHandler" msprop:Generator_RowDeletedName="dsItemCancelRowDeleted" msprop:Generator_RowClassName="dsItemCancelRow" msprop:Generator_UserTableName="dsItemCancel" msprop:Generator_RowEvArgName="dsItemCancelRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="vchkotid" msprop:Generator_ColumnVarNameInTable="columnvchkotid" msprop:Generator_ColumnPropNameInRow="vchkotid" msprop:Generator_ColumnPropNameInTable="vchkotidColumn" msprop:Generator_UserColumnName="vchkotid" type="xs:string" minOccurs="0" />
+              <xs:element name="tableid" msprop:Generator_ColumnVarNameInTable="columntableid" msprop:Generator_ColumnPropNameInRow="tableid" msprop:Generator_ColumnPropNameInTable="tableidColumn" msprop:Generator_UserColumnName="tableid" type="xs:int" minOccurs="0" />
+              <xs:element name="tablesname" msprop:Generator_ColumnVarNameInTable="columntablesname" msprop:Generator_ColumnPropNameInRow="tablesname" msprop:Generator_ColumnPropNameInTable="tablesnameColumn" msprop:Generator_UserColumnName="tablesname" type="xs:string" minOccurs="0" />
+              <xs:element name="itemname" msprop:Generator_ColumnVarNameInTable="columnitemname" msprop:Generator_ColumnPropNameInRow="itemname" msprop:Generator_ColumnPropNameInTable="itemnameColumn" msprop:Generator_UserColumnName="itemname" type="xs:string" minOccurs="0" />
+              <xs:element name="itemqty" msprop:Generator_ColumnVarNameInTable="columnitemqty" msprop:Generator_ColumnPropNameInRow="itemqty" msprop:Generator_ColumnPropNameInTable="itemqtyColumn" msprop:Generator_UserColumnName="itemqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="amount" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_UserColumnName="amount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="reason" msprop:Generator_ColumnVarNameInTable="columnreason" msprop:Generator_ColumnPropNameInRow="reason" msprop:Generator_ColumnPropNameInTable="reasonColumn" msprop:Generator_UserColumnName="reason" type="xs:string" minOccurs="0" />
+              <xs:element name="canceldate" msprop:Generator_ColumnVarNameInTable="columncanceldate" msprop:Generator_ColumnPropNameInRow="canceldate" msprop:Generator_ColumnPropNameInTable="canceldateColumn" msprop:Generator_UserColumnName="canceldate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="vchhostname" msprop:Generator_ColumnVarNameInTable="columnvchhostname" msprop:Generator_ColumnPropNameInRow="vchhostname" msprop:Generator_ColumnPropNameInTable="vchhostnameColumn" msprop:Generator_UserColumnName="vchhostname" type="xs:string" minOccurs="0" />
+              <xs:element name="kotcanceltime" msprop:Generator_ColumnVarNameInTable="columnkotcanceltime" msprop:Generator_ColumnPropNameInRow="kotcanceltime" msprop:Generator_ColumnPropNameInTable="kotcanceltimeColumn" msprop:Generator_UserColumnName="kotcanceltime" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="kotordertime" msprop:Generator_ColumnVarNameInTable="columnkotordertime" msprop:Generator_ColumnPropNameInRow="kotordertime" msprop:Generator_ColumnPropNameInTable="kotordertimeColumn" msprop:Generator_UserColumnName="kotordertime" type="xs:dateTime" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

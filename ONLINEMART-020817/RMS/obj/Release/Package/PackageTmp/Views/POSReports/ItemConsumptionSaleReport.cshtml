@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "ItemConsumptionSaleReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div id="Xyx" class="page-content" ng-controller="ItemconsumptionReportController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i>ITEM CONSUMPTION</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="ItemconsumptionReportController" name="fmitemconsumptionReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="itemcon.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmitemconsumptionReport.FromDate.$dirty || submitted ) && fmitemconsumptionReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="ToDate" type="text" id="datepicker" class=" form-control" ng-model="itemcon.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmitemconsumptionReport.ToDate.$dirty || submitted ) && fmitemconsumptionReport.ToDate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                   Department Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="itemcon.Departmentname=0" ng-model="itemcon.Departmentname" class=" form-control" name="Departmentname" ng-options="c.departmentid as c.departmentname for c in departmentDetails" required>
+                                        @*<option value="">Select Name</option>
+                                          <option value="1">All</option>*@
+                                    </select><br />
+                                    <span class="error" ng-show="(fmitemconsumptionReport.Departmentname.$dirty || submitted ) && fmitemconsumptionReport.Departmentname.$error.required">
+                                        Department Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintItemConsumptionReport(itemcon)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('ItemconsumptionReportController', function ($scope, $http, $rootScope) {
+        $scope.itemcon = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Item Consumption";
+
+        $scope.isFormValid = false;
+
+        $scope.$watch('fmitemconsumptionReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/POSReports/GetDepartmentnames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.departmentDetails = eval('(' + data.Data + ')');
+            });
+        }
+        $scope.checkDate = function (date1, date2) {
+          //  if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+             if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+            //if (date1 > date2)
+            return false;
+            else
+                return true;
+        }
+        $scope.PrintItemConsumptionReport = function (itemcon) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+                    var w = window.open("/POSReports/ItemConsumptionReport/?fromdate=" + changedate(itemcon.fromdate) + "&todate=" + changedate(itemcon.todate) + "&department=" + itemcon.Departmentname + "", '_blank');
+                    $scope.itemcon = {};
+                    $scope.fmitemconsumptionReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.itemcon.Departmentname = 0;
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+        }
+    });
+</script>
+
+

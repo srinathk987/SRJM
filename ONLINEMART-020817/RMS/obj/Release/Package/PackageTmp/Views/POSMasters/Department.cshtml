@@ -1,0 +1,314 @@
+﻿@{
+    // ViewBag.Title = "Department";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+}
+@*<link rel="stylesheet" href="~/assets/css/ui.jqgrid.min.css" />
+    <!-- text fonts -->
+    <link rel="stylesheet" href="~/assets/css/malaka.css" class="ace-main-stylesheet"
+        id="main-ace-style" />*@
+<div class="page-content" ng-controller="deptController" ng-init="LoadData()">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmDepartment" novalidate>
+
+                <div class="form-group" hidden>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                        Department Code <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Code" ng-model="Dept.DeparmentCode" placeholder="Department Code" class="form-control" maxlength="10" kit-alpha-numeric
+                               type="text" />
+
+                        <span class="error" ng-show="(fmDepartment.Code.$dirty || submitted) && fmDepartment.Code.$error.required">
+                            Department Code required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Department Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Name" id="txtName" ng-model="Dept.DeparmentName" placeholder="Enter Department Name" maxlength="100" kit-alpha-numeric autofocus
+                               class="form-control" required type="text" />
+                        <span class="error" ng-show="(fmDepartment.Name.$dirty || submitted ) && fmDepartment.Name.$error.required">
+                            Department Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="Save(Dept)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpDepartment"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script type="text/javascript">
+
+
+    var appElement = document.querySelector('[ ng-controller=deptController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpDepartment"))
+    }
+    function edit(row) {
+        debugger;
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#gpDepartment").getRowData(row);
+        $scope.DeparmentNameCheck = rowdata.DeparmentName;
+
+        $http.post('/POSMasters/UpdateDepartment', rowdata).success(function (data) {
+            debugger
+            if (data == 1) {
+
+                $scope.btnSave = "Update";
+                $scope.Dept = rowdata;
+                $scope.$apply();
+            } else {
+                alert("Cannot Update Department Details  as it is in use by the application");
+            }
+        })
+                  .error(function (data) {
+                      alert("Error found");
+                  });
+
+
+
+
+
+
+    }
+    function Delete(row) {
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnSave == "Save") {
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#gpDepartment").getRowData(row);
+
+
+            $http.post('/POSMasters/DeleteDepartment', rowdata).success(function (data) {
+                if (data == true) {
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+                    if (ans) {
+                        alert("Department Details Deleted Successfully");
+                        $('#gpDepartment').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                }
+                else if (data == false) {
+                    alert("Cannot Delete Department Details  as it is in use by the application");
+                }
+            }).error(function (data) { alert("Error Occuerd"); });
+            // }
+        }
+        else {
+
+            alert("Cannot Delete Department Details In Edit Mode");
+        }
+    }
+
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('deptController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Department";
+        $rootScope.ModuleName = "Masters";
+
+
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSMasters/ShowDepartment/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+        //        setTimeout(function () {
+        //        debugger
+        //            $('#txtName').val('25');
+        //            $scope.$apply();
+        //        });
+
+        $scope.$watch('fmDepartment.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Save = function (Dept) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http.post('/POSMasters/SaveDepartment', Dept).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Department Details Saved Successfully");
+                                $scope.LoadData();
+                                $('gpDepartment').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                            } else {
+                                alert("Department  Name  Already Exist");
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+                }
+                else {
+                    if ($scope.DeparmentNameCheck != Dept.DeparmentName) {
+                        $http.post('/POSMasters/UpdateDepartment', Dept).success(function (data) {
+                            debugger
+                            if (data > 0) {
+                                alert("Department  Name  Already Exist");
+
+                            } else {
+                                var ans = confirm($rootScope.msgUpdate);
+                                if (ans) {
+                                    alert("Department Details Updated Successfully");
+                                    $scope.LoadData();
+                                    ClearForm();
+                                }
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+                    else {
+
+                        alert("Department Details Updated Successfully");
+                        
+                        ClearForm();
+
+                    }
+                }
+
+                // }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $('#txtName').focus();
+            $scope.Dept = {};
+            $scope.btnSave = "Save";
+            $scope.fmDepartment.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#gpDepartment";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'RecordId', name: 'RecordId', width: 75, hidden: true },
+
+			{ label: 'Deparment Code', name: 'DeparmentCode', width: 90 },
+            { label: 'Deparment Name', name: 'DeparmentName', width: 75 },
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Departments <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+            //  $("#gpDepartment").trigger("reloadGrid", [{ page: data.length}]);
+
+            //            $('#btnEdit').click(function () {
+            //                debugger;
+
+            //                var griddata = $("#gpDepartment").jqGrid('getGridParam', 'data');
+            //            });
+
+        }
+
+    });
+</script>

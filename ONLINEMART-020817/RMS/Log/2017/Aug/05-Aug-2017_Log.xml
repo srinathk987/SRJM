@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<USERS>
+  <User>
+    <Title>MMSSale</Title>
+    <Message>ERROR: 42P01: relation "tabmmscombomst" does not exist</Message>
+    <InnerMessage>
+    </InnerMessage>
+    <Source>Npgsql</Source>
+    <StackTrace>   at Npgsql.NpgsqlState.&lt;ProcessBackendResponses_Ver_3&gt;d__a.MoveNext()
+   at Npgsql.ForwardsOnlyDataReader.GetNextResponseObject()
+   at Npgsql.ForwardsOnlyDataReader.GetNextRowDescription()
+   at Npgsql.ForwardsOnlyDataReader.NextResult()
+   at Npgsql.ForwardsOnlyDataReader..ctor(IEnumerable`1 dataEnumeration, CommandBehavior behavior, NpgsqlCommand command, NotificationThreadBlock threadBlock, Boolean synchOnReadError)
+   at Npgsql.NpgsqlCommand.GetReader(CommandBehavior cb)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior cb)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet)
+   at HelperManager.NPGSqlHelper.ExecuteDataset(NpgsqlConnection connection, CommandType commandType, String commandText, NpgsqlParameter[] commandParameters) in e:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\NPGSQLHelper.cs:line 413
+   at HelperManager.NPGSqlHelper.ExecuteDataset(String connectionString, CommandType commandType, String commandText, NpgsqlParameter[] commandParameters) in e:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\NPGSQLHelper.cs:line 323
+   at HelperManager.NPGSqlHelper.ExecuteDataset(String connectionString, CommandType commandType, String commandText) in e:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\NPGSQLHelper.cs:line 297
+   at RMS.Infrastructure.MMSTransactionRepository.GetAllProducts() in e:\AgroStore local Copies\ONLINEMART-020817\RMS.Infrastructure\MMSTransactionRepository.cs:line 3961</StackTrace>
+    <DateTime>05-08-2017 22:01:17</DateTime>
+    <LoginUserName>
+    </LoginUserName>
+  </User>
+</USERS>

@@ -1,0 +1,436 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div class="row setup-content" name="Functionfrm" ng-form id="step-5" ng-controller="NewFormCtrl">
+    <div class="col-xs-12">
+        <form name="Functionfrm" novalidate class="form-horizontal">
+            <div class="col-md-12">
+                <div>
+                    <header class="panel-heading">
+                        Function
+                    </header>
+                    <div class='form-group'>
+                        <div class="col-sm-8 ">
+                            <label class="col-md-3 control-label FullWidth">
+                                <span style="color: Black">Module Name</span> <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-8 FullWidth">
+                                <select ng-model="Function.Moduleid" class="form-control" name="Moduleid" id="Moduleid"
+                                        ng-options="I.Moduleid as I.Modulename for I in ModuleList" required ng-change="ModuleChange()">
+                                    <option value="">Select Module Name</option>
+                                </select>
+                                <span class="error" ng-show="(Functionfrm.Moduleid.$dirty || Functionsubmitted) && Functionfrm.Moduleid.$error.required">
+                                    Module Name required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class="col-sm-8 ">
+                            <label class="col-md-3 control-label FullWidth">
+                                Function Name <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-8 FullWidth">
+                                <input class="form-control" maxlength="100" ng-model="Function.FunctionName" type="text"
+                                       placeholder="Enter Function Name" name="FunctionName" id="FunctionName" required
+                                       kit-alpha-numeric ng-pattern="/[0-9a-zA-Z]$/" />
+                                <div>
+                                    <span class="error" ng-show="(Functionfrm.FunctionName.$dirty || Functionsubmitted) && Functionfrm.FunctionName.$error.required">
+                                        Function required!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div class="col-md-12 FullWidth">
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class="col-sm-8 ">
+                            <label class="col-md-3 control-label FullWidth">
+                            </label>
+                            <div class="col-sm-8 FullWidth">
+                                Url Ex:<span style="color: Blue; height: 5px;">ControllerName/ViewName</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div class="col-md-12 FullWidth">
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class="col-sm-8 ">
+                            <label class="col-md-3 control-label FullWidth">
+                                Function URL <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-8 FullWidth">
+                                <input class="form-control" maxlength="100" id="FunctionUrl" ng-model="Function.FunctionUrl"
+                                       type="text" placeholder="Enter Function URL" name="FunctionUrl" required ng-pattern="^([a-zA-Z0-9]+)(?:\/[a-zA-Z0-9]+)(?=.*[/])?$/" />
+                                <div>
+                                    <span class="error" ng-show="(Functionfrm.FunctionUrl.$dirty || Functionsubmitted) && Functionfrm.FunctionUrl.$error.required">
+                                        Function url required!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div class="col-md-12 FullWidth">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <div class="col-md-8">
+                            <div class="col-md-3 ">
+                            </div>
+                            <div class="col-md-8 text-right">
+                                <button ng-click="SaveFunction(Function)" class="btn btn-primary" type="submit">
+                                    <i ng-class="seticon"></i>Save
+                                </button>
+                                <button ng-click="ResetFunctionData()" class="btn btn-danger">
+                                    <i class="fa fa-times"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <header class="panel-heading">
+                            Function Details
+                        </header>
+                        <div class="panel-collapse">
+                            <table>
+                                <tr>
+                                    <td style="width: 10px;"></td>
+                                    <td>
+                                        <div style="width: 450px">
+                                            @* <div id="grid_functions">
+                                                </div>*@
+                                            <table id="grid_functions" style="width: 440px"></table>
+                                        </div>
+                                    </td>
+                                    <td style="width: 25px;"></td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <button id="btnforward" style="color: #333; background-color: #e6e6e6; border-color: #adadad;
+                                                                                width: 50px;" ng-click="ForwardData()">
+                                                        >
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr style="height: 10px;"></tr>
+                                            <tr>
+                                                <td>
+                                                    <button id="btnbackword" style="color: #333; background-color: #e6e6e6; border-color: #adadad;
+                                                                                width: 50px;" ng-click="BackwordData()">
+                                                        <
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="width: 25px;"></td>
+                                    <td>
+                                        <div style="width: 450px">
+                                            <table id="grid_Function_Order" style="width: 440px"></table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div style="height: 10px;">
+                            </div>
+                            <div align="right" style="margin-right: 10px">
+                                <button ng-click="SaveFunctionOrder()" class="btn btn-primary" id="SaveFunctionOrder"
+                                        type="submit">
+                                    <i ng-class="seticon"></i>SwapOrder
+                                </button>
+                                <button ng-click="ModuleChange()" class="btn btn-danger">
+                                    <i class="fa fa-times"></i>Reset
+                                </button>
+                            </div>
+                            <div style="height: 10px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+      
+        //-----==================== Functions Old Order Grid Binding ==================-----//
+        BindGrid = function (data) {
+            debugger;
+            var grid = $("#grid_functions");
+            grid.jqGrid({
+                datatype: "local",
+                multiselect: true,
+                data: data,
+                colNames: ['ID', 'FunctionName', 'FunctionStatus', 'Module Id'],
+                colModel: [
+                    { name: 'FunctionId', index: 'FunctionId', sorttype: 'int', hidden: true },
+                    { name: 'FunctionName', index: 'FunctionName', align: 'center', editable: false },
+                    { name: 'FunctionStatus', index: 'FunctionStatus', editable: false, hidden: true },
+                    { name: 'Moduleid', index: 'Moduleid', sorttype: 'int', hidden: true }
+                ],
+                rowNum: 10,
+                caption: "Old Order Functions",
+                hidegrid: false,
+                rowList: [5, 10, 20],
+                viewrecords: true,
+                sortorder: "desc",
+                height: "100%",
+                width: '100%',
+                localReader: {
+                    repeatitems: true,
+                    cell: "",
+                    id: 0
+                }
+            });
+            jQuery('#grid_functions').jqGrid('clearGridData');
+            jQuery('#grid_functions').jqGrid('setGridParam', { data: data });
+            jQuery('#grid_functions').trigger('reloadGrid');
+        }
+
+        //-----==================== Functions New Order Grid Binding ==================-----//
+        BindFunctionGrid = function (data) {
+            debugger;
+            var grid = $("#grid_Function_Order");
+            grid.jqGrid({
+                datatype: "local",
+                multiselect: true,
+                hidegrid: false,
+                data: data,
+                caption: "New Order Functions",
+                colNames: ['ID', 'FunctionName', 'FunctionStatus', 'FunctionOrder', 'Module Id'],
+                colModel: [
+                    { name: 'FunctionId', index: 'FunctionId', sorttype: 'int', hidden: true },
+                    { name: 'FunctionName', index: 'FunctionName', align: 'center', editable: false },
+                    { name: 'FunctionStatus', index: 'FunctionStatus', editable: false, hidden: true },
+                    { name: 'FunctionOrder', index: 'FunctionOrder', sorttype: 'int', editable: false, hidden: true },
+                    { name: 'Moduleid', index: 'Moduleid', sorttype: 'int', hidden: true }
+                ],
+                rowNum: 10,
+                rowList: [5, 10, 20],
+                viewrecords: true,
+                sortorder: "desc",
+                Selection: true,
+                height: "100%",
+                width: '100%',
+                localReader: {
+                    repeatitems: true,
+                    cell: "",
+                    id: 0
+                }
+            });
+            jQuery('#grid_Function_Order').jqGrid('clearGridData');
+            jQuery('#grid_Function_Order').jqGrid('setGridParam', { data: data });
+            jQuery('#grid_Function_Order').trigger('reloadGrid');
+        }
+        //-----==================== Calling Grid Binging Functions on page Load with Empty Data ==================-----//
+     
+        BindGrid([]);
+        BindFunctionGrid([]);
+    });
+</script>
+
+<script>
+    var app = angular.module('RMS');
+    app.controller('NewFormCtrl', function ($scope, $http, $rootScope) {
+        $http.get('/Login/ShowModuleName/').success(function (data) {
+            debugger;
+            $scope.ModuleList = data;
+        });
+
+        $scope.ModuleChange = function () {
+            debugger;
+            var name = $scope.Function.Moduleid;
+            if (typeof name != 'undefined') {
+                $http({ url: '/Login/ShowModuleName/', method: "POST", data: { ModuleName: name } }).success(function (data) {
+                    debugger
+                    $scope.Function.Moduleid = name;
+                    BindGrid(data);
+                    BindFunctionGrid([]);
+                });
+            }
+        };
+
+        //-----==================== Adding to Functions to New Function Order Grid from Old Function Order Grid in Add Function Form ==================-----//
+        $scope.ForwardData = function() {
+            debugger;
+            alert("12");
+            var Grid = jQuery('#grid_functions').jqGrid('getGridParam');
+            if (Grid.data.length > 0) {
+                var selRowIds = jQuery('#grid_functions').jqGrid('getGridParam', 'selarrrow');
+                var selRows = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+                if (parseInt(selRowIds.length) > 0) {
+                    var ROWS = [];
+                    var roworder = 1;
+                    if (typeof selRows != 'undefined') {
+                        if (selRows.data.length > 0) {
+                            roworder = selRows.data.length + 1;
+                            for (var x = 0; x < selRows.data.length; x++) {
+                                var RD = jQuery('#grid_Function_Order').jqGrid("getRowData", x + 1);
+                                var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: x + 1, Moduleid: RD.Moduleid }; //empty row template
+                                ROWS.push(rowData);
+                            }
+                        }
+                    }
+                    for (var x = 0; x < selRowIds.length; x++) {
+                        var RD = jQuery('#grid_functions').jqGrid("getRowData", selRowIds[x]);
+                        var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: roworder, Moduleid: RD.Moduleid }; //empty row template
+                        ROWS.push(rowData);
+                        roworder++;
+                    }
+                    BindFunctionGrid(ROWS);
+                    var myData = jQuery('#grid_functions').jqGrid('getGridParam', 'data');
+                    for (var i = selRowIds.length - 1; i >= 0; i--) {
+                        $('#grid_functions').jqGrid('delRowData', selRowIds[i]);
+                    }
+                    jQuery('#grid_functions').trigger('reloadGrid');
+                }
+                else {
+                    alert('Select Functions in Old Function Grid!');
+                }
+            } else {
+                var Grid1 = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+                if (Grid.data.length == 0 && Grid1.data.length > 0) {
+                    alert('No data in Old Function Grid All Data is Moved to New Function Grid!');
+                } else {
+                    alert('No data in Old Function Grid!');
+                }
+            }
+
+        }
+        //-----==================== Adding to Functions to Old Function Order Grid from New Functions Grid in Add Function Form ==================-----//
+        $scope.BackwordData = function () {
+            debugger;
+            var Grid = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+            if (Grid.data.length > 0) {
+                var selRowIds = jQuery('#grid_Function_Order').jqGrid('getGridParam', 'selarrrow');
+                var selRows = jQuery('#grid_functions').jqGrid('getGridParam');
+                if (parseInt(selRowIds.length) > 0) {
+                    var ROWS = [];
+                    var roworder = 1;
+                    if (typeof selRows != 'undefined') {
+                        if (selRows.data.length > 0) {
+                            roworder = selRows.data.length + 1;
+                            for (var x = 0; x < selRows.data.length; x++) {
+                                var RD = jQuery('#grid_functions').jqGrid("getRowData", x + 1);
+                                var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: x + 1, Moduleid: RD.Moduleid }; //empty row template
+                                ROWS.push(rowData);
+                            }
+                        }
+                    }
+                    for (var x = 0; x < selRowIds.length; x++) {
+                        var RD = jQuery('#grid_Function_Order').jqGrid("getRowData", selRowIds[x]);
+                        var rowData = { FunctionId: RD.FunctionId, FunctionName: RD.FunctionName, FunctionStatus: true, FunctionOrder: roworder, Moduleid: RD.Moduleid }; //empty row template
+                        ROWS.push(rowData);
+                        roworder++;
+                    }
+                    BindGrid(ROWS);
+                    var myData = jQuery('#grid_Function_Order').jqGrid('getGridParam', 'data');
+                    for (var i = selRowIds.length - 1; i >= 0; i--) {
+                        $('#grid_Function_Order').jqGrid('delRowData', selRowIds[i]);
+                    }
+                    jQuery('#grid_Function_Order').trigger('reloadGrid');
+                }
+                else {
+                    alert('Select Functions in New Function Grid!');
+                }
+            } else {
+                var Grid1 = jQuery('#grid_functions').jqGrid('getGridParam');
+                if (Grid.data.length == 0 && Grid1.data.length > 0) {
+                    alert('No data in New Function Grid All Data is Moved to Old Function Grid!');
+                } else {
+                    alert('No data in New Function Grid!');
+                }
+            }
+        }
+        $scope.SaveFunction = function (Function) {
+            debugger;
+            $scope.Functionsubmitted = true;
+            //if ($scope.isFunctionFormValid) {
+                //Save
+                debugger;
+                var ans = window.confirm("Are you sure?Do you want to Save?");
+                if (ans) {
+                    $http({
+                        url: '/Login/SaveFunction/',
+                        method: "POST",
+                        data: Function
+
+                    }).success(function (data) {
+                        debugger;
+                        if (data == 'True') {
+                            $scope.ResetFunctionData();
+                            $scope.Functionsubmitted = false;
+                            alert("Function Saved Successfully !");
+                        }
+                        else {
+                            alert(" Error While Saving Function!");
+                        }
+                    });
+                }
+           // }
+        }
+        $scope.SaveFunctionOrder = function () {
+            debugger;
+            var IsSave = false;
+            var NEWFUNCTION = jQuery('#grid_Function_Order').jqGrid('getGridParam');
+            if (parseInt(NEWFUNCTION.data.length) > 0) {
+                //Sort Order
+                debugger;
+                var OLDFUNCTION = jQuery('#grid_functions').jqGrid('getGridParam');
+                if (OLDFUNCTION.data.length == 0) {
+                    IsSave = true;
+                } else {
+                    if (confirm('Some functions are there in Old Function Grid! Do you want to Proceed to Sort?')) {
+                        IsSave = true;
+                    }
+                }
+                if (IsSave) {
+                    var ans = window.confirm("Are you sure?Do you want to Save?");
+                    if (ans) {
+                        $http({
+                            url: '/Login/SaveFunctionOrder/',
+                            method: "POST",
+                            data: NEWFUNCTION.data
+                        }).success(function (data) {
+                            debugger;
+                            if (data == 'True') {
+                                $scope.ResetFunctionData();
+                                $scope.Functionsubmitted = false;
+                                alert("Function Sorting Saved Successfully !");
+                                //BindGrid(data.Data);
+                            }
+                            else {
+                                alert(" Error While Sorting Function!");
+                            }
+                        });
+                    }
+                }
+            } else {
+                alert('Please Add Functions to New Order Functions Grid');
+            }
+        }
+
+        $scope.ResetFunctionData = function () {
+            debugger;
+            $scope.Function = {};
+            $scope.Functionfrm.$setPristine();
+            $scope.Functionsubmitted = false;
+            BindGrid([]);
+            BindFunctionGrid([]);
+            $('#FunctionUrl').val('');
+            $('#FunctionName').val('');
+        }
+    });
+</script>

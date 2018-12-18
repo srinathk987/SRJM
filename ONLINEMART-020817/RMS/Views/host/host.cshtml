@@ -1,0 +1,296 @@
+﻿@{
+
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+
+}
+
+<style>
+    ul.host-menu {
+        display:block
+    }
+
+        ul.host-menu li {
+
+            width:100px;
+            padding:10px;
+            float:left;
+
+        }
+
+        /*.accordion-wrapper {
+display: block;
+height: 350px;
+max-height: 100%;
+}
+
+#accordion {
+max-width: 36.125rem;
+margin-left: 15px;
+}
+
+.panel-group {
+-webkit-backface-visibility: hidden;
+-webkit-transform: translateX(-98%) rotate(-90deg);
+-webkit-transform-origin: right top;
+-moz-transform: translateX(-98%) rotate(-90deg);
+-moz-transform-origin: right top;
+-o-transform: translateX(-98%) rotate(-90deg);
+-o-transform-origin: right top;
+transform: translateX(-98%) rotate(-90deg);
+transform-origin: right top;
+margin-bottom: 15px;
+}
+
+.panel-body {
+-webkit-backface-visibility: hidden;
+-webkit-transform: translateX(0%) rotate(90deg);
+-webkit-transform-origin: left top;
+-moz-transform: translateX(0%) rotate(90deg);
+-moz-transform-origin: left top;
+-o-transform: translateX(0%) rotate(90deg);
+-o-transform-origin: left top;
+transform: translateX(0%) rotate(90deg);
+transform-origin: left top;
+height: 86.2rem;
+}*/
+
+
+.panel-group {
+    width:430px;
+    z-index: 100;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateX(-100%) rotate(-90deg);
+    -webkit-transform-origin: right top;
+    -moz-transform: translateX(-100%) rotate(-90deg);
+    -moz-transform-origin: right top;
+    -o-transform: translateX(-100%) rotate(-90deg);
+    -o-transform-origin: right top;
+    transform: translateX(-100%) rotate(-90deg);
+    transform-origin: right top;
+}
+.panel-heading {
+    width: 430px;
+}
+.panel-title {
+    height:18px
+}
+.panel-title a {
+    float:right;
+    text-decoration:none;
+    padding: 10px 430px;
+    margin: -10px -430px;
+}
+.panel-body {
+-webkit-backface-visibility: hidden;
+-webkit-transform: translateX(0%) rotate(90deg);
+-webkit-transform-origin: left top;
+-moz-transform: translateX(0%) rotate(90deg);
+-moz-transform-origin: left top;
+-o-transform: translateX(0%) rotate(90deg);
+-o-transform-origin: left top;
+transform: translateX(0%) rotate(90deg);
+transform-origin: left top;
+height: 86.2rem;
+}
+.panel-body {
+    height:830px;
+}
+.panel-group img {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateX(-100%) rotate(90deg);
+    -webkit-transform-origin: right top;
+    -moz-transform: translateX(-100%) rotate(90deg);
+    -moz-transform-origin: right top;
+    -o-transform: translateX(-100%) rotate(90deg);
+    -o-transform-origin: right top;
+    transform: translateX(-100%) rotate(90deg);
+    transform-origin: right top;
+}
+.panel-group .panel img {
+    margin-left:400px;
+    margin-top:800px;
+    position: absolute;
+}
+
+</style>
+
+<div class="host-layout" style="width:100%; height:645px; display:normal">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        Suzuki
+                    </a>
+                </h4>
+
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <img src="http://files.conceptcarz.com/img/Suzuki/suzuki-concept-kizashi-3-2008-01-800.jpg" />
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        Chevrolet
+                    </a>
+                </h4>
+
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <img src="http://www.wallsave.com/wallpapers/800x400/zl-camaro/65234/zl-camaro-chevrolet-carbon-concept-car-65234.jpg" />
+                    kfjsafjasfjklasdjf klsdjfkl fklsdjklasdfj klasdfjklasdfjasd
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        Volvo
+                    </a>
+                </h4>
+
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <img src="http://files.conceptcarz.com/img/Volvo/2009_Volvo_S60_Concept-Image-01-800.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="accordion-wrapper">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Featured Story
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <h4>Slide Title</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingTwo">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        About The Reins Act
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="panel-body">
+                                    <h4>Slide Title</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingThree">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Video
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                <div class="panel-body">
+                                    <h4>Slide Title</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingFour">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                        Photos
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour" >
+                                <div class="panel-body" style="display:inline-block">
+                                    <h4>Slide Title</h4>
+                                    <p>sdfasdfasdfasdfasdf fasd</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+    <div class="container ">
+        <div class="main-content">
+            <div class="row">
+
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="login-container">
+                        <div class="center">
+                            <h1>
+                                <img src="../assets/images/logo.png" width="120">
+                            </h1>
+                            <!--<h2 class="red" id="id-company-text">MALAKA RESTAURANT</h2>-->
+                        </div>
+                        <div class="space-6">
+                        </div>
+                        <br>
+                        <br>
+                        <div class="container">
+                            
+                      
+                            <ul class="host-menu">
+                                <li class="btn btn-info" data-toggle="collapse" data-target="#demo">Menu 1</li>
+                                <div id="demo" class="collapse" style="width:200px; float:left;">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                </div>  
+
+                                <li>Menu 2</li>
+                                <li>Menu 3</li>
+                                <li>Menu 4< /li>
+                                <li>Menu 5</li>
+
+
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <!-- /.position-relative -->
+                    <!--<div class="navbar-fixed-top align-right">
+                        <br />
+                        &nbsp;
+                        <a id="btn-login-dark" href="#" class="red2">Dark</a>
+                        &nbsp;
+                        <span class="red2">/</span>
+                        &nbsp;
+                        <a id="btn-login-blur" href="#" class="red2">Blur</a>
+                        &nbsp;
+                        <span class="red2">/</span>
+                        &nbsp;
+                        <a id="btn-login-light" href="#" class="red2">Light</a>
+                        &nbsp; &nbsp; &nbsp;
+                    </div>-->
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+</div>

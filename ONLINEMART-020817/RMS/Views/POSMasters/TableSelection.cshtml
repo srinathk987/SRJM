@@ -1,0 +1,580 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<style>
+    .tabl-selection {
+        margin: 0px 0 0 0;
+    }
+
+        .tabl-selection label.btn-info.active {
+            background: #68ac4d !important;
+            color: #FFF;
+        }
+
+        .tabl-selection h5 {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+
+
+        .tabl-selection label.btn-info {
+            width: 100%;
+            border: 1px solid #efefef;
+            box-shadow: 5px 8px 8px 0 #ccc;
+            text-align: center;
+        }
+
+        .tabl-selection .btn-group {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .tabl-selection .btn span.glyphicon {
+            opacity: 0;
+        }
+
+        /*.tabl-selection .btn.active div.check {
+            opacity: 1;
+        }
+
+        .tabl-selection .btn div.check {
+            opacity: 0;
+        }
+
+        .tabl-selection .btn div.uncheck {
+            opacity: 1;
+        }
+
+        .tabl-selection .btn div img {
+            opacity: 0.4;
+        }
+
+
+        .tabl-selection .btn.active div.uncheck {
+            opacity: 0;
+        }*/
+
+
+
+
+        .tabl-selection .btn.active span.glyphicon {
+            opacity: 1;
+        }
+
+        .tabl-selection .btn.active h5 {
+            font-size: 18px;
+            line-height: 20px;
+        }
+</style>
+
+
+
+
+
+<div class="page-content" ng-controller="TableSelectionController" ng-init="LoadSessiondata();">
+
+
+
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <form class="form-horizontal" role="form" name="fmTableSelection" id="fmTableSelection" novalidate>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-2">
+                        From Date <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="TableFromdate" type="text" ng-model="Table.TableFromdate" class=" form-control" id="TableFromdate" data-date-format="dd/mm/yyyy" required disabled="true" />
+
+                        <span class="error" ng-show="(fmTableSelection.TableFromdate.$dirty || submitted) && fmTableSelection.TableFromdate.$error.required">
+                            From Date Required!
+                        </span>
+
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        To Date <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4">
+                        <input name="TableTodate" type="text" ng-model="Table.TableTodate" class=" form-control" id="TableTodate" data-date-format="dd/mm/yyyy" required />
+
+                        <span class="error" ng-show="(fmTableSelection.TableTodate.$dirty || submitted) && fmTableSelection.TableTodate.$error.required">
+                            To Date Required!
+                        </span>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                        Host Name<span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-4">
+                        <select name="HostName" id="HostName" ng-model="Table.HostName" ng-options="v.userid as v.username for v in GetHostNames" class="form-control" ng-change="ChangeEvent()" required>
+                            <option value="" selected>Select</option>
+                        </select>
+                        <span class="error" ng-show="(fmTableSelection.HostName.$dirty|| submitted) && fmTableSelection.HostName.$error.required">
+                            Host Name Required!
+                        </span>
+                    </div>
+
+
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+
+                    </label>
+                    <div class="col-sm-4">
+                        <div>
+                            <button class="btn btn-success" type="button" ng-click="Save(Table)">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" type="reset" ng-click="Reset()">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                        @*<button class="btn orange" type="reset" ng-click="ShowAssignedTables()" ng-disabled="Isdisabled">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>{{btnshow}}
+                            </button>*@
+                    </div>
+                </div>
+
+                <div class="panel panel-default" ng-hide="show">
+                    <div class="panel-heading">
+                        Assigned Tables &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn orange" type="reset" ng-click="ShowAssignedTables()" ng-disabled="Isdisabled">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>{{btnshow}}
+                        </button>
+                    </div>
+                    <div class="panel-body" ng-repeat="group in groups">
+
+
+                        <div style="text-align:left; padding:10px 0px; ">  {{group.name}}</div>
+                        <div class="row">
+                            <div class="form-group">
+
+                                <div class="tabl-selection">
+                                    <div class="items col-sm-2 col-md-1 col-lg-1 col-xs-2" ng-repeat="table in group.items">
+                                        <div data-toggle="buttons" ng-class="getClass(table)" class="btn-group">
+                                            <label class="btn btn-info">
+                                                <input type="checkbox" class="groupHeaderassigned" value="{{table.TableName}}" autocomplete="off">
+                                                <span class="glyphicon glyphicon-ok glyphicon-lg"></span>
+                                                <h5> {{table.TableName}} </h5>
+
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                @*<div class="modal-content">
+                        <div class="modal-header" style="background: #FFEB3B">
+
+                            <h4 class="modal-title" id="myModalLabel">Assigned Tables <i class="fa  fa-hand-o-down animated bounce"></i></h4>
+                        </div>
+                        <div class="modal-body" ng-repeat="group in groups">
+
+
+                            <div> {{group.name}}</div>
+
+                            <ul class="widget-main" style="display:inline-block">
+
+                                <li ng-repeat="table in group.items">
+                                    <span>
+
+                                        <input type="checkbox" class="groupHeaderassigned" value="{{table.TableName}}" /><a>{{table.TableName}}</a>
+                                        <img src="~/assets/Images/table.png" width="40" height="40" class="inverted pull-left" />
+
+                                    </span>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>*@
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Allot Table</div>
+                    <div class="panel-body" ng-repeat="group in lstAvailabletablesdata">
+
+
+                        <div style="text-align:left; padding:10px 0px; ">  {{ group.SectioName }}</div>
+                        <div class="row">
+                            <div class="form-group">
+
+                                <div class="tabl-selection">
+                                    <div class="items col-sm-2 col-md-1 col-lg-1 col-xs-2" ng-repeat="name in group.MytableName">
+                                        <div data-toggle="buttons" class="btn-group">
+                                            <label class="btn btn-info">
+                                                <input type="checkbox" value="{{name}}" class="groupHeader" autocomplete="off">
+                                                <span class="glyphicon glyphicon-ok glyphicon-lg"></span>
+                                                <h5> {{name}} </h5>
+
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                @*<li ng-repeat="name in group.MytableName">*@
+
+
+                @*<span>
+
+                        <input type="checkbox" class="groupHeader" value="{{name}}" /><a>{{name}}</a>
+                        <img src="~/assets/Images/table.png" width="40" height="40" class="inverted pull-left" />
+
+                    </span>*@
+
+
+
+                <div class=" col-sm-12">
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpDepartment"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script>
+    $(function () {
+
+
+        //  $("#TableFromdate").datepicker().datepicker("setDate", new Date());
+        $('#TableFromdate').datepicker('setDate', 'today');
+        $("#TableFromdate").datepicker({
+            endDate: '+0d'
+
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+
+        var nowDate = new Date();
+        var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+
+        $('#TableTodate').datepicker({ startDate: today });
+        // $("#TableTodate").datepicker({ endDate: '+0d' });
+
+
+
+    });
+
+
+</script>
+
+
+
+
+
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('TableSelectionController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Table Selection";
+        $rootScope.ModuleName = "Masters";
+        $scope.Isdisabled = true;
+        $scope.show = true;
+        $scope.btnshow = "Clear Assigned Tables";
+
+
+        $scope.Reset = function () {
+
+            var url = '@Url.Action("../POSMasters/TableSelection")';
+            window.location.href = url;
+
+            $scope.fmTableSelection.$setPristine();
+            $scope.submitted = false;
+
+        }
+
+
+
+        $scope.$watch('fmTableSelection.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.LoadSessiondata = function () {
+
+            $http({
+                url: '/POSMasters/ShowAlltablesbind/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.lstAvailabletablesdata = data.lstAvailabletablesdata;
+            });
+
+        }
+
+        $http({
+            url: '/POSMasters/GetHostNamesComboData/',
+            method: "get"
+        }).success(function (data) {
+            debugger;
+            $scope.GetHostNames = eval('(' + data.Data + ')');
+        });
+
+
+
+        $scope.getClass = function (strValue) {
+
+            if (strValue.TableStatus == "M")
+                return "table-list badge-info";
+            else if (strValue.TableStatus == "R" || strValue.TableStatus == "B")
+                return "table-list badge-danger ";
+
+            else
+                return "table-list badge-success ";
+
+        }
+
+
+
+
+
+
+        $scope.ChangeEvent = function () {
+
+            debugger;
+            $http.post('/POSMasters/ShowAlltablesAssigned', { UserId: $scope.Table.HostName }).success(function (data) {
+                $scope.lstAvailabletable = data.lstAvailabletable;
+
+
+                $scope.groups = [];
+                $scope.Names = [];
+                if ($scope.lstAvailabletable.length == 0) {
+                    $scope.Isdisabled = true;
+                    $scope.show = true;
+                }
+                else {
+                    for (var s = 0; s < $scope.lstAvailabletable.length; s++) {
+
+
+
+                        $scope.Names.push($scope.lstAvailabletable[s]["SectioName"]);
+                        $scope.Isdisabled = false;
+                        $scope.show = false;
+
+                    }
+                }
+
+
+                var Departments = $scope.Names.filter(function (item, i, ar) {
+                    return ar.indexOf(item) === i;
+                });
+
+
+
+
+                for (var i = 0; i < Departments.length; i++) {
+
+                    $scope.groups[i] = {
+                        name: Departments[i],
+                        items: []
+                    };
+
+
+                    for (var j = 0; j < $scope.lstAvailabletable.length; j++) {
+
+
+                        if ($scope.lstAvailabletable[j]["SectioName"] == Departments[i]) {
+
+
+
+                            $scope.groups[i].items.push($scope.lstAvailabletable[j]);
+                            $scope.Isdisabled = false;
+                            $scope.show = false;
+
+
+
+                        }
+
+
+
+                    }
+                }
+
+            });
+        }
+
+        $scope.ShowAssignedTables = function () {
+            var checkboxesassigned = document.getElementsByClassName('groupHeaderassigned');
+            var TableNamesAssigned = "";;
+            for (var i = 0; i < checkboxesassigned.length; i++) {
+                if (checkboxesassigned[i].checked) {
+                    (checkboxesassigned[i].value);
+                    TableNamesAssigned = TableNamesAssigned + "," + "'" + checkboxesassigned[i].value + "'";
+
+                }
+            }
+
+            TableNamesAssigned = TableNamesAssigned.substring(1);
+
+            if (TableNamesAssigned == "") {
+
+                confirm("Please Select Assigned Tables To Clear");
+                //alert("Please Select Assigned Tables To Clear");
+                var url = '@Url.Action("../POSMasters/TableSelection")';
+                window.location.href = url;
+
+            }
+            if (TableNamesAssigned != "") {
+                var ans = confirm("Are You Sure? Do You Want To Clear?");
+
+                if (ans) {
+
+                    $http({
+                        url: '/POSMasters/UpdatetableDetails/',
+                        method: "POST",
+
+                        data: { TableNames: TableNamesAssigned, createdby: $scope.Table.HostName }
+                    }).success(function (data) {
+
+
+
+                        if (data.Success) {
+
+
+
+
+                            alert(" Assigned Tables Successfully Cleared");
+
+                            var url = '@Url.Action("../POSMasters/TableSelection")';
+                            window.location.href = url;
+
+
+
+                        }
+
+                        else {
+                            var tabnames = "";
+                            debugger;
+                            for (var i = 0; i < data[0].MytableName.length; i++) {
+                                tabnames = tabnames + "," + data[0].MytableName[i];
+                            }
+                            tabnames = tabnames.substring(1);
+
+                            alert("Table No (" + tabnames + ") Are in Running Status");
+
+                            var url = '@Url.Action("../POSMasters/TableSelection")';
+                            window.location.href = url;
+
+                        }
+
+                    });
+                }
+                else
+                {
+                    var url = '@Url.Action("../POSMasters/TableSelection")';
+                    window.location.href = url;
+                }
+
+
+            }
+
+
+
+        }
+
+
+
+
+        $scope.Save = function (Table) {
+            $scope.submitted = true;
+
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+
+
+                    var checkboxes = document.getElementsByClassName('groupHeader');
+
+
+                    var TableNames = "";;
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i].checked) {
+                            (checkboxes[i].value);
+                            TableNames = TableNames + "," + "'" + checkboxes[i].value + "'";
+
+                        }
+                    }
+
+                    TableNames = TableNames.substring(1);
+                    if (TableNames == "") {
+                        alert("Please Select Tables To Allot");
+                    }
+                    else {
+
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+                            $http({
+                                url: '/POSMasters/SaveTableDetails/',
+                                method: "POST",
+
+                                data: { TableName: TableNames, Createdby: $scope.Table.HostName, Fromdate: $scope.Table.TableFromdate, Todate: $scope.Table.TableTodate }
+                            }).success(function (data) {
+
+
+
+                                if (data.Success) {
+
+                                    alert("Tables Assigned Successfully");
+                                    var url = '@Url.Action("../POSMasters/TableSelection")';
+                                    window.location.href = url;
+                                }
+                                
+                            });
+                        }
+                        else
+                        {
+
+                            var url = '@Url.Action("../POSMasters/TableSelection")';
+                            window.location.href = url;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    </script>
+
+
+
+
+
+    
+
+                                   
+
+                                   
+
+
+

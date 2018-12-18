@@ -1,0 +1,1376 @@
+﻿@{
+
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+@*<link href="~/assets/Css/ui.jqgrid.css" rel="stylesheet" />
+    <link href="~/assets/Css/ajax-jquery.ui-1.11.1-themes-start-jquery-ui.css" rel="stylesheet" />*@
+
+<div ng-controller="ctrlbillgeneration" ng-init="loadNonReasons()">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-header">
+                    <h1>
+                        Bill Generation<small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                    </h1>
+                </div>
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label" for="form-field-1">
+                            Table No :
+                        </label>
+                        <div class="col-sm-2">
+                            <input id="form-field-1" ng-model="Bill.tablesname" placeholder="Autopopulated" class="form-control"
+                                   type="text" disabled="true">
+                        </div>
+
+
+                        <label class="col-sm-1 control-label " for="form-field-1">
+                            Date :
+                        </label>
+
+                        <div class="col-sm-2">
+                            <input id="form-field-1" ng-model="Bill.billdate" class="form-control" type="text" disabled="true">
+                            @*<span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>*@
+                        </div>
+
+                        <label class="col-sm-1 control-label" for="form-field-1">
+                            Time :
+                        </label>
+
+                        <div class="col-sm-2">
+                            <input id="form-field-2" ng-model="Bill.billtime" class="form-control" type="text" disabled="true">
+
+                        </div>
+
+                    </div>
+                    <div class="widget-box" hidden="true">
+                        <div class="widget-main">
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4">
+                                        <input name="switch-field-2" class="ace ace-switch ace-switch-5" type="checkbox">
+                                        <span class="lbl"></span>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <label>
+                                            Bill Split <span class="pull-right">&nbsp;</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <label class="col-sm-1 control-label" for="form-field-1">
+                                    Table No.:
+                                </label>
+                                <div class="col-sm-2">
+                                    <input id="form-field-1" placeholder="Enter Code" class="col-xs-10 col-sm-12" type="text">
+                                </div>
+                                <label class="col-sm-2 control-label" for="form-field-1">
+                                    KOT No.:
+                                </label>
+                                <div class="col-sm-2">
+                                    <select id="tax" class="multiselect" multiple="">
+                                        <option value="1">Tomotoes</option>
+                                        <option value="2">Potatoes</option>
+                                        <option value="3">Brinjal</option>
+                                        <option value="4">Gharam Masala</option>
+                                        <option value="5">Ghee</option>
+                                        <option value="6">Salt</option>
+                                        <option value="7">Sugar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" for="form-field-1">
+                                    KOT Type:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select id="tax" class="multiselect" multiple="">
+                                        <option value="1">Tomotoes</option>
+                                        <option value="2">Potatoes</option>
+                                        <option value="3">Brinjal</option>
+                                        <option value="4">Gharam Masala</option>
+                                        <option value="5">Ghee</option>
+                                        <option value="6">Salt</option>
+                                        <option value="7">Sugar</option>
+                                    </select>
+                                </div>
+                                <label class="col-sm-1 control-label" for="form-field-1">
+                                    N.C Reason:
+                                </label>
+                                <div class="col-sm-2">
+                                    <select id="tax" class="multiselect" multiple="">
+                                        <option value="1">Tomotoes</option>
+                                        <option value="2">Potatoes</option>
+                                        <option value="3">Brinjal</option>
+                                        <option value="4">Gharam Masala</option>
+                                        <option value="5">Ghee</option>
+                                        <option value="6">Salt</option>
+                                        <option value="7">Sugar</option>
+                                    </select>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Authorised By :
+                                </label>
+                                <div class="col-sm-2">
+                                    <select id="tax" class="multiselect" multiple="">
+                                        <option value="1">Tomotoes</option>
+                                        <option value="2">Potatoes</option>
+                                        <option value="3">Brinjal</option>
+                                        <option value="4">Gharam Masala</option>
+                                        <option value="5">Ghee</option>
+                                        <option value="6">Salt</option>
+                                        <option value="7">Sugar</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <div class="pull-right no-padding-right">
+                                    <button class="btn btn-success" type="button">
+                                        <i class="ace-icon fa fa-plus bigger-110"></i>UPDATE
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+
+                <table id="grdbillgenerartion-table"></table>
+                <div id="grdbillgenerartion-pager">
+                </div>
+                <script type="text/javascript">
+                    var $path_base = "."; //in Ace demo this will be used for editurl parameter
+                </script>
+                <!-- PAGE CONTENT ENDS -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="hr hr-18 dotted hr-double">
+        </div>
+
+        <form class="form-horizontal" name="fmbillgeneration" novalidate>
+            <div class="col-sm-6 col-xs-12">
+
+
+                <div class="widget-body" ng-hide="true">
+                    <div class="widget-box">
+                        <div class="widget-main">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Voucher No.:
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class=" form-control" ng-model="Bill.VoucherId" name="VoucherName" ng-options="c.VoucherId as c.VoucherName for c in VoucherDetails"
+                                            ng-change="Voucher_change(Bill)">
+                                        <option value="">Select Voucher No</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group" hidden="true">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Discount %:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.VDiscountPercentage" placeholder="Enter Discount %"
+                                           class="form-control text-right" type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Discount Amount:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.VDiscountvalue" placeholder="Enter Discount Amount"
+                                           class="form-control text-right" type="text" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr hr-dotted" ng-hide="true"></div>
+                <div class="widget-body">
+                    <div class="widget-box">
+                        <div class="widget-main">
+                            <div class="form-group" hidden="true">
+                                <div class="col-sm-12">
+                                    <div class="pull-right no-padding-right">
+                                        <button class="btn btn-success" type="button" ng-click="VoucherAdd(Bill)">
+                                            <i class="ace-icon fa fa-plus bigger-110"></i>ADD
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" hidden="true">
+                                <div class="col-sm-12">
+                                    <table id="grdvoucher-table"></table>
+                                    <div id="grdvoucher-pager">
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Discount Type:
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class=" form-control" ng-model="Bill.discounttype" name="DiscountType" ng-change="DiscountType_change()">
+                                        <option value="">Select Discount Type</option>
+                                        <option value="FLAT">FLAT</option>
+                                        <option value="PERCENTAGE">PERCENTAGE</option>
+                                    </select>
+                                    <span class="error" ng-show="(BillEditfrm.DiscountType.$dirty || submitted) && BillEditfrm.DiscountType.$error.required">
+                                        Select Discount Type!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Discount :
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.discount" kit-amount ng-blur="Discount_change(Bill)"
+                                           placeholder="Enter Discount" class="form-control text-right" type="text" maxlength="7">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Reason:
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class=" form-control" ng-model="Bill.ReasonName" name="ReasonName" ng-options="c.ReasonName as c.ReasonName for c in ReasonDetails">
+                                        <option value="">Select Reason</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+
+                <div class="widget-body">
+                    <div class="widget-box">
+                        <div class="widget-main">
+                            <div class="form-group" hidden="true">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Tax Type:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input type="radio" name="tax" ng-model="Bill.Discounttaxtype" value="BEFORE" checked>
+                                    Before Tax
+                                    <input type="radio" name="tax" ng-model="Bill.Discounttaxtype" value="AFTER">
+                                    After Tax
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Total:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.totalamount" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group" ng-hide="true">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Voucher Discount:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.VDiscountAmount" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Discount Amount:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.discountamount" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Gross Amount:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.gross" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Service Charges :
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class=" form-control" ng-model="Bill.servicecharges" name="servicecharges"
+                                            ng-options="c.servicecharges as c.servicecharges for c in servicechargeDetails"
+                                            ng-change="CalculateValues()">
+                                        <option value="">Select Service Charges</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Service Charges Value :
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.servicechargesvalue" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Service Tax 15 % On Service Charge :
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.ServiceTaxOnServiceCharge" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Service Tax:
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class=" form-control" ng-model="Bill.servicetax" name="servicetax"
+                                            ng-change="CalculateValues()">
+                                        <option value="0">Select Service Tax</option>
+                                        <option value="6">6</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Service Tax Value:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.servicetaxvalue" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Vat Tax:
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class=" form-control" ng-model="Bill.VATtax" name="VATtax"
+                                            ng-change="CalculateVat(Bill)">
+                                        <option value="0" selected>Select Vat Tax</option>
+                                        <option value="0">0</option>
+                                        <option value="2">2</option>
+                                        <option value="5">5</option>
+                                        <option value="14.5">14.5</option>
+                                    </select>
+
+
+                                    @*<span class="error" ng-show="(fmbillgeneration.VATtax.$dirty || submitted) && fmbillgeneration.VATtax.$error.required">
+                                            Select Vat Tax!
+                                        </span>*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Vat Tax Value:
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.VAtaxvalue" placeholder="" class="form-control text-right"
+                                           type="text" readonly="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Net Payable :
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.netamount" placeholder="" class="form-control text-right"
+                                           type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="form-field-1">
+                                    Authorised By  :
+                                </label>
+                                <div class="col-sm-6">
+                                    <input id="form-field-1" ng-model="Bill.vchauthorisedby" name="vchauthorisedby" placeholder="" class="form-control"
+                                           type="text" maxlength="100">
+                                    <span class="error" ng-show="(fmbillgeneration.Name.$dirty || submitted ) && fmbillgeneration.vchauthorisedby.$error.required">
+                                        Authorised By Required!
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr"></div>
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="SaveBillGeneration(Bill)">
+                            <i class="ace-icon fa fa-save bigger-110"></i>Save
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="ClearBillGeneration()">
+                            <i class="ace-icon fa fa-times bigger-110"></i>Cancel
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.history.forward();
+    function preventBack() { window.history.forward(1); }
+    //setTimeout("preventBack()", 0);
+    //window.onunload = function () { null };
+</script>
+
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=ctrlbillgeneration]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdbillgenerartion-table"))
+    }
+
+
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('ctrlbillgeneration', function ($scope, $http, $rootScope, $location, myService) {
+        debugger
+        $scope.Bill = {};
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+
+        var UrlData = $location.$$absUrl.split('/');
+        var TableId = UrlData[UrlData.length - 1];
+
+        if (angular.isDefined(TableId) && TableId !== "" && TableId !== "BillGeneration") {
+            LoadData(TableId);
+        }
+        else {
+            myService.Redirect();
+        }
+        function LoadData(TableId) {
+            debugger
+            $http({
+                url: '/POSTransaction/ShowkotDetails/',
+                method: "post",
+                data: { TableId: TableId }
+
+            }).success(function (data) {
+                debugger;
+
+                $scope.Bill = data.Details;
+
+                $scope.VoucherDetails = data.VoucherData;
+                $scope.Bill.Discounttaxtype = "BEFORE";
+                $scope.ReasonDetails = data.Reasondata;
+
+                $scope.servicetaxDetails = data.servicetax;
+                $scope.servicechargeDetails = data.servicecharge;
+                $scope.BillG = data.griddetails;
+                KotBinding(data.griddetails);
+
+                if (data.servicecharge.length == 1) {
+
+                    $scope.Bill.servicecharges = data.servicecharge[0].servicecharges
+                }
+                $scope.Bill.servicetax = "6";
+                $scope.CalculateValues();
+
+
+            });
+            //.error(function () {
+            //alert("Error Occuerd");
+
+            // });
+        }
+
+        $scope.CalculateVat = function (Bill) {
+
+            debugger;
+            if (Bill.VATtax === undefined || Bill.VATtax == null || Bill.VATtax == "") { Bill.VATtax = 0; }
+            if (Bill.servicetaxvalue === undefined | Bill.servicetaxvalue == null || Bill.servicetaxvalue == "") { Bill.servicetaxvalue = 0; }
+            netamount = (parseFloat(Bill.gross) + parseFloat(Bill.servicechargesvalue) + parseFloat(Bill.ServiceTaxOnServiceCharge) + parseFloat(Bill.servicetaxvalue)) * parseFloat(Bill.VATtax) / 100;
+            $scope.Bill.VAtaxvalue = parseFloat(netamount).toFixed(2);
+
+            netamount = parseFloat(Bill.gross) + parseFloat(Bill.servicechargesvalue) + parseFloat(Bill.ServiceTaxOnServiceCharge) + parseFloat(Bill.servicetaxvalue) + parseFloat($scope.Bill.VAtaxvalue)
+
+            $scope.Bill.netamount = Math.round(netamount);
+
+        }
+
+        function loadNonReasons() {
+            countriesList = ":Select;";
+            $.ajax({
+                url: '/POSMasters/ShowReasons/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                data: '',
+                success: function (data) {
+                    debugger
+                    var msg = eval('(' + data.Data + ')');
+
+                    if (msg != undefined && msg.length > 0) {
+                        for (var i = 0; i < msg.length; i++) {
+                            if (i == msg.length - 1) {
+                                countriesList += "" + msg[i].reasonid + ":" + msg[i].reasonname + "";
+                            }
+                            else {
+                                countriesList += "" + msg[i].reasonid + ":" + msg[i].reasonname + ";";
+                            }
+                        }
+                    }
+                }
+
+            });
+            return countriesList;
+        }
+
+        //individual discount cal
+        function checkVal(value) {
+            debugger;
+
+            var rowid = parseInt($("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow'));
+            // $('#grdbillgenerartion-table').saveRow(rowid);
+            var rowData = $("#grdbillgenerartion-table").getRowData(rowid);
+            var CheckBox = $("#" + rowid + "_noncharge").prop('checked');
+
+            if (CheckBox == false) {
+                var amount = 0;
+                var Type = $("#" + rowid + "_IndDiscountType option:selected").text();
+                var Amount = parseFloat(document.getElementById("" + rowid + "_IndiviItemQty").value);
+
+                var gridAmt = parseFloat(rowData.itemrate);
+                var itemQt = parseInt(rowData.itemqty);
+                gridAmt = gridAmt * itemQt;
+
+                if (Type != "Select") {
+
+                    if (Type == "Percentage") {
+
+                        if (isNaN(Amount)) {
+
+                            $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", 0);
+                            $scope.CalculateValues();
+                        }
+                        if (Amount > 100) {
+
+                            alert("Enter Percentage Less Than :" + 100 + "");
+                            document.getElementById("" + rowid + "_IndiviItemQty").value = "";
+                        }
+                        else {
+
+
+                            var balAmount = parseFloat(gridAmt * Amount / 100);
+                            var RebalAmount = gridAmt - balAmount;
+                            $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", RebalAmount);
+
+                            if (isNaN(RebalAmount)) {
+
+                                RebalAmount = 0;
+                                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", RebalAmount);
+                            }
+
+                            $('#grdbillgenerartion-table').saveRow(rowid);
+                            $scope.CalculateValues();
+                        }
+                    }
+                    else if (Type == "Flat") {
+
+                        if (isNaN(Amount)) {
+
+                            $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", 0);
+                            $scope.CalculateValues();
+                        }
+                        if (Amount > gridAmt) {
+
+                            alert("Enter Amount Less Than :" + gridAmt + "");
+                            document.getElementById("" + rowid + "_IndiviItemQty").value = "";
+                        }
+                        else {
+
+                            var balAmount = gridAmt - Amount;
+                            $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", balAmount);
+                            if (isNaN(balAmount)) {
+
+                                balAmount = 0;
+                                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", balAmount);
+                            }
+                            $('#grdbillgenerartion-table').saveRow(rowid);
+                            $scope.CalculateValues();
+                        }
+
+                    }
+
+                }
+                else {
+
+                    document.getElementById("" + rowid + "_IndiviItemQty").value = 0;
+
+
+                    function search(nameKey, myArray) {
+                        for (var i = 0; i < myArray.length; i++) {
+                            if (myArray[i].itemname === nameKey) {
+                                return myArray[i];
+                            }
+                        }
+                    }
+
+                    var array = $scope.BillG;
+
+                    var resultObject = search(rowData.itemname, array);
+                    var Amount = resultObject["numamount"];
+
+                    $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", Amount);
+                    $scope.CalculateValues();
+                }
+            }
+            else {
+
+                alert("Can Not Give Discount To this item");
+                document.getElementById("" + rowid + "_IndiviItemQty").value = 0;
+                document.getElementById("" + rowid + "_IndDiscountType").value = "Select";
+                $('#grdbillgenerartion-table').saveRow(rowid);
+                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, "numamount", 0);
+
+            }
+
+
+        }
+
+        var NonReasons = loadNonReasons();
+
+        $scope.Discount_change = function (Bill) {
+            debugger;
+
+            $scope.TotalDiscountValue = parseInt($scope.Bill.discount);
+            var totalamt = $scope.Bill.totalamount
+            var dis = $scope.Bill.discounttype
+            if (dis == "PERCENTAGE") {
+                if ($scope.TotalDiscountValue <= 100) {
+
+                    $scope.CalculateValues();
+                }
+                else {
+
+                    alert(" percentage Should not exceed 100");
+                    $scope.Bill.discount = 0;
+                    $scope.Bill.discounttype = "";
+                }
+            }
+
+            else if (dis == "FLAT") {
+
+                if ($scope.TotalDiscountValue <= totalamt) {
+
+                    $scope.CalculateValues();
+                }
+                else {
+
+                    alert(" Amount Should not exceed " + totalamt + "");
+                    $scope.Bill.discount = 0;
+                    $scope.Bill.discounttype = "";
+                }
+
+            }
+        }
+        $scope.Voucher_change = function (Bill) {
+            debugger;
+
+            $http({
+                url: '/POSTransaction/ShowVoucherDetails/',
+                method: "POST",
+                data: { 'VoucherId': $scope.Bill.VoucherId }
+            }).success(function (Data) {
+                debugger;
+                //   $scope.EmpAllowCheckGridDetails = gridData;
+                $scope.Bill.VDiscountPercentage = Data.VDiscountPercentage;
+                $scope.Bill.VDiscountvalue = Data.VDiscountAmount;
+                $scope.Bill.VoucherDiscountvalue = Data.VDiscountAmount;
+                var amount = $scope.Bill.totalamount;
+                if ($scope.Bill.VoucherDiscountvalue > amount) {
+                    $scope.Bill.VDiscountvalue = amount;
+                }
+                else {
+                    $scope.Bill.VDiscountvalue = $scope.Bill.VoucherDiscountvalue;
+                }
+                $scope.CalculateValues();
+
+            }).error(function (ex) {
+                alert("Error While Getting Data" + $(ex).filter('title').text());
+
+            });
+        };
+
+        $scope.DiscountType_change = function () {
+
+            $scope.Bill.discount = "";
+            $scope.TotalDiscountValue = 0;
+            $scope.CalculateValues();
+        }
+        $scope.CalculateValues = function () {
+
+            debugger;
+            if (angular.isDefined($scope.Bill.VoucherId) && $scope.Bill.VoucherId != 0 && $scope.Bill.VoucherId != null && $scope.Bill.VoucherId != "") {
+                $scope.Bill.VoucherName = $.grep($scope.VoucherDetails, function (C) {
+                    return C.VoucherId == $scope.Bill.VoucherId;
+                })[0].VoucherName;
+                var voucherno = $scope.Bill.VoucherName;
+            }
+            else {
+                var voucherno = "";
+            }
+            var voucherdiscountprec = $scope.Bill.VDiscountPercentage;
+            var voucherdiscountvalue = $scope.Bill.VoucherDiscountvalue;
+            var discounttype = $scope.Bill.discounttype;
+            var discount = 0;
+            if (($scope.Bill.discount != "" && angular.isDefined($scope.Bill.discount)) || $scope.Bill.discount == "0") {
+
+                discount = parseFloat($scope.TotalDiscountValue);
+            }
+            else {
+                discount = 0;
+            }
+            var Taotalamount = 0;
+            var remainingamount = 0;
+            var discountamount = 0;
+            var voucherdiscountamount = 0;
+            var grossamount = 0;
+            var servicetax = 0;
+            var servicetaxvalue = 0;
+            //$scope.Bill.servicetax;
+            var servicecharges = 0;
+            var servicechargesvalue = 0;
+            // $scope.Bill.servicecharges;
+            var netamount = 0;
+            Grid_data = $('#grdbillgenerartion-table').jqGrid('getRowData');
+            for (var i = 0; i < Grid_data.length; i++) {
+                if (Grid_data[i].chkselect == 'Y') {
+
+                    Taotalamount = Taotalamount + parseFloat(Grid_data[i].numamount);
+                }
+            }
+            debugger;
+            $scope.Bill.totalamount = Taotalamount;
+            remainingamount = Taotalamount;
+            if (voucherno != "") {
+
+                if (voucherdiscountvalue > 0) {
+
+                    if (voucherdiscountvalue > Taotalamount) {
+                        voucherdiscountvalue = Taotalamount;
+                        $scope.Bill.VDiscountvalue = voucherdiscountvalue;
+                    }
+                    $scope.Bill.VDiscountvalue = voucherdiscountvalue;
+                    $scope.Bill.VDiscountAmount = voucherdiscountvalue;
+                    voucherdiscountamount = voucherdiscountvalue;
+
+                }
+                else if (voucherdiscountprec > 0) {
+
+                    voucherdiscountamount = (Taotalamount * voucherdiscountprec) / 100;
+                    $scope.Bill.VDiscountAmount = voucherdiscountamount;
+                }
+                else {
+                    $scope.Bill.VDiscountAmount = 0;
+                }
+
+                Taotalamount = Taotalamount - voucherdiscountamount;
+
+            }
+            else {
+                $scope.Bill.VDiscountAmount = 0;
+            }
+
+            if (discounttype != "") {
+
+                if (discounttype == "FLAT") {
+
+                    if (discount > Taotalamount) {
+                        discount = Taotalamount;
+                        $scope.Bill.discount = discount;
+                    }
+                    $scope.Bill.discountamount = discount;
+                    $scope.Bill.discount = discount;
+                    discountamount = discount;
+                }
+                else if (discounttype == "PERCENTAGE") {
+                    discount = $scope.TotalDiscountValue;
+                    $scope.Bill.discount = discount;
+                    discountamount = (Taotalamount * discount) / 100;
+                    $scope.Bill.discountamount = discountamount;
+                }
+
+                else {
+                    $scope.Bill.discountamount = 0;
+                    $scope.Bill.discount = 0;
+                }
+                Taotalamount = Taotalamount - discountamount;
+            }
+            else {
+                $scope.Bill.discountamount = 0;
+            }
+
+
+            grossamount = remainingamount - (parseFloat(voucherdiscountamount) + parseFloat(discountamount));
+
+            if (angular.isDefined($scope.Bill.servicetax)) {
+                servicetax = $scope.Bill.servicetax;
+                servicetaxvalue = (Taotalamount * servicetax) / 100;
+            }
+
+            if (angular.isDefined($scope.Bill.servicecharges)) {
+                servicetax = $scope.Bill.servicecharges;
+                servicechargesvalue = ((Taotalamount) * servicetax) / 100;
+            }
+            $scope.Bill.servicetaxvalue = (parseFloat(servicetaxvalue.toFixed(2)));
+            $scope.Bill.servicechargesvalue = (parseFloat(servicechargesvalue.toFixed(2)));
+            //changes New
+            $scope.Bill.ServiceTaxOnServiceCharge = (parseFloat(servicechargesvalue * 15 / 100).toFixed(2));
+            //$scope.Bill.servicetaxvalue = Math.round(parseFloat(grossamount * 6 / 100).toFixed(2));
+
+            if ($scope.Bill.VAtaxvalue === undefined) {
+                $scope.Bill.VAtaxvalue = 0;
+            }
+            netamount = grossamount + $scope.Bill.servicechargesvalue + $scope.Bill.ServiceTaxOnServiceCharge + $scope.Bill.servicetaxvalue + $scope.Bill.VAtaxvalue;
+            $scope.Bill.gross = grossamount
+            $scope.Bill.netamount = Math.round(netamount);
+            $scope.CalculateVat($scope.Bill);
+            $scope.$apply();
+
+        };
+
+        //        setTimeout(function () {
+        //        debugger
+        //            $('#txtName').val('25');
+        //            $scope.$apply();
+        //        });
+
+        $scope.$watch('fmbillgeneration.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+
+
+
+        $scope.ClearBillGeneration = function () {
+            myService.Redirect();
+        }
+
+        $scope.SaveBillGeneration = function (Bill) {
+            debugger;
+            if (Bill.servicecharges == null || Bill.servicecharges == "") { Bill.servicecharges = 0; }
+            var rowid = parseInt($("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow'));
+            $('#grdbillgenerartion-table').saveRow(rowid);
+            $scope.submitted = true;
+            var count = 0;
+            var Grid_data = $('#grdbillgenerartion-table').jqGrid('getRowData');
+            $scope.Griddata = Grid_data;
+            for (var i = 0; i < Grid_data.length; i++) {
+                if (Grid_data[i].chkselect == 'Y') {
+
+                    count = 1;
+                    break;
+                }
+            }
+
+            if (count == 0) {
+                $scope.submitted = false;
+                alert("Select Atleast One Item in Grid");
+            }
+            else if ($scope.isFormValid) {
+
+                //debugger;
+
+                //var inputs = document.getElementsByTagName("input"); //or document.forms[0].elements;
+                //var cbs = []; //will contain all checkboxes
+                //var checked = []; //will contain all checked checkboxes
+                //for (var i = 0; i < inputs.length; i++) {
+                //    if (inputs[i].type == "checkbox") {
+                //        cbs.push(inputs[i]);
+                //        if (inputs[i].checked) {
+                //            checked.push(inputs[i]);
+                //        }
+                //    }
+                //}
+                //var nbCbs = cbs.length; //number of checkboxes
+                //var nbChecked = checked.length;
+
+
+
+
+                //var checkboxes = document.getElementsByClassName('groupHeader');
+                //var count = 0;
+                //for (var i = 0; i < checkboxes.length; i++) {
+                //    if (checkboxes[i].checked) {
+                //        (checkboxes[i].value);
+                //        debugger;
+                //        count = checkboxes[i].checked.length;
+
+
+
+
+                //    }
+                //}
+
+
+
+
+
+                var ans = confirm($rootScope.msgSave);
+                if (ans) {
+                    if ($scope.Bill.VoucherId != 0 && $scope.Bill.VoucherId != "") {
+                        $scope.Bill.VoucherName = $.grep($scope.VoucherDetails, function (C) {
+                            return C.VoucherId == $scope.Bill.VoucherId;
+                        })[0].VoucherName;
+                    }
+
+
+                    $http.post('/POSTransaction/SaveBillGeneration', { objBillGeneration: JSON.stringify($scope.Bill), lstKotDetails: JSON.stringify($scope.Griddata) })
+                        .success(function (data) {
+                            debugger
+                            if (data.status == 1) {
+
+                                alert("Bill Details Saved Successfully With " + data.billno + " !");
+                                ClearForm();
+
+                                //  var w = window.open("../POSReports/BillGenerationReport/?billno=" + data.billno, '_blank');
+
+
+                                debugger;
+                                var w = window.open("/POSReports/BillGenerationReport/?billno=" + data.billno + "", '_blank');
+                                //w.location.href = "BillGenerationReport/?billno=" + data.billno + "";
+                                myService.Redirect();
+                            }
+                        });
+                    //.error(function (data) {
+                    //    alert("Error While Saving Data");
+                    //});
+                }
+
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $scope.Bill = {};
+
+            $scope.fmbillgeneration.$setPristine();
+            $scope.submitted = false;
+            //KotBinding([]);
+            $("#grdbillgenerartion-table").jqGrid("clearGridData", true);
+        }
+
+
+
+
+        //                $scope.VoucherAdd = function (Bill) {
+        //            debugger;
+        //                     if(angular.isDefined($scope.Bill.VoucherId)) {
+
+        //               Voucher_data = $('#grdvoucher-table').jqGrid('getRowData');
+        //                 var totalamount= $scope.Bill.totalamount;
+
+        //            var voucherdiscountprec = $scope.Bill.VDiscountPercentage;
+        //            var voucherdiscountvalue = $scope.Bill.VDiscountvalue;
+        //             var voucherdiscountamount = 0;
+        //              var totalvdiscountamount = 0;
+
+        //                   for (var i = 0; i < Voucher_data.length; i++) {
+        //                      totalvdiscountamount=totalvdiscountamount+parseFloat( Voucher_data[i].vamount);
+        //                   }
+        //                    if(voucherdiscountvalue>0){
+        //                         voucherdiscountamount=voucherdiscountamount+parseFloat(voucherdiscountvalue);
+        //                         $scope.Bill.vamount=voucherdiscountvalue;
+        //                    }
+        //                   if(voucherdiscountprec>0){
+        //                            voucherdiscountamount=voucherdiscountamount+ ((totalamount*parseFloat(voucherdiscountprec))/100);
+        //                            $scope.Bill.vamount=(totalamount*voucherdiscountprec)/100;
+        //                   }
+
+
+        //           if((voucherdiscountamount+totalvdiscountamount)>totalamount)
+        //           {
+        //              $scope.Bill.VDiscountvalue=totalamount-voucherdiscountamount;
+        //               $scope.Bill.vamount=totalamount-voucherdiscountamount;
+        //
+        //            }
+        //               $('#grdvoucher-table').jqGrid("addRowData", 0, $scope.Bill, "last");
+
+        //         }
+        //        }
+
+        //******************Voucher JQ Grid  *******************************//
+        //        function VoucherBinding(data) {
+        //            debugger
+
+        //            var grid_data = {};
+        //            var grid_selector = "#grdvoucher-table";
+        //            var pager_selector = "#grdvoucher-pager";
+
+        //            //grid data refresh
+        //            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+        //            //resize to fit page size
+        //            $(window).on('resize.jqGrid', function () {
+        //                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        //            })
+        //            //resize on sidebar collapse/expand
+        //            var parent_column = $(grid_selector).closest('[class*="col-"]');
+        //            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+        //                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+        //                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+        //                    setTimeout(function () {
+        //                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+        //                    }, 0);
+        //                }
+        //            })
+
+        //            var lastSelection;
+
+
+        //            jQuery(grid_selector).jqGrid({
+        //                data: grid_data,
+        //                datatype: "local",
+        //                height: 150,
+        //                width:400,
+        //                rownumbers: true,
+        //                colModel: [
+        //			{ label: 'VOUCHER ID', name: 'VoucherId', width: 90, hidden: true },
+        //            { label: 'VOUCHER No', name: 'VoucherName', width: 75 },
+        //			{ label: '%', name: 'VDiscountPercentage', width: 30 },
+        //			{ label: 'Amount', name: 'VDiscountvalue', width: 30},
+        //            { label: 'Amount', name: 'vamount', width: 30},
+        //                ],
+
+        //            viewrecords: true,
+        //
+        //            loadComplete: function (id) {
+        //                var table = this;
+        //                setTimeout(function () {
+        //                    styleCheckbox(table);
+
+        //                    updateActionIcons(table);
+        //                    updatePagerIcons(table);
+        //                    enableTooltips(table);
+        //                }, 0);
+        //            },
+
+        //        });
+        //        };
+        //****************** JQ Grid  *******************************//
+
+        //function allcheck() {
+        //    debugger;
+        //    alert("changed");
+
+        //}
+        //function checkselect() {
+        //    alert("");
+        //}
+        function checkselect(value) {
+            debugger;
+            var $scope = angular.element(appElement).scope();
+            var rowid = $("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow');
+
+            if (value.checked == true) {
+                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, 'chkselect', 'Y');
+            }
+            else if (value.checked == false) {
+
+                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, 'chkselect', 'N');
+            }
+            $scope.CalculateValues();
+            $('#grdbillgenerartion-table').saveRow(rowid);
+        }
+
+
+        function checknoncharge(value) {
+            debugger;
+            var rowid = $("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow');
+            var Type = $("#" + rowid + "_IndDiscountType option:selected").text();
+            var Amount = parseFloat(document.getElementById("" + rowid + "_IndiviItemQty").value);
+
+            if (value.checked == true) {
+
+                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, 'numamount', 0);
+                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, 'chknoncharge', 'Y');
+
+
+            }
+            else if (value.checked == false) {
+                $("#grdbillgenerartion-table").jqGrid("setCell", rowid, 'chknoncharge', 'N');
+
+                if (Type == "" && isNaN(Amount) || Amount == null || Amount == 0) {
+                    //Grid_data = $('#grdbillgenerartion-table').jqGrid('getRowData');
+                    var rowData = $("#grdbillgenerartion-table").getRowData(rowid);
+                    var amount = rowData.itemrate * rowData.itemqty;
+                    $("#grdbillgenerartion-table").jqGrid("setCell", rowid, 'numamount', amount);
+                }
+                else {
+
+                    checkVal(value);
+                }
+            }
+            $scope.CalculateValues();
+            $('#grdbillgenerartion-table').saveRow(rowid);
+        }
+
+
+        function KotBinding(data) {
+            debugger;
+
+            var grid_data = data;
+            var grid_selector = "#grdbillgenerartion-table";
+            var pager_selector = "#grdbillgenerartion-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var lastSelection;
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 200,
+                rownumbers: true,
+                rowNum: 100000,
+                shrinkToFit: true,
+                forceFit: true,
+                colModel: [
+
+            { label: 'RecordId', name: 'kotid', width: 75, hidden: true },
+             //<input type="checkbox" name="chkall"  onchange="allcheck()"/>
+            {
+                label: 'Select', name: 'select', width: 50, editable: true, edittype: "checkbox", editoptions: {
+                    value: "Y:N", dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            checkselect(this);
+                        }
+                    }]
+                }, unformat: aceSwitch
+            },
+              {
+                  label: 'Non Chargeable', name: 'noncharge', width: 50, editable: true, edittype: "checkbox", editoptions: {
+                      value: "Y:N", dataEvents: [{
+                          type: 'change', fn: function (e) {
+                              checknoncharge(this);
+                          }
+                      }]
+                  }, unformat: aceSwitch
+              },
+
+            { label: '', name: 'chkselect', width: 30, hidden: true },
+           { label: 'Non Charge1', name: 'chknoncharge', width: 30, hidden: true },
+
+            { label: 'KOT ID', name: 'kotid', width: 30, hidden: true },
+            { label: 'KOT No.', name: 'vchkotid', width: 30 },
+            { label: 'Item Id', name: 'itemid', width: 90, hidden: true },
+            { label: 'Item Code', name: 'itemcode', width: 75, hidden: true },
+            { label: 'Item Name', name: 'itemname', width: 100 },
+            { label: 'Quantity', name: 'itemqty', width: 30 },
+            { label: 'Rate', name: 'itemrate', width: 30, align: 'right' },
+            {
+                label: 'Discount', name: 'IndDiscountType', width: 50, editable: true, edittype: "select", editoptions: {
+                    value: ["Select", "Flat", "Percentage"],
+                    dataEvents: [
+                               {
+                                   type: 'change',
+                                   fn: function (e) {
+                                       debugger;
+                                       checkVal(this.value);
+
+                                   }
+                               }]
+                }
+            },
+            {
+                label: 'Amount/Percentage', name: 'IndiviItemQty', width: 50, align: "right", editable: true, editoptions: {
+                    dataEvents: [{
+
+                        type: 'blur', fn: function (e) {
+                            debugger;
+                            var value = (this.value);
+                            re = /^[0-9\b]+$/;
+                            if (re.test(value)) {
+
+
+
+
+                                checkVal(this.value);
+                            }
+                            else {
+
+                                alert("Enter Numbers Only");
+                                var rowid = parseInt($("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow'));
+                                document.getElementById("" + rowid + "_IndiviItemQty").value = 0;
+                            }
+
+
+
+                        }
+
+
+                    }]
+                }
+            },
+            { label: 'Amount', name: 'numamount', width: 30, align: 'right' },
+              {
+                  label: 'Reasons/Remarks', name: 'Reason', width: 90, editable: true, edittype: "select", editoptions: {
+                      value: NonReasons,
+                      dataEvents: [
+                         {
+                             type: 'change',
+                             fn: function (e) {
+                                 var rowid = $("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow');
+                                 $('#grdbillgenerartion-table').saveRow(rowid);
+                             }
+                         }]
+                  }
+              },
+                ],
+
+                viewrecords: true,
+                loadonce: false,
+                //rowNum: 100000000,
+                //rowList: [8, 16, 25, 100, 100000000],
+
+                // pager: pager_selector,
+                onSelectRow: editRow,
+                altRows: true,
+                search: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    // $("option[value=100000000]").text('All');
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                grouping: true,
+                ignoreCase: true,
+                groupingView: {
+                    groupField: ["vchkotid"],
+                    groupColumnShow: [true],
+                    //  groupText: ['<input type="checkbox"  class="groupHeader"  value="{0}" /><b>{0} - {1} ITEM(s)</b>'],
+
+                    groupText: ['<b>{0} - {1} ITEM(s)</b>'],
+                    groupOrder: ["asc"],
+                    groupSummary: [false],
+                    groupCollapse: false
+
+                },
+
+
+                // multiselect: true,
+
+
+                caption: "Bill Generation Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+            function editRow(id) {
+                debugger;
+                if (id) {
+                    var grid = $("#grdbillgenerartion-table");
+                    var rowData = $("#grdbillgenerartion-table").getRowData(lastSelection);
+                    //$("#grdbilledit-table").jqGrid("setCell", lastSelection, 'ItemQty', rowData.ItemQty);
+                    grid.jqGrid('restoreRow', lastSelection);
+                    grid.jqGrid('editRow', id, {
+                        keys: true, successfunc: function (data) {
+                            debugger;
+
+
+                            var rowid = parseInt($("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow'));
+                            var kk = parseFloat(document.getElementById("" + rowid + "_IndiviItemQty").value);
+
+                            var value = kk
+                            re = /^[0-9\b]+$/;
+                            if (re.test(value)) {
+                                checkVal(kk);
+                            }
+                            else {
+
+                                alert("Enter Numbers Only");
+                                var rowid = parseInt($("#grdbillgenerartion-table").jqGrid('getGridParam', 'selrow'));
+                                document.getElementById("" + rowid + "_IndiviItemQty").value = 0;
+                            }
+
+
+
+                        }
+                    });
+                    lastSelection = id;
+
+                }
+            }
+
+            //switch element when editing inline
+            function aceSwitch(cellvalue, options, cell) {
+                setTimeout(function () {
+                    $(cell).find('input[type=checkbox]')
+                            .addClass('ace ace-switch ace-switch-5')
+                            .after('<span class="lbl"></span>');
+                }, 0);
+            }
+
+
+        }
+
+    });
+</script>

@@ -1,0 +1,361 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<div ng-controller="kotCancelController" ng-init="GetTableName();">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-header">
+                    <h1>
+                        KOT Cancel <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                    </h1>
+                </div>
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="kotCancelMasterfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Table No. :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTableNO" class="form-control" disabled />
+                            @*<input type="text" name="TableNo" ng-model="KOTC.TableNo" placeholder="Table No."
+                                kit-alpha-numeric class="form-control" required ng-change="TableChange()" id="TableNo" disabled style="visibility:hidden" />*@
+                            <span class="error" ng-show="(kotCancelMasterfrm.TableNo.$dirty || submitted) && kotCancelMasterfrm.TableNo.$error.required">
+                                Table No. Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            KOT No. :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="KotId" ng-model="KOTC.KotId" placeholder="KOT NO." ng-options="K.KotId as K.Kot for K in KOTS"
+                                    ng-change="SelectKOT()" class="form-control" required id="KotId">
+                                <option value="">Select KOT</option>
+                            </select>
+
+                            <span class="error" ng-show="(kotCancelMasterfrm.KotId.$dirty || submitted) && kotCancelMasterfrm.KotId.$error.required">
+                                Kot No. Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Reason :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="ReasonID" ng-model="KOTC.ReasonID" placeholder="ReasonID" ng-options="K.ReasonID as K.Reason for K in Reasons"
+                                    class="form-control" required>
+                                <option value="">Select Reason</option>
+                            </select>
+                            <span class="error" ng-show="(kotCancelMasterfrm.ReasonID.$dirty || submitted) && kotCancelMasterfrm.ReasonID.$error.required">
+                                Reason Required!
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table id="grdCategory"></table>
+        <div id="grid-pager">
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="pull-right">
+            <button class="btn btn-success" type="button" ng-click="SaveKot(KOTC)">
+                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn orange" ng-click="Reset()" id="Reset">
+                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+            </button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var appElement = document.querySelector('[ ng-controller=kotCancelController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdCategory"))
+    }
+    //    function edit(row) {
+    //        debugger;
+    //        var $scope = angular.element(appElement).scope();
+    //        var rowdata = $("#grdCategory").getRowData(row);
+    //        $scope.btnSave = "Update"
+    //        $scope.Isc = rowdata;
+    //        $scope.Isc.CategoryId = $.grep($scope.Categories, function (c) {
+    //            return c.CategoryCode == $scope.Isc.CategoryCode;
+    //        })[0].CategoryId;
+
+    //        $scope.$apply();
+    //    }
+    //    function Delete(row) {
+    //        var $scope = angular.element(appElement).scope();
+    //        var $http = angular.element(appElement).injector().get('$http');
+    //        var rowdata = $("#grdCategory").getRowData(row);
+
+    //        var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+    //        if (ans) {
+    //            $http.post('/POSMasters/DeleteItemSubCategory', rowdata).success(function (data) {
+    //                if (data) {
+    //                    alert("Item Sub-Category Details Deleted Successfully");
+    //                    $('#grdCategory').jqGrid('delRowData', row);
+    //                    $scope.LoadData();
+    //                }
+    //            }).error(function (data) { alert("Error Occuerd"); });
+    //        }
+    //    }
+</script>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('kotCancelController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "KOT Cancel";
+        $scope.KOTC = {};
+
+        $scope.$watch('kotCancelMasterfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+
+        $scope.GetTableName = function () {
+            $http({
+                url: '/POSTransaction/getData/',
+                method: "get"
+            }).success(function (data) {
+                debugger
+                $('#txtTableNO').val(data.split('-')[0]);
+                $scope.KOTC.TableNo = data.split('-')[1];
+                $scope.TableChange(data.split('-')[1]);
+            });
+        }
+
+        //-------TableNO Change-----------//
+
+
+        $scope.TableChange = function (TableNo) {
+            debugger;
+            // var TableNo = $scope.KOTC.TableNo;
+            //------GRID Binding--------//
+            if (TableNo != null) {
+                $http({
+                    url: '/POSTransaction/ShowKot/',
+                    method: "POST",
+                    data: { Id: TableNo }
+                }).success(function (data) {
+                    debugger;
+                    $scope.Reset();
+                    $scope.KOTS = data;
+                    $scope.KOTC.TableNo = TableNo;
+
+                });
+            } else {
+                $scope.Reset();
+                $scope.KOTS = null;
+            }
+        }
+
+        //-------- KOT Select Gird Binding--------//
+        $scope.SelectKOT = function () {
+            debugger;
+            var KotId = $scope.KOTC.KotId;
+            var TableNo = $scope.KOTC.TableNo;
+            //select itemid, itemname, itemcode, itemqty, remarks from tabposkotcanceldetails td join  tabposkotcancel ti on ti.recordid=td.detailsid
+            //------GRID Binding--------//
+            if (KotId != null) {
+                $http({
+                    url: '/POSTransaction/ShowKotCancelGridData/',
+                    method: "POST",
+                    data: { TableNO: TableNo, KotId: KotId }
+                }).success(function (data) {
+                    debugger;
+                    OriginGridBinding(data);
+                });
+            } else {
+                OriginGridBinding([]);
+            }
+        }
+        //-------- Reason Binding--------//
+        $http({
+            url: '/POSTransaction/ShowReason/',
+            method: "get"
+        }).success(function (data) {
+            debugger;
+            $scope.Reasons = data;
+            OriginGridBinding([]);
+            //}).error(function () {
+            //    alert("Error Occuerd");
+        });
+
+        //--Page Load KOT Binding---------//
+        //$http({
+        //    url: '/POSTransaction/ShowKot/',
+        //    method: "get"
+        //}).success(function (data) {
+        //    debugger;
+        //    $scope.KOTS = data;
+        //    $scope.TableChange(data.split('-')[1])
+        //}).error(function () {
+        //    alert("Error Occuerd");
+        //});
+
+        $scope.SaveKot = function (KOTC) {
+            // debugger;
+            var Grid = jQuery('#grdCategory').jqGrid('getGridParam');
+            $scope.submitted = true;
+            $scope.KOTC.KotName = $("#KotId option:selected").text();
+
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        var ROWS = [];
+                        for (var x = 0; x < Grid.data.length; x++) {
+                            //                            var RD = jQuery('#grdCategory').jqGrid("getRowData", x);
+                            var RD = Grid.data[x];
+                            debugger;
+                            var ReasonForCancel = $scope.KOTC.ReasonID;
+
+                            debugger;
+                            var rowData = { Itemid: RD.Itemid, Item: RD.Item, ItemCode: RD.ItemCode, ItemQty: RD.ItemQty, Reason: ReasonForCancel, Sectionid: RD.Sectionid, SessionId: RD.SessionId, Date: RD.Date, Time: RD.Time, Host: RD.Host, Covers: RD.Covers, Adults: RD.Adults, Kids: RD.Kids, Status: RD.Status, Rate: RD.Rate };
+                            ROWS.push(rowData);
+                        }
+                        debugger;
+                        var GridData = JSON.stringify(ROWS);
+                        var formData = JSON.stringify(KOTC);
+                        $http({ url: '/POSTransaction/SaveKotCancel/', method: "POST", data: { jsonData: GridData, UserID: formData } }).success(function (data) {
+                            debugger
+                            if (data == true) {
+                                alert("Details Saved Successfully");
+                                ClearForm();
+                                var url = '@Url.Action("../POSTransaction/DashBoard")';
+                                window.location.href = url;
+                            } else {
+                                alert("Details Already Exist");
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+                }
+            }
+        }
+        $scope.Reset = function () {
+            var TableNO = $scope.KOTC.TableNo;
+            ClearForm();
+            $scope.KOTC.TableNo = TableNO;
+        }
+        $scope.Amount = function (str) {
+            debugger;
+            var x = $('#' + str + '').val();
+            if (parseFloat(x) == 0) {
+                $('#' + str + '').val('');
+            } else {
+                for (var y = 0; y < x.length; y++) {
+                    if (x[y] == '0' && x[y] != '.') {
+                    } else if (x[y] == '.') {
+                        x = x.substring(y, x.length);
+                        x = '0' + x;
+                        break;
+                    } else {
+                        x = x.substring(y, x.length);
+                        break;
+                    }
+                }
+                $('#' + str + '').val(x);
+            }
+
+        }
+
+        //****************** Clear Details *******************************//
+        function ClearForm() {
+            OriginGridBinding([]);
+            $scope.KOTC = {};
+            $scope.kotCancelMasterfrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+            var grid_data = data;
+            var grid_selector = "#grdCategory";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                // Item, Itemid, ItemCode, ItemQty, Reason,
+                colModel: [
+                        { label: 'Item Id', name: 'Itemid', width: 75 },
+                        { label: 'Item Code', name: 'ItemCode', width: 75 },
+                        { label: 'Item Name', name: 'Item', width: 75 },
+                        { label: 'Quantity', name: 'ItemQty', width: 90 },
+
+                { label: 'SectionId', name: 'Sectionid', width: 90, hidden: true },
+        { label: 'SessionId', name: 'SessionId', width: 90, hidden: true },
+        { label: 'Date', name: 'Date', width: 90, hidden: true },
+        { label: 'Time', name: 'Time', width: 90, hidden: true },
+        { label: 'Host', name: 'Host', width: 90, hidden: true },
+        { label: 'Covers', name: 'Covers', width: 90, hidden: true },
+                { label: 'Adults', name: 'Adults', width: 90, hidden: true },
+        { label: 'Kids', name: 'Kids', width: 90, hidden: true },
+
+                { label: 'Status', name: 'Status', width: 90, hidden: true },
+                 { label: 'Rate', name: 'Rate', width: 90, hidden: true }
+
+                ],
+                viewrecords: true,
+                rowNum: 100000,
+                //rowList: [8, 16, 25, 100],
+                //pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                caption: "Item Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+            jQuery('#grdCategory').jqGrid('clearGridData');
+            jQuery('#grdCategory').jqGrid('setGridParam', { data: grid_data });
+            jQuery('#grdCategory').trigger('reloadGrid');
+        }
+    });
+</script>

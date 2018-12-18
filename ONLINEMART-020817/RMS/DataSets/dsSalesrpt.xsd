@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsSalesrpt" targetNamespace="http://tempuri.org/dsSalesrpt.xsd" xmlns:mstns="http://tempuri.org/dsSalesrpt.xsd" xmlns="http://tempuri.org/dsSalesrpt.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsSalesrpt" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsSalesrpt" msprop:Generator_UserDSName="dsSalesrpt">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dsSalesrpt" msprop:Generator_TableClassName="dsSalesrptDataTable" msprop:Generator_TableVarName="tabledsSalesrpt" msprop:Generator_TablePropName="_dsSalesrpt" msprop:Generator_RowDeletingName="dsSalesrptRowDeleting" msprop:Generator_RowChangingName="dsSalesrptRowChanging" msprop:Generator_RowEvHandlerName="dsSalesrptRowChangeEventHandler" msprop:Generator_RowDeletedName="dsSalesrptRowDeleted" msprop:Generator_UserTableName="dsSalesrpt" msprop:Generator_RowChangedName="dsSalesrptRowChanged" msprop:Generator_RowEvArgName="dsSalesrptRowChangeEvent" msprop:Generator_RowClassName="dsSalesrptRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="vchbillno" msprop:Generator_ColumnVarNameInTable="columnvchbillno" msprop:Generator_ColumnPropNameInRow="vchbillno" msprop:Generator_ColumnPropNameInTable="vchbillnoColumn" msprop:Generator_UserColumnName="vchbillno" type="xs:string" minOccurs="0" />
+              <xs:element name="numpaidamount" msprop:Generator_ColumnVarNameInTable="columnnumpaidamount" msprop:Generator_ColumnPropNameInRow="numpaidamount" msprop:Generator_ColumnPropNameInTable="numpaidamountColumn" msprop:Generator_UserColumnName="numpaidamount" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

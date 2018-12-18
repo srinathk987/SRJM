@@ -1,0 +1,1138 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+<style type="text/css">
+    .fullwidth {
+        width: 100% !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .ui-jqgrid-btable .ui-state-highlight {
+        background: #003366;
+    }
+
+    .ui-state-highlight {
+        background: lightblue !important;
+    }
+
+    .holdRow td {
+        font-weight: bold !important;
+        color: Blue !important;
+        background: gray;
+    }
+
+    .holdSelected td {
+        font-weight: bold !important;
+        color: green !important;
+        background: yellow;
+    }
+
+
+    .higLightholdRow td {
+        font-weight: bold !important;
+        color: Yellow !important;
+    }
+
+    .can_be_selected {
+        border: 1px solid #696;
+    }
+
+    .background_color_grey {
+        background: #ccc;
+    }
+
+    .ui-jqgrid .ui-jqgrid-title {
+        width: 100%;
+    }
+
+    .ui-jqgrid .ui-jqgrid-caption {
+        width: 100%;
+    }
+
+
+    .grid-ico {
+        width: auto;
+        float: right;
+        right: 20px;
+        position: relative;
+    }
+
+        .grid-ico li {
+            list-style: none;
+            float: left;
+            padding: 0px 5px;
+            font-size: 18px;
+            color: #fff;
+        }
+
+    .ui-jqgrid .ui-jqgrid-hbox {
+        background: none;
+        border-bottom: 0px solid #fc8b7f;
+    }
+
+
+
+
+    .background_color_grey {
+        background: #ccc;
+    }
+
+
+    /*#wrap {
+        margin: 00px 10px;
+        display: inline-block;
+        position: relative;
+        height: 60px;
+        float: right;
+        padding: 0;
+        position: relative;
+    }*/
+
+    #wrap-search input[type="text"] {
+        height: 40px;
+        font-size: 22px;
+        display: inline-block;
+        font-weight: 100;
+        border: none;
+        outline: none;
+        color: #333;
+        padding: 3px;
+        padding-right: 26px;
+        width: 0px;
+        position: absolute;
+        top: 0;
+        right: 0px;
+        background: none;
+        z-index: 3;
+        transition: width .4s cubic-bezier(0.000, 0.795, 0.000, 1.000);
+        cursor: pointer;
+        border-radius: 0px !important;
+    }
+
+        #wrap-search input[type="text"]:focus:hover {
+            border-bottom: 1px solid #BBB;
+        }
+
+        #wrap-search input[type="text"]:focus {
+            width: 400px;
+            z-index: 1;
+            border-bottom: 1px solid #BBB;
+            cursor: text;
+            background: #fff;
+            border-radius: none;
+        }
+
+    /*#wrap-search input[type="submit"] {
+        height: 30px;
+        width: 26px;
+        display: inline-block;
+        color: red;
+        float: right;
+        background: url(../../assets/Images/search-icon.png) center center no-repeat;
+        text-indent:111px;
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 0;
+        z-index: 2;
+        cursor: pointer;
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity .4s ease;
+        background-size: 30px;
+    }
+
+        input[type="submit"]:hover {
+            opacity: 0.8;
+        }*/
+
+
+    #wrap-search a.submit {
+        height: 30px;
+        width: 26px;
+        display: inline-block;
+        color: red;
+        float: right;
+        background: url(../../assets/Images/search-icon.png) center center no-repeat;
+        text-indent: 111px;
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 2;
+        cursor: pointer;
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity .4s ease;
+        background-size: 30px;
+    }
+
+        #wrap-search a.submit:hover {
+            opacity: 0.8;
+        }
+
+
+
+    ul.menu-item {
+        width: 100%;
+        padding: 3px;
+        margin: 0px;
+    }
+
+        ul.menu-item li {
+            width: 100%;
+            height: 40px;
+            display: inline;
+            padding: 8px 10px;
+            line-height: 30px;
+            font-size: 16px;
+            margin: 2px 0px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+        }
+
+            ul.menu-item li span {
+                float: left;
+            }
+
+            ul.menu-item li .item-title {
+                width: auto;
+                min-width: 70%;
+            }
+
+            ul.menu-item li .item-Code {
+                width: auto;
+                min-width: 70%;
+            }
+
+            ul.menu-item li .quantity {
+                width: auto;
+                min-width: 10%;
+            }
+
+        ul.menu-item .rate-item {
+            width: auto;
+            min-width: 20%;
+            text-align: right;
+        }
+
+            ul.menu-item .rate-item .fa {
+                color: #080000 !important;
+            }
+
+    .table {
+        background: rgba(256,256,256,0.6);
+    }
+
+
+        .table > thead > tr {
+            background: #C69332 !important;
+        }
+
+
+            .table > thead > tr > th {
+                font-weight: 600 !important;
+                font-size: 16px;
+                color: #fff;
+                text-transform: uppercase !important;
+                width: inherit;
+                padding: 8px 2px;
+            }
+
+        .table > tbody {
+            font-size: 14px;
+            color: #111;
+        }
+
+
+
+    .fa-plus:before,
+    .fa-minus:before {
+        font-size: 12px !important;
+        font-kerning: none;
+        color: #444;
+        text-shadow: none;
+    }
+
+    .table > thead > tr > th:last-child {
+        text-align: right;
+        padding-right: 25px !important;
+    }
+
+    .table > tfoot > tr > th:last-child {
+        text-align: right;
+    }
+
+    .table > tfoot > tr > th {
+        font-size: 18px;
+        font-weight: 600;
+        /*border-bottom: 1px double rgba(0, 0, 0, 0.8);*/
+    }
+
+    .table > tfoot > tr:first-child > th {
+        border-top: 5px solid #C69332 !important;
+    }
+
+
+    .table > tfoot > tr > td, .table > tfoot > tr > th {
+        border-top: none !important;
+    }
+</style>
+
+<div class="page-content" ng-controller="ThirdPartyBillSettlementController" ng-init=" getGridData();">
+
+    <div class="row">
+
+        <div class=" col-sm-12 col-xs-12">
+
+
+            <div class="page-header" style="padding-bottom:42px !important; ">
+
+                <h1 style="width:auto; line-height:35px;  float:left">
+
+                    Bill Settlement
+                    <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+
+
+
+                </h1>
+
+                <a href="" ng-click="Back();" class="pull-right right " style="font-size:16px;">
+                    <i class="ace-icon fa fa-chevron-left"> </i> BACK TO HOME PAGE
+                </a>
+
+
+            </div>
+            <form class="" role="form" name="FmThirdPartyBillSettlement" novalidate>
+
+                <!-- PAGE CONTENT BEGINS -->
+                <div class="col-sm-6">
+                    <div class="form-group">
+
+                        <label class="control-label col-sm-3" for="form-field-1">Third Party <span style="color: Red">*</span>:</label>
+                        <div class="col-sm-3">
+                            <select id="form-field-1" ng-model="Third.ThirdPartyNames" class="form-control" name="TDur" ng-hide="ShoWFirst" ng-options="c.vchpartyid as c.vchpartyname for c in ThirdPartyNames" ng-change="SelectThirdParty(Third.ThirdPartyNames)">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label col-sm-2" for="form-field-1" ng-hide="hideDate">Date: <span style="color: Red">*</span>:</label>
+                        <div class="col-sm-3" ng-hide="hideDate">
+                            <input name="FromDate" class="form-control" type="text" ng-model="bill.fromdate" id="calendar" data-date-format="dd/mm/yyyy" ng-change="getThirdPartyBillDetails(Third)" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+
+
+
+                        <label class="col-sm-3 control-label" for="form-field-1">Company Name <span style="color: Red">*</span>:</label>
+                        <div class="col-sm-3">
+
+                            <select name="CompanyName" class="form-control" ng-model="BillToCompany.CompanyName"  ng-change="getBillToCompanyBills(BillToCompany.CompanyName)" ng-options="c.vchcompanyname as c.vchcompanyname for c in BilltocompanyNames">
+                                <option value="">Select Company </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <label class="control-label col-sm-2" for="form-field-1">Date: <span style="color: Red">*</span>:</label>
+                        <div class="col-sm-3">
+                            <input name="FromDate" class="form-control" type="text" ng-model="BillToCompany.fromdate" id="calendargfghf" data-date-format="dd/mm/yyyy" ng-disabled="true" />
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-xs-12">
+                    <div class="widget-box transparent" id="recent-box" style="padding:0px 0px !important; border:1px solid #ddd; margin-left:0px; height:auto !important;">
+                        <div class="widget-header " style="padding:0px 0px !important;">
+                            <div class="col-sm-3 col-xs-12 btn-info ">
+                                <h4 class=" widget-title lighter smaller">
+                                    <i class="ace-icon fa fa-cart-plus"></i> BILLS
+                                </h4>
+                            </div>
+
+                            @*<table id="gpKOT"></table> table-striped table-bordered*@
+
+                            <table class="table table-responsive " width="100">
+
+                                <thead class="">
+                                    <tr class="">
+
+
+                                        <th align="center" style="width: 33%; text-wrap: none; text-align: center; ">
+                                            Date
+                                        </th>
+                                        <th style="width: 33%; text-align: center; ">
+                                            No Of Orders
+                                        </th>
+                                        <th style="width: 44%; text-align: center; ">
+                                            Amount
+                                        </th>
+
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="Bills in ThirdPartyBills">
+
+                                        <td style="text-align: center">
+                                            {{Bills.datorderdate}}
+                                        </td>
+
+                                        <td style="text-align: center">
+                                            {{Bills.nooforders}}
+                                        </td>
+
+                                        <td style="text-align: right">
+                                            {{Bills.numdueamount | currency:'₹ '}}
+                                        </td>
+
+
+
+
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-hide="FHide">
+
+                                    <tr class="" style=" color: #C69332">
+                                        <th colspan="2">
+                                            <div class="pull-right ">
+                                                <span style="float: left; "> Total:</span>
+
+                                            </div>
+                                        </th>
+                                        <th>{{Total| currency:'₹ '}}</th>
+                                    </tr>
+
+                                    <tr class="" style=" color: #4d7c9b">
+
+
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float: left; ">Margin Per/Amount:</span>
+
+                                            </div>
+                                        </th>
+                                        <th>{{MarginAOrP}}</th>
+
+
+
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b">
+
+
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float: left; ">Margin Amount:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>{{MarginAmountaReduced| currency:'₹ '}}</th>
+
+
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b">
+
+
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float: left; "> Previous Pending:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>{{MarginAmount| currency:'₹ '}}</th>
+
+
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Paid Amount<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="13" ng-minlength="3" ng-model="Third.PaidAmount" kit-digits name="PaidAmount"
+                                                   placeholder="Enter Paid Amount" class="form-control " type="text" style="text-align:right " required>
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.PaidAmount.$dirty || submitted ) && FmThirdPartyBillSettlement.PaidAmount.$error.required">
+                                                Select Mode Of Payment!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; "> Mode Of Payment<span style="color: Red">*</span> :</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <select id="form-field-1" ng-model="Third.ModeOfPayment" class="form-control" name="TMode" ng-change="Showhidedetails(Third.ModeOfPayment)" required>
+                                                <option value="">Select</option>
+                                                <option value="Cash">Cash</option>
+                                                <option value="Cheque">Cheque</option>
+                                                <option value="BankTransfer">Bank Transfer</option>
+
+
+                                            </select>
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.TMode.$dirty || submitted ) && FmThirdPartyBillSettlement.TMode.$error.required">
+                                                Select Mode Of Payment!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="CheQuedetailsshow">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Cheque No.<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="10" ng-minlength="6" ng-model="Third.ChequeNo" kit-digits name="ChequeN"
+                                                   placeholder="Enter Cheque No." class="form-control " type="text" style="text-align:left " ng-required="ChequeReqired">
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.ChequeN.$dirty || submitted ) && FmThirdPartyBillSettlement.ChequeN.$error.required">
+                                                Enter Cheque No.!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="CheQuedetailsshow">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Cheque Date.<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input name="Chequedate" class="form-control col-sm-2" type="text" ng-model="Third.Chequedate" id="ChequeDate" data-date-format="dd/mm/yyyy" ng-required="ChequeReqired" />
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.Chequedate.$dirty || submitted ) && FmThirdPartyBillSettlement.Chequedate.$error.required">
+                                                Enter Cheque Date!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="CheQuedetailsshow">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Bank Name <span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="100" ng-model="Third.BankName" name="CBName"
+                                                   placeholder="Enter Bank Name" class="form-control " type="text" style="text-align:left " ng-required="ChequeReqired">
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.CBName.$dirty || submitted ) && FmThirdPartyBillSettlement.CBName.$error.required">
+                                                Enter Bank Name !
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="Transactiondetailsshow">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Transaction No.<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="20" ng-minlength="10" ng-model="Third.TransactionNo" name="TranNo"
+                                                   placeholder="Enter Transaction No." class="form-control " type="text" style="text-align:left " ng-required="TranReqired">
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.TranNo.$dirty || submitted ) && FmThirdPartyBillSettlement.TranNo.$error.required">
+                                                Enter Transaction No.!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="Transactiondetailsshow">
+
+                                        <th id="total" colspan="2">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Transaction Date <span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input name="Trandate" class="form-control col-sm-2" type="text" ng-model="Third.TransactionDate" id="TransactionDate" data-date-format="dd/mm/yyyy" ng-required="TranReqired" />
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlement.Trandate.$dirty || submitted ) && FmThirdPartyBillSettlement.Trandate.$error.required">
+                                                select Transaction Date!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+
+                            @*<div id="grid-pager2">
+                                </div>*@
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-sm-6 col-xs-7">
+
+                    </div>
+
+
+
+                    <div class="col-sm-6 col-xs-6" ng-hide="FHide">
+                        <a href="" class=" checkout-btn  checkout-btn-bg pull-right" ng-click="Save(Third)" ng-hide="FooterShow">
+                            CHECK OUT
+                        </a>
+
+                    </div>
+                </div>
+
+            </form>
+            <form class="" role="form" name="FmThirdPartyBillSettlementBilltocompany" novalidate>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="widget-box transparent" id="recent-box" style="padding:0px 0px !important; border:1px solid #ddd; margin-left:0px; height:auto !important;">
+                        <div class="widget-header " style="padding:0px 0px !important;">
+                            <div class="col-sm-4 col-xs-12 btn-info ">
+                                <h4 class=" widget-title lighter smaller">
+                                    <i class="ace-icon fa fa-cart-plus"></i>COMPANY BILLS
+                                </h4>
+                            </div>
+
+                            @*<table id="gpKOT"></table> table-striped table-bordered*@
+
+                            <table class="table table-responsive " width="100">
+
+                                <thead class="">
+                                    <tr class="">
+                                        <th style="width: 1%;">
+                                        </th>
+                                        <th align="center" style="width: 15%; text-wrap: none; text-align: center; ">
+                                            Bill No
+                                        </th>
+                                        <th align="center" style="width: 25%; text-wrap: none; text-align: center; ">
+                                            Date
+                                        </th>
+                                        <th style="width: 25%; text-align: center; ">
+                                            Net Amount
+                                        </th>
+                                        <th style="width: 25%; text-align: center; ">
+                                            Due Amount
+                                        </th>
+
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="Bills in BillToCompanyDatabase">
+                                        <td>
+                                            <input type="checkbox" ng-model="selected" ng-change="getAmounts($index,Bills.numdueamount,selected)">
+                                        </td>
+                                        <td style="text-align: center">
+                                            {{Bills.vchbillno}}
+                                        </td>
+                                        <td style="text-align: center">
+                                            {{Bills.datdate}}
+                                        </td>
+
+                                        <td style="text-align: right">
+                                            {{Bills.numnet| currency:'₹ '}}
+                                        </td>
+
+                                        <td style="text-align: right">
+                                            {{Bills.numdueamount | currency:'₹ '}}
+                                        </td>
+
+
+
+
+                                    </tr>
+                                </tbody>
+                                <tfoot ng-hide="FHideBillToC">
+
+                                    <tr class="" style=" color: #C69332">
+                                        <th colspan="4">
+                                            <div class="pull-right ">
+                                                <span style="float: left; "> Total:</span>
+
+                                            </div>
+                                        </th>
+                                        <th>{{BilltoCompanytotal| currency:'₹ '}}</th>
+                                    </tr>
+
+
+                                    <tr class="" style=" color: #4d7c9b">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Paid Amount<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="13" ng-minlength="3" ng-model="BillToCompany.PaidAmount" kit-digits name="PaidAmountB"
+                                                   placeholder="Enter Paid Amount" class="form-control " type="text" style="text-align:right " required>
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.PaidAmountB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.PaidAmountB.$error.required">
+                                                Enter Paid Amount!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; "> Mode Of Payment<span style="color: Red">*</span> :</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <select id="form-field-1" ng-model="BillToCompany.ModeOfPayment" class="form-control" name="TModeB" ng-change="Showhidedetails(BillToCompany.ModeOfPayment)" required>
+                                                <option value="">Select</option>
+                                                <option value="Cash">Cash</option>
+                                                <option value="Cheque">Cheque</option>
+                                                <option value="BankTransfer">Bank Transfer</option>
+
+
+                                            </select>
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.TModeB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.TModeB.$error.required">
+                                                Select Mode Of Payment!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="CheQuedetailsshow">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Cheque No.<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="10" ng-minlength="6" ng-model="BillToCompany.ChequeNo" kit-digits name="ChequeNB"
+                                                   placeholder="Enter Cheque No." class="form-control " type="text" style="text-align:left " ng-required="ChequeReqired">
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.ChequeNB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.ChequeNB.$error.required">
+                                                Enter Cheque No.!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="CheQuedetailsshow">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Cheque Date.<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input name="ChequedateB" class="form-control col-sm-2" type="text" ng-model="BillToCompany.Chequedate" id="ChequedateBDdd" data-date-format="dd/mm/yyyy" ng-required="ChequeReqired" />
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.ChequedateB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.ChequedateB.$error.required">
+                                                Enter Cheque Date!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="CheQuedetailsshow">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Bank Name <span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="100" ng-model="BillToCompany.BankName" name="CBNameB"
+                                                   placeholder="Enter Bank Name" class="form-control " type="text" style="text-align:left " ng-required="ChequeReqired">
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.CBNameB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.CBNameB.$error.required">
+                                                Enter Bank Name !
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="Transactiondetailsshow">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Transaction No.<span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input id="form-field-2" maxlength="20" ng-minlength="10" ng-model="BillToCompany.TransactionNo" name="TranNoB"
+                                                   placeholder="Enter Transaction No." class="form-control " type="text" style="text-align:left " ng-required="TranReqired">
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.TranNoB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.TranNoB.$error.required">
+                                                Enter Transaction No.!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="" style=" color: #4d7c9b" ng-hide="Transactiondetailsshow">
+
+                                        <th id="total" colspan="4">
+                                            <div class="pull-right">
+                                                <span style="float:left; ">Transaction Date <span style="color: Red">*</span>:</span>
+
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <input name="TrandateB" class="form-control col-sm-2" type="text" ng-model="BillToCompany.TransactionDate" id="TransactionDateBD" data-date-format="dd/mm/yyyy" ng-required="TranReqired" />
+                                            <span class="error" ng-show="(FmThirdPartyBillSettlementBilltocompany.TrandateB.$dirty || submitted1 ) && FmThirdPartyBillSettlementBilltocompany.TrandateB.$error.required">
+                                                select Transaction Date!
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+
+                            @*<div id="grid-pager2">
+                                </div>*@
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-sm-6 col-xs-7">
+
+                    </div>
+
+
+
+                    <div class="col-sm-6 col-xs-6" ng-hide="FHideBillToC">
+                        <a href="" class=" checkout-btn  checkout-btn-bg pull-right" ng-click="SaveBillTocomanyBills(BillToCompany)" ng-hide="FooterShow">
+                            CHECK OUT
+                        </a>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+<script>
+
+    var app = angular.module('RMS');
+    app.controller("ThirdPartyBillSettlementController", ['$filter', '$scope', '$http', '$rootScope', '$location', 'myService', function ($filter, $scope, $http, $rootScope, $location, myService) {
+        debugger;
+
+        $scope.Transactiondetailsshow = true;
+        $scope.CheQuedetailsshow = true;
+        $scope.submitted = false;
+        $scope.submitted1 = false;
+        $scope.isFormValid = false;
+        $scope.isFormValid1 = false;
+        $scope.TranReqired = false;
+        $scope.ChequeReqired = false;
+        $scope.FHide = true;
+        $scope.hideDate = true;
+        $scope.FHideBillToC = true;
+        $scope.BillToCompany = { fromdate: "" }
+        $scope.BillToCompany.fromdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+
+
+        $scope.$watch('FmThirdPartyBillSettlement.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+        $scope.$watch('FmThirdPartyBillSettlementBilltocompany.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid1 = newValue;
+        });
+        $scope.Back = function () {
+
+            window.location.href = "/POSTransaction/DashBoard/";
+
+        }
+        $scope.SelectThirdParty = function (ThirdPartyNames) {
+            debugger
+            if (ThirdPartyNames == null) {
+                $scope.hideDate = true;; $scope.ThirdPartyBills = [];
+
+                document.getElementById('calendar').value = "";;
+
+                $scope.Total = 0;
+                $scope.MarginAOrP = 0;
+                $scope.MarginAmount = 0;
+                $scope.Third = {};
+
+                $scope.FHide = true;
+                $scope.FmThirdPartyBillSettlement.$setPristine();
+                $scope.submitted = false;
+            }
+            else {
+                $scope.hideDate = false;;
+
+                $scope.Total = 0;
+                $scope.MarginAOrP = 0;
+                $scope.MarginAmount = 0;
+
+                $scope.ThirdPartyBills = [];
+                $scope.FHide = true;
+                $scope.FmThirdPartyBillSettlement.$setPristine();
+                $scope.submitted = false;
+                document.getElementById('calendar').value = "";;
+            }
+            //$scope.ThirpartyName = $.grep($scope.ThirdPartyNames, function (c) {
+            //    debugger;
+            //    return c.vchpartyid == ThirdPartyNames;
+            //})[0].vchpartyname;
+
+        }
+        $scope.getGridData = function () {
+            debugger;
+            $http({
+                url: '/TakeAway/GetThirdpartyNames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+
+                $scope.ThirdPartyNames = eval('(' + data.JsonString + ')')
+
+            });
+
+            $http({
+                url: '/TakeAway/GetBillToCompanynames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+
+                $scope.BilltocompanyNames = eval('(' + data.Billtocompany + ')')
+
+            });
+
+        }
+        $scope.getAmounts = function (row, Amount, Selected) {
+            debugger;
+
+            var k = $scope.BilltoCompanytotal;
+            var hh = $scope.BillToCompanyDatabase
+            if (Selected == true) {
+
+                $scope.BilltoCompanytotal = $scope.BilltoCompanytotal + Amount
+                $scope.BillToCompanyDatabase[row].checkedstatus = 1;
+            }
+            else {
+
+                $scope.BilltoCompanytotal = $scope.BilltoCompanytotal - Amount;
+                $scope.BillToCompanyDatabase[row].checkedstatus = 0;
+            }
+
+        }
+        $scope.Showhidedetails = function (ModeOfPayment) {
+            debugger;
+            if (ModeOfPayment == "Cheque") {
+
+                $scope.Transactiondetailsshow = true;
+                $scope.CheQuedetailsshow = false;
+                $scope.ChequeReqired = true;
+            }
+            else if (ModeOfPayment == "BankTransfer") {
+
+                $scope.Transactiondetailsshow = false;
+                $scope.CheQuedetailsshow = true;
+                $scope.TranReqired = true;
+            }
+            else {
+
+                $scope.Transactiondetailsshow = true;
+                $scope.CheQuedetailsshow = true;
+                $scope.TranReqired = false;
+                $scope.ChequeReqired = false;
+            }
+
+        }
+
+        $scope.getThirdPartyBillDetails = function (ThirPartyData) {
+            debugger;
+
+
+
+            var date = document.getElementById('calendar').value;
+
+            $http({
+                url: '/TakeAway/GetThirdpartyBills/',
+                method: "POST",
+                data: { Date: date, ThirdpartyId: ThirPartyData.ThirdPartyNames }
+            }).success(function (data) {
+                debugger;
+
+                $scope.ThirdPartyBills = eval('(' + data.JsonString + ')')
+                if ($scope.ThirdPartyBills.length > 0) {
+                    $scope.FHide = false;
+                    $scope.Total = $scope.ThirdPartyBills.reduce(function (pv, cv) {
+
+                        return pv + cv.numdueamount;
+                    }, 0);
+                    $scope.MarginAOrP = $scope.ThirdPartyBills[0].nummargin;
+
+                    $scope.MarginAmountaReduced = Math.round((parseFloat($scope.Total)) - (parseFloat($scope.Total) * parseInt($scope.MarginAOrP) / 100));
+                    $scope.MarginAmount = Math.round($scope.MarginAmountaReduced);
+                }
+                else {
+
+                    $scope.FHide = true;
+                    alert("NO Bills Generated !");
+                }
+
+            });
+        }
+
+        $scope.Save = function (Third) {
+            debugger;
+
+
+
+            Third["PaidAfterDiscountAdd"] = Math.round((parseFloat(Third.PaidAmount) * 100) / (100 - parseFloat($scope.ThirdPartyBills[0].nummargin)));
+            $scope.ThirpartyName = $.grep($scope.ThirdPartyNames, function (c) {
+                debugger;
+                return c.vchpartyid == Third.ThirdPartyNames;
+            })[0].vchpartyname;
+            Third["ThirpartyName"] = $scope.ThirpartyName;
+            Third["DueAmount"] = $scope.MarginAmount;
+            Third["TotalAmount"] = $scope.MarginAmount;
+            Third["Date"] = document.getElementById('calendar').value;;
+            Third["TotalBillAmount"] = $scope.Total;
+            Third["MarginAmount"] = $scope.Total - parseFloat(Third["DueAmount"]);
+
+
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+                $http({
+                    url: '/TakeAway/saveThirdPartyBillsettlement/',
+                    method: "POST",
+                    data: { Third: JSON.stringify(Third), ThirdDetails: JSON.stringify($scope.ThirdPartyBills) }
+                }).success(function (data) {
+                    debugger;
+
+                    alert("Amount Paid Successfully!");
+                    window.location.href = "/POSTransaction/DashBoard/";
+                });
+            }
+
+        }
+
+
+        $scope.getBillToCompanyBills = function (Company) {
+            debugger;
+            $http({
+                url: '/TakeAway/getBillToCompanyBills/',
+                method: "post",
+                data: { CompanyName: Company }
+            }).success(function (data) {
+                debugger;
+
+                $scope.BillToCompanyDatabase = eval('(' + data.Billtocompany + ')')
+                if ($scope.BillToCompanyDatabase.length > 0) { $scope.FHideBillToC = false; } else { $scope.FHideBillToC = true; }
+                $scope.BilltoCompanytotal = 0.00;
+
+            });
+        }
+        //$scope.getBillToCompanyData = function (BillNo) {
+
+        //    debugger;
+        //    $http({
+        //        url: '/TakeAway/getBillToCompanyBills/',
+        //        method: "post",
+        //        data: { BillNo: BillNo }
+        //    }).success(function (data) {
+        //        debugger;
+
+        //        $scope.BillToCompanyDatabase = eval('(' + data.Billtocompany + ')')
+        //        $scope.BilltoCompanytotal = $scope.BillToCompanyDatabase[0].total;
+
+        //    });
+        //}
+        $scope.SaveBillTocomanyBills = function (BillToCompanyDAta) {
+            debugger;
+
+            var paiA = parseFloat(BillToCompanyDAta.PaidAmount);
+            var checkedstatusCount = 0;
+            for (var i = 0; i < $scope.BillToCompanyDatabase.length; i++) {
+
+
+
+                if ($scope.BillToCompanyDatabase[i].checkedstatus == 1) {
+                    checkedstatusCount++;
+                    var dueA = $scope.BillToCompanyDatabase[i].numdueamount;
+
+                    var rem = $scope.BillToCompanyDatabase[i].numdueamount - paiA;
+                    if (rem < 0) {
+                        $scope.BillToCompanyDatabase[i].paidatstarting = $scope.BillToCompanyDatabase[i].numdueamount;
+                        paiA = Math.abs(rem)
+                    }
+                    else {
+                        $scope.BillToCompanyDatabase[i].paidatstarting = paiA;
+                        break;
+                    }
+                }
+            }
+
+            //$scope.ThirpartyName = $.grep($scope.BilltoCompanytotal, function (c) {
+            //    debugger;
+            //    return c.vchpartyid == BillToCompany.CompanyName;
+            //})[0].vchpartyname;
+
+
+
+            $scope.submitted1 = true;
+            if ($scope.isFormValid1) {
+                if (checkedstatusCount > 0) {
+                    $http({
+                        url: '/TakeAway/SaveBillTocomanyBills/',
+                        method: "POST",
+                        data: { BillToCompany: JSON.stringify(BillToCompanyDAta), BillToCompanyDetails: JSON.stringify($scope.BillToCompanyDatabase) }
+                    }).success(function (data) {
+                        debugger;
+
+                        alert("Amount Paid Successfully!");
+                        window.location.href = "/POSTransaction/DashBoard/";
+                    });
+                }
+                else {
+
+                    alert("Check  At Least One CheckBox In Table !");
+                }
+            }
+
+        }
+
+    }]);
+
+</script>
+<script>
+    $(function () {
+        $("#calendar").datepicker();
+        $("#TransactionDate").datepicker({ startDate: 'today', autoclose: true });
+        $("#ChequeDate").datepicker({ startDate: 'today', autoclose: true });
+        $("#ChequedateBDdd").datepicker({ startDate: 'today', autoclose: true });
+        $("#TransactionDateBD").datepicker({ startDate: 'today', autoclose: true });
+        $("#calendargfghf").datepicker({ startDate: 'today', autoclose: true });
+
+    });
+</script>

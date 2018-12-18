@@ -1,0 +1,92 @@
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.dll.config
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\Antlr3.Runtime.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\Microsoft.Web.Infrastructure.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\Newtonsoft.Json.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.Infrastructure.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Helpers.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Mvc.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Optimization.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Razor.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Deployment.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.WebPages.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Razor.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\WebGrease.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.Core.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\RMS.Infrastructure.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\Antlr3.Runtime.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\Newtonsoft.Json.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Helpers.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Mvc.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Optimization.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.Razor.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.WebPages.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Deployment.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Razor.xml
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\obj\Debug\RMS.csprojResolveAssemblyReference.cache
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\obj\Debug\RMS.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS\obj\Debug\RMS.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.dll.config
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\Antlr3.Runtime.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\Microsoft.Web.Infrastructure.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\Newtonsoft.Json.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.Core.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.Infrastructure.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Helpers.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Mvc.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Optimization.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Razor.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Deployment.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.WebPages.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Razor.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\WebGrease.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.Core.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\RMS.Infrastructure.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\Antlr3.Runtime.pdb
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\Newtonsoft.Json.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Helpers.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Mvc.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Optimization.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.Razor.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.WebPages.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Deployment.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Razor.xml
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\obj\Debug\RMS.csprojResolveAssemblyReference.cache
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\obj\Debug\RMS.dll
+E:\AgroStore local Copies\ONLINEMART-020817\RMS\obj\Debug\RMS.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.dll.config
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Antlr3.Runtime.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Newtonsoft.Json.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.Core.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.Infrastructure.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Helpers.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Mvc.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Optimization.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Razor.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Deployment.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.WebPages.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Razor.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\WebGrease.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Npgsql.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Mono.Security.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.Core.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\RMS.Infrastructure.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Antlr3.Runtime.pdb
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\Newtonsoft.Json.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Helpers.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Mvc.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Optimization.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.Razor.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.WebPages.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Deployment.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\bin\System.Web.WebPages.Razor.xml
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\obj\Debug\RMS.csprojResolveAssemblyReference.cache
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\obj\Debug\RMS.dll
+C:\Users\krishna\Desktop\Files\ONLINEMART-020817\RMS\obj\Debug\RMS.pdb

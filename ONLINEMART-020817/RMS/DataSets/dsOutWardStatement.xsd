@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsOutWardStatement" targetNamespace="http://tempuri.org/dsOutWardStatement.xsd" xmlns:mstns="http://tempuri.org/dsOutWardStatement.xsd" xmlns="http://tempuri.org/dsOutWardStatement.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsOutWardStatement" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsOutWardStatement" msprop:Generator_UserDSName="dsOutWardStatement">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="OutWardStatement" msprop:Generator_TableClassName="OutWardStatementDataTable" msprop:Generator_TableVarName="tableOutWardStatement" msprop:Generator_RowChangedName="OutWardStatementRowChanged" msprop:Generator_TablePropName="OutWardStatement" msprop:Generator_RowDeletingName="OutWardStatementRowDeleting" msprop:Generator_RowChangingName="OutWardStatementRowChanging" msprop:Generator_RowEvHandlerName="OutWardStatementRowChangeEventHandler" msprop:Generator_RowDeletedName="OutWardStatementRowDeleted" msprop:Generator_RowClassName="OutWardStatementRow" msprop:Generator_UserTableName="OutWardStatement" msprop:Generator_RowEvArgName="OutWardStatementRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productname" msprop:Generator_ColumnVarNameInTable="columnproductname" msprop:Generator_ColumnPropNameInRow="productname" msprop:Generator_ColumnPropNameInTable="productnameColumn" msprop:Generator_UserColumnName="productname" type="xs:string" minOccurs="0" />
+              <xs:element name="numissueconvertionqty" msprop:Generator_ColumnVarNameInTable="columnnumissueconvertionqty" msprop:Generator_ColumnPropNameInRow="numissueconvertionqty" msprop:Generator_ColumnPropNameInTable="numissueconvertionqtyColumn" msprop:Generator_UserColumnName="numissueconvertionqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vchuom" msprop:Generator_ColumnVarNameInTable="columnvchuom" msprop:Generator_ColumnPropNameInRow="vchuom" msprop:Generator_ColumnPropNameInTable="vchuomColumn" msprop:Generator_UserColumnName="vchuom" type="xs:string" minOccurs="0" />
+              <xs:element name="numrate" msprop:Generator_ColumnVarNameInTable="columnnumrate" msprop:Generator_ColumnPropNameInRow="numrate" msprop:Generator_ColumnPropNameInTable="numrateColumn" msprop:Generator_UserColumnName="numrate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="amount" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_UserColumnName="amount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vchdepartment" msprop:Generator_ColumnVarNameInTable="columnvchdepartment" msprop:Generator_ColumnPropNameInRow="vchdepartment" msprop:Generator_ColumnPropNameInTable="vchdepartmentColumn" msprop:Generator_UserColumnName="vchdepartment" type="xs:string" minOccurs="0" />
+              <xs:element name="datissuedate" msprop:Generator_ColumnVarNameInTable="columndatissuedate" msprop:Generator_ColumnPropNameInRow="datissuedate" msprop:Generator_ColumnPropNameInTable="datissuedateColumn" msprop:Generator_UserColumnName="datissuedate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="tostorage" msprop:Generator_ColumnVarNameInTable="columntostorage" msprop:Generator_ColumnPropNameInRow="tostorage" msprop:Generator_ColumnPropNameInTable="tostorageColumn" msprop:Generator_UserColumnName="tostorage" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

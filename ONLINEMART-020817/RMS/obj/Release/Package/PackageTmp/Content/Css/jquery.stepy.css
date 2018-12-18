@@ -1,0 +1,128 @@
+
+a.tooltips span.top {
+  position: absolute;
+  min-width:120px;
+  padding:0px 5px;
+  color:#149666;
+  background:linear-gradient(to right, rgba(220,220,220,0.4), rgba(250, 250, 250, 0.9)) ;
+
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  visibility: visible;
+  border-radius: 6px;
+  bottom: 40px;
+  left: 50%;
+  margin-left: -60px;
+  text-transform:uppercase;
+  box-shadow:0px 1px 4px #666;
+}
+
+a.tooltips span.top:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -8px;
+  width: 0; height: 0;
+  border-top: 8px solid rgba(220,220,220,1);
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+ 
+}
+
+
+
+a.tooltips span.bottom {
+  position: absolute;
+  min-width:120px;
+  padding:0px 5px;
+    color:#149666;
+  background:linear-gradient(to right, rgba(220,220,220,0.4), rgba(250, 250, 250, 0.9)) ;
+
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  visibility: visible;
+  border-radius: 6px;
+  opacity: 0.8;
+  top: 40px;
+  left: 50%;
+  margin-left: -60px;
+text-transform:uppercase;
+  box-shadow:0px 1px 4px #666;
+}
+
+
+
+a.tooltips span.bottom:after {
+ content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -8px;
+  width: 0; height: 0;
+  border-bottom: 8px solid rgba(220,220,220,1);
+  border-right: 8px solid transparent;
+  border-left: 8px solid transparent;
+}
+/*a:hover.tooltips span {
+  visibility: visible;
+  opacity: 0.8;
+  bottom: 30px;
+  left: 50%;
+  margin-left: -76px;
+  z-index: 999;
+}*/
+
+
+.stepwizard-row {
+    display: table-row;
+}
+
+.stepwizard {
+    display: table;
+    width: 100%;
+    position: relative;
+	margin:45px 0px;
+	padding:0px 5px;
+
+}
+
+.stepwizard-step button[disabled] {
+	
+    opacity: 0.5 !important;
+    filter: alpha(opacity=50) !important;
+	background:#666;
+}
+
+
+.stepwizard-row:before {
+    top: 14px;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+    z-order: 0;
+
+}
+
+.stepwizard-step {
+    display: table-cell;
+    text-align: center;
+    position: relative;
+
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+
+}

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsMMsSalesReport" targetNamespace="http://tempuri.org/dsMMsSalesReport.xsd" xmlns:mstns="http://tempuri.org/dsMMsSalesReport.xsd" xmlns="http://tempuri.org/dsMMsSalesReport.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsMMsSalesReport" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsMMsSalesReport" msprop:Generator_UserDSName="dsMMsSalesReport">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="MMSSalesReportds" msprop:Generator_TableClassName="MMSSalesReportdsDataTable" msprop:Generator_TableVarName="tableMMSSalesReportds" msprop:Generator_RowChangedName="MMSSalesReportdsRowChanged" msprop:Generator_TablePropName="MMSSalesReportds" msprop:Generator_RowDeletingName="MMSSalesReportdsRowDeleting" msprop:Generator_RowChangingName="MMSSalesReportdsRowChanging" msprop:Generator_RowEvHandlerName="MMSSalesReportdsRowChangeEventHandler" msprop:Generator_RowDeletedName="MMSSalesReportdsRowDeleted" msprop:Generator_RowClassName="MMSSalesReportdsRow" msprop:Generator_UserTableName="MMSSalesReportds" msprop:Generator_RowEvArgName="MMSSalesReportdsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="datsaledate" msprop:Generator_ColumnVarNameInTable="columndatsaledate" msprop:Generator_ColumnPropNameInRow="datsaledate" msprop:Generator_ColumnPropNameInTable="datsaledateColumn" msprop:Generator_UserColumnName="datsaledate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="vchproductname" msprop:Generator_ColumnVarNameInTable="columnvchproductname" msprop:Generator_ColumnPropNameInRow="vchproductname" msprop:Generator_ColumnPropNameInTable="vchproductnameColumn" msprop:Generator_UserColumnName="vchproductname" type="xs:string" minOccurs="0" />
+              <xs:element name="numquantity" msprop:Generator_ColumnVarNameInTable="columnnumquantity" msprop:Generator_ColumnPropNameInRow="numquantity" msprop:Generator_ColumnPropNameInTable="numquantityColumn" msprop:Generator_UserColumnName="numquantity" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vchuom" msprop:Generator_ColumnVarNameInTable="columnvchuom" msprop:Generator_ColumnPropNameInRow="vchuom" msprop:Generator_ColumnPropNameInTable="vchuomColumn" msprop:Generator_UserColumnName="vchuom" type="xs:string" minOccurs="0" />
+              <xs:element name="numsaleamount" msprop:Generator_ColumnVarNameInTable="columnnumsaleamount" msprop:Generator_ColumnPropNameInRow="numsaleamount" msprop:Generator_ColumnPropNameInTable="numsaleamountColumn" msprop:Generator_UserColumnName="numsaleamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="createddate" msprop:Generator_ColumnVarNameInTable="columncreateddate" msprop:Generator_ColumnPropNameInRow="createddate" msprop:Generator_ColumnPropNameInTable="createddateColumn" msprop:Generator_UserColumnName="createddate" type="xs:string" minOccurs="0" />
+              <xs:element name="categoryname" msprop:Generator_ColumnVarNameInTable="columncategoryname" msprop:Generator_ColumnPropNameInRow="categoryname" msprop:Generator_ColumnPropNameInTable="categorynameColumn" msprop:Generator_UserColumnName="categoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="numunitrate" msprop:Generator_ColumnVarNameInTable="columnnumunitrate" msprop:Generator_ColumnPropNameInRow="numunitrate" msprop:Generator_ColumnPropNameInTable="numunitrateColumn" msprop:Generator_UserColumnName="numunitrate" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

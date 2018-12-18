@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS", "RMS\RMS.csproj", "{B9596EB6-EBFA-41EA-8BCF-3C0AACF93021}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.Core", "RMS.Core\RMS.Core.csproj", "{8274AC38-FC99-4ED7-85ED-284B89473DCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.Infrastructure", "RMS.Infrastructure\RMS.Infrastructure.csproj", "{A8258908-B6E7-4645-981F-452336DC2631}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9596EB6-EBFA-41EA-8BCF-3C0AACF93021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9596EB6-EBFA-41EA-8BCF-3C0AACF93021}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9596EB6-EBFA-41EA-8BCF-3C0AACF93021}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9596EB6-EBFA-41EA-8BCF-3C0AACF93021}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8274AC38-FC99-4ED7-85ED-284B89473DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8274AC38-FC99-4ED7-85ED-284B89473DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8274AC38-FC99-4ED7-85ED-284B89473DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8274AC38-FC99-4ED7-85ED-284B89473DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8258908-B6E7-4645-981F-452336DC2631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8258908-B6E7-4645-981F-452336DC2631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8258908-B6E7-4645-981F-452336DC2631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8258908-B6E7-4645-981F-452336DC2631}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

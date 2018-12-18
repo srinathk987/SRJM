@@ -1,0 +1,801 @@
+﻿@{
+    Layout = "~/Views/Shared/_HRMSLayoutPage.cshtml";
+}
+
+<script>
+    var app = angular.module('RMS');
+
+    app.controller('EmpDetailsCtrl', function ($scope, $http, $rootScope) {
+        debugger;
+
+        $scope.Emp = {};
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+
+        $scope.wssubmitted = false;
+        $scope.iswsFormValid = false;
+
+        //$rootScope.ControllerName = "Employee Masters";
+        //$rootScope.PageName = "Department";
+
+        $rootScope.FormName = "Employee Details";
+        $rootScope.ModuleName = "Employee Transactions";
+
+
+        $scope.empNameReadOnly = false;
+        $scope.Emp.EmployeeStatus = 'Y';
+        $scope.btnSave = "Save";
+        $scope.setcss = 'btn btn-primary';
+        $scope.seticon = 'fa fa-save';
+        $scope.$watch('Empform.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.$watch('frmWorkstations.$valid', function (newValue) {
+            $scope.iswsFormValid = newValue;
+        });
+
+        //$scope.EmpStatus = [
+        //    { name: 'ACTIVE', value: 'Y' },
+        //    { name: 'ON LONG LEAVE', value: 'O' },
+        //    { name: 'SUSPENDED', value: 'S' },
+        //    { name: 'LEFT', value: 'L' }
+
+        //];
+
+        $http.get('/Employee/GenerateEMPId/').success(function (data) {
+            debugger;
+            $scope.Emp.EmployeeID = data;
+        });
+
+        $http.get('/Employee/ShowDesignations/').success(function (data) {
+            debugger
+            $scope.Designations = data;
+        });
+
+        //$scope.LoadWorkstations = function () {
+
+        //    $http.get('/Employee/ShowWorkStations/').success(function (data) {
+        //        debugger
+        //        $scope.workstations = data;
+        //    });
+        //}
+
+        $http.get('/EmployeeMasters/ShowCountry/').success(function (data) {
+            debugger
+            $scope.countries = data;
+        })
+
+
+        $scope.getStates = function (Emp) {
+            debugger;
+            var id = Emp.CountryId
+            $http({ url: '/EmployeeMasters/ShowStates/', method: "POST", data: { strcountryid: id } }).success(function (data) {
+                debugger
+                $scope.States = data;
+            });
+        }
+
+        $scope.getCities = function (Emp) {
+            var id = Emp.StateId
+
+            $http({ url: '/Employee/BindCities/', method: "POST", data: { strSateid: id } }).success(function (data) {
+                $scope.Cities = data;
+
+            });
+        }
+
+
+
+        $scope.SaveEmpDetails = function (Emp) {
+            debugger;
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                $scope.Emp.Country = $.grep($scope.countries, function (c) {
+                    return c.CountryId == $scope.Emp.CountryId;
+                })[0].Country;
+
+                $scope.Emp.State = $.grep($scope.States, function (s) {
+                    return s.StateId == $scope.Emp.StateId;
+                })[0].State;
+
+
+                //if ($scope.Emp.EmployeeStatus == "ACTIVE") {
+                //    $scope.Emp.EmployeeStatus = "Y";
+                //} else if ($scope.Empform.EmployeeStatus.value == "ON LONG LEAVE") {
+                //    $scope.Emp.EmployeeStatus = "O";
+
+                //} else if ($scope.Empform.EmployeeStatus.value == "SUSPENDED") {
+                //    $scope.Emp.EmployeeStatus = "S";
+
+                //} else if ($scope.Empform.EmployeeStatus.value == "LEFT") {
+                //    $scope.Emp.EmployeeStatus = "L";
+                //}
+
+                if ($scope.btnSave == 'Save') {
+                    var result = confirm('Are You Sure? Do You Want To Save?');
+                    if (result) {
+                        $http.post("/Employee/CreateEmpDetails/", Emp).success(function (data, status) {
+                            debugger;
+                            if (data == 'True') {
+                                alert('Employee Details Saved Sucessfully');
+                                $scope.LoadEmpDetails();
+                            }
+                            else {
+                                alert("Error While Saving");
+                            }
+                        });
+                        $scope.Clear();
+
+                    }
+                }
+
+                if ($scope.btnSave == 'Update') {
+                    var result = confirm('Are You Sure? Do You Want To Update?');
+                    if (result) {
+                        $http({ method: 'POST', data: Emp, url: '/Employee/UpdateEmpDetails' }).success(function (data) {
+                            debugger;
+                            if (data == 'True') {
+
+                                //obj.dataModel = { data: data.data };
+                                //$("#grid_array").removeData();
+                                //$grid = $("#grid_array").pqGrid(obj);
+                                window.alert('Employee Details Updated Sucessfully');
+                                $scope.LoadEmpDetails();
+
+                            }
+                            else if ($scope.Is_Saved == 'False') {
+                                window.alert('City is Already Existed');
+
+                            }
+                        });
+                        $scope.Clear();
+                        //$scope.LoadAllCities()
+                    }
+                }
+
+
+            }
+
+        };
+
+
+        //$scope.LoadRelations = function () {
+        //    debugger
+        //    $http.get("/EmployeeMasters/BindRelation/").success(function (data) {
+
+        //        $scope.Relations = data;
+        //        obj.dataModel = { data: data };
+        //        $("#grid_editing").removeData();
+        //        $grid = $("#grid_editing").pqGrid(obj);
+        //    }).error(function () {
+        //        alert("error");
+        //    });
+
+        //}
+
+
+        $scope.LoadEmpDetails = function () {
+
+            $http.get("/Employee/GetEmpDetails/").success(function (data) {
+                debugger
+                //$scope.Emp = data;
+                obj.dataModel = { data: data };
+                $("#grid_array").removeData();
+                $grid = $("#grid_array").pqGrid(obj);
+                //$scope.empNameReadOnly = true;
+
+            });
+
+            $http.get('/Employee/ShowWorkStations/').success(function (data) {
+                debugger
+                $scope.workstations = data;
+            });
+        }
+
+        var obj = {
+            //            scrollModel: { autoFit: true },
+            selectionModel: { type: 'row' },
+            hoverMode: 'cell',
+            pageModel: { type: 'local' },
+            filterModel: { mode: 'OR' },
+            selectionModel: { type: 'cell' },
+            editModel: {
+                saveKey: $.ui.keyCode.ENTER,
+                select: false,
+                keyUpDown: false,
+                cellBorderWidth: 0
+            }
+        };
+        obj.colModel = [
+
+             {
+                 title: "", editable: false, width: 190, sortable: false, render: function (ui) {
+                     return "<button type='button' class='btn btn-default edit_btn'>Edit</button>\
+                                      <button type='button' class='btn btn-default delete_btn'>Delete</button>";
+                 }
+             },
+        { dataIndx: 'EmployeeID', title: 'Emp.Id', editable: false, width: 65, render: filterRender },
+                    { dataIndx: 'Name', title: 'Name', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'Sname', title: 'Surname', editable: false, width: 100, render: filterRender },
+                     { dataIndx: 'Gender', title: 'Gender', editable: false, width: 60, render: filterRender },
+                    { dataIndx: 'MobileNumber', title: 'Mobile Number', editable: false, width: 130, render: filterRender },
+                    { dataIndx: 'Email', title: 'E-Mail', editable: false, width: 120, render: filterRender },
+                    { dataIndx: 'Designation', title: 'Designation', editable: false, width: 170, render: filterRender },
+                    { dataIndx: 'EmploymentType', title: 'Employment Type', editable: false, width: 170, render: filterRender },
+                    { dataIndx: 'WorkType', title: 'Work Type', editable: false, width: 170, render: filterRender },
+                    { dataIndx: 'PreferredTimeofWork', title: 'Preferred time of work', editable: false, width: 190, render: filterRender },
+                    { dataIndx: 'WorkStation', title: 'Work Stations', editable: false, width: 170, render: filterRender },
+                    //{ dataIndx: 'EmployeeStatus', title: 'Status', editable: false, width: 50, render: filterRender },
+                    { dataIndx: 'DoorNo', title: 'Door No', editable: false, width: 100, render: filterRender },
+                    { dataIndx: 'StreetName', title: 'Street Name', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'Area', title: 'Area', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'Country', title: 'Country', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'State', title: 'State', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'CityName', title: 'City', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'PinCode', title: 'Pincode', editable: false, width: 150, render: filterRender },
+                    { dataIndx: 'CountryId', title: 'Country Id', editable: false, width: 70, render: filterRender, hidden: true },
+                    { dataIndx: 'StateId', title: 'State Id', editable: false, width: 80, render: filterRender, hidden: true },
+
+        ];
+        obj.toolbar = {
+            cls: "pq-toolbar-search",
+            items: [
+
+                    { type: 'textbox', attr: 'placeholder="Enter your keyword"', cls: "col-md-3 form-control-search filterValue", listeners: [{ 'keyup': filterhandler }] }
+            ]
+        };
+
+
+        obj.refresh = function () {
+            //debugger;
+            var $grid = $(this);
+            if (!$grid) {
+                return;
+            }
+            //delete button
+            $grid.find("button.delete_btn").button({ icons: { primary: 'ui-icon-close' } }).unbind("click").bind("click", function (evt) {
+                debugger
+                var $tr = $(this).closest("tr"),
+                  rowIndx = $grid.pqGrid("getRowIndx", { $tr: $tr }).rowIndx;
+
+                var $tr = $(this).closest("tr");
+                var obj = $grid.pqGrid("getRowIndx", { $tr: $tr });
+                var rowIndx = obj.rowIndx;
+                $grid.pqGrid("addClass", { rowIndx: rowIndx, cls: 'pq-row-delete' });
+                var rowData = $grid.pqGrid("getRowData", { rowIndx: rowIndx });
+
+                if ($scope.btnSave == 'Save') {
+                    var ans = window.confirm("Are you sure to Delete record?");
+                    if (ans) {
+                        debugger;
+                        $http.post('/Employee/DeleteEmpDetails/', rowData).success(function (data) {
+                            debugger
+                            if (data == 'True') {
+                                $grid.pqGrid("deleteRow", { rowIndx: rowIndx, effect: true });
+                                ClearForm();
+                                alert("Employee Deleted Successfully");
+                            }
+                            else {
+                                alert("Error While Deleting");
+                            }
+
+                        });
+                    }
+
+                }
+            });
+            //edit button
+            $grid.find("button.edit_btn").button({ icons: { primary: 'ui-icon-pencil' } }).unbind("click").bind("click", function (evt) {
+                debugger;
+                var $tr = $(this).closest("tr"),
+            rowIndx = $grid.pqGrid("getRowIndx", { $tr: $tr }).rowIndx;
+                var row = $grid.pqGrid('getRowData', { rowIndx: rowIndx });
+
+                var id = row.CountryId
+
+                $http({ url: '/EmployeeMasters/ShowStates/', method: "POST", data: { strcountryid: id } }).success(function (data) {
+                    debugger
+                    $scope.States = data;
+                });
+
+                var id = row.StateId
+
+                $http({ url: '/Employee/BindCities/', method: "POST", data: { strSateid: id } }).success(function (data) {
+                    $scope.Cities = data;
+
+                });
+
+                $scope.Emp = Object.assign({}, row);
+                //$('#Group').attr("disabled", false);
+                $scope.btnSave = "Update";
+                $scope.empNameReadOnly = true;
+                $scope.$digest();
+
+            });
+
+            //rows which were in edit mode before refresh, put them in edit mode again.
+            //var rows = $grid.pqGrid("getRowsByClass", { cls: 'pq-row-edit' });
+            //if (rows.length > 0) {
+            //    var rowIndx = rows[0].rowIndx;
+            //    var row = $grid.pqGrid('getRowData', { rowIndx: rowIndx });
+            //    $scope.Blood = row;
+            //    $scope.$apply();
+
+            //}
+        };
+
+        $scope.Clear = function () {
+            debugger;
+            $scope.Emp = {};
+            $http.get('/Employee/GenerateEMPId/').success(function (data) {
+                debugger;
+                $scope.Emp.EmployeeID = data;
+            });
+            $scope.setcss = 'btn btn-primary';
+            $scope.btnSave = 'Save';
+            $scope.seticon = 'fa fa-save';
+            $scope.Empform.$setPristine();
+            $scope.submitted = false;
+            $scope.isFormValid = false;
+            $scope.Emp.EmployeeStatus = 'Y';
+            $scope.empNameReadOnly = false;
+        };
+
+
+
+        $scope.SaveWorkStation = function (Ws) {
+            debugger;
+            $scope.wssubmitted = true;
+            if ($scope.iswsFormValid) {
+                if ($scope.btnSave == 'Save') {
+                    var result = confirm('Are You Sure? Do You Want To Save?');
+                    if (result) {
+                        $http.post("/Employee/CreateWorkStation/", Ws).success(function (data, status) {
+                            debugger;
+                            if (data == 'True') {
+                                alert('Work Station Saved Sucessfully');
+                                $scope.LoadEmpDetails();
+                            }
+                            else {
+                                alert("Work Station Already Exist");
+                            }
+                        });
+                        $scope.WsClear();
+                    }
+                }
+            }
+        };
+
+
+        $scope.WsClear = function () {
+            debugger;
+            $scope.Ws = {};
+            $scope.wssubmitted = false;
+            $scope.iswsFormValid = false;
+            $scope.frmWorkstations.$setPristine();
+        };
+
+
+    });
+
+</script>
+
+<style>
+    .pq-toolbar-search input[type=text] {
+        padding: 5px;
+        float: right;
+    }
+
+    .pq-toolbar-search input[type=text], .pq-grid-footer input[type=text] {
+        width: auto !important;
+    }
+</style>
+<div ng-controller="EmpDetailsCtrl" ng-init="LoadEmpDetails()">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+
+                <div class="panel-body">
+                    <div class="row setup-content" name="Personalform" ng-form id="step-1">
+                        <div class="col-xs-12">
+                            <form name="Empform" novalidate class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div>
+                                        <h5 class="widget-title red dark-10 no-padding " style="font-size:16px; font-weight:600; margin:5px 0px;">
+                                            <i class="ace-icon fa fa-user"></i>
+                                            EMPLOYEE INFORMATION
+                                        </h5>
+
+                                        <div class='form-group'>
+                                            <div class="col-sm-4 ">
+                                                <label class="col-md-6 control-label FullWidth">
+                                                    Employee ID :
+                                                </label>
+                                                <div class="col-sm-6 FullWidth">
+                                                    <input class="form-control" disabled maxlength="20" id="EmployeeId" ng-model="Emp.EmployeeID"
+                                                           type="text" name="EmployeeId" />
+                                                    <span class="error" ng-show="(Empform.EmployeeId.$dirty || submitted) && Empform.EmployeeId.$error.required">
+                                                        Employee ID required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 ">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    Name <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-sm-7 FullWidth">
+                                                    <input class="form-control" kit-alphabets maxlength="50" ng-readonly="empNameReadOnly"
+                                                           ng-model="Emp.Name" type="text" autofocus placeholder="Enter Name" name="Name" required />
+                                                    <div>
+                                                        <span class="error" ng-show="(Empform.Name.$dirty || submitted) && Empform.Name.$error.required">
+                                                            Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 ">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    Surname <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-7 FullWidth">
+                                                    <input class="form-control " kit-alphabets maxlength="50" ng-readonly="empNameReadOnly"
+                                                           ng-model="Emp.Sname" type="text" placeholder="Enter Surname" name="Sname"
+                                                           required />
+                                                    <span class="error" ng-show="(Empform.Sname.$dirty || submitted) && Empform.Sname.$error.required">
+                                                        Surname required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='form-group'>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-6 control-label FullWidth">
+                                                    Gender <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-6 FullWidth">
+                                                    <select ng-model="Emp.Gender" id="myselect" class="form-control " name="Gender"
+                                                            required>
+                                                        <option value="">Select Gender</option>
+                                                        <option value="M">Male</option>
+                                                        <option value="F">Female</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(Empform.Gender.$dirty || submitted) && Empform.Gender.$error.required">
+                                                        Gender required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-sm-5 control-label FullWidth">
+                                                    Designation <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-sm-7 FullWidth">
+                                                    <select class=" form-control" name="ddlDesignation" ng-model="Emp.Designation" ng-options="c.Designation as c.Designation for c in Designations"
+                                                            required>
+                                                        <option value="" label="Select Designation"></option>
+                                                    </select>
+                                                    <span class="error" ng-show="(Empform.ddlDesignation.$dirty || submitted) && Empform.ddlDesignation.$error.required">
+                                                        Designation required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    Mobile Number <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-7 FullWidth">
+                                                    <input class="form-control " kit-digits ng-model="Emp.MobileNumber" maxlength="10"
+                                                           type="text" kit-digits placeholder="Enter Mobile Number" onkeypress="return isNumber(event)"
+                                                           name="MobileNumber" required />
+                                                    <span class="error" ng-show="(Empform.MobileNumber.$dirty || submitted) && Empform.MobileNumber.$error.required">
+                                                        Mobile number required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class='form-group'>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-6 control-label FullWidth">
+                                                    Status of Employment <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-6 FullWidth">
+                                                    <select ng-model="Emp.EmployeeStatus" class="form-control " name="EmployeeStatus" id="ddlStatus" required>
+                                                        <option value="Y">ACTIVE</option>
+                                                        <option value="O">ON LONG LEAVE</option>
+                                                        <option value="S">SUSPENDED</option>
+                                                        <option value="L">LEFT</option>
+                                                    </select>
+                                                    @*ng-options="c.name as c.name for c in EmpStatus"
+                                                        <option value="">Select Status</option>*@
+                                                    <span class="error" ng-show="(Empform.PresentStatusOfEMP.$dirty || submitted) && Empform.PresentStatusOfEMP.$error.required">
+                                                        Status of employment required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    E-Mail :
+                                                </label>
+                                                <div class="col-md-7 FullWidth">
+                                                    <input class="form-control " maxlength="75" ng-model="Emp.Email" type="email"
+                                                           placeholder="Enter  E-Mail" name="Email" />
+                                                    @*<span class="error" ng-show="(Empform.Email.$dirty || submitted) && Empform.Email.$error.required">
+                                                            E-Mail required!
+                                                        </span>
+                                                        <span style="color: red" ng-show="Personalform.Email.$dirty && Personalform.Email.$invalid">
+                                                        </span>*@
+                                                    <span class="error" ng-show="Empform.Email.$error.email && submitted">
+                                                        Invalid email
+                                                        address.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    Work Type <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-7 FullWidth">
+                                                    <select ng-model="Emp.WorkType" class="form-control " name="WorkType" id="ddlWorkType" required>
+                                                        <option value="">Select Work Type</option>
+                                                        <option value="PART TIME">PART TIME</option>
+                                                        <option value="FULL TIME">FULL TIME</option>
+                                                        <option value="WEEK END">WEEK END</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(Empform.WorkType.$dirty || submitted) && Empform.WorkType.$error.required">
+                                                        Work Type required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class='form-group'>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-6 control-label FullWidth">
+                                                    Employment Type <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-6 FullWidth">
+                                                    <select ng-model="Emp.EmploymentType" class="form-control " name="EmploymentType" id="ddlEmploymentType" required>
+                                                        <option value="">Select Employment Type</option>
+                                                        <option value="PERMANENT">PERMANENT</option>
+                                                        <option value="TEMPORARY">TEMPORARY</option>
+                                                        <option value="PART TIME">PART TIME</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(Empform.EmploymentType.$dirty || submitted) && Empform.EmploymentType.$error.required">
+                                                        Employment Type required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    Preferred Time of Work :
+                                                </label>
+                                                <div class="col-md-7 FullWidth">
+                                                    <select ng-model="Emp.PreferredTimeofWork" class="form-control " name="PreferredTimeofWork" id="ddlPreferredTimeofWork" required>
+                                                        <option value="">Select Preferred Time of Work</option>
+                                                        <option value="ONLY MORNING">ONLY MORNING</option>
+                                                        <option value="ONLY AFTERNOON">ONLY AFTERNOON</option>
+                                                        <option value="ONLY EVENING">ONLY EVENING</option>
+                                                        <option value="ONLY NIGHT">ONLY NIGHT</option>
+                                                        <option value="FULL DAY">FULL DAY</option>
+                                                        <option value="MORNING-AFTERNOON">MORNING-AFTERNOON</option>
+                                                        <option value="NOON-EVENING">NOON-EVENING</option>
+                                                        <option value="NOON-NIGHT">NOON-NIGHT</option>
+                                                        <option value="EVENING-NIGHT">EVENING-NIGHT</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(Empform.PreferredTimeofWork.$dirty || submitted) && Empform.PreferredTimeofWork.$error.required">
+                                                        Preferred Time of Work required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="col-md-5 control-label FullWidth">
+                                                    Work Stations <span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-md-7 FullWidth">
+                                                    @*<select ng-model="Emp.WorkStationId" class="form-control " name="WorkStation" id="ddlWorkStations" ng-options="c.WorkStationId as c.Workstation for c in Stations" required>
+                                                            <option value="" label="Select WorkStations"></option>
+                                                        </select>*@
+                                                    <select class=" form-control" name="WorkStation" ng-model="Emp.WorkStation"
+                                                            id="ddlWorkStations" ng-options="c.WorkStation as c.WorkStation  for c in workstations " required>
+                                                        <option value="">Select Work Stations</option>
+                                                    </select>
+                                                    <span href="#" class="add-btn-popup" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i></span>
+                                                    <span class="error" ng-show="(Empform.WorkStation.$dirty || submitted) && Empform.WorkStation.$error.required">
+                                                        Work Stations required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <fieldset>
+                                            <legend>
+                                                <h5 class="widget-title red dark-10 no-padding " style="font-size:16px; font-weight:600; margin:5px 0px;">
+                                                    <i class="ace-icon fa fa-envelope"></i>
+                                                    CONTACT DETAILS
+                                                </h5>
+                                            </legend>
+                                            <div class='form-group'>
+                                                <div class="col-sm-4">
+                                                    <label class="col-md-6 control-label FullWidth">
+                                                        Door No. <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-6 FullWidth">
+                                                        <input type="text" id="txtDoorNo" class="form-control" ng-pattern="/^[a-zA-Z0-9-# ':;,/]*$/"
+                                                               style="text-transform: uppercase" maxlength="50"
+                                                               name="DoorNo" ng-model="Emp.DoorNo" placeholder="Enter Door No." required />
+                                                        <span class="error pop_up" ng-show="(Empform.DoorNo.$dirty || submitted) && Empform.DoorNo.$error.required">
+                                                            Door No required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <label class="col-md-5 control-label FullWidth">
+                                                        Street Name <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-7 FullWidth">
+                                                        <input type="text" name="StreetName" id="txtStreetName" class="form-control" ng-pattern="/^[a-zA-Z0-9- /]*$/"
+                                                               placeholder="Enter Street Name" style="text-transform: uppercase"
+                                                               maxlength="50" ng-model="Emp.StreetName" required />
+                                                        <span class="error" ng-show="(Empform.StreetName.$dirty || submitted) && Empform.StreetName.$error.required">
+                                                            Street Name required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <label class="col-md-5 control-label FullWidth">
+                                                        Area <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-7 FullWidth">
+                                                        <input type="text" id="txtArea" class="form-control" ng-pattern="/^[a-zA-Z0-9- /]*$/"
+                                                               placeholder="Enter Area" style="text-transform: uppercase"
+                                                               maxlength="50" name="Area" ng-model="Emp.Area" required />
+                                                        <span class="error" ng-show="(Empform.Area.$dirty || submitted) && Empform.Area.$error.required">
+                                                            Area required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-sm-4 ">
+                                                    <label class="col-md-6 control-label FullWidth">
+                                                        Country <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-6 FullWidth">
+                                                        <select class=" form-control" name="Country" ng-model="Emp.CountryId" ng-blur="checkboxAddress2()"
+                                                                id="ddlCountry" ng-options="c.CountryId as c.Country  for c in countries " ng-change="getStates(Emp)" required>
+                                                            <option value="">Select Country</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Empform.Country.$dirty || submitted) && Empform.Country.$error.required">
+                                                            Country required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <label class="col-md-5 control-label FullWidth">
+                                                        State <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-7 FullWidth">
+                                                        <select class=" form-control" name="State" ng-model="Emp.StateId" ng-options="s.StateId as s.State for s in States"
+                                                                id="ddlState" ng-blur="checkboxAddress2()" ng-change="getCities(Emp)" required>
+                                                            <option value="">Select State</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Empform.State.$dirty || submitted) && Empform.State.$error.required">
+                                                            State required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 ">
+                                                    <label class="col-md-5 control-label FullWidth">
+                                                        City <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-7 FullWidth">
+                                                        <select class=" form-control" name="City" ng-model="Emp.CityName" ng-options="s.CityName as s.CityName for s in Cities"
+                                                                ng-blur="checkboxAddress2()" required>
+                                                            <option value="">Select City</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(Empform.City.$dirty || submitted) && Empform.City.$error.required">
+                                                            City required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='form-group'>
+                                                <div class="col-md-4">
+                                                    <label class="col-md-6 control-label FullWidth">
+                                                        Pincode <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-md-6 FullWidth">
+                                                        <input type="text" class=" form-control" kit-digits name="PinCode" ng-pattern="/^[a-zA-Z0-9-/]*$/"
+                                                               ng-blur="checkboxAddress2()" placeholder="Enter Pincode" maxlength="6" ng-model="Emp.PinCode" required />
+                                                        <span class="error" ng-show="(Empform.PinCode.$dirty || submitted) && Empform.PinCode.$error.required">
+                                                            Pincode required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class='form-group'>
+                                            <div class="pull-right">
+                                                <button ng-class="setcss" ng-click="SaveEmpDetails(Emp)">
+                                                    <i ng-class="seticon"></i>{{btnSave}}
+                                                </button>
+                                                <button ng-click="Clear()" class=" btn btn-danger">
+                                                    <i class="fa fa-times"></i>Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="panel">
+                            <header class="panel-heading">
+
+                                <h5 class="widget-title panel-default red dark-10 no-padding " style="font-size:16px; font-weight:600; margin:5px 0px;">
+                                    <i class="ace-icon fa fa-user"></i>
+                                    EMPLOYEE DETAILS
+
+                                    <span class="tools pull-right">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="fa fa-chevron-down"></a>
+                                    </span>
+                                </h5>
+                            </header>
+                            <div id="collapseTwo" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="container-fluid">
+                                        <div id="grid_array" class="responsive">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+    <!-- Modal add WorkStations -->
+    <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+        <div class="modal-dialog add-popup animated fadeInRightBig " role="document">
+            <div class="modal-content" style="height:100%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Work Station</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" name="frmWorkstations" novalidate style="border:inherit;border-bottom-width:1px;">
+                        <div class="widget-box">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    Work Station<span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="WorkStation" ng-model="Ws.WorkStation" maxlength="50" placeholder="Work Station"
+                                           class="form-control" id="WorkStation" required />
+                                    <span class="error" ng-show="(frmWorkstations.WorkStation.$dirty || wssubmitted) && frmWorkstations.WorkStation.$error.required">
+                                        Work Station!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="SaveWorkStation(Ws)"><i ng-class="seticon"></i>Save</button>
+                    @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>*@
+                    <button ng-click="WsClear()" class=" btn btn-danger"><i class="fa fa-times"></i>Reset </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,319 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div class="page-content" ng-controller="PrinterController" ng-init="LoadData()">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmPrinter" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Department  <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+
+                        <select id="departmentid" ng-model="Prnt.DeparmentName" class=" form-control" name="DepartmentName" ng-options="c.departmentname as c.departmentname for c in DepartmentDetails"
+                                autofocus required data-index="1" kt-focus>
+                            <option value="">Select Department</option>
+                        </select>
+                        <span class="error" ng-show="(fmPrinter.DepartmentName.$dirty || submitted ) && fmPrinter.DepartmentName.$error.required">
+                            Department required!
+                        </span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Printer Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="PrinterName" ng-model="Prnt.PrinterName" placeholder="Enter Printer Name" kit-alpha-numeric data-index="1"
+                               class="form-control" maxlength="100" required autofocus type="text" />
+                        <span class="error" ng-show="(fmPrinter.PrinterName.$dirty || submitted ) && fmPrinter.PrinterName.$error.required">
+                            Printer Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group" hidden>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                        Printer Code <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="PrinterCode" ng-model="Prnt.PrinterCode" placeholder=" Enter Printer Code" kit-alpha-numeric
+                               class="form-control" maxlength="10" type="text" />
+                        <span class="error" ng-show="(fmPrinter.PrinterCode.$dirty || submitted) && fmPrinter.PrinterCode.$error.required">
+                            Printer Code required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        IP Address <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="IpAddress" ng-model="Prnt.IpAddress" placeholder="Enter IP Address" kit-ip data-index="2" kt-focus
+                               class="form-control" maxlength="15" required autofocus type="text" />
+                        <span class="error" ng-show="(fmPrinter.IpAddress.$dirty || submitted ) && fmPrinter.IpAddress.$error.required">
+                            IP Address required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                        Port No.<span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="ProtNo" ng-model="Prnt.ProtNo" placeholder="Enter Port No." class="form-control" data-index="3"
+                               kit-digits maxlength="5" required type="text" />
+                        <span class="error" ng-show="(fmPrinter.ProtNo.$dirty || submitted) && fmPrinter.ProtNo.$error.required">
+                            Port required!
+                        </span>
+
+                        
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right ">
+                        <button class="btn btn-success " type="button" ng-click="Save(Prnt)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="grdPrinter"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=PrinterController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdPrinter"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdPrinter").getRowData(row);
+        $scope.btnSave = "Update"
+        $scope.Prnt = rowdata;
+        $scope.$apply();
+    }
+    function Delete(row) {
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnSave == "Save") {
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#grdPrinter").getRowData(row);
+
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+            if (ans) {
+                $http.post('/POSMasters/DeletePrinter', rowdata).success(function (data) {
+                    if (data) {
+
+                        alert("Printer Details Deleted Successfully");
+                        $('#grdPrinter').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                }).error(function (data) { alert("Error Occuerd"); });
+            }
+        }
+        else {
+            alert("Cannot Delete Printer Details In Edit Mode");
+        }
+    }
+
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('PrinterController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Printer";
+        $rootScope.ModuleName = "Masters";
+
+        $scope.$watch('fmPrinter.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+
+        function LoadDepartments() {
+            $http({
+                url: '/POSMasters/GetDepartmentComboData/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.DepartmentDetails = eval('(' + data.Data + ')');
+            });
+        }
+
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSMasters/ShowPrinters/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+
+            LoadDepartments();
+        }
+
+
+
+        $scope.Save = function (Prnt) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http.post('/POSMasters/SavePrinter', Prnt).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Printer Details Saved Successfully");
+                                $scope.LoadData();
+                                $('grdPrinter').trigger("reloadGrid", [{ page: 2 }])
+
+                                ClearForm();
+
+                            } else {
+                                alert("Printer Name or IP Address Already Exist");
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+                }
+                else {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $http.post('/POSMasters/UpdatePrinter', Prnt).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Printer Details Updated Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+                            } else {
+                                alert("Printer Name  or IP Address Already Exist");
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+
+                }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $scope.Prnt = {};
+
+            $scope.DepartmentDetails = {};
+            LoadDepartments();
+            $scope.btnSave = "Save";
+            $scope.fmPrinter.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdPrinter";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                //  return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'PrinterId', name: 'PrinterId', width: 75, hidden: true },
+                        { label: 'Department Name', name: 'DeparmentName', width: 75 },
+			{ label: 'Printer Name', name: 'PrinterName', width: 75 },
+			{ label: 'Printer Code', name: 'PrinterCode', width: 90 },
+            { label: 'IP Address', name: 'IpAddress', width: 75 },
+			{ label: 'Port No', name: 'ProtNo', width: 90 },
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Printers <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+        }
+
+    });
+</script>

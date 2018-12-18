@@ -1,0 +1,1449 @@
+﻿@{
+
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+
+}
+
+<html>
+<head>
+
+
+
+
+
+
+
+</head>
+
+<style type="text/css">
+    .fullwidth {
+        width: 100% !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .ui-jqgrid-btable .ui-state-highlight {
+        background: #003366;
+    }
+
+    .ui-state-highlight {
+        background: lightblue !important;
+    }
+
+    .holdRow td {
+        font-weight: bold !important;
+        color: Blue !important;
+        background: gray;
+    }
+
+    .holdSelected td {
+        font-weight: bold !important;
+        color: green !important;
+        background: yellow;
+    }
+
+
+    .higLightholdRow td {
+        font-weight: bold !important;
+        color: Yellow !important;
+    }
+
+    .can_be_selected {
+        border: 1px solid #696;
+    }
+
+    .background_color_grey {
+        background: #ccc;
+    }
+
+    .ui-jqgrid .ui-jqgrid-title {
+        width: 100%;
+    }
+
+    .ui-jqgrid .ui-jqgrid-caption {
+        width: 100%;
+    }
+
+
+    .grid-ico {
+        width: auto;
+        float: right;
+        right: 20px;
+        position: relative;
+    }
+
+        .grid-ico li {
+            list-style: none;
+            float: left;
+            padding: 0px 5px;
+            font-size: 18px;
+            color: #fff;
+        }
+
+    .ui-jqgrid .ui-jqgrid-hbox {
+        background: none;
+        border-bottom: 0px solid #fc8b7f;
+    }
+
+
+
+
+    .background_color_grey {
+        background: #ccc;
+    }
+
+
+    /*#wrap {
+        margin: 00px 10px;
+        display: inline-block;
+        position: relative;
+        height: 60px;
+        float: right;
+        padding: 0;
+        position: relative;
+    }*/
+
+    #wrap-search input[type="text"] {
+        height: 40px;
+        font-size: 22px;
+        display: inline-block;
+        font-weight: 100;
+        border: none;
+        outline: none;
+        color: #333;
+        padding: 3px;
+        padding-right: 26px;
+        width: 0px;
+        position: absolute;
+        top: 0;
+        right: 0px;
+        background: none;
+        z-index: 3;
+        transition: width .4s cubic-bezier(0.000, 0.795, 0.000, 1.000);
+        cursor: pointer;
+        border-radius: 0px !important;
+    }
+
+        #wrap-search input[type="text"]:focus:hover {
+            border-bottom: 1px solid #BBB;
+        }
+
+        #wrap-search input[type="text"]:focus {
+            width: 400px;
+            z-index: 1;
+            border-bottom: 1px solid #BBB;
+            cursor: text;
+            background: #fff;
+            border-radius: none;
+        }
+
+    /*#wrap-search input[type="submit"] {
+        height: 30px;
+        width: 26px;
+        display: inline-block;
+        color: red;
+        float: right;
+        background: url(../../assets/Images/search-icon.png) center center no-repeat;
+        text-indent:111px;
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 0;
+        z-index: 2;
+        cursor: pointer;
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity .4s ease;
+        background-size: 30px;
+    }
+
+        input[type="submit"]:hover {
+            opacity: 0.8;
+        }*/
+
+
+    #wrap-search a.submit {
+        height: 30px;
+        width: 26px;
+        display: inline-block;
+        color: red;
+        float: right;
+        background: url(../../assets/Images/search-icon.png) center center no-repeat;
+        text-indent: 111px;
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 2;
+        cursor: pointer;
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity .4s ease;
+        background-size: 30px;
+    }
+
+        #wrap-search a.submit:hover {
+            opacity: 0.8;
+        }
+
+
+
+    ul.menu-item {
+        width: 100%;
+        padding: 3px;
+        margin: 0px;
+    }
+
+        ul.menu-item li {
+            width: 100%;
+            height: 40px;
+            display: inline;
+            padding: 8px 10px;
+            line-height: 30px;
+            font-size: 16px;
+            margin: 2px 0px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+        }
+
+            ul.menu-item li span {
+                float: left;
+            }
+
+            ul.menu-item li .item-title {
+                width: auto;
+                min-width: 70%;
+                cursor: pointer;
+            }
+
+            ul.menu-item li .item-Code {
+                width: auto;
+                min-width: 70%;
+            }
+
+            ul.menu-item li .quantity {
+                width: auto;
+                min-width: 10%;
+            }
+
+        ul.menu-item .rate-item {
+            width: auto;
+            min-width: 20%;
+            text-align: right;
+        }
+
+            ul.menu-item .rate-item .fa {
+                color: #080000 !important;
+            }
+
+
+    .table > thead > tr {
+        background: #6fb3e0 !important;
+    }
+
+
+        .table > thead > tr > th {
+            font-weight: 400 !important;
+            font-size: 17px;
+            color: #fff;
+            text-transform: uppercase !important;
+            width: inherit;
+            padding: 8px 8px;
+        }
+
+    .table > tbody {
+        font-size: 16px;
+    }
+
+
+    .table > thead > tr > th:last-child {
+        text-align: right;
+        padding-right: 25px !important;
+    }
+
+    .table > tbody > tr > td:last-child {
+        text-align: right;
+    }
+
+
+    .fa-plus:before,
+    .fa-minus:before {
+        font-size: 12px !important;
+        font-kerning: none;
+        color: #444;
+        text-shadow: none;
+    }
+
+    .table > tfoot > tr > th:last-child {
+        text-align: right;
+    }
+
+
+    .table > tfoot > tr:first-child > th {
+        font-size: 16px;
+        font-weight: 600;
+        border-top: 1px double rgba(0, 0, 0, 0.4);
+        padding: 8px;
+    }
+
+    .table > tfoot > tr > th {
+        font-size: 16px;
+        font-weight: 400;
+        border: none;
+        padding: 4px;
+    }
+
+    .table > tfoot > tr:last-child > th {
+        font-size: 18px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+        border-top: 1px solid rgba(0, 0, 0, 0.6);
+        padding: 8px;
+    }
+
+    .table > tfoot > tr:first-child > td {
+        border-top: 1px solid #ddd;
+    }
+
+
+
+    .table > tfoot > tr > td {
+        border: none;
+    }
+
+
+    .table input {
+        border: none !important;
+        border-bottom: 1px solid #ddd !important;
+        border-radius: 0px !important;
+    }
+</style>
+
+
+<div ng-controller="TakeAwayAtHotelNewOrderController" ng-init=" GetTableName();">
+    <script>
+
+
+
+    </script>
+
+    <div class="page-content">
+        <div class="row">
+
+            <div class=" col-sm-12 col-xs-12">
+
+
+                <div class="page-header" style="padding-bottom:42px !important; ">
+
+                    <h1 style="width:auto; line-height:35px;  float:left">
+
+
+                        NEW ORDER
+                        <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+
+                    </h1>
+                    <a href="" ng-click="Back();" class="pull-right right " style="font-size:16px;">
+                        <i class="ace-icon fa fa-chevron-left"> </i> Take Away
+                    </a>
+
+
+
+                </div>
+                <!-- PAGE CONTENT BEGINS -->
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+        <div class="row">
+
+
+            <div class="col-sm-5 col-xs-12 table-responsive">
+                @*<table id="gpKOT"></table> table-bordered*@
+                <table class="table" style="margin:3px 0px; border:#f5ecec; " width="100">
+                    <thead class="">
+                        <tr>
+
+                            <th ng-hide="true">
+                                Item Id
+                            </th>
+                            <th ng-hide="true">
+                                Item Code
+                            </th>
+                            <th align="center" style="width:45%">
+                                Item
+                            </th>
+
+                            <th align="center" style="width:30%">
+                                Qty.
+                            </th>
+
+                            <th style="width:25%">
+                                Rate
+                            </th>
+
+
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="Itema in Items">
+
+                        <td ng-hide="true">
+                            {{Itema.ItemId}}
+                        </td>
+                        <td ng-hide="true">
+                            {{Itema.ItemCode}}
+                        </td>
+                        <td>
+                            {{Itema.ItemName}}
+                        </td>
+
+
+
+                        <td>
+                            <a href="#" class='btn-grid' ng-click="AddQuantity($index)" style="width:24px; height:24px; text-align:center; line-height:20px;  border-radius:50%; border:1px solid #ddd;"><i class='fa fa-plus'></i></a>
+                            {{Itema.Quantity}}
+                            <a href="#" class='btn-grid' ng-click="RemoveQantity($index)" style="width:24px; height:24px; text-align:center; line-height:20px;  border-radius:50%; border:1px solid #ddd;"><i class="fa fa-minus" aria-hidden='true'></i> </a>
+                        </td>
+
+                        <td>
+                            {{Itema.Rate| currency:'₹ '}}
+                        </td>
+
+
+
+
+                    </tr>
+
+
+                    <tfoot ng-hide="HideFooter">
+
+                        <tr class="" style="">
+                            <td></td>
+
+
+                            <th id="total" colspan="1">Total:</th>
+                            <th>{{Total| currency:'₹ '}}</th>
+                        </tr>
+                        <tr class="" style="">
+                            <td></td>
+
+
+                            <th id="total" colspan="1">
+
+                                <span style="float:left; margin-right:5px;"> Discount:</span>
+                                <div class="switch-field">
+
+                                    <input type="radio" id="switch_left" name="switch_2" value="PER" onchange="FlatOrpercentage()" />
+                                    <label for="switch_left"> %</label>
+                                    <input type="radio" id="switch_right" name="switch_2" value="FLAT" checked onchange="FlatOrpercentage()" />
+                                    <label for="switch_right"> ₹ </label>
+                                </div>
+
+                            </th>
+                            <th>
+
+                                <input id="Disountof" ng-model="NEWORDER.Discount" ng-keyup="calNetAmount(NEWORDER.Discount)"
+                                       kit-digits placeholder="Discount" class="form-control " type="text" maxlength="5">
+
+                            </th>
+                        </tr>
+                        <tr class="" style="">
+                            <td></td>
+
+
+                            <th id="total" colspan="1">
+
+                                <span style="float:left; margin-right:5px;"> Other Charges:</span>
+
+
+                            </th>
+                            <th>
+
+                                <input id="Disountof" ng-model="NEWORDER.OtherCharges" ng-keyup="AddOtherCharges(NEWORDER)"
+                                       kit-digits placeholder="Discount" class="form-control " type="text" maxlength="5">
+
+                            </th>
+                        </tr>
+                        <tr class="" style="">
+
+                            <th id="total" colspan="2">
+                                <div class="pull-right" style="margin-top:5px;">
+                                    <span style="float:left; margin-right:5px;">Service Tax:</span>
+
+                                </div>
+                            </th>
+
+                            <th>
+                                <select class=" form-control" ng-model="NEWORDER.servicetax" name="servicetax"
+                                        ng-change="Calculateservicecharge(NEWORDER)">
+                                    <option value="">Service Tax</option>
+                                    <option value=0>0</option>
+                                    <option value=6>6</option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="" style="">
+
+                            <th id="total" colspan="2">
+                                <div class="pull-right" style="margin-top:5px;">
+                                    <span style="float:left; margin-right:5px;">Service Tax Amount:</span>
+
+                                </div>
+                            </th>
+
+                            <th>
+                                <input id="form-field-1" ng-model="NEWORDER.servicetaxvalue" placeholder="" class="form-control text-right"
+                                       type="text" readonly="true">
+                            </th>
+                        </tr>
+                        <tr class="" style="">
+
+                            <th id="total" colspan="2">
+                                <div class="pull-right" style="margin-top:5px;">
+                                    <span style="float:left; margin-right:5px;">Vat Tax:</span>
+
+                                </div>
+                            </th>
+
+                            <th>
+                                <select class=" form-control" ng-model="NEWORDER.VatTax" name="servicetax"
+                                        ng-change="CalculateVatTax(NEWORDER)">
+                                    <option value="">Vat Tax</option>
+                                    <option value=0>0</option>
+                                    <option value=5>5</option>
+                                    <option value=14.5>14.5</option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="" style="">
+
+                            <th id="total" colspan="2">
+                                <div class="pull-right" style="margin-top:5px;">
+                                    <span style="float:left; margin-right:5px;">Vat Tax Amount:</span>
+
+                                </div>
+                            </th>
+
+                            <th>
+                                <input id="form-field-1" ng-model="NEWORDER.VatTaxAmount" placeholder="" class="form-control text-right"
+                                       type="text" readonly="true">
+                            </th>
+                        </tr>
+
+                        <tr class="" style=" color:green">
+                            <td></td>
+
+
+                            <th id="total" colspan="1">Net Payable:</th>
+                            <th>
+
+                                {{NetTotal| currency:'₹ '}}
+
+                            </th>
+                        </tr>
+
+
+                    </tfoot>
+                </table>
+                @*<div id="grid-pager2">
+                    </div>*@
+                <br />
+
+                <div class="col-sm-6" ng-hide="HideFooter">
+                    <a href="" class="checkout-btn checkout-btn-bg col-sm-12" ng-click="Save(NEWORDER)">
+                        CHECK OUT
+                    </a>
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+            <div class="col-sm-7 col-xs-12">
+                <div class="widget-box transparent" id="recent-box" style="padding:0px 0px !important; border:1px solid #ddd; margin-left:0px; height:auto !important;">
+                    <div class="widget-header " style="padding:0px 0px !important;">
+                        <div class="col-sm-3 col-xs-12 btn-info ">
+                            <h4 class=" widget-title lighter smaller">
+                                <i class="ace-icon fa fa-cart-plus"></i> CATEGORIES
+                            </h4>
+                        </div>
+                        <div class="col-sm-7  col-xs-7 padding-0">
+                            <div class="widget-toolbar no-border pull-left padding-0" id="xyx">
+                                <ul class="nav nav-tabs padding-0" id="Tabscontainer">
+                                    <li id="{{IdGeneration(table)}}" ng-class="ActiveTabs($index)" ng-repeat="table in uniqueArray"> <a data-toggle="tab" href="#{{IdGeneration(table)}}" ng-click="getsubcate(table)">{{table}}  </a> </li>
+                                    @*class="active" {active: $index==0}*@
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 pull-right">
+                            <div id="wrap-search">
+                                <form action="" autocomplete="on">
+                                    <input type="text" name="filter" ng-keyup="showRemainingTabs(filter,$event)" ng-focus="SEARCH()" ng-model="filter" value="" id="filter" placeholder="What're you looking for ?" />
+                                    <a href="#" class="submit" id="search_submit"></a>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="widget-body">
+
+
+                        <div class="widget-main no-padding">
+                            <div class="tab-content  no-padding" id="DataPush" ng-repeat="table in uniqueArray" ng-init="listIndex = $index">
+                                <div id="{{IdGeneration(table)}}" class="tab-pane active ">
+
+                                    <div class="panel-group" id="accordion">
+
+                                        <div class="panel panel-default no-border no-radius" id="xyz" ng-repeat="table in uniqueArraySub" ng-if="listIndex==0">
+
+
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+
+
+
+                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#{{IdGeneration(table)}}" ng-click="getItems(table)" style="border:0px solid #333; width:100% !important; display:inline-block; height:100%; ">
+                                                        <span class="fa fa-angle-down  pull-right" style="color:#111 !important; ">  </span>  {{table}}
+
+                                                    </a>
+
+                                                </h4>
+                                            </div>
+
+                                            <div id="{{IdGeneration(table)}}" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <ul class="menu-item">
+                                                        <li ng-repeat="tables in itemsundersubs" ng-click="addItem(tables)">
+                                                            <span class="item-title"> {{tables.ItemName}}</span>
+                                                            <span class="quantity"> {{tables.Quantity}} </span>
+                                                            <span class="rate-item"><i class="fa fa-inr"></i> {{tables.Rate}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="panel-group" id="accordion1" ng-hide="shide">
+                                        <div class="panel panel-default no-border no-radius">
+
+                                            <div class="panel-body" style="margin:0px !important; ">
+                                                <ul class="menu-item">
+                                                    <li id="xyz" ng-repeat="tables in it | filter:filter" ng-if="listIndex==0" ng-click="addItem(tables)">
+                                                        <span ng-hide="true"> {{tables.ItemCode}}</span>
+                                                        <span class="item-title"> {{tables.ItemName}}</span>
+                                                        <span class="quantity"> {{tables.Quantity}} </span>
+                                                        <span class="rate-item"><i class="fa fa-inr"></i> {{tables.Rate}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            </h4>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                </div>
+                                <!-- /.#member-tab -->
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <ul class="check-out hidden-md hidden-lg">
+        <li class="recent-kot-btn" data-toggle='modal' data-target='#myModal2'> <i class="fa fa-bell-o"></i> RECENT KOT'S | </li>
+        <li class="no-kot"> No. of Items : <span>20</span> </li>
+        <li ng-click="Save()" class="check-out-btn">CHECK OUT <i class="fa fa-forward"></i></li>
+
+
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller("TakeAwayAtHotelNewOrderController", ['$filter', '$scope', '$http', '$rootScope', '$location', 'myService', function ($filter, $scope, $http, $rootScope, $location, myService) {
+        debugger;
+        $scope.HideFooter = true;
+        $scope.selectedOptions = [{
+            value: 0,
+            text: 0,
+
+        }];
+        var Ordder = window.location.href.split("/")[5]
+        if (window.location.href.indexOf("?") > 0) {
+            Ordder = window.location.href.split("/")[5].split("?")[0];
+        }
+        var Contains = window.location.href.indexOf("TW")
+
+
+        if (Ordder !== undefined && Contains != -1) {
+            $scope.OrdderNo = window.location.href.split("/")[5].split("?")[0].replace(/[^a-zA-Z 0-9.]+/g, '');
+            $scope.BillNo = window.location.href.split("/")[5].split("?")[1].replace(/[^a-zA-Z 0-9.]+/g, '');
+            $http({
+                url: '/TakeAway/GetItemsOfSpecicOrder/',
+                method: "post",
+                data: { orderNo: $scope.OrdderNo }
+            }).success(function (data) {
+                debugger;
+                $scope.ItemsDetails = eval('(' + data.DeliveryBoyDetails + ')')
+                $scope.ITDE = { ItemName: "", Rate: "", Quantity: "", ItemId: "", ItemCode: "", ActualRate: "" };
+                var IteMDetailsdatabase = [];
+                $scope.Items = [];
+                for (var i = 0; i < $scope.ItemsDetails.length; i++) {
+
+                    $scope.Items.push({ 'ItemId': $scope.ItemsDetails[i]["itemid"], 'ItemCode': $scope.ItemsDetails[i]["itemcode"], 'ItemName': $scope.ItemsDetails[i]["itemname"], 'Quantity': $scope.ItemsDetails[i]["itemqty"], 'Rate': parseFloat($scope.ItemsDetails[i]["numitemrate"]) * parseFloat($scope.ItemsDetails[i]["itemqty"]), 'ActualRate': parseFloat($scope.ItemsDetails[i]["numitemrate"] * parseFloat($scope.ItemsDetails[i]["itemqty"]) / $scope.ItemsDetails[i]["itemqty"]), 'Status': "N" });
+
+                }
+                $scope.hidemobileno = true;
+                $scope.NetTotal = $scope.ItemsDetails[0].numnetpayable
+                $scope.NEWORDER.Discount = $scope.ItemsDetails[0].numdiscount
+                $scope.NEWORDER["servicetax"] = $scope.ItemsDetails[0].numservicetax.toString();;
+                $scope.NEWORDER["servicetaxvalue"] = $scope.ItemsDetails[0].numservicetaxvalue;
+                $scope.NEWORDER.VatTax = $scope.ItemsDetails[0].numvattax.toString();
+                $scope.NEWORDER.VatTaxAmount = $scope.ItemsDetails[0].numvattaxvalue
+                $scope.NEWORDER.OtherCharges = $scope.ItemsDetails[0].numdeliverycharges
+
+
+                $scope.ordernoDatabase = $scope.ItemsDetails[0].orderno;
+                $scope.Total = $scope.Items.reduce(function (pv, cv) {
+                    debugger;
+                    return pv + cv.Rate;
+                }, 0);
+                $scope.HideFooter = false;
+                $scope.NEWORDER["OrderTotal"] = $scope.Total;
+
+
+                if ($scope.ItemsDetails[0].vchdiscounttype == "Flat") {
+
+                    document.getElementById('switch_right').checked = true;
+                    $scope.NEWORDER.discounttype = "Flat"
+                }
+                if ($scope.ItemsDetails[0].vchdiscounttype == "Per") {
+
+                    document.getElementById('switch_left').checked = true;
+                    $scope.NEWORDER.discounttype = "Per"
+                }
+            });
+        }
+
+        var UrlData = $location.$$absUrl.split('/');
+        var TableId = UrlData[UrlData.length - 1];
+        $scope.KOTDetails = {};
+        $scope.shide = true;
+        var UrlData = $location.$$absUrl.split('/');
+        var TableId = UrlData[UrlData.length - 1];
+        $scope.ind = 0;
+        $scope.Items = [];
+        $scope.NEWORDER = { OrderDate: "", OrderTime: "", discounttype: "", vchdeliverychargesstatus: "", Discount: 0, servicetaxvalue: 0, OtherCharges: 0 }
+        debugger;
+        $scope.Qun = {};
+        var date = new Date();
+        $scope.NEWORDER.OrderDate = $filter('date')(new Date(), 'dd-MM-yyyy');
+        $scope.NEWORDER.OrderTime = $filter('date')(new Date(), 'hh:mm a');
+
+        LoadSession(TableId);
+        $scope.IdGeneration = function (id) {
+
+            NewId = id.split(' ').join('').replace(/[^a-zA-Z0-9]/g, '')
+
+            return NewId;
+        }
+        $scope.showRemainingTabs = function (searchName, event) {
+            debugger;
+            $('.panel-collapse collapse in').collapse('hide')
+            if (event.keyCode != 13) {
+                if (searchName != "") {
+                    $scope.ind = 1;
+
+                    for (var T = 0; T < $scope.uniqueArray.length; T++) {
+
+                        $('[href="#' + $scope.uniqueArray[T].replace(/ /g, '') + '"]').closest('li').hide();
+
+                    }
+
+
+                    document.getElementById('accordion').style.visibility = "hidden";
+                    $scope.shide = false;
+                    $('.nav-tabs a[href="#Search"]').tab('show');
+                    $scope.getsubcate("Search");
+                }
+                if (searchName == "") {
+
+                    $scope.ActiveTab = "XYZ";
+                    for (var W = 0; W < $scope.uniqueArray.length; W++) {
+
+                        $('[href="#' + $scope.uniqueArray[W].replace(/ /g, '') + '"]').closest('li').show();
+
+                    }
+                    $('[href="#Search"]').closest('li').hide();
+                    document.getElementById('accordion').style.visibility = "visible";
+                    $scope.shide = true;
+                    $('.nav-tabs a[href="#' + $scope.uniqueArray[0].split(' ').join('').replace(/[^a-zA-Z0-9]/g, '') + '"]').tab('show');
+                    $scope.getsubcate($scope.uniqueArray[0]);
+                    $('.panel-collapse collapse in').collapse('hide')
+
+                }
+            }
+            else {
+
+
+                event.preventDefault();
+            }
+            //$('[href="#FOOD"]').closest('li').show();
+            //document.getElementById('accordion').style.visibility = "visible";
+        }
+        $scope.getItems = function (table) {
+            debugger;
+            $scope.subcateclick = table.replace(/ /g, '');
+            var itemsundersubs = [];
+            for (var m = 0; m < $scope.lstItems.length; m++) {
+                // .replace(/[^a-zA-Z0-9]/g, ' ')
+                if ($scope.lstItems[m].subcategoryname == table && $scope.lstItems[m].CategoryName == $scope.ActiveTab) {
+
+                    itemsundersubs.push($scope.lstItems[m]);
+                }
+            }
+
+
+            $scope.itemsundersubs = itemsundersubs;
+
+        }
+        $scope.AddOtherCharges = function (NEWORDER) {
+            debugger;
+            $scope.Calculateservicecharge(NEWORDER);
+
+        }
+        $scope.addItem = function (item) {
+            debugger;
+            $scope.HideFooter = false
+            debugger
+            var ItemCountIntable = $scope.Items.reduce(function (n, Z) {
+                return n + (Z.ItemName == item.ItemName);
+            }, 0);
+            if (ItemCountIntable == 0) {
+                $scope.Items.push({ 'ItemId': item.ItemId, 'ItemCode': item.ItemCode, 'ItemName': item.ItemName, 'Quantity': item.Quantity, 'Rate': item.Rate, 'ActualRate': item.Rate, 'Status': "N" });
+
+                $scope.Total = $scope.Items.reduce(function (pv, cv) {
+                    debugger;
+                    return pv + cv.Rate;
+                }, 0);
+                $scope.NetTotal = $scope.Total
+                $scope.NEWORDER["OrderNetTotal"] = $scope.NetTotal;
+                $scope.NEWORDER["vchdeliverychargesstatus"] = "Y";
+                $scope.NEWORDER["OrderTotal"] = $scope.Total;
+                if (Amount != "") {
+                    var Amount = parseFloat($scope.NEWORDER["Discount"]);
+                    $scope.calNetAmount(Amount);
+                }
+            }
+        }
+        $scope.Back = function () {
+            debugger;
+            var url = '@Url.Action("../TakeAway/TakeAwayAtHotel")';
+            window.location.href = url;
+
+        }
+        $scope.AddQuantity = function (row) {
+            debugger;
+
+            $scope.Items[row]['Quantity'] = parseInt($scope.Items[row]['Quantity']) + 1
+            $scope.Items[row]['Rate'] = parseFloat($scope.Items[row]['Quantity']) * $scope.Items[row]['ActualRate'];
+            $scope.Total = $scope.Items.reduce(function (pv, cv) {
+
+                return pv + cv.Rate;
+            }, 0);
+            $scope.NetTotal = $scope.Total;
+
+            $scope.NEWORDER["OrderNetTotal"] = $scope.NetTotal;
+            $scope.NEWORDER["vchdeliverychargesstatus"] = "Y";
+            $scope.NEWORDER["OrderTotal"] = $scope.Total;
+            if (Amount != "") {
+                var Amount = parseFloat($scope.NEWORDER["Discount"]);
+                $scope.calNetAmount(Amount);
+            }
+        }
+        $scope.RemoveQantity = function (row) {
+            debugger;
+
+
+
+            $scope.Items[row]['Quantity'] = parseInt($scope.Items[row]['Quantity']) - 1
+            if ($scope.Items[row]['Quantity'] == 0) {
+
+                $scope.Items.splice(row, 1);
+                $scope.Total = $scope.Items.reduce(function (pv, cv) {
+
+                    return pv + cv.Rate;
+                }, 0);
+                $scope.NetTotal = $scope.Total
+                if ($scope.Items.length == 0) {
+
+                    $scope.HideFooter = true;
+                }
+                else {
+
+                    $scope.HideFooter = false;
+                }
+                $scope.NEWORDER["OrderNetTotal"] = $scope.NetTotal;
+                $scope.NEWORDER["vchdeliverychargesstatus"] = "Y";
+                $scope.NEWORDER["OrderTotal"] = $scope.Total;
+                if (Amount != "") {
+                    var Amount = parseFloat($scope.NEWORDER["Discount"]);
+                    $scope.calNetAmount(Amount);
+                }
+            }
+            else {
+                $scope.Items[row]['Rate'] = parseFloat($scope.Items[row]['Quantity']) * $scope.Items[row]['ActualRate'];
+                $scope.Total = $scope.Items.reduce(function (pv, cv) {
+
+                    return pv + cv.Rate;
+                }, 0);
+                $scope.NetTotal = $scope.Total;
+                $scope.NEWORDER["OrderNetTotal"] = $scope.NetTotal;
+                $scope.NEWORDER["vchdeliverychargesstatus"] = "Y";
+                $scope.NEWORDER["OrderTotal"] = $scope.Total;
+                if (Amount != "") {
+                    var Amount = parseFloat($scope.NEWORDER["Discount"]);
+                    $scope.calNetAmount(Amount);
+                }
+            }
+        }
+        $scope.getsubcate = function (getsubcate) {
+
+            debugger;
+            if ($scope.subcateclick !== undefined) {
+                $('#' + $scope.subcateclick.replace(/[^a-zA-Z0-9]/g, ' ')).collapse('hide')
+            }
+            var Active = $scope.ActiveTab;
+            if (getsubcate != Active)
+                if (getsubcate == "Search") {
+
+
+                    $scope.itemsundersubs = [];
+                    $scope.uniqueArraySub = [];
+                    var WithoutFrequentItems = $scope.lstItems.filter(function (el) { return el.CategoryName != "FREQUENT" });
+                    var ss = filter(WithoutFrequentItems)
+                    function filter(arr) {
+                        var f = []
+                        return arr.filter(function (n) {
+                            return f.indexOf(n.ItemName) == -1 && f.push(n.ItemName)
+                        })
+                    }
+
+                    $scope.it = ss;
+
+                }
+                else {
+                    $scope.it = [];
+                    var CategoryName = getsubcate;
+                    var catege = [];
+                    var Subcatege = [];
+                    var itemsundersubs = [];
+                    var itemsun = [];
+                    var itemsundersubsObject = [];
+                    $scope.ActiveTab = getsubcate;
+                    for (var r = 0; r < $scope.lstItems.length; r++) {
+
+                        if ($scope.lstItems[r].CategoryName == CategoryName) {
+                            if ($scope.lstItems[r]["subcategoryname"] != "") {
+                                Subcatege.push($scope.lstItems[r].subcategoryname);
+                            }
+
+                        }
+
+                    }
+                    $scope.uniqueArraySub = Subcatege.filter(function (elem, pos) {
+                        return Subcatege.indexOf(elem) == pos;
+                    });
+
+                    for (var p = 0; p < $scope.uniqueArraySub.length; p++) {
+                        for (var m = 0; m < $scope.lstItems.length; m++) {
+
+                            if ($scope.lstItems[m].subcategoryname == $scope.uniqueArraySub[p]) {
+
+                                itemsundersubs.push($scope.lstItems[m]);
+                            }
+                        }
+
+                    }
+                    $scope.itemsundersubs = itemsundersubs;
+                    //for (var i = 0; i < $scope.uniqueArraySub.length; i++) {
+                    //    $scope.uniqueArraySub[i] = $scope.uniqueArraySub[i].replace(/[^a-zA-Z0-9]/g, ' ');
+                    //}
+                    $scope.$apply();
+                }
+
+        }
+        $scope.ActiveTabs = function (index) {
+
+
+            if (index == 0) {
+                return "active"
+            }
+            if (index == 2) {
+
+                if ($scope.ind == 0) {
+                    $('[href="#Search"]').closest('li').hide();
+                }
+            } else { $('[href="#Search"]').closest('li').hide(); }
+
+
+        }
+        $scope.CalculateVatTax = function (NewOrder) {
+            debugger;
+            var discount = 0;
+
+
+
+            var switch_left = document.getElementById('switch_left').checked;
+            var switch_right = document.getElementById('switch_right').checked;
+            if (switch_left == true) {
+
+                $scope.NEWORDER["discounttype"] = "Per";
+            }
+            if (switch_right == true) {
+
+                $scope.NEWORDER["discounttype"] = "Flat";
+            }
+            NewOrder["OrderTotal"] = $scope.Items.reduce(function (pv, cv) {
+                debugger;
+                return pv + cv.Rate;
+            }, 0);
+
+
+            if (NewOrder.VatTax === undefined || NewOrder.VatTax == "") { NewOrder.VatTax = 0; }
+            if (NewOrder.OtherCharges === undefined || NewOrder.OtherCharges == "") { NewOrder.OtherCharges = 0; }
+            if (NewOrder.discounttype == "Per") {
+
+                discount = parseFloat((parseInt(NewOrder.OrderTotal)) * parseInt(NewOrder.Discount)) / 100
+            }
+            else {
+
+                discount = NewOrder.Discount;
+
+            }
+            var totalvatcalaamount = (parseFloat(NewOrder.OrderTotal) + parseFloat(NewOrder.OtherCharges) - parseFloat(discount) + parseFloat(NewOrder.servicetaxvalue)) * parseFloat(NewOrder.VatTax) / 100;
+            $scope.NEWORDER.VatTaxAmount = totalvatcalaamount.toFixed(2);
+
+            var net = parseFloat(NewOrder.OrderTotal) + parseFloat(NewOrder.OtherCharges) - parseFloat(discount) + parseFloat(NewOrder.servicetaxvalue) + totalvatcalaamount;
+            $scope.NetTotal = Math.round(net);
+            NewOrder.OrderNetTotal = Math.round($scope.NetTotal);
+        }
+        $scope.Calculateservicecharge = function (NewOrder) {
+            debugger;
+
+
+            if (NewOrder.OtherCharges === undefined || NewOrder.OtherCharges == "") { NewOrder.OtherCharges = 0; }
+            //if (NewOrder.Discount != "") {
+            if (NewOrder.discounttype == "Per") {
+
+                if (isNaN(NewOrder.Discount)) {
+
+                    NewOrder.Discount = 0;
+                }
+                var servicetax = NewOrder.servicetax;
+                if (servicetax == "" || servicetax === undefined) { NewOrder.servicetaxvalue = 0; servicetax = 0 }
+                var tax = ((parseFloat(NewOrder.OrderTotal)) * parseInt(NewOrder.Discount) / 100)
+                var servicetaxcal = (parseFloat(((parseFloat(NewOrder.OrderTotal) + parseFloat(NewOrder.OtherCharges)) - tax) * parseInt(servicetax) / 100));
+
+                NewOrder.servicetaxvalue = (servicetaxcal.toFixed(2));
+                var net = (parseInt(NewOrder.OrderTotal) - parseFloat(parseInt(NewOrder.OrderTotal) * parseInt(NewOrder.Discount)) / 100);
+                if (net == 0) {
+                    net = (parseInt(NewOrder.OrderTotal) - parseFloat(parseInt(NewOrder.OrderTotal) * parseInt(NewOrder.Discount)) / 100);
+                    NewOrder.servicetaxvalue = 0;
+                }
+                else {
+
+                    net = (parseInt(NewOrder.OrderTotal) + parseFloat(NewOrder.OtherCharges) - parseFloat(parseInt(NewOrder.OrderTotal) * parseInt(NewOrder.Discount)) / 100) + parseFloat(servicetaxcal);
+                }
+                //+parseInt(NewOrder.DeliverCharges)
+                $scope.NetTotal = net;
+                NewOrder.OrderNetTotal = $scope.NetTotal;
+            }
+
+            else if (NewOrder.discounttype == "Flat") {
+
+                var servicetax = NewOrder.servicetax;
+                if (servicetax == "" || servicetax === undefined) { NewOrder.servicetaxvalue = 0; servicetax = 0 }
+                var servicetaxcal = (parseFloat((parseFloat(NewOrder.OrderTotal) + parseFloat(NewOrder.OtherCharges) - parseInt(NewOrder.Discount)) * parseInt(servicetax) / 100));
+
+                NewOrder.servicetaxvalue = servicetaxcal.toFixed(2);
+                var net = parseFloat(NewOrder.OrderTotal) + parseFloat(NewOrder.OtherCharges) - parseInt(NewOrder.Discount) + parseFloat(servicetaxcal);
+                $scope.NetTotal = net;
+                NewOrder.OrderNetTotal = $scope.NetTotal;
+            }
+            //}
+
+            $scope.CalculateVatTax(NewOrder);
+        }
+        function LoadSession(T) {
+            debugger
+
+
+
+
+            $http({
+                url: '/TakeAway/ItemsForDelivery/',
+                method: "post",
+                data: { TName: T }
+            }).success(function (data) {
+                debugger;
+
+
+                $scope.lstItems = data.lstItems;
+                $scope.KOTDetails = data.lstSessionDetails;
+                var catege = [];
+                var Subcatege = [];
+                var itemsundersubs = [];
+                var itemsun = [];
+                var itemsundersubsObject = [];
+                T = 0;
+                y = 0;
+
+                //var uniqueArray = $.unique($scope.lstItems.map(function (d) {
+                //    return d.CategoryName;
+                //}));
+
+
+                for (var z = 0; z < $scope.lstItems.length; z++) {
+
+                    catege.push($scope.lstItems[z].CategoryName);
+                }
+                var uniqueArray = catege.filter(function (elem, pos) {
+                    return catege.indexOf(elem) == pos;
+                });
+
+                $scope.uniqueArray = uniqueArray;
+                $scope.ActiveTab = uniqueArray[0];
+                $scope.uniqueArray[$scope.uniqueArray.length] = "Search";
+
+                debugger;
+                for (var i = 0; i < uniqueArray.length; i++) {
+                    $scope.cat = uniqueArray[0];
+                    for (var r = 0; r < $scope.lstItems.length; r++) {
+
+                        if ($scope.lstItems[r].CategoryName == $scope.cat) {
+                            if ($scope.lstItems[r]["subcategoryname"] != "") {
+                                Subcatege.push($scope.lstItems[r].subcategoryname);
+                            }
+
+                        }
+
+
+
+                        $scope.uniqueArraySub = Subcatege.filter(function (elem, pos) {
+                            return Subcatege.indexOf(elem) == pos;
+                        });
+
+
+                        for (var p = 0; p < $scope.uniqueArraySub.length; p++) {
+                            for (var m = 0; m < $scope.lstItems.length; m++) {
+
+                                if ($scope.lstItems[m].subcategoryname == $scope.uniqueArraySub[p]) {
+
+                                    itemsundersubs.push($scope.lstItems[m]);
+                                }
+                            }
+
+                        }
+                        $scope.itemsundersubs = itemsundersubs;
+
+                    }
+
+                }
+
+                //for (var i = 0; i < $scope.uniqueArraySub.length; i++) {
+                //    $scope.uniqueArraySub[i] = $scope.uniqueArraySub[i].replace(/[^a-zA-Z0-9]/g, ' ');
+                //}
+
+
+
+            });
+
+
+
+
+
+        }
+
+        $scope.calNetAmount = function (AmountOrPercentage) {
+            debugger;
+            var switch_left = document.getElementById('switch_left').checked;
+            var switch_right = document.getElementById('switch_right').checked;
+            if (AmountOrPercentage != "") {
+                if (switch_left == true) {
+
+                    if (isNaN(AmountOrPercentage)) {
+
+                        AmountOrPercentage = 0;
+                    }
+                    if ($scope.Total > 0) {
+                        if (parseInt(AmountOrPercentage) <= 100) {
+                            $scope.NEWORDER["discounttype"] = "Per";
+                            var ff = Math.round((parseFloat($scope.Total) + parseFloat($scope.NEWORDER.OtherCharges)) - parseFloat(((parseFloat($scope.Total) + parseFloat($scope.NEWORDER.OtherCharges)) * parseFloat(AmountOrPercentage)) / 100));
+                            $scope.NetTotal = parseFloat(ff)
+                            $scope.NEWORDER["OrderNetTotal"] = Math.round($scope.NetTotal);
+                            $scope.NEWORDER["vchdeliverychargesstatus"] = "Y";
+                            $scope.NEWORDER["OrderTotal"] = $scope.Total;
+                            if (isNaN($scope.NEWORDER.servicetaxvalue)) {
+
+                                $scope.NEWORDER.servicetaxvalue = 0
+                            }
+
+                            $scope.Calculateservicecharge($scope.NEWORDER);
+                        }
+                        else {
+
+                            alert("Discount % Less Than Or  Equal To  100 ! ");
+                            $scope.NEWORDER.Discount = 0;
+                            $scope.calNetAmount();
+                        }
+                    }
+                }
+                if (switch_right == true) {
+
+                    if (isNaN(AmountOrPercentage)) {
+
+                        AmountOrPercentage = 0;
+                    }
+                    if ($scope.Total > 0) {
+                        if (AmountOrPercentage <= parseFloat($scope.Total)) {
+                            $scope.NEWORDER["discounttype"] = "Flat";
+                            var dd = Math.round(parseFloat(parseFloat($scope.Total) + parseFloat($scope.NEWORDER.OtherCharges)) - parseFloat(AmountOrPercentage));
+                            $scope.NetTotal = parseFloat(dd);
+                            $scope.NEWORDER["OrderNetTotal"] = Math.round($scope.NetTotal);
+                            $scope.NEWORDER["vchdeliverychargesstatus"] = "Y";
+                            $scope.NEWORDER["OrderTotal"] = $scope.Total;
+                            if (isNaN($scope.NEWORDER.servicetaxvalue)) {
+
+                                $scope.NEWORDER.servicetaxvalue = 0
+                            }
+
+                            $scope.Calculateservicecharge($scope.NEWORDER);
+                        }
+                        else {
+
+                            alert("Discount Amount less than Or Equal To  Total ");
+                            $scope.NEWORDER.Discount = 0;
+                            $scope.calNetAmount();
+                        }
+                    }
+                }
+            }
+            else {
+
+                $scope.NetTotal = $scope.Total;
+                $scope.NEWORDER.Discount = 0;
+                $scope.NEWORDER["OrderNetTotal"] = Math.round($scope.NetTotal);
+
+                $scope.NEWORDER["OrderTotal"] = $scope.Total;
+
+                if (switch_left == true) {
+
+                    $scope.NEWORDER["discounttype"] = "Per";
+                }
+                if (switch_right == true) {
+
+                    $scope.NEWORDER["discounttype"] = "Flat";
+                }
+                $scope.Calculateservicecharge($scope.NEWORDER);
+            }
+            $scope.$digest();
+        }
+
+        $scope.Save = function (NEWORDER) {
+            debugger;
+            var Ordder = window.location.href.split("/")[5];
+            var Contains = window.location.href.indexOf("TB")
+
+
+            if (Ordder !== undefined && Contains != -1) {
+                var OrderTotal = NEWORDER["OrderNetTotal"];
+                if (OrderTotal === undefined) {
+                    var PreviousItems = $scope.ItemsDetails;
+                    var equal = PreviousItems.length;
+                    for (var i = 0; i < PreviousItems.length; i++) {
+
+                        if (PreviousItems[i].itemqty == $scope.Items[i].Quantity) {
+                            debugger;
+                            equal--;
+
+                        }
+
+                    }
+                    if (equal == 0) {
+                        debugger;
+                        alert("No Changes Are Made !")
+                        var url = '@Url.Action("../TakeAway/TakeAwayAtHotel")';
+                        window.location.href = url;
+                        return false;
+                    }
+                }
+            }
+            if (NEWORDER.OtherCharges != 0) { NEWORDER.vchdeliverychargesstatus = "Y" } 
+            var OrderTotal = NEWORDER["OrderTotal"];
+            if (OrderTotal === undefined) {
+
+                var PreviousItems = $scope.ItemsDetails;
+                var equal = PreviousItems.length;
+                for (var i = 0; i < PreviousItems.length; i++) {
+
+                    if (PreviousItems[i].itemqty == $scope.Items[i].Quantity) {
+                        debugger;
+                        equal--;
+
+                    }
+
+                }
+                if (equal == 0) {
+                    debugger;
+                    alert("No Changes Are Made !")
+                    var url = '@Url.Action("../TakeAway/TakeAwayAtHotel")';
+                    window.location.href = url;
+                    return false;
+                }
+            }
+            ItemDetails = $scope.Items
+            if ($scope.Items.length > 0) {
+
+
+                if (confirm('Are You Sure want to save?')) {
+                    var orderno = $scope.OrdderNo
+                    if ($scope.OrdderNo !== undefined) {
+
+
+
+                        NEWORDER["OrderUpdate"] = orderno;
+                        NEWORDER["orderno"] = $scope.ordernoDatabase;
+                    }
+                    else {
+
+                        NEWORDER["OrderUpdate"] = 0;
+                    }
+                    if ($scope.BillNo !== undefined) {
+
+                        NEWORDER["OrderPreviousBillNo"] = $scope.BillNo;
+
+                    }
+                    else {
+
+                        NEWORDER["OrderPreviousBillNo"] = 0;
+                    }
+
+                    var switch_left = document.getElementById('switch_left').checked;
+                    var switch_right = document.getElementById('switch_right').checked;
+                    if (switch_left == true) {
+
+                        $scope.NEWORDER["discounttype"] = "Per";
+
+                    }
+                    else if (switch_right) {
+
+                        $scope.NEWORDER["discounttype"] = "Flat";
+                    }
+                    $http({
+                        url: '/TakeAway/SaveTakeAwayAthotel/',
+                        method: "POST",
+                        data: { session: ($scope.KOTDetails[0].SessionId), CustomerDetails: NEWORDER, ItemDetails: $scope.Items }
+                    }).success(function (data) {
+                        debugger;
+
+                        debugger;
+                        $scope.HideFooter = true;
+                        alert("Order Details Saved Successfully");
+                        debugger;
+
+                        var w = window.open("/POSReports/BillReprintReport/?Billno=" + data.billNo + "&Billtype=Take Away &Takeawayno=" + data.TAKEAWAYID + "&Printtype=Original", '_blank');
+                        // var w = window.open("/POSReports/BillReprintReport/?Billno=" + data.billNo + "&Billtype=TAKE AWAY", '_blank');
+                        var url = '@Url.Action("../TakeAway/TakeAwayAtHotel")';
+                        window.location.href = url;
+
+
+
+                    });
+                }
+            }
+            else {
+                alert("Add Items to Grid");
+            }
+        }
+
+
+
+
+
+
+    }]);
+    //function FlatOrPercentage() {
+    //    debugger;
+    //    var appElement = document.querySelector('[ ng-controller=HomeDeliveryController]');
+
+    //        var $scope = angular.element(appElement).scope();
+
+
+
+    //}
+</script>
+
+
+
+
+</html>
+
+<script>
+    function FlatOrpercentage() {
+        debugger;
+        var appElement = document.querySelector('[ ng-controller=TakeAwayAtHotelNewOrderController]');
+        var $scope = angular.element(appElement).scope();
+        var Amount = parseFloat($scope.NEWORDER["Discount"]);
+        $scope.calNetAmount(Amount);
+
+
+    }
+
+
+    $('.collapse').on('shown.bs.collapse', function () {
+        $(this).parent().find("span.fa-plus").removeClass("fa-plus").addClass("fa-minus");
+    }).on('hidden.bs.collapse', function () {
+        $(this).parent().find("span.fa-minus").removeClass("fa-minus").addClass("fa-plus");
+    });
+
+</script>
+
+
+
+

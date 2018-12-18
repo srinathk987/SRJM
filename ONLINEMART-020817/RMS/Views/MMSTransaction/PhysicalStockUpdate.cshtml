@@ -1,0 +1,1084 @@
+﻿@{
+    // ViewBag.Title = "PhysicalStockUpdate";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .holdRow td {
+        font-weight: bold !important;
+        color: green !important;
+    }
+
+    .higLightholdRow td {
+        font-weight: bold !important;
+        color: Yellow !important;
+    }
+</style>
+<div ng-controller="PhysicalStockUpdateController" ng-init="LoadData()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="PhysicalStockUpdatefrm" novalidate>
+
+                    <div class="col-sm-8">
+                        <div style="border:1px solid #666; border-radius:5px; margin-top:5px; padding:20px 10px;">
+                            <span style="margin:-30px 10px; color:#fff; border-radius:4px; background:#344935; padding:2px 6px; position:absolute; ">Excel Upload To Grid </span>
+                            <div class="form-group">
+
+                                <label class="col-sm-4 control-label no-padding-right" for="form-field-1">
+                                    Date <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-6">
+                                    <input type="text" id="Date" name="Date" ng-model="SU.Date" data-index="2" data-date-format="dd/mm/yyyy"
+                                           placeholder="Enter Date " class="form-control" required disabled />
+                                    <span class="error" ng-show="(PhysicalStockUpdatefrm.Date.$dirty || submitted) && PhysicalStockUpdatefrm.Date.$error.required">
+                                        Date Required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">
+                                    Upload File :
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="file" id="fileUpload" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <button type="button" ng-click="Upload()" class="btn btn-primary">
+                                            <i class="fa fa-upload"></i>Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <button class="btn btn-info btn-lg btn-block" ng-click="Export()" id="Reset">
+                                        <i class="ace-icon fa fa-upload bigger-110"></i>Export Stock Data Excel
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div style="border:1px solid #666; border-radius:5px; margin-top:5px; padding:20px 10px;">
+                            <span style="margin:-30px 10px; color:#fff; border-radius:4px; background:#344935; padding:2px 6px; position:absolute; ">Export Stock To Digital Excel</span>
+                            <button class="btn btn-success btn-lg btn-block" ng-click="DigitalExport()" id="Reset">
+                                <i class="ace-icon fa fa-upload bigger-110"></i>Export Stock To Digital Excel
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <table id="grdStockUpdate"></table>
+
+        <div id="grid-pager">
+
+        </div>
+        <table id="grdStockUpdate1"></table>
+
+        <div id="grid-pager1">
+
+        </div>
+
+        <br />
+        <div class="col-sm-12">
+            <div class="pull-right">
+                <button class="btn btn-success" type="button" ng-click="SaveStockupdate(SU)" data-index="3">
+                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn orange" id="Export" ng-click="Reset()" id="Reset">
+                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#Date").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var appElement = document.querySelector('[ ng-controller=PhysicalStockUpdateController]');
+    function Search() {
+        debugger;
+
+
+        JqCustomSearch($("#globalSearchText").val(), $("#grdStockUpdate"))
+        //$('#grdStockUpdate').jqGrid('setRowData', 1, false, "holdRow");
+    }
+
+</script>
+
+<script type="text/javascript">
+    app.controller('PhysicalStockUpdateController', function ($scope, $http, $rootScope) {
+        debugger
+        $('#productcategory').focus();
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Physical Stock Update";
+        $rootScope.ModuleName = "Transaction";
+        $scope.SU = {};
+        $scope.$watch('PhysicalStockUpdatefrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Upload = function () {
+            debugger;
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    debugger;
+                    var lines = e.currentTarget.result;
+                    var Cont = e.currentTarget.result.indexOf("productname")
+                    if (Cont >= 0) {
+                        var data = csvTojs(lines);
+                        StockUpdateGridBinding(data);
+                        var gridData = $('#grdStockUpdate').jqGrid('getRowData');
+                        //Stockinstore, physicalstock, closingstock
+                        for (var i = 0; i < gridData.length; i++) {
+
+                            var Stockinstore = gridData[i].Stockinstore;
+                            var physicalstock = gridData[i].physicalstock;
+                            var closingstock = Stockinstore - physicalstock;
+                            if (closingstock > 0) {
+
+                                $('#grdStockUpdate').jqGrid("setCell", i + 1, "closingstock", closingstock);
+                                $('#grdStockUpdate').jqGrid('setRowData', i + 1, false, "holdRow");
+                            }
+                            else {
+
+                                $('#grdStockUpdate').jqGrid("setCell", i + 1, "physicalstock", Stockinstore);
+                                $('#grdStockUpdate').jqGrid("setCell", i + 1, "closingstock", 0);
+                            }
+
+                        }
+
+                    }
+                    else {
+
+                        alert("Wrong Excel File");
+                    }
+
+                }
+                reader.readAsText($("#fileUpload")[0].files[0]);
+
+            }
+
+        }
+        $scope.LoadData = function () {
+            debugger;
+            $scope.SU.Date = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+            var storagelocid = 0;
+
+            debugger;
+            $http({ method: 'post', url: "/MMSTransaction/ShowStockupdate/", data: { locationid: storagelocid } }).success(function (data) {
+                StockUpdateGridBinding(data);
+                $scope.GridLength = data.length;
+                $scope.GridData = data;
+                //StockUpdateGridBinding1(data);
+
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+
+            $http({
+                url: '/MMSTransaction/ShowStockusers/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+
+                $scope.Stock = data;
+
+            });
+        }
+
+
+        $http({
+            url: '/MMSTransaction/ShowStoragelocation/',
+            method: "get"
+
+        }).success(function (data) {
+            debugger;
+
+            $scope.store = data;
+
+        });
+
+
+        $http({ method: 'post', url: "/MMSTransaction/ShowStockupdate/", data: { locationid: 0 } }).success(function (data) {
+            $("#grdStockUpdate").jqGrid("clearGridData", true).trigger("reloadGrid");
+            StockUpdateGridBinding(data);
+
+
+        }).error(function () {
+            alert("Error Occuerd");
+
+        });
+
+        $(function () {
+            $("#Date").datepicker({
+                endDate: '+0d'
+
+            });
+        });
+
+        $scope.StorageLocationchange = function () {
+            debugger;
+            // var storagelocid = $("#Storageloc").val();
+            var storagelocid = $scope.SU.Storagelocationid;
+
+
+
+        };
+
+        $scope.SaveStockupdate = function (SU) {
+            debugger;
+            $scope.submitted = true;
+            var verifiedby = $("#Userid").val();
+            var userid = $scope.SU.Userid;
+            var Date = $("#Date").val();
+
+
+            for (var i = 1; i <= $scope.GridLength; i++) {
+
+                $('#grdStockUpdate').saveRow(parseInt(i));
+
+
+            }
+            //var verifiedbyname = $("#Userid option:selected").text();
+            var Grid_data = $('#grdStockUpdate').jqGrid('getRowData');
+            var grdlenth = Grid_data.length;
+            var grddata = [];
+            debugger;
+            for (var i = 0; i < grdlenth; i++) {
+
+                if (Grid_data[i].physicalstock !== "" || Grid_data[i].NewRate !== "") {
+                    var row = Grid_data[i];
+                    grddata.push(row);
+                }
+            }
+            debugger;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        //$http.post('/MMSTransaction/SaveStock', SU).success(function (data) {
+
+                        $http({ method: 'POST', data: { PhysicalStockUpdateDTO: JSON.stringify(SU), lstStockupdate: JSON.stringify(grddata) }, url: '/MMSTransaction/SaveStock/' }).success(function (data) {
+                            debugger
+                            if (data === true) {
+                                alert("Stock Details Saved Sucessfully");
+
+                                $scope.SU = {};
+                                ClearForm();
+
+
+                            } else {
+                                alert("Error While Saving....");
+                            }
+                        })
+                    }
+                }
+                else {
+
+                }
+            }
+        }
+
+        $scope.Export = function () {
+
+            JSONToCSVConvertor1(JSON.stringify($('#grdStockUpdate').jqGrid('getRowData')), 'Title', true);
+
+        };
+        $scope.DigitalExport = function () {
+
+            JSONToCSVConvertor(JSON.stringify($('#grdStockUpdate').jqGrid('getRowData')), 'Title', true);
+        };
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            debugger;
+            var storagelocid = 0;
+            document.getElementById('fileUpload').value = "";
+            $scope.SU = {};
+            $scope.PhysicalStockUpdatefrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+            // $('#grdStockUpdate').jqGrid('delRowData');
+            //$scope.grdStockUpdate.grid.clearAllFilters();
+            $("#grdStockUpdate").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $http({ method: 'post', url: "/MMSTransaction/ShowStockupdate/", data: { locationid: storagelocid } }).success(function (data) {
+                StockUpdateGridBinding(data);
+                $scope.GridLength = data.length;
+                $scope.GridData = data;
+                //StockUpdateGridBinding1(data);
+
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+            $scope.SU.Date = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+        }
+        $scope.lastsel2 = 0;
+        //****************** JQ Grid  *******************************//
+        function StockUpdateGridBinding(data) {
+            debugger
+            $scope.grid = data;
+            var grid_data = data;
+            var grid_selector = "#grdStockUpdate";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        //{
+                        //    label: ' ', width: 40, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                        //        return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        //    }
+                        //},
+                        { label: 'pluno', name: 'pluno', width: 200, hidden: true },
+                        { label: 'pluname', name: 'pluname', width: 200, hidden: true },
+                        { label: 'plucode', name: 'plucode', width: 200, hidden: true },
+                        { label: 'uom', name: 'uom', width: 200, hidden: true },
+                        { label: 'unitprice', name: 'unitprice', width: 200, hidden: true },
+
+                         { label: 'Product', name: 'productname', width: 200 },
+                          { label: 'Productcode', name: 'productcode', width: 100, hidden: true },
+                         { label: 'Product Id', name: 'productid', width: 80, hidden: true },
+                         { label: 'UOM', name: 'uom1', width: 80 },
+                         { label: 'storage locationid', name: 'Storagelocationid', hidden: true },
+                         { label: 'Storage Location', name: 'Storagelocation', width: 100, hidden: true },
+                         { label: 'shelfid', name: 'Shelfid', hidden: true },
+                         //{ label: 'Shelf Name', name: 'Shelfname', width: 100 },
+                         { label: 'Min Stock', name: 'Stockinstore', hidden: true },
+                         { label: 'Max Stock', name: 'Stockinstore', hidden: true },
+                         { label: 'categoryid', name: 'productcategoryid', hidden: true },
+                         { label: 'Category Name', name: 'categoryname', width: 100, hidden: true },
+                         { label: 'subcatogeryid', name: 'productsubcategoryid', sorttype: 'number', hidden: true },
+                          { label: 'SubCategory Name', name: 'subcategoryname', width: 110, sorttype: 'number', hidden: true }
+                          , { label: 'Actual Rate', name: 'numsalerate1', width: 110, sorttype: 'number', formatter: AmountFormate, align: 'right' },
+                                {
+                                    label: 'New Rate', name: 'numsalerate', formatter: AmountFormate, editable: true, align: 'right', width: 100, editoptions: {
+                                        dataEvents: [{
+
+
+                                            type: 'keyup', fn: function (e) {
+                                                debugger;
+
+                                                var value = (this.value);
+                                                if (value <= 999999) {
+                                                    re = /^[\0-9\b.]+$/;
+                                                    if (re.test(value)) {
+
+                                                        if (e.keyCode == 13) {
+
+
+                                                            document.getElementById("" + rowid + "_physicalstock").focus();
+                                                        }
+                                                        //else {
+
+                                                        //    var rowid = parseInt($scope.lastsel2) - 1;
+                                                        //    var pluname = $('#grdStockUpdate').jqGrid('getRowData')[rowid].pluname;
+
+                                                        //    for (var i = 0; i < $('#grdStockUpdate').jqGrid('getRowData').length; i++) {
+
+                                                        //        var plunameFOR = $('#grdStockUpdate').jqGrid('getRowData')[i].pluname;
+                                                        //        if (plunameFOR == pluname) {
+
+                                                        //            var Row = rowid + 1;
+                                                        //            var salerate = document.getElementById("" + Row + "_numsalerate").value;
+                                                        //            $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                                        //            $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "numsalerate", salerate);
+                                                        //            $('#grdStockUpdate').trigger('reloadGrid');
+
+
+
+                                                        //        }
+
+                                                        //    }
+
+                                                        //}
+                                                    }
+                                                    else {
+
+
+                                                        var rowid = $scope.lastsel2;
+                                                        $scope.GridData
+                                                        document.getElementById("" + rowid + "_numsalerate").value = $scope.GridData[rowid - 1].numsalerate;
+                                                        //$('#grdStockUpdate').jqGrid('restoreRow', rowid);
+                                                    }
+                                                }
+                                                else {
+
+                                                    alert("Rate Should be Less Than 999999");
+                                                    var rowid = parseInt($scope.lastsel2);
+                                                    document.getElementById("" + rowid + "_numsalerate").value = $scope.GridData[rowid - 1].numsalerate;;
+                                                }
+                                            }
+
+
+                                        }]
+                                    }
+                                },
+                         { label: 'Stock in System', name: 'Stockinstore', width: 90, formatter: QuantityFormate, align: 'right' },
+
+                 {
+                     label: 'Physical Stock', name: 'physicalstock', width: 90, formatter: QuantityFormate, editable: true, align: 'right', editoptions: {
+                         dataEvents: [{
+
+                             type: 'keydown', fn: function (e) {
+                                 debugger;
+
+                                 var value = (this.value);
+                                 if (value < 9999) {
+                                     re = /^[0-9\b.]+$/;
+                                     if (re.test(value)) {
+                                         var rowid = $scope.lastsel2;
+
+                                         if (e.keyCode == 9 || e.keyCode == 13) {
+                                             var PhysicalStock = parseFloat(document.getElementById("" + rowid + "_physicalstock").value);
+                                             var closingstock = 0;
+                                             if (PhysicalStock != "" || PhysicalStock == 0) {
+                                                 var Stockinstore = parseFloat($('#grdStockUpdate').jqGrid("getCell", rowid, "Stockinstore"));
+
+                                                 if (Stockinstore >= PhysicalStock) {
+                                                     closingstock = parseFloat(Stockinstore) - parseFloat(PhysicalStock);
+                                                 }
+                                                 else {
+
+                                                     document.getElementById("" + rowid + "_physicalstock").value = Stockinstore;
+                                                     closingstock = 0;
+
+                                                 }
+                                             }
+                                             $('#grdStockUpdate').jqGrid("setCell", rowid, "closingstock", (closingstock).toFixed(3));
+
+
+                                             $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                             $('#grdStockUpdate').jqGrid('setRowData', $scope.lastsel2, false, "holdRow");
+                                             jQuery('#grdStockUpdate').jqGrid('editRow', parseInt($scope.lastsel2) + 1, { keys: true });
+                                             $scope.lastsel2 = parseInt($scope.lastsel2) + 1;
+
+                                         }
+                                     }
+                                     else {
+                                         //alert("Enter Numbers Only");
+
+
+                                         if (e.keyCode == 9) {
+
+                                             document.getElementById("" + $scope.lastsel2 + "_physicalstock").value = "";
+                                             $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                             jQuery('#grdStockUpdate').jqGrid('editRow', parseInt($scope.lastsel2) + 1, { keys: true });
+                                             $scope.lastsel2 = parseInt($scope.lastsel2) + 1;
+
+                                         }
+                                         if (e.keyCode == 13) {
+                                             $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                             $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "physicalstock", 0);
+                                             $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "closingstock", 0);
+                                             jQuery('#grdStockUpdate').jqGrid('editRow', parseInt($scope.lastsel2) + 1, { keys: true });
+                                             $scope.lastsel2 = parseInt($scope.lastsel2) + 1;
+                                         }
+
+                                     }
+                                 }
+                                 else {
+                                     alert("Quantity Should be Less Than 9999");
+                                     var rowid = parseInt($scope.lastsel2);
+                                     document.getElementById("" + rowid + "_physicalstock").value = $scope.GridData[rowid - 1].physicalstock;;
+
+                                     //$('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                     //$('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "physicalstock", 0);
+
+
+
+
+                                 }
+                             }
+
+
+                         }]
+                     }
+                 },
+            { label: 'Variation', name: 'closingstock', width: 90, align: 'right' },
+                { label: 'Stock in System', name: 'Stockinstore1', width: 90, formatter: Number, align: 'right', hidden: true },
+
+                ],
+
+                viewrecords: true,
+                rowNum: 2000,
+                //rowList: [8, 16, 25, 100],
+                //pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+                onSelectRow: function (id) {
+                    debugger;
+                    jQuery('#grdStockUpdate').jqGrid('restoreRow', $scope.lastsel2);
+                    jQuery('#grdStockUpdate').jqGrid('editRow', id, { keys: true });
+                    $scope.lastsel2 = id;
+
+                },
+
+                caption: "Physical Stock Update"
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+            //jQuery("#grdStockUpdate").jqGrid('setGroupHeaders', {
+            //    useColSpanStyle: true,
+            //    groupHeaders: [
+            //      { startColumnName: 'categoryname', numberOfColumns: 2, titleText: 'Price' }
+            //    ]
+            //});
+
+        }
+        function QuantityFormate(cellvalue, options, rowObject) {
+
+            cellvalue = parseFloat(cellvalue).toFixed(3);
+            return cellvalue;
+        }
+        function AmountFormate(cellvalue, options, rowObject) {
+
+            var cellvaluePresent = parseFloat(cellvalue).toFixed(2);
+            return cellvaluePresent;
+        }
+
+        function StockUpdateGridBinding1(data) {
+            debugger
+            $scope.grid = data;
+            var grid_data = data;
+            var grid_selector = "#grdStockUpdate1";
+            var pager_selector = "#grid-pager1";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        //{
+                        //    label: ' ', width: 40, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                        //        return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        //    }
+                        //},
+                        { label: 'pluno', name: 'pluno', width: 200, hidden: true },
+                        { label: 'pluname', name: 'pluname', width: 200, hidden: true },
+                        { label: 'plucode', name: 'plucode', width: 200, hidden: true },
+                        { label: 'uom', name: 'uom', width: 200, hidden: true },
+                        { label: 'unitprice', name: 'unitprice', width: 200, hidden: true },
+
+                         { label: 'Product', name: 'productname', width: 200 },
+                          { label: 'Productcode', name: 'productcode', width: 100, hidden: true },
+                         { label: 'Product Id', name: 'productid', width: 80, hidden: true },
+                         { label: 'UOM', name: 'uom1', width: 80 },
+                         { label: 'storage locationid', name: 'Storagelocationid', hidden: true },
+                         { label: 'Storage Location', name: 'Storagelocation', width: 100, hidden: true },
+                         { label: 'shelfid', name: 'Shelfid', hidden: true },
+                         //{ label: 'Shelf Name', name: 'Shelfname', width: 100 },
+                         { label: 'Min Stock', name: 'Stockinstore', hidden: true },
+                         { label: 'Max Stock', name: 'Stockinstore', hidden: true },
+                         { label: 'categoryid', name: 'productcategoryid', hidden: true },
+                         { label: 'Category Name', name: 'categoryname', width: 100, hidden: true },
+                         { label: 'subcatogeryid', name: 'productsubcategoryid', sorttype: 'number', hidden: true },
+                          { label: 'SubCategory Name', name: 'subcategoryname', width: 110, sorttype: 'number', hidden: true }
+                          , { label: 'Actual Rate', name: 'numsalerate', width: 110, sorttype: 'number' },
+                                {
+                                    label: 'New Rate', name: 'numsalerate', editable: true, align: 'right', width: 100, editoptions: {
+                                        dataEvents: [{
+
+
+                                            type: 'keyup', fn: function (e) {
+                                                debugger;
+
+                                                var value = (this.value);
+                                                if (value <= 999999) {
+                                                    re = /^[\0-9\b.]+$/;
+                                                    if (re.test(value)) {
+
+                                                        if (e.keyCode == 13) {
+
+
+                                                            document.getElementById("" + rowid + "_physicalstock").focus();
+                                                        }
+                                                        //else {
+
+                                                        //    var rowid = parseInt($scope.lastsel2) - 1;
+                                                        //    var pluname = $('#grdStockUpdate').jqGrid('getRowData')[rowid].pluname;
+
+                                                        //    for (var i = 0; i < $('#grdStockUpdate').jqGrid('getRowData').length; i++) {
+
+                                                        //        var plunameFOR = $('#grdStockUpdate').jqGrid('getRowData')[i].pluname;
+                                                        //        if (plunameFOR == pluname) {
+
+                                                        //            var Row = rowid + 1;
+                                                        //            var salerate = document.getElementById("" + Row + "_numsalerate").value;
+                                                        //            $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                                        //            $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "numsalerate", salerate);
+                                                        //            $('#grdStockUpdate').trigger('reloadGrid');
+
+
+
+                                                        //        }
+
+                                                        //    }
+
+                                                        //}
+                                                    }
+                                                    else {
+
+
+                                                        var rowid = $scope.lastsel2;
+                                                        document.getElementById("" + rowid + "_NewRate").value = "";
+                                                        //$('#grdStockUpdate').jqGrid('restoreRow', rowid);
+                                                    }
+                                                }
+                                                else {
+
+                                                    alert("Rate Should be Less Than 999999");
+                                                    var rowid = parseInt($scope.lastsel2);
+                                                    document.getElementById("" + rowid + "_NewRate").value = "";
+                                                }
+                                            }
+
+
+                                        }]
+                                    }
+                                },
+                         { label: 'Stock in System', name: 'Stockinstore', width: 90, formatter: Number, align: 'right' },
+
+                         {
+                             label: 'Physical Stock', name: 'physicalstock', width: 90, editable: true, align: 'right', editoptions: {
+                                 dataEvents: [{
+
+                                     type: 'keydown', fn: function (e) {
+                                         debugger;
+
+                                         var value = (this.value);
+                                         if (value < 9999) {
+                                             re = /^[0-9\b.]+$/;
+                                             if (re.test(value)) {
+                                                 var rowid = $scope.lastsel2;
+
+                                                 if (e.keyCode == 9 || e.keyCode == 13) {
+                                                     var PhysicalStock = document.getElementById("" + rowid + "_physicalstock").value;
+                                                     var closingstock = 0;
+                                                     if (PhysicalStock != "") {
+                                                         var Stockinstore = $('#grdStockUpdate').jqGrid("getCell", rowid, "Stockinstore");
+
+                                                         closingstock = parseFloat(Stockinstore) - parseFloat(PhysicalStock);
+                                                     }
+                                                     $('#grdStockUpdate').jqGrid("setCell", rowid, "closingstock", (closingstock).toFixed(3));
+
+
+                                                     $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                                     $('#grdStockUpdate').jqGrid('setRowData', $scope.lastsel2, false, "holdRow");
+                                                     jQuery('#grdStockUpdate').jqGrid('editRow', parseInt($scope.lastsel2) + 1, { keys: true });
+                                                     $scope.lastsel2 = parseInt($scope.lastsel2) + 1;
+
+                                                 }
+                                             }
+                                             else {
+                                                 //alert("Enter Numbers Only");
+
+
+                                                 if (e.keyCode == 9) {
+
+                                                     document.getElementById("" + $scope.lastsel2 + "_physicalstock").value = "";
+                                                     $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                                     jQuery('#grdStockUpdate').jqGrid('editRow', parseInt($scope.lastsel2) + 1, { keys: true });
+                                                     $scope.lastsel2 = parseInt($scope.lastsel2) + 1;
+
+                                                 }
+                                                 if (e.keyCode == 13) {
+                                                     $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                                     $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "physicalstock", 0);
+                                                     $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "closingstock", 0);
+                                                     jQuery('#grdStockUpdate').jqGrid('editRow', parseInt($scope.lastsel2) + 1, { keys: true });
+                                                     $scope.lastsel2 = parseInt($scope.lastsel2) + 1;
+                                                 }
+
+                                             }
+                                         }
+                                         else {
+                                             alert("Quantity Should be Less Than 9999");
+                                             $('#grdStockUpdate').saveRow(parseInt($scope.lastsel2));
+                                             $('#grdStockUpdate').jqGrid("setCell", $scope.lastsel2, "physicalstock", 0);
+
+
+
+
+                                         }
+                                     }
+
+
+                                 }]
+                             }
+                         },
+            { label: 'Variation', name: 'closingstock', width: 90, formatter: Number, align: 'right' }
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 2000,
+                //rowList: [8, 16, 25, 100],
+                //pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+                onSelectRow: function (id) {
+                    debugger;
+                    jQuery('#grdStockUpdate').jqGrid('restoreRow', $scope.lastsel2);
+                    jQuery('#grdStockUpdate').jqGrid('editRow', id, { keys: true });
+                    $scope.lastsel2 = id;
+
+                },
+
+                caption: "Physical Stock Update <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+            //jQuery("#grdStockUpdate").jqGrid('setGroupHeaders', {
+            //    useColSpanStyle: true,
+            //    groupHeaders: [
+            //      { startColumnName: 'categoryname', numberOfColumns: 2, titleText: 'Price' }
+            //    ]
+            //});
+
+        }
+
+        function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+            debugger;
+            var kk = 0;
+            var kkk = 0;
+            //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+            var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+            var CSV = '';
+            //Set Report title in first row or line
+
+            CSV += '';
+
+            //This condition will generate the Label/Header
+            if (ShowLabel) {
+                var row = "";
+
+                //This loop will extract the label from 1st index of on array
+                for (var index in arrData[0]) {
+                    kk++;
+                    //Now convert each value to string and comma-seprated
+
+                    if (kk <= 5) {
+                        row += index + ',';
+                    }
+                }
+
+                row = row.slice(0, -1);
+
+                //append Label row with line break
+                CSV += row + '\r\n';
+            }
+
+            //1st loop is to extract each row
+            for (var i = 0; i < arrData.length; i++) {
+                var row = "";
+
+                //2nd loop will extract each column and convert it in string comma-seprated
+                for (var index in arrData[i]) {
+                    if (index == "pluno" || index == "pluname" || index == "plucode" || index == "uom" || index == "unitprice") {
+                        row += '"' + arrData[i][index] + '",';
+                    }
+                }
+
+                row.slice(0, row.length - 1);
+
+                //add a line break after each row
+                CSV += row + '\r\n';
+            }
+
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
+
+            //Generate a file name
+            var d = new Date();
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth() + 1; //Months are zero based
+            var curr_year = d.getFullYear();
+            var fileName = "DigitalStock" + curr_date + '-' + curr_month + '-' + curr_year;
+            //this will remove the blank-spaces from the title and replace it with an underscore
+            //fileName += ReportTitle.replace(/ /g, "_");
+
+            //Initialize file format you want csv or xls
+            var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+
+            // Now the little tricky part.
+            // you can use either>> window.open(uri);
+            // but this will not work in some browsers
+            // or you will not get the correct file extension
+
+            //this trick will generate a temp <a /> tag
+            var link = document.createElement("a");
+            link.href = uri;
+
+            //set the visibility hidden so it will not effect on your web-layout
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+
+            //this part will append the anchor tag and remove it after automatic click
+            console.log(document.body);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        function JSONToCSVConvertor1(JSONData, ReportTitle, ShowLabel) {
+            debugger;
+            var kk = 0;
+            var kkk = 0;
+            //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+            var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+            var CSV = '';
+            //Set Report title in first row or line
+
+            CSV += '';
+
+            //This condition will generate the Label/Header
+            var ContainsArry = ["pluno", "pluname", "plucode", "uom", "unitprice", "productcode", "productid", "Storagelocationid", "Storagelocation", "Shelfid", "productcategoryid", "categoryname", "productsubcategoryid", "subcategoryname", "Stockinstore1", "Stockinstore", "numsalerate1"];
+            if (ShowLabel) {
+                var row = "";
+
+                //This loop will extract the label from 1st index of on array
+                for (var index in arrData[0]) {
+
+                    //Now convert each value to string and comma-seprated
+
+                    if (ContainsArry.indexOf(index) == -1) {
+                        row += index + ',';
+                    }
+                }
+
+                row = row.slice(0, -1);
+
+                //append Label row with line break
+                CSV += row + '\r\n';
+            }
+
+
+            //1st loop is to extract each row
+            for (var i = 0; i < arrData.length; i++) {
+                var row = "";
+
+                //2nd loop will extract each column and convert it in string comma-seprated
+                for (var index in arrData[i]) {
+
+                    if (ContainsArry.indexOf(index) == -1) {
+                        row += '"' + arrData[i][index] + '",';
+                    }
+
+                }
+
+                row.slice(0, row.length - 1);
+
+                //add a line break after each row
+                CSV += row + '\r\n';
+            }
+
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
+
+            //Generate a file name
+
+            var d = new Date();
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth() + 1; //Months are zero based
+            var curr_year = d.getFullYear();
+            var fileName = "Stock_" + curr_date + '-' + curr_month + '-' + curr_year;
+            //this will remove the blank-spaces from the title and replace it with an underscore
+            //fileName += ReportTitle.replace(/ /g, "_");
+
+            //Initialize file format you want csv or xls
+            var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+            // Now the little tricky part.
+            // you can use either>> window.open(uri);
+            // but this will not work in some browsers
+            // or you will not get the correct file extension
+
+            //this trick will generate a temp <a /> tag
+            var link = document.createElement("a");
+            link.href = uri;
+
+            //set the visibility hidden so it will not effect on your web-layout
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+
+            //this part will append the anchor tag and remove it after automatic click
+            console.log(document.body);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        function csvTojs(csv) {
+            var lines = csv.split("\n");
+            var result = [];
+            var headers = lines[0].split(",");
+
+            for (var i = 1; i < lines.length; i++) {
+                var obj = {};
+
+                var row = lines[i],
+                  queryIdx = 0,
+                  startValueIdx = 0,
+                  idx = 0;
+
+                if (row.trim() === '') { continue; }
+
+                while (idx < row.length) {
+                    /* if we meet a double quote we skip until the next one */
+                    var c = row[idx];
+
+                    if (c === '"') {
+                        do { c = row[++idx]; } while (c !== '"' && idx < row.length - 1);
+                    }
+
+                    if (c === ',' || /* handle end of line with no comma */ idx === row.length - 1) {
+                        /* we've got a value */
+                        var value = row.substr(startValueIdx, idx - startValueIdx).trim();
+
+                        /* skip first double quote */
+                        if (value[0] === '"') { value = value.substr(1); }
+                        /* skip last comma */
+                        if (value[value.length - 1] === ',') { value = value.substr(0, value.length - 1); }
+                        /* skip last double quote */
+                        if (value[value.length - 1] === '"') { value = value.substr(0, value.length - 1); }
+
+                        var key = headers[queryIdx++];;
+                        obj[key] = value;
+
+
+                        startValueIdx = idx + 1;
+                    }
+
+                    ++idx;
+                }
+
+                result.push(obj);
+            }
+            return result;
+        }
+
+    });
+</script>
+<script>
+
+
+
+</script>

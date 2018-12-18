@@ -1,0 +1,3296 @@
+﻿@{
+    // ViewBag.Title = "CreateProductOrder";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<style>
+    fieldset {
+        display: block;
+        margin-left: 2px;
+        margin-right: 2px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 1px solid #ddd;
+    }
+</style>
+<div ng-controller="PurchaseOrderController" ng-init="Loaddata();">
+    <div class="page-content" id="page-content">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="Purchaseorderfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            PO Type <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="PoType" id="PoType" ng-model="Order.PoType" class="form-control" required ng-change="potypeChange()">
+                                <option value="" selected>Select PO Type</option>
+                                <option value="NEW">NEW</option>
+                                <option value="MODIFY">MODIFY</option>
+                                <option value="REORDER">REORDER</option>
+                            </select>
+                            <span class="error" ng-show="(Purchaseorderfrm.PoType.$dirty || submitted) && Purchaseorderfrm.PoType.$error.required">
+                                PO Type Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Date <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input name="PurchseOrderDate" type="text" ng-model="Order.PurchseOrderDate" class=" form-control" id="PurchseOrderDate" data-date-format="dd/mm/yyyy" required ng-disabled="DateEnableStatus" />
+                            @*<input type="date" class="form-control" placeholder="Date" name="Date" ng-model="Order.Date" required />*@
+                            <span class="error" ng-show="(Purchaseorderfrm.Date.$dirty || submitted) && Purchaseorderfrm.Date.$error.required">
+                                Date Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Through <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+
+                            <select name="PoThrough" id="PoThrough" ng-model="Order.PoThrough" class="form-control" required ng-disabled="grdedit">
+                                <option value="" selected>Select Through</option>
+                                <option value="Direct">Direct</option>
+                                @*
+                                    <option value="PR">PR</option>
+                                    <option value="PQ">PQ</option>*@
+                            </select>
+                            <span class="error" ng-show="(Purchaseorderfrm.PoThrough.$dirty || submitted) && Purchaseorderfrm.PoThrough.$error.required">
+                                PO Through Required!
+                            </span>
+
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Place Of Delivery<span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="PlaceofDelivery" id="PlaceofDelivery" ng-model="Order.PlaceofDelivery" class="form-control" ng-options="v.placeofdelivery as v.placeofdelivery for v in placeofdeliveries" required>
+                                <option value="" selected>Select Place of Delivery</option>
+                            </select>
+                            @*<input type="text" class="form-control" placeholder="Enter Place Of Delivery" name="PlaceofDelivery" ng-model="Order.PlaceofDelivery" required />*@
+                            <span class="error" ng-show="(Purchaseorderfrm.PlaceofDelivery.$dirty || submitted) && Purchaseorderfrm.PlaceofDelivery.$error.required">
+                                Place Of Delivery Required!
+                            </span>
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>Vendor Details</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                Vendor Name<span style="color: Red">*</span> :
+                            </label>
+                            <div class="col-sm-4">
+                                <select name="VendorName" id="VendorName" ng-model="Order.VendorID" style="width:345px;height:22px;" class="Search-Select form-control" ng-options="v.vendorid as v.vchvendorname for v in Names" ng-change="vendorchange()" ng-required="Vendorrequired">
+                                    <option value="" selected>Select Vendor Name</option>
+                                </select>
+                                <span class="error" ng-show="(Purchaseorderfrm.VendorName.$dirty || submitted) && Purchaseorderfrm.VendorName.$error.required">
+                                    Vendor Name Required!
+                                </span>
+                            </div>
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                Contact Person@*<span style="color: Red">*</span>*@:
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" placeholder="Contact Person" name="ContactPerson" ng-model="Order.ContactPerson" />
+                                <span class="error" ng-show="(Purchaseorderfrm.ContactPerson.$dirty || submitted) && Purchaseorderfrm.ContactPerson.$error.required">
+                                    Contact Person Required!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                Contact Number@*<span style="color: Red">*</span>*@:
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="Contactno" class="form-control" placeholder="Contact No." name="Contactno" ng-model="Order.Contactno" maxlength="10" kit-digits onblur="CheckMobilenumber()" />
+                                <span class="error" ng-show="(Purchaseorderfrm.Contactno.$dirty || submitted) && Purchaseorderfrm.Contactno.$error.required">
+                                    Contact No. Required!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="!hdpo">
+                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                PO No.<span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-4">
+                                <select name="poid" id="poid" ng-model="Order.poid" class="form-control" ng-options="v.poid as v.pono for v in ponumbers" ng-required="!hdpo" ng-change="poChange()">
+                                    <option value="" selected>Select PO</option>
+                                </select>
+                                @*<input type="text" class="form-control" placeholder="Enter Place Of Delivery" name="PlaceofDelivery" ng-model="Order.PlaceofDelivery" required />*@
+                                <span class="error" ng-show="(Purchaseorderfrm.poid.$dirty || submitted) && Purchaseorderfrm.poid.$error.required">
+                                    PO Number Required!
+                                </span>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+
+
+                <form class="form-horizontal" role="form" name="productaddfrm" novalidate>
+                    <fieldset>
+                        <legend>Add Product</legend>
+                        <div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Product <span style="color: Red">*</span> :
+
+                                </label>
+                                <div class="col-sm-10">
+                                    <select name="ProductID" id="ProductID" ng-model="Product.ProductID" style="height:22px;" ng-options="v.productid as v.productname for v in ProductNames" class="Search-Select form-control" ng-change="productChange()" required>
+                                        <option value="" selected>Select Product</option>
+                                    </select>
+
+                                    <span class="error" ng-show="(productaddfrm.ProductID.$dirty || AddProductsubmitted) && productaddfrm.ProductID.$error.required">
+                                        Product Name Required!
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    UOM @*<span style="color: Red">*</span>*@ :
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" id="Uom" placeholder="UOM" name="Uom" ng-model="Product.Uom" disabled />
+                                    <span class="error" ng-show="(productaddfrm.Uom.$dirty || AddProductsubmitted) && productaddfrm.Uom.$error.required">
+                                        UOM Required!
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Category Name@*<span style="color: Red">*</span>*@:
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="Category Name" name="ProductCategoryName" ng-model="Product.ProductCategoryName" disabled />
+                                    @*<span class="error" ng-show="(productaddfrm.ProductCategoryName.$dirty || AddProductsubmitted) && productaddfrm.ProductCategoryName.$error.required">
+                                            Category Name Required!
+                                        </span>*@
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Subcategory Name@*<span style="color: Red">*</span>*@:
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="Subcategory Name" name="ProductSubCategoryName" ng-model="Product.ProductSubCategoryName" disabled />
+                                    @*<span class="error" ng-show="(productaddfrm.ProductSubCategoryName.$dirty || AddProductsubmitted) && productaddfrm.ProductSubCategoryName.$error.required">
+                                            Sub Category Name required!
+                                        </span>*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Quantity<span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="Enter Quantity" name="Quantity" ng-model="Product.Quantity" ng-keyup="ProductAmountcalculate()" required kit-quantity maxlength="10" />
+                                    <span class="error" ng-show="(productaddfrm.Quantity.$dirty || AddProductsubmitted) && productaddfrm.Quantity.$error.required">
+                                        Quantity Required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Estimate Rate <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="Enter Estimate Rate" style="text-align:right;" ng-keyup="ProductAmountcalculate()" name="EstimateRate" ng-model="Product.EstimateRate" required kit-amount maxlength="10" />
+                                    <span class="error" ng-show="(productaddfrm.EstimateRate.$dirty || AddProductsubmitted) && productaddfrm.EstimateRate.$error.required">
+                                        Estimate Rate Required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Delivered Before @*<span style="color: Red">*</span>*@ :
+                                </label>
+                                <div class="col-sm-4">
+                                    <input name="DeliveredBefore" type="text" ng-model="Product.DeliveredBefore" class=" form-control" id="DeliveredBefore" data-date-format="dd/mm/yyyy" />
+                                    @*<input type="date" class="form-control" placeholder="Date" name="DeliveredBefore" ng-model="Product.DeliveredBefore" required />*@
+                                    <span class="error" ng-show="(productaddfrm.DeliveredBefore.$dirty || AddProductsubmitted) && productaddfrm.DeliveredBefore.$error.required">
+                                        Delivered Before Required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label">
+                                    Discount Type :
+                                </label>
+                                <div class="col-sm-4">
+                                    <select id="taxtype" ng-model="Product.ProductDiscountType" class=" form-control" name="ProductDiscounttype" ng-change="ProductdiscounttypeChange();">
+                                        <option value="">SELECT</option>
+                                        <option value="FLAT">FLAT</option>
+                                        <option value="PERCENTAGE">PERCENTAGE</option>
+                                    </select>
+                                    @*<input type="checkbox" id="Discounttype" class="checkbox" ng-model="TX.DiscountType" ng-checked="discounttypeChange()" placeholder="Enter Discount Percentage" />*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Discount :
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="DiscountFlatPercentage" ng-model="Product.ProductDiscountFlatPercentage" placeholder="Enter Discount" ng-keyup="ProductDiscountFlatPercentageChange($event, Product.ProductDiscountFlatPercentage)"
+                                           class="form-control" id="ProductDiscountFlatPercentage" ng-required="Producthddiscount" ng-disabled="!Producthddiscount" kit-amount maxlength="10" ng-change="ProductDiscountCalculations()" />@*ng-blur="DiscountCalculations();"*@
+                                        <span class="error" ng-show="(productaddfrm.ProductDiscountFlatPercentage.$dirty || AddProductsubmitted) && productaddfrm.ProductDiscountFlatPercentage.$error.required">
+                                            Discount Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-2 control-label">
+                                        Discount Value :
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="ProductDiscountValue" class="form-control" ng-model="Product.ProductDiscountValue" ng-required="Producthdtaxdiscountper" style="text-align:right" disabled maxlength="10" />
+                                        @*<input type="checkbox" id="Discounttype" class="checkbox" ng-model="TX.DiscountType" ng-checked="discounttypeChange()" placeholder="Enter Discount Percentage" />*@
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        Tax Input Credit On :
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select id="taxtype" ng-model="Product.taxtype" class=" form-control" name="taxtype" ng-change="taxtypeChange();">
+                                            <option value="" selected>NONE</option>
+                                            <option value="EXCISE">EXCISE</option>
+                                            <option value="VAT">VAT</option>
+                                            <option value="BOTH">BOTH</option>
+                                        </select>
+                                        <span class="error" ng-show="(productaddfrm.vendorid.$dirty || AddProductsubmitted ) && productaddfrm.vendorid.$error.required">
+                                            Tax Type Required!
+                                        </span>
+                                    </div>
+
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        Amount @*<span style="color: Red">*</span>*@ :
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="productamount" class="form-control" ng-model="Product.productamount" disabled style="text-align:right" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group" ng-show="hdVATCST">
+                                    <fieldset class="widget-box">
+                                        <div class="widget-header widget-header-flat widget-header-small">
+                                            <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>TAXATION DETAILS </h5>
+
+                                        </div>
+                                        <div class="widget-body">
+                                            <div class="widget-main">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        Tax Type :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <select id="vatorcst" ng-model="Product.vatorcst" class=" form-control" ng-required="hdVATCST" name="vatorcst" ng-change="productvatorcstChange()">
+                                                            <option value="" selected>Select</option>
+                                                            <option value="VAT">VAT</option>
+                                                            <option value="CST">CST</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(productaddfrm.vatorcst.$dirty || AddProductsubmitted ) && productaddfrm.vatorcst.$error.required">
+                                                            Vat or Cst Type Required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        VAT/CST % :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <select id="taxvatcst" ng-model="Product.taxvatcst" class=" form-control" ng-required="hdVATCST" name="taxvatcst" ng-options="percentage for percentage in productPercentages" ng-change="productVatorCstCalculations();">
+                                                            <option value="" selected>SELECT</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(productaddfrm.taxvatcst.$dirty || AddProductsubmitted) && productaddfrm.taxvatcst.$error.required">
+                                                            Select Vat/Cst !
+                                                        </span>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">
+                                                        VAT/CST Value :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" id="taxvatorcsttotal" class="form-control" ng-model="Product.TaxvatorcstAmount" disabled style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <div class="form-group" ng-show="hdEXCISE">
+                                    <fieldset class="widget-box">
+                                        <div class="widget-header widget-header-flat widget-header-small">
+                                            <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>EXCISE DETAILS </h5>
+                                            @*<div class="widget-toolbar">
+                                                    <a href="#" data-action="collapse">
+                                                        <i class="ace-icon fa fa-chevron-up"></i>
+                                                    </a>
+                                                </div>*@
+                                        </div>
+                                        <div class="widget-body">
+                                            <div class="widget-main">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">
+                                                        Excise Duty% :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        @*<input type="text" id="TaxExcisePercentage" class="form-control" ng-model="TX.TaxExcisePercentage" ng-required="hdtaxtypeexcise" />*@
+                                                        <select id="TaxExcisePercentage" ng-model="Product.TaxExcisePercentage" class=" form-control" name="TaxExcisePercentage" ng-required="hdEXCISE" ng-change="ProductExiseCalculations()">
+                                                            <option value="">Select</option>
+                                                            <option value="2">2 </option>
+                                                            <option value="12">12</option>
+                                                            <option value="12.5">12.5</option>
+                                                            <option value="14">14</option>
+                                                            <option value="14.5">14.5</option>
+                                                            <option value="15">15</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(productaddfrm.TaxExcisePercentage.$dirty || AddProductsubmitted ) && productaddfrm.TaxExcisePercentage.$error.required">
+                                                            Excise Duty Percentage Required!
+                                                        </span>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label ">
+                                                        Excise Duty Value:
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" id="TaxExciseAmount" class="form-control" ng-model="Product.TaxExciseAmount" style="text-align:right" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label ">
+                                                        CESS% :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <select id="TaxCESSPercentage" ng-model="Product.TaxCESSPercentage" class=" form-control" name="TaxCESSPercentage" ng-required="hdEXCISE" ng-change="ProductExiseCalculations()">
+                                                            <option value="">Select</option>
+                                                            <option value="0">0 </option>
+                                                            <option value="2">2</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(productaddfrm.TaxCESSPercentage.$dirty || AddProductsubmitted ) && productaddfrm.TaxCESSPercentage.$error.required">
+                                                            CESS Percentage Required!
+                                                        </span>
+                                                        @*<input type="text" id="TaxCESSPercentage" class="form-control" ng-model="TX.TaxCESSPercentage" ng-required="hdtaxtypeexcise" />*@
+                                                    </div>
+                                                    <label class="col-sm-2 control-label ">
+                                                        CESS Value :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" id="TaxCESSAmount" class="form-control" ng-model="Product.TaxCESSAmount" disabled style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label ">
+                                                        SHCESS% :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        @*<input type="text" id="TaxSHCESSPercentage" class="form-control" ng-model="TX.TaxSHCESSPercentage" ng-required="hdtaxtypeexcise" />*@
+                                                        <select id="TaxSHCESSPercentage" ng-model="Product.TaxSHCESSPercentage" class=" form-control" name="TaxSHCESSPercentage" ng-required="hdEXCISE" ng-change="ProductExiseCalculations()">
+                                                            <option value="">Select</option>
+                                                            <option value="0">0 </option>
+                                                            <option value="1">1</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(productaddfrm.TaxCESSPercentage.$dirty || AddProductsubmitted ) && productaddfrm.TaxCESSPercentage.$error.required">
+                                                            SHCESS Percentage Required!
+                                                        </span>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label no-padding-right">
+                                                        SHCESS Value :
+                                                    </label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" id="TaxSHCESSAmount" class="form-control" ng-model="Product.TaxSHCESSAmount" disabled style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div>
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <button class="btn btn-success" data-index="2" type="button" ng-click="AddProduct(Product)">
+                                            <i class="ace-icon fa fa-plus bigger-110"></i>Add
+                                        </button>
+                                        <button class="btn btn orange" type="button" ng-click="ProductReset()">
+                                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </form>
+
+
+
+                    <div style="border:0px solid #333; overflow:scroll; ">
+                        <table id="grdPurchaseOrder" class="table-responsive"></table>
+                    </div>
+
+
+                    @*<div id="grid-pager">
+                        </div>*@
+                    <div class="form-group" hidden>
+                        <label class="col-sm-2 control-label no-padding-right">
+                            Transport Charges:
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="TransportCharges" type="number" class=" form-control" id="TransportCharges" placeholder="Enter Transport charges" />
+                            @*<span class="error" ng-show="(Purchaseorderfrm.Terms.$dirty || submitted) && Purchaseorderfrm.Terms.$error.required">
+                                    Terms & Conditions required!
+                                </span>*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <span style="height:10px;"><label></label></span>
+            </div>
+            <div class="col-xs-12 col-sm-12">
+                <form class="form-horizontal" role="form" name="frmtx" novalidate>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Basic Amount :
+                        </label>
+                        <div class="col-sm-4 ">
+                            <input type="text" id="BasicAmount" class="form-control" ng-model="TX.BasicAmount" style="text-align:right" disabled />
+                        </div>
+                        <label class="col-sm-2 control-label">
+                            Discount Type :
+                        </label>
+                        <div class="col-sm-4">
+                            <select id="taxtype" ng-model="TX.DiscountType" class=" form-control" name="Discounttype" ng-change="discounttypeChange();">
+                                <option value="">SELECT</option>
+                                <option value="FLAT">FLAT</option>
+                                <option value="PERCENTAGE">PERCENTAGE</option>
+                            </select>
+                            @*<input type="checkbox" id="Discounttype" class="checkbox" ng-model="TX.DiscountType" ng-checked="discounttypeChange()" placeholder="Enter Discount Percentage" />*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Discount :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="DiscountFlatPercentage" ng-model="TX.DiscountFlatPercentage" placeholder="Enter Discount" ng-keyup="DiscountFlatPercentageChange($event, TX.DiscountFlatPercentage)"
+                                   class="form-control" id="DiscountFlatPercentage" ng-required="hddiscount" kit-amount maxlength="10" ng-change="TotalCalculations()" />@*ng-blur="DiscountCalculations();"*@
+                                <span class="error" ng-show="(frmtx.DiscountFlatPercentage.$dirty || isTaxSubmitted) && frmtx.DiscountFlatPercentage.$error.required">
+                                    Discount Required!
+                                </span>
+                            </div>
+
+
+
+                            <label class="col-sm-2 control-label">
+                                Discount Value :
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="DiscountValue" class="form-control" ng-model="TX.DiscountValue" ng-required="hdtaxdiscountper" style="text-align:right" disabled maxlength="10" />
+                                @*<input type="checkbox" id="Discounttype" class="checkbox" ng-model="TX.DiscountType" ng-checked="discounttypeChange()" placeholder="Enter Discount Percentage" />*@
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                Total VAT/CST :
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="totalvatorcst" class="form-control" ng-model="TX.totalvatorcst" style="text-align:right" disabled />
+                            </div>
+                            <label class="col-sm-2 control-label">
+                                Total Excise :
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="totalexcise" class="form-control" ng-model="TX.totalexcise" style="text-align:right" disabled maxlength="10" />
+                                <input type="text" id="totalproductdiscount" ng-model="TX.totalproductdiscount" hidden style="text-align:right" />
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                Total CESS :
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="totalcess" class="form-control" ng-model="TX.totalcess" style="text-align:right" disabled />
+                            </div>
+                            <label class="col-sm-2 control-label">
+                                Total SHCESS :
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="totalshcess" class="form-control" ng-model="TX.totalshcess" style="text-align:right" disabled maxlength="10" />
+                            </div>
+
+                        </div>
+
+
+
+
+
+                        @*<div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Tax Input Credit On :
+                                </label>
+                                <div class="col-sm-4">
+                                    <select id="taxtype" ng-model="TX.taxtype" class=" form-control" name="taxtype" ng-change="taxtypeChange();">
+                                        <option value="" selected>NONE</option>
+                                        <option value="EXCISE">EXCISE</option>
+                                        <option value="VAT">VAT</option>
+                                        <option value="BOTH">BOTH</option>
+                                    </select>
+                                    <span class="error" ng-show="(frmtx.vendorid.$dirty || isTaxSubmitted ) && frmtx.vendorid.$error.required">
+                                        Tax Type Required!
+                                    </span>
+                                </div>
+                            </div>*@
+
+
+                        @*<div class="form-group" ng-show="hdEXCISE">
+                                <fieldset class="widget-box">
+                                    <div class="widget-header widget-header-flat widget-header-small">
+                                        <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>EXCISE DETAILS </h5>
+
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    Excise Duty% :
+                                                </label>
+                                                <div class="col-sm-4">
+
+                                                    <select id="TaxExcisePercentage" ng-model="TX.TaxExcisePercentage" class=" form-control" name="TaxExcisePercentage" ng-required="hdEXCISE" ng-change="ExiseCalculations()">
+                                                        <option value="">Select</option>
+                                                        <option value="2">2 </option>
+                                                        <option value="12">12</option>
+                                                        <option value="12.5">12.5</option>
+                                                        <option value="14">14</option>
+                                                        <option value="14.5">14.5</option>
+                                                        <option value="15">15</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(frmtx.TaxExcisePercentage.$dirty || isTaxSubmitted ) && frmtx.TaxExcisePercentage.$error.required">
+                                                        Excise Duty Percentage Required!
+                                                    </span>
+                                                </div>
+                                                <label class="col-sm-2 control-label ">
+                                                    Excise Duty Value:
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" id="TaxExciseAmount" class="form-control" ng-model="TX.TaxExciseAmount" style="text-align:right" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label ">
+                                                    CESS% :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <select id="TaxCESSPercentage" ng-model="TX.TaxCESSPercentage" class=" form-control" name="TaxCESSPercentage" ng-required="hdEXCISE" ng-change="ExiseCalculations()">
+                                                        <option value="">Select</option>
+                                                        <option value="0">0 </option>
+                                                        <option value="2">2</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(frmtx.TaxCESSPercentage.$dirty || isTaxSubmitted ) && frmtx.TaxCESSPercentage.$error.required">
+                                                        CESS Percentage Required!
+                                                    </span>
+
+                                                </div>
+                                                <label class="col-sm-2 control-label ">
+                                                    CESS Value :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" id="TaxCESSAmount" class="form-control" ng-model="TX.TaxCESSAmount" disabled style="text-align:right" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label ">
+                                                    SHCESS% :
+                                                </label>
+                                                <div class="col-sm-4">
+
+                                                    <select id="TaxSHCESSPercentage" ng-model="TX.TaxSHCESSPercentage" class=" form-control" name="TaxSHCESSPercentage" ng-required="hdEXCISE" ng-change="ExiseCalculations()">
+                                                        <option value="">Select</option>
+                                                        <option value="0">0 </option>
+                                                        <option value="1">1</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(frmtx.TaxCESSPercentage.$dirty || isTaxSubmitted ) && frmtx.TaxCESSPercentage.$error.required">
+                                                        SHCESS Percentage Required!
+                                                    </span>
+                                                </div>
+                                                <label class="col-sm-2 control-label no-padding-right">
+                                                    SHCESS Value :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" id="TaxSHCESSAmount" class="form-control" ng-model="TX.TaxSHCESSAmount" disabled style="text-align:right" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+
+
+                            <div class="form-group" ng-show="hdVATCST">
+                                <fieldset class="widget-box">
+                                    <div class="widget-header widget-header-flat widget-header-small">
+                                        <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>TAXATION DETAILS </h5>
+
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    Tax Type :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <select id="vatorcst" ng-model="TX.vatorcst" class=" form-control" name="vatorcst" ng-required="hdVATCST" ng-change="vatorcstChange()">
+                                                        <option value="" selected>Select</option>
+                                                        <option value="VAT">VAT</option>
+                                                        <option value="CST">CST</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(frmtx.vatorcst.$dirty || isTaxSubmitted ) && frmtx.vatorcst.$error.required">
+                                                        Vat or Cst Type Required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    VAT/CST % :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <select id="taxvatcst" ng-model="TX.taxvatcst" class=" form-control" name="taxvatcst" ng-required="hdVATCST" ng-options="percentage for percentage in Percentages" ng-change="VatorCstCalculations();">
+                                                        <option value="" selected>SELECT</option>
+                                                    </select>
+                                                </div>
+                                                <label class="col-sm-2 control-label">
+                                                    VAT/CST Value :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" id="taxvatorcsttotal" class="form-control" ng-model="TX.TaxvatorcstAmount" disabled style="text-align:right" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>*@
+
+
+
+
+
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label">
+                                Transport Charges :
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" id="TransportCharges" style="text-align:right" kit-amount maxlength="10" class="form-control" ng-model="TX.TransportCharges" ng-change="TotalCalculations()" />
+                            </div>
+
+                            <label class="col-sm-2 control-label">
+                                Total Amount :
+                            </label>
+                            <div class="col-sm-4 pull-right">
+                                <input type="text" id="TotalAmount" class="form-control" ng-model="TX.TotalAmount" disabled style="text-align:right" />
+                                <span class="error" ng-show="(frmtx.TotalAmount.$dirty || isTaxSubmitted ) && frmtx.TotalAmount.$error.required">
+                                    Total Amount Required!
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">
+                            Terms & Conditions<span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-6">
+                            @*<input name="Terms" type="text" class=" form-control" id="Terms" required placeholder="Enter Terms & Conditions" />*@
+                            <textarea id="TermsandConditions" placeholder="Enter Terms & Conditions" class="col-xs-12"
+                                      style="resize:none" rows="3" name="TermsandConditions" required maxlength="475"></textarea>
+                            @*<span class="error" ng-show="(Purchaseorderfrm.Terms.$dirty || submitted) && Purchaseorderfrm.Terms.$error.required">
+                                    Terms & Conditions required!
+                                </span>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="form-group pull-right" style="padding-right:30px;">
+                            <button class="btn btn-success" id="btnSave" data-index="2" type="button" ng-click="SavePurchaseOrder(Order)">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class=" btn orange" ng-click="Reset()" id="Reset" type="button">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+            (function ($) {
+
+                // register plugin
+                var plugin = register("searchable");
+
+                // defaults
+                plugin.defaults = {
+                    maxListSize: 100,
+                    maxMultiMatch: 50,
+                    exactMatch: false,
+                    wildcards: true,
+                    ignoreCase: true,
+                    warnMultiMatch: "top {0} matches ...",
+                    warnNoMatch: "no matches ...",
+                    latency: 200,
+                    zIndex: "auto"
+                };
+
+                /**
+                 * Execute function
+                 * element-specific code here
+                 * param {Options} settings Settings
+                 */
+                plugin.execute = function (settings, zindex) {
+
+                    var timer = null;
+                    var searchCache = null;
+                    var search = null;
+
+                    // do not attach on IE6 or lower
+                    if ($.browser.msie && parseInt(jQuery.browser.version) < 7)
+                        return this;
+
+                    // only active select elements with drop down capability
+                    if (this.nodeName != "SELECT" || this.size > 1)
+                        return this;
+
+                    var self = $(this);
+                    var storage = { index: -1, options: null }; // holds data for restoring
+                    var idxAttr = "lang";
+                    var enabled = false;
+
+                    // detecting chrome
+                    $.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
+                    if ($.browser.chrome) $.browser.safari = false;
+
+                    // lets you override the options
+                    // inside the dom objects class property
+                    // requires the jQuery metadata plugin
+                    // <div class="hello {color: 'red'}">ddd</div>
+                    if ($.meta) {
+                        settings = $.extend({}, options, self.data());
+                    }
+
+                    // objects
+                    var wrapper = $("<div/>");
+                    var overlay = $("<div/>");
+                    var input = $("<input/>");
+                    var selector = $("<select/>");
+
+                    // matching option items
+                    var topMatchItem = $("<option>" + settings.warnMultiMatch.replace(/\{0\}/g, settings.maxMultiMatch) + "</option>").attr("disabled", "true");
+                    var noMatchItem = $("<option>" + settings.warnNoMatch + "</option>").attr("disabled", "true");
+
+
+                    var selectorHelper = {
+                        /**
+                         * Return DOM options of selector element
+                         */
+                        option: function (idx) {
+                            return $(selector.get(0).options[idx]);
+                        },
+                        /**
+                         * Returns the selected item of selector element
+                         */
+                        selected: function () {
+                            return selector.find(":selected");
+                        },
+                        /**
+                         * Get or Set the selectedIndex of the selector element
+                         * param {int} idx SelectedIndex
+                         */
+                        selectedIndex: function (idx) {
+                            if (idx > -1)
+                                selector.get(0).selectedIndex = idx;
+                            return selector.get(0).selectedIndex;
+                        },
+                        /**
+                         * Resize selector depends on the parameter size
+                         * param {Number} size Size
+                         */
+                        size: function (size) {
+                            selector.attr("size", Math.max(2, Math.min(size, 20)));
+                        },
+                        /**
+                         * Reset the entries, which can be choose to it's inital state depends on selectedIndex and maxMultiMatch
+                         */
+                        reset: function () {
+                            // return if selector has data and stored index equal selectedIndex of source select element
+                            if ((self.get(0).selectedIndex - 1) == self.data("index"))
+                                return;
+
+                            // calc start and length of iteration
+                            var idx = self.get(0).selectedIndex;
+                            var len = self.get(0).length;
+                            var mc = Math.floor(settings.maxMultiMatch / 2);
+                            var begin = Math.max(1, (idx - mc));
+                            var end = Math.min(len, Math.max(settings.maxMultiMatch, (idx + mc)));
+                            var si = idx - begin;
+
+                            // clear selector select element
+                            selector.empty();
+                            this.size(end - begin);
+
+                            // append options
+                            for (var i = begin; i < end; i++)
+                                selector.append($(self.get(0).options[i]).clone().attr(idxAttr, i - 1));
+
+                            // append top match item if length exceeds
+                            if (end > settings.maxMultiMatch)
+                                selector.append(topMatchItem);
+
+                            // set selectedIndex of selector
+                            selector.get(0).selectedIndex = si;
+                        }
+                    };
+
+                    // draw it
+                    draw();
+
+                    /*
+                     * EVENT HANDLING
+                     */
+                    var suspendBlur = false;
+                    overlay.mouseover(function () {
+                        suspendBlur = true;
+                    });
+                    overlay.mouseout(function () {
+                        suspendBlur = false;
+                    });
+                    selector.mouseover(function () {
+                        suspendBlur = true;
+                    });
+                    selector.mouseout(function () {
+                        suspendBlur = false;
+                    });
+                    input.click(function (e) {
+                        if (!enabled)
+                            enable(e, true);
+                        else
+                            disable(e, true);
+                    });
+                    input.blur(function (e) {
+                        if (!suspendBlur && enabled)
+                            disable(e, true);
+                    });
+                    self.keydown(function (e) {
+                        if (e.keyCode != 9 && !e.shiftKey && !e.ctrlKey && !e.altKey)
+                            input.click();
+                    });
+                    self.click(function (e) {
+                        selector.focus();
+                    });
+                    selector.click(function (e) {
+                        if (selectorHelper.selectedIndex() < 0)
+                            return;
+                        disable(e);
+                    });
+                    selector.focus(function (e) {
+                        input.focus();
+                    });
+                    selector.blur(function (e) {
+                        if (!suspendBlur)
+                            disable(e, true);
+                    });
+                    selector.mousemove(function (e) {
+                        // Disabled on opera because of <select> elements always return scrollTop of 0
+                        // Affects up to Opera 10 beta 1, can be removed if bug is fixed
+                        // http://www.greywyvern.com/code/opera/bugs/selectScrollTop
+                        if ($.browser.opera && parseFloat(jQuery.browser.version) >= 9.8)
+                            return true;
+                        // get font-size of option
+                        var fs = Math.floor(parseFloat(/([0-9\.]+)px/.exec(selectorHelper.option(0).css("font-size"))));
+                        // calc line height depends on browser
+                        var fsdiff = 4;
+                        if ($.browser.opera)
+                            fsdiff = 2.5;
+                        if ($.browser.safari || $.browser.chrome)
+                            fsdiff = 3;
+                        fs += Math.round(fs / fsdiff);
+                        // set selectedIndex depends on mouse position and line height
+                        //selectorHelper.selectedIndex(Math.floor((e.pageY - selector.offset().top + this.scrollTop) / fs));
+                    });
+
+                    // toggle click event on overlay div
+                    overlay.click(function (e) {
+                        input.click();
+                    });
+
+                    // trigger event keyup
+                    input.keyup(function (e) {
+
+                        // break searching while using navigation keys
+                        if (jQuery.inArray(e.keyCode, new Array(9, 13, 16, 33, 34, 35, 36, 38, 40)) > -1)
+                            return true;
+
+                        // set search text
+                        search = $.trim(input.val().toLowerCase());
+
+                        // if a previous timer is running, stop it
+                        clearSearchTimer();
+
+                        // start new timer
+                        timer = setTimeout(searching, settings.latency);
+                    });
+
+                    // trigger keydown event for keyboard usage
+                    input.keydown(function (e) {
+
+                        // tab stop
+                        if (e.keyCode == 9) {
+                            disable(e);
+                        }
+
+                        // return on shift, ctrl, alt key mode
+                        if (e.shiftKey || e.ctrlKey || e.altKey)
+                            return;
+
+                        // which key is pressed
+                        switch (e.keyCode) {
+                            case 13:  // enter
+                                disable(e);
+                                self.focus();
+                                break;
+                            case 27: // escape
+                                disable(e, true);
+                                self.focus();
+                                break;
+                            case 33: // pgup
+                                if (selectorHelper.selectedIndex() - selector.attr("size") > 0) {
+                                    selectorHelper.selectedIndex(selectorHelper.selectedIndex() - selector.attr("size"));
+                                }
+                                else {
+                                    selectorHelper.selectedIndex(0);
+                                }
+                                synchronize();
+                                break;
+                            case 34: // pgdown
+                                if (selectorHelper.selectedIndex() + selector.attr("size") < selector.get(0).options.length - 1) {
+                                    selectorHelper.selectedIndex(selectorHelper.selectedIndex() + selector.attr("size"));
+                                }
+                                else {
+                                    selectorHelper.selectedIndex(selector.get(0).options.length - 1);
+                                }
+                                synchronize();
+                                break;
+                            case 38: // up
+                                if (selectorHelper.selectedIndex() > 0) {
+                                    selectorHelper.selectedIndex(selectorHelper.selectedIndex() - 1);
+                                    synchronize();
+                                }
+                                break;
+                            case 40: // down
+                                if (selectorHelper.selectedIndex() < selector.get(0).options.length - 1) {
+                                    selectorHelper.selectedIndex(selectorHelper.selectedIndex() + 1);
+                                    synchronize();
+                                }
+                                break;
+                            default:
+                                return true;
+                        }
+
+                        // we handled the key.stop
+                        // doing anything with it!
+                        return false;
+                    });
+
+                    /**
+                     * Draw the needed elements
+                     */
+                    function draw() {
+
+                        // fix some styles
+                        self.css("text-decoration", "none");
+                        self.width(self.outerWidth());
+                        self.height(self.outerHeight());
+
+                        // wrapper styles
+                        wrapper.css("position", "relative");
+                        wrapper.css("width", self.outerWidth());
+                        // relative div needs an z-index (related to IE z-index bug)
+                        if ($.browser.msie)
+                            wrapper.css("z-index", zindex);
+
+                        // overlay div to block events of source select element
+                        overlay.css({
+                            "position": "absolute",
+                            "top": 0,
+                            "left": 0,
+                            "width": self.outerWidth(),
+                            "height": self.outerHeight(),
+                            "background-color": "#FFFFFF",
+                            "opacity": "0.01"
+                        });
+
+                        // overlay text field for searching capability
+                        input.attr("type", "text");
+                        input.hide();
+                        input.height(self.outerHeight());
+
+                        // default styles for text field
+                        input.css({
+                            "position": "absolute",
+                            "top": 0,
+                            "left": 0,
+                            "margin": "0px",
+                            "padding": "0px",
+                            "outline-style": "none",
+                            "border-style": "solid",
+                            "border-bottom-style": "none",
+                            "border-color": "transparent",
+                            "background-color": "transparent"
+                            //                "background-color": "red"
+                        });
+
+                        // copy selected styles to text field
+                        var sty = new Array();
+                        sty.push("border-left-width");
+                        sty.push("border-top-width");
+                        //sty.push("font-family");
+                        sty.push("font-size");
+                        sty.push("font-stretch");
+                        sty.push("font-variant");
+                        sty.push("font-weight");
+                        sty.push("color");
+                        sty.push("text-align");
+                        sty.push("text-indent");
+                        sty.push("text-shadow");
+                        sty.push("text-transform");
+                        sty.push("padding-left");
+                        sty.push("padding-top");
+                        for (var i = 0; i < sty.length; i++)
+                            input.css(sty[i], self.css(sty[i]));
+
+                        // adjust search text field
+                        // IE7
+                        if ($.browser.msie && parseInt(jQuery.browser.version) < 8) {
+                            input.css("padding", "0px");
+                            input.css("padding-left", "3px");
+                            input.css("border-left-width", "2px");
+                            input.css("border-top-width", "3px");
+                        }
+                            // chrome
+                        else if ($.browser.chrome) {
+                            input.height(self.innerHeight());
+                            input.css("text-transform", "none");
+                            input.css("padding-left", parseFloatPx(input.css("padding-left")) + 3);
+                            input.css("padding-top", 2);
+                        }
+                            // safari
+                        else if ($.browser.safari) {
+                            input.height(self.innerHeight());
+                            input.css("padding-top", 2);
+                            input.css("padding-left", 3);
+                            input.css("text-transform", "none");
+                        }
+                            // opera
+                        else if ($.browser.opera) {
+                            input.height(self.innerHeight());
+                            var pl = parseFloatPx(self.css("padding-left"));
+                            input.css("padding-left", pl == 1 ? pl + 1 : pl);
+                            input.css("padding-top", 0);
+                        }
+                        else if ($.browser.mozilla) {
+                            input.css("padding-top", "0px");
+                            input.css("border-top", "0px");
+                            input.css("padding-left", parseFloatPx(self.css("padding-left")) + 3);
+                        }
+                            // all other browsers
+                        else {
+                            input.css("padding-left", parseFloatPx(self.css("padding-left")) + 3);
+                            input.css("padding-top", parseFloatPx(self.css("padding-top")) + 1);
+                        }
+
+                        // adjust width of search field
+                        var offset = parseFloatPx(self.css("padding-left")) + parseFloatPx(self.css("padding-right")) +
+                        parseFloatPx(self.css("border-left-width")) + parseFloatPx(self.css("border-left-width")) + 23;
+                        input.width(self.outerWidth() - offset);
+
+                        // store css width of source select object then set width
+                        // to auto to obtain the maximum width depends on the longest entry.
+                        // this is nessesary to set the width of the selector, because min-width
+                        // do not work in all browser.
+                        var w = self.css("width");
+                        var ow = self.outerWidth();
+                        self.css("width", "auto");
+                        ow = ow > self.outerWidth() ? ow : self.outerWidth();
+                        self.css("width", w);
+
+                        // entries selector replacement
+                        selector.hide();
+                        selectorHelper.size(self.get(0).length);
+                        selector.css({
+                            "position": "absolute",
+                            "top": self.outerHeight(),
+                            "left": 0,
+                            "width": ow,
+                            "border": "1px solid #333",
+                            "font-weight": "normal",
+                            "padding": 0,
+                            "background-color": self.css("background-color"),
+                            "text-transform": self.css("text-transform")
+                        });
+
+                        // z-index handling
+                        var zIndex = /^\d+$/.test(self.css("z-index")) ? self.css("z-index") : 1;
+                        // if z-index option is defined, use it instead of select element z-index
+                        if (settings.zIndex && /^\d+$/.test(settings.zIndex))
+                            zIndex = settings.zIndex;
+                        overlay.css("z-index", (zIndex).toString(10));
+                        input.css("z-index", (zIndex + 1).toString(10));
+                        selector.css("z-index", (zIndex + 2).toString(10));
+
+                        // append to container
+                        self.wrap(wrapper);
+                        self.after(overlay);
+                        self.after(input);
+                        self.after(selector);
+                    };
+
+                    /**
+                     * Enable the search facilities
+                     *
+                     * param {Object} e Event
+                     * param {boolean} s Show selector
+                     * param {boolean} v Verbose enabling
+                     */
+                    function enable(e, s, v) {
+
+                        // exit event on disabled select element
+                        if (self.attr("disabled"))
+                            return false;
+
+                        // prepend empty option
+                        self.prepend("<option />");
+
+                        // set state to enabled
+                        if (typeof v == "undefined")
+                            enabled = !enabled;
+
+                        // reset selector
+                        selectorHelper.reset();
+
+                        // synchronize select and dropdown replacement
+                        synchronize();
+
+                        // store search result
+                        store();
+
+                        // show selector
+                        if (s)
+                            selector.show();
+
+                        // show search field
+                        input.show();
+                        input.focus();
+                        input.select();
+
+                        // select empty option
+                        self.get(0).selectedIndex = 0;
+
+                        if (typeof e != "undefined")
+                            e.stopPropagation();
+                    };
+
+                    /**
+                     * Disable the search facilities
+                     *
+                     * param {Object} e Event
+                     * param {boolean} rs Restore last results
+                     */
+                    function disable(e, rs) {
+
+                        // set state to disabled
+                        enabled = false;
+
+                        // remove empty option
+                        self.find(":first").remove();
+
+                        // clear running search timer
+                        clearSearchTimer();
+
+                        // hide search field and selector
+                        input.hide();
+                        selector.hide();
+
+                        // restore last results
+                        if (typeof rs != "undefined")
+                            restore();
+
+                        // populate changes
+                        populate();
+
+                        if (typeof e != "undefined")
+                            e.stopPropagation();
+                    };
+
+                    /**
+                     * Clears running search timer
+                     */
+                    function clearSearchTimer() {
+                        // clear running timer
+                        if (timer != null)
+                            clearTimeout(timer);
+                    };
+
+                    /**
+                     * Populate changes to select element
+                     */
+                    function populate() {
+                        // invalid selectedIndex or disabled elements do not be populate
+                        if (selectorHelper.selectedIndex() < 0 || selectorHelper.selected().get(0).disabled)
+                            return;
+
+                        // store selectedIndex
+                        self.get(0).selectedIndex = parseInt(selector.find(":selected").attr(idxAttr));
+
+                        // trigger change event
+                        self.change();
+
+                        // store selected index
+                        self.data("index", new Number(self.get(0).selectedIndex));
+                    };
+
+                    /**
+                     * Synchronize selected item on dropdown replacement with source select element
+                     */
+                    function synchronize() {
+                        if (selectorHelper.selectedIndex() > -1 && !selectorHelper.selected().get(0).disabled)
+                            input.val(selector.find(":selected").text());
+                        else
+                            input.val(self.find(":selected").text());
+                    };
+
+                    /**
+                     * Stores last results of selector
+                     */
+                    function store() {
+                        storage.index = selectorHelper.selectedIndex();
+                        storage.options = new Array();
+                        for (var i = 0; i < selector.get(0).options.length; i++)
+                            storage.options.push(selector.get(0).options[i]);
+                    };
+
+                    /**
+                     * Restores last results of selector previously stored by store function
+                     */
+                    function restore() {
+                        selector.empty();
+                        for (var i = 0; i < storage.options.length; i++)
+                            selector.append(storage.options[i]);
+                        selectorHelper.selectedIndex(storage.index);
+                        selectorHelper.size(storage.options.length);
+                    };
+
+                    /**
+                     * Escape regular expression string
+                     *
+                     * param str String
+                     * return escaped regexp string
+                     */
+                    function escapeRegExp(str) {
+                        var specials = ["/", ".", "*", "+", "?", "|", "(", ")", "[", "]", "{", "}", "\\", "^", "$"];
+                        var regexp = new RegExp("(\\" + specials.join("|\\") + ")", "g");
+                        return str.replace(regexp, "\\$1");
+                    };
+
+                    /**
+                     * The actual searching gets done here
+                     */
+                    function searching() {
+                        if (searchCache == search) { // no change ...
+                            timer = null;
+                            return;
+                        }
+
+                        var matches = 0;
+                        searchCache = search;
+                        selector.hide();
+                        selector.empty();
+
+                        // escape regexp characters
+                        var regexp = escapeRegExp(search);
+                        // exact match
+                        if (settings.exactMatch)
+                            regexp = "^" + regexp;
+                        // wildcard support
+                        if (settings.wildcards) {
+                            regexp = regexp.replace(/\\\*/g, ".*");
+                            regexp = regexp.replace(/\\\?/g, ".");
+                        }
+                        // ignore case sensitive
+                        var flags = null;
+                        if (settings.ignoreCase)
+                            flags = "i";
+
+                        // RegExp object
+                        search = new RegExp(regexp, flags);
+
+                        // for each item in list
+                        for (var i = 1; i < self.get(0).length && matches < settings.maxMultiMatch; i++) {
+                            // search
+                            if (search.length == 0 || search.test(self.get(0).options[i].text)) {
+                                var opt = $(self.get(0).options[i]).clone().attr(idxAttr, i - 1);
+                                if (self.data("index") == i)
+                                    opt.text(self.data("text"));
+                                selector.append(opt);
+                                matches++;
+                            }
+                        }
+
+                        // result actions
+                        if (matches >= 1) {
+                            selectorHelper.selectedIndex(0);
+                        }
+                        else if (matches == 0) {
+                            selector.append(noMatchItem);
+                        }
+
+                        // append top match item if matches exceeds maxMultiMatch
+                        if (matches >= settings.maxMultiMatch) {
+                            selector.append(topMatchItem);
+                        }
+
+                        // resize selector
+                        selectorHelper.size(matches);
+                        selector.show();
+                        timer = null;
+                    };
+
+                    /**
+                     * Parse a given pixel size value to a float value
+                     * param value Pixel size value
+                     */
+                    function parseFloatPx(value) {
+                        try {
+                            value = parseFloat(value.replace(/[\s]*px/, ""));
+                            if (!isNaN(value))
+                                return value;
+                        }
+                        catch (e) { }
+                        return 0;
+                    };
+
+                    return;
+                };
+
+                /**
+                 * Register plugin under given namespace
+                 *
+                 * Plugin Pattern informations
+                 * The function creates the namespace under jQuery
+                 * and bind the function to execute the plugin code.
+                 * The plugin code goes to the plugin.execute function.
+                 * The defaults can setup under plugin.defaults.
+                 *
+                 * param {String} nsp Namespace for the plugin
+                 * return {Object} Plugin object
+                 */
+                function register(nsp) {
+
+                    // init plugin namespace
+                    var plugin = $[nsp] = {};
+
+                    // bind function to jQuery fn object
+                    $.fn[nsp] = function (settings) {
+                        // extend default settings
+                        settings = $.extend(plugin.defaults, settings);
+
+                        var elmSize = this.size();
+                        return this.each(function (index) {
+                            plugin.execute.call(this, settings, elmSize - index);
+                        });
+                    };
+
+                    return plugin;
+                };
+
+            })(jQuery);
+        </script>
+
+
+
+        <script>
+            $(function () {
+                $('.Search-Select').searchable();
+                $('#PurchseOrderDate').datepicker('setEndDate', 'today');
+                $('#DeliveredBefore').datepicker('setStartDate', 'today');
+                //$("#PurchseOrderDate").datepicker({
+                //    endDate: '+0d',
+                //});
+                //$("#DeliveredBefore").datepicker({
+                //    endDate: '+0d',
+                //});
+                //$("form[name=frmtx]").mouseover(function () {
+                //    EditModeSave();
+                //});
+                //$("form[name=productaddfrm]").mouseover(function () {
+                //    EditModeSave();
+                //});
+                //$("form[name=Purchaseorderfrm]").mouseover(function () {
+                //    EditModeSave();
+                //});
+                //$("#grdPurchaseOrder").mouseout(function () {
+                //    debugger
+                //    EditModeSave();
+                //});
+                function EditModeSave() {
+                    var grid = $("#grdPurchaseOrder");
+                    var rowKey = grid.jqGrid('getGridParam', "selrow")
+                    if (rowKey !== undefined && rowKey != '' && rowKey != null) {
+                        grid.jqGrid('saveRow', rowKey);
+                    }
+                }
+                //$("#btnSave").mouseover(function () {
+
+
+                //});
+            });
+        </script>
+        <script type="text/javascript">
+            var appElement = document.querySelector('[ ng-controller=PurchaseOrderController]');
+            function Search() {
+                JqCustomSearch($("#globalSearchText").val().toUpperCase(), $("#grdPurchaseOrder"))
+            }
+            function Delete(row) {
+                debugger
+                var appElement = document.querySelector('[ ng-controller=PurchaseOrderController]');
+                var $scope = angular.element(appElement).scope();
+                var ans = confirm("Are You Sure? Do You Want To Delete?");
+                if (ans) {
+                    //var appElement = document.querySelector('[ ng-controller=PurchaseOrderController]');
+                    //$scope.hdEXCISE = false;
+                    //$scope.hdVATCST = false;
+                    $('#grdPurchaseOrder').jqGrid('delRowData', row);
+
+
+                    BasicCalculations();
+                    $scope.DiscountCalculations();
+                    // $scope.ExiseCalculations();
+                    // $scope.VatorCstCalculations();
+                    $scope.TotalCalculations();
+                    $scope.$apply();
+                }
+            }
+
+
+
+        </script>
+
+        <script type="text/javascript">
+            var app = angular.module('RMS');
+            app.controller('PurchaseOrderController', function ($scope, $http, $rootScope) {
+                $scope.gridPercentages = [0.00, 12.55]
+                $scope.submitted = false;
+                $scope.isFormValid = false;
+                $scope.TX = {};
+                $scope.Order = {};
+                $scope.AddProductsubmitted = false;
+                $scope.AddProductisFormValid = false;
+                $scope.hdpo = true;
+                $scope.grdedit = false;
+                $scope.btnSave = "Save";
+                $scope.hdEXCISE = false;
+                $scope.hdVATCST = false;
+                $rootScope.FormName = "Purchase Order";
+                $rootScope.ModuleName = "MMSTransaction";
+                $scope.Vendorrequired = false;
+                //$scope.Product.ProductCategoryID = "";
+                //$scope.Product.ProductSubcategoryID = "";
+                $scope.isTaxSubmitted = false;
+                $scope.$watch('Purchaseorderfrm.$valid', function (newValue) {
+                    $scope.isFormValid = newValue;
+                });
+                $scope.$watch('productaddfrm.$valid', function (newValue) {
+                    debugger;
+                    $scope.AddProductisFormValid = newValue;
+                });
+                $scope.$watch('frmtx.$valid', function (newValue) {
+                    $scope.isTaxFormValid = newValue;
+                });
+                $http({
+                    url: '/MMSTransaction/GetDatepickerEnableStatus/',
+                    method: "get"
+                }).success(function (data) {
+                    if (data != null) {
+                        if (eval('(' + data.Data + ')') === "Y") {
+                            $scope.DateEnableStatus = false;
+                        } else {
+                            $scope.DateEnableStatus = true;
+                        }
+                    }
+                });
+
+                //----------------------new---------------------------------//
+
+                $scope.productvatorcstChange = function () {
+                    debugger;
+                    $scope.hdtaxtypevatorcst = true;
+                    if ($scope.Product.vatorcst === "VAT") {
+                        var ROWS = ["0.00", "5.00", "14.50"];
+                        $scope.productPercentages = ROWS;
+                    } else if ($scope.Product.vatorcst === "CST") {
+                        var ROWS = ["2.00","5.50","2.50", "12.50"];
+                        $scope.productPercentages = ROWS;
+                    } else {
+                        $scope.hdtaxtypevatorcst = false;
+                        $scope.productPercentages = [];
+                    }
+                }
+
+
+
+                $scope.GridvatorcstChange = function (value) {
+                    debugger;
+                    var Grid_data = $('#grdPurchaseOrder').jqGrid('getRowData');
+                    var rowid = parseInt($("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow'));
+                    var Type = $("#" + rowid + "_vatorcst option:selected").text();
+                    var grdlen = Grid_data.length;
+                    //var taxtype = Grid_data[i].TaxvatorcstAmount;
+                    if (Type === "VAT") {
+                        var ROWS = ["0.00", "5.00", "14.50"];
+                        $scope.gridPercentages = ROWS;
+                    } else if (Type === "CST") {
+                        var ROWS = ["2.00","5.50","2.50", "12.50"];
+                        $scope.gridPercentages = ROWS;
+                    } else {
+
+                        $scope.gridPercentages = [];
+                    }
+                }
+
+
+
+
+                $scope.ProductReset = function () {
+                    $scope.Product = {};
+                    $scope.productaddfrm.$setPristine();
+                    $scope.AddProductsubmitted = false;
+                    $scope.taxtypeChange();
+                }
+
+
+                $scope.ProductAmountcalculate = function () {
+                    debugger;
+                    var rate = $scope.Product.EstimateRate;
+                    var qty = $scope.Product.Quantity;
+                    var strdiscounttype = $scope.Product.ProductDiscountType;
+                    var strprdtdiscount = 0;
+                    if ($scope.Product.ProductDiscountFlatPercentage != "") {
+
+                        if (strdiscounttype == "FLAT" || strdiscounttype == "PERCENTAGE") {
+                            $scope.ProductDiscountCalculations();
+                            strprdtdiscount = $scope.Product.ProductDiscountValue;
+
+                        }
+
+                        else {
+                            $scope.Product.ProductDiscountValue = 0;
+                            strprdtdiscount = 0;
+                            // var prdtamount = parseFloat(rate) * parseFloat(qty);
+                        }
+                    }
+                    else {
+                        $scope.Product.ProductDiscountValue = 0;
+                    }
+
+                    var prdtamount = parseFloat((parseFloat(rate) * parseFloat(qty)) - parseFloat(strprdtdiscount)).toFixed(2);
+                    $scope.Product.productamount = prdtamount;
+
+                    //$scope.ProductDiscountFlatPercentageChange();
+                    //$scope.productVatorCstCalculations();
+                    //$scope.ProductExiseCalculations();
+                    //$scope.ProductTotalCalculations();
+                }
+
+
+                $scope.productVatorCstCalculations = function () {
+                    debugger;
+                    var rate = $scope.Product.EstimateRate;
+                    var qty = $scope.Product.Quantity;
+                    var prdtamount = 0;
+                    var prdttaxtype = $scope.Product.vatorcst;
+                    var prdttaxpercentage = $scope.Product.taxvatcst;
+                    var strdiscounttype = $scope.Product.ProductDiscountType;
+                    var strprdtdiscount = 0;
+
+                    if (strdiscounttype == "FLAT" || strdiscounttype == "PERCENTAGE") {
+                        strprdtdiscount = $scope.Product.ProductDiscountValue;
+                        prdtamount = Math.round(parseFloat(rate) * parseFloat(qty)) - parseFloat(strprdtdiscount);
+                    }
+                    else {
+                        prdtamount = $scope.Product.productamount || 0;
+                    }
+                    if (prdtamount > 0) {
+                        if (prdttaxtype == 'VAT' || prdttaxtype == 'CST') {
+                            $scope.Product.TaxvatorcstAmount = Math.round(parseFloat(prdttaxpercentage) * (parseFloat(prdtamount))) / 100;
+                        }
+                        else {
+                            $scope.Product.TaxvatorcstAmount = 0;
+                        }
+                    }
+                    else {
+                        $scope.Product.TaxvatorcstAmount = 0;
+                    }
+                }
+
+
+                $scope.ProductExiseCalculations = function () {
+                    debugger;
+                    var strdiscounttype = $scope.Product.ProductDiscountType;
+                    var BasicAmount = 0;
+                    var rate = $scope.Product.EstimateRate;
+                    var qty = $scope.Product.Quantity;
+                    var DiscountAmount = 0;
+                    //if (strdiscounttype == "FLAT" || strdiscounttype == "PERCENTAGE") {
+
+                    //}
+                    if (strdiscounttype == "FLAT" || strdiscounttype == "PERCENTAGE") {
+                        DiscountAmount = $scope.Product.ProductDiscountValue;
+                        BasicAmount = Math.round(parseFloat(rate) * parseFloat(qty)) - parseFloat(DiscountAmount);
+                    }
+                    else {
+                        BasicAmount = $scope.Product.productamount || 0;
+                    }
+                    if (parseFloat(BasicAmount) > 0) {
+                        //             Excise TAX  Details             //
+                        var strTaxType = $scope.Product.taxtype;
+
+                        var strTaxExcisePercentage = $scope.Product.TaxExcisePercentage || 0;
+                        var strTaxExciseAmount = $scope.Product.TaxExciseAmount || 0;
+                        var strTaxCESSPercentage = $scope.Product.TaxCESSPercentage;
+                        var strTaxCESSAmount = $scope.Product.TaxCESSAmount || 0;
+                        var strTaxSHCESSPercentage = $scope.Product.TaxSHCESSPercentage;
+                        var strTaxSHCESSAmount = $scope.Product.TaxSHCESSAmount || 0;
+                        //             Excise TAX  Details             //
+
+                        if (strTaxType === "EXCISE" || strTaxType === "BOTH") {
+                            if (strTaxExcisePercentage !== undefined && strTaxExcisePercentage != "Select") {
+                                strTaxExciseAmount = (parseFloat(BasicAmount)) * (parseFloat(strTaxExcisePercentage) / 100);
+                                $scope.Product.TaxExciseAmount = Math.round(parseFloat(strTaxExciseAmount) * 100) / 100;
+                            }
+                            if (strTaxExcisePercentage != "Select") {
+                                if (strTaxCESSPercentage !== undefined) {
+                                    strTaxCESSAmount = parseFloat(strTaxExciseAmount) * (parseFloat(strTaxCESSPercentage) / 100);
+                                    $scope.Product.TaxCESSAmount = Math.round(parseFloat(strTaxCESSAmount) * 100) / 100;
+                                }
+                                if (strTaxCESSPercentage !== undefined) {
+                                    strTaxSHCESSAmount = parseFloat(strTaxExciseAmount) * (parseFloat(strTaxSHCESSPercentage) / 100);
+                                    $scope.Product.TaxSHCESSAmount = Math.round(parseFloat(strTaxSHCESSAmount) * 100) / 100;
+                                }
+                            } else {
+                                // $scope.Product.TaxExciseAmount = '';
+                                //$scope.Product.TaxCESSPercentage = '';
+                                //$scope.Product.TaxSHCESSPercentage = '';
+                                $scope.Product.TaxExcisePercentage.$valid = true;
+                                $scope.Product.TaxCESSPercentage.$valid = true;
+                                $scope.Product.TaxSHCESSPercentage.$valid = true;
+
+                            }
+                        } else {
+                            // $scope.Product.TaxExcisePercentage = 0;
+                            $scope.Product.TaxExciseAmount = 0;
+                            // $scope.Product.TaxCESSPercentage = 0;
+                            $scope.Product.TaxCESSAmount = 0;
+                            // $scope.Product.TaxSHCESSPercentage = 0;
+                            $scope.Product.TaxSHCESSAmount = 0;
+                        }
+                        //$scope.$apply();
+
+                    } else {
+                        $scope.Product.TaxExciseAmount = 0;
+                        $scope.Product.TaxCESSAmount = 0;
+                        $scope.Product.TaxSHCESSAmount = 0;
+                    }
+                }
+
+
+                $scope.ProductTotalCalculations = function () {
+                    debugger;
+                    var rate = $scope.Product.EstimateRate;
+                    var qty = $scope.Product.Quantity;
+                    var strBasicAmount = (parseFloat(rate) * parseFloat(qty));
+                    if (parseFloat(strBasicAmount) > 0) {
+                        var strTaxExciseAmount = $scope.Product.TaxExciseAmount || 0;
+                        var strTaxCESSAmount = $scope.Product.TaxCESSAmount || 0;
+                        var strTaxSHCESSAmount = $scope.Product.TaxSHCESSAmount || 0;
+                        var strTaxvatorcstAmount = $scope.Product.TaxvatorcstAmount || 0;
+                        var strDiscountFlatAmount = $scope.Product.ProductDiscountValue || 0;
+                        var strtaxtype = $scope.Product.taxtype;
+
+                        var strprdtdiscount = $scope.Product.ProductDiscountValue;
+                        debugger;
+                        var strdiscounttype = $scope.Product.ProductDiscountType;
+                        if (strdiscounttype == "FLAT" || strdiscounttype == "PERCENTAGE") {
+                            strBasicAmount = (parseFloat(rate) * parseFloat(qty)) - parseFloat(strDiscountFlatAmount);
+                        }
+
+                        //if (strtaxtype !== "NONE" || strtaxtype !=undefined) {
+                        //    TotalAmount = parseFloat(strBasicAmount) ;
+                        //    if (strtaxtype === "EXCISE" || strtaxtype === "BOTH") {
+                        //        TotalAmount = strBasicAmount + parseFloat(strTaxExciseAmount) + parseFloat(strTaxCESSAmount) + parseFloat(strTaxSHCESSAmount);
+                        //    }
+                        //    if (strtaxtype === "VAT" || strtaxtype === "BOTH") {
+                        //        TotalAmount = strBasicAmount + parseFloat(strTaxvatorcstAmount);
+                        //    }
+
+                        //} else {
+                        //    TotalAmount = parseFloat(strBasicAmount) ;
+                        //}
+                        //$scope.$apply();
+
+                        $scope.Product.productamount = Math.round(parseFloat(strBasicAmount) * 100) / 100;
+                    } else {
+                        $scope.Product.productamount = 0;
+                    }
+                }
+
+
+                $scope.ProductdiscounttypeChange = function () {
+                    debugger;
+
+                    var strDiscountType = $scope.Product.ProductDiscountType;
+                    if (strDiscountType === "FLAT" || strDiscountType === "PERCENTAGE") {
+                        $scope.Producthddiscount = true;
+                        $scope.Product.ProductDiscountFlatPercentage = '';
+                        $scope.Product.ProductDiscountValue = 0;
+                    } else {
+                        $scope.Producthddiscount = false;
+                        $scope.Product.ProductDiscountFlatPercentage = 0;
+                        $scope.Product.ProductDiscountValue = 0;
+                    }
+                    $scope.ProductDiscountCalculations();
+                    $scope.ProductExiseCalculations();
+                    $scope.productVatorCstCalculations();
+                    $scope.ProductAmountcalculate();
+                    //$scope.ExiseCalculations();
+                    // $scope.VatorCstCalculations();
+                }
+
+
+                $scope.ProductDiscountFlatPercentageChange = function (e, myValue) {
+                    debugger;
+
+                    var strvalue = myValue;
+                    var strDiscountType = $scope.Product.ProductDiscountType;
+                    var DiscountFlatPercentage = $scope.Product.ProductDiscountFlatPercentage;
+                    var rate = $scope.Product.EstimateRate;
+                    var qty = $scope.Product.Quantity;
+                    var BasicAmount = (parseFloat(rate) * parseFloat(qty)) || 0;
+
+                    var DiscountAmount = 0;
+                    if (parseFloat(BasicAmount) > 0) {
+                        if (strDiscountType === "PERCENTAGE") {
+                            if (parseFloat(myValue) > 100) {
+                                alert('Discount Percentage Should not be more than 100%!');
+                                $scope.Product.ProductDiscountFlatPercentage = '';
+                                $scope.Product.ProductDiscountValue = '';
+                                $scope.Product.ProductDiscountFlatPercentage.$invalid = true;
+                            } else {
+                                DiscountAmount = (parseFloat(BasicAmount) * (parseFloat($scope.Product.ProductDiscountFlatPercentage) / 100));
+                            }
+                        } else if (strDiscountType === "FLAT") {
+                            if (parseFloat(myValue) > parseFloat(BasicAmount)) {
+                                //alert('');
+                                alert('Flat Discount Value not more than Basic Amount !');
+                                $scope.Product.ProductDiscountFlatPercentage = '';
+                                $scope.Product.ProductDiscountValue = '';
+                                $scope.Product.ProductDiscountFlatPercentage.$invalid = true;
+                            } else {
+                                DiscountAmount = $scope.Product.ProductDiscountFlatPercentage || 0;
+                            }
+                        }
+                        if (parseFloat(DiscountAmount) > 0) {
+                            // $scope.TX.DiscountValue = DiscountAmount;
+                            $scope.Product.ProductDiscountValue = Math.round(parseFloat(DiscountAmount) * 100) / 100;
+                        }
+
+
+                        // $scope.ProductAmountcalculate();
+                        $scope.ProductExiseCalculations();
+                        $scope.productVatorCstCalculations();
+                        $scope.ProductTotalCalculations();
+                    } else {
+                        $scope.Product.ProductDiscountValue = 0;
+                    }
+                };
+
+
+                $scope.ProductDiscountCalculations = function () {
+                    debugger;
+                    var rate = $scope.Product.EstimateRate;
+                    var qty = $scope.Product.Quantity;
+                    var BasicAmount = (parseFloat(rate) * parseFloat(qty)) || 0;
+
+                    if (parseFloat(BasicAmount) > 0) {
+                        //             Discount Details             //
+                        var strDiscountType = $scope.Product.ProductDiscountType;
+                        var strDiscountFlatAmount = $scope.Product.ProductDiscountFlatPercentage;
+                        var DiscountAmount = 0;
+                        if (strDiscountType === "PERCENTAGE" || strDiscountType === "FLAT") {
+                            if (strDiscountFlatAmount == 0 || strDiscountFlatAmount == '') {
+                                $scope.Product.ProductDiscountValue = 0;
+                            }
+                        }
+                        //             Discount Details             //
+                        if (strDiscountType === "PERCENTAGE") {
+                            DiscountAmount = (parseFloat(BasicAmount) * (parseFloat(strDiscountFlatAmount) / 100));
+                        } else if (strDiscountType === "FLAT") {
+                            DiscountAmount = strDiscountFlatAmount || 0;
+                        }
+                        if (parseFloat(strDiscountFlatAmount) > 0) {
+                            $scope.Product.ProductDiscountValue = Math.round(parseFloat(DiscountAmount) * 100) / 100;
+                        }
+                        //$scope.$apply();
+                        //$scope.ProductAmountcalculate();
+                        $scope.ProductDiscountFlatPercentageChange();
+                        $scope.ProductExiseCalculations();
+                        $scope.productVatorCstCalculations();
+                        $scope.ProductTotalCalculations();
+                    } else {
+                        $scope.Product.ProductDiscountValue = 0;
+                    }
+                }
+
+
+                //----------------------------------------------------------------------//
+
+
+
+
+                //****************** TAX FORM  *******************************//
+
+                $scope.discounttypeChange = function () {
+                    debugger;
+                    DiscountClear();
+                    var strDiscountType = $scope.TX.DiscountType;
+                    if (strDiscountType === "FLAT" || strDiscountType === "PERCENTAGE") {
+                        $scope.hddiscount = true;
+                    } else {
+                        $scope.hddiscount = false;
+                    }
+                    $scope.DiscountCalculations();
+                    //$scope.ExiseCalculations();
+                    // $scope.VatorCstCalculations();
+                }
+                $scope.taxtypeChange = function () {
+                    debugger;
+                    ExciseTaxClear();
+                    VatTaxClear();
+                    var strtaxtype = $scope.Product.taxtype;
+                    if ($scope.Product.taxtype === "EXCISE") {
+                        $scope.hdEXCISE = true;
+                        $scope.hdVATCST = false;
+                    } else if ($scope.Product.taxtype === "VAT") {
+                        $scope.hdEXCISE = false;
+                        $scope.hdVATCST = true;
+                    } else if ($scope.Product.taxtype === "BOTH") {
+                        $scope.hdVATCST = true;
+                        $scope.hdEXCISE = true;
+                    } else {
+                        $scope.hdEXCISE = false;
+                        $scope.hdVATCST = false;
+                    }
+                    $scope.$apply();
+                }
+
+                $scope.vatorcstChange = function () {
+                    debugger;
+                    $scope.hdtaxtypevatorcst = true;
+                    if ($scope.TX.vatorcst === "VAT") {
+                        var ROWS = ["0", "5", "14.5"];
+                        $scope.Percentages = ROWS;
+                    } else if ($scope.TX.vatorcst === "CST") {
+                        var ROWS = ["2", "2.5", "12.5"];
+                        $scope.Percentages = ROWS;
+                    } else {
+                        $scope.hdtaxtypevatorcst = false;
+                        $scope.Percentages = [];
+                    }
+                }
+
+                function ExciseTaxClear() {
+
+                    $scope.Product.TaxExcisePercentage = '';
+                    $scope.Product.TaxExciseAmount = '';
+                    $scope.Product.TaxCESSPercentage = '';
+                    $scope.Product.TaxCESSAmount = '';
+                    $scope.Product.TaxSHCESSPercentage = '';
+                    $scope.Product.TaxSHCESSAmount = '';
+
+                    $scope.Product.TaxExcisePercentage.$valid = true;
+                    $scope.Product.TaxExciseAmount.$valid = true;
+                    $scope.Product.TaxCESSPercentage.$valid = true;
+                    $scope.Product.TaxCESSAmount.$valid = true;
+                    $scope.Product.TaxSHCESSPercentage.$valid = true;
+                    $scope.Product.TaxSHCESSAmount.$valid = true;
+
+                    $scope.TotalCalculations();
+                }
+                function VatTaxClear() {
+                    $scope.Product.vatorcst = '';
+                    $scope.Product.taxvatcst = '';
+                    $scope.Product.TaxvatorcstAmount = '';
+                    $scope.Percentages = [];
+                    $scope.Product.vatorcst.$valid = true;
+                    $scope.Product.taxvatcst.$valid = true;
+                    $scope.Product.TaxvatorcstAmount.$valid = true;
+                    $scope.TotalCalculations();
+                }
+                function DiscountClear() {
+                    $scope.TX.DiscountValue = '';
+                    $scope.TX.DiscountFlatPercentage = '';
+                    $scope.TX.DiscountValue.$valid = true;
+                    $scope.TX.DiscountFlatPercentage.$valid = true;
+                    $scope.TotalCalculations();
+                }
+
+
+                $scope.TotalCalculations = function () {
+                    debugger;
+                    //TX.DiscountType, TX.DiscountFlatAmount, TX.DiscountPercentage, TX.taxtype, TX.TaxExcisePercentage,
+                    //TX.TaxExciseAmount, TX.TaxCESSPercentage, TX.TaxCESSAmount,TX.TransportCharges,
+                    //TX.TaxSHCESSPercentage, TX.TaxSHCESSAmount, TX.vatorcst, TX.taxvatcst, TX.TaxvatorcstAmount
+                    var strBasicAmount = $scope.TX.BasicAmount || 0;
+                    var strDiscountFlatAmount = 0;
+                    var strDiscountType = $scope.TX.DiscountType;
+                    if (parseFloat(strBasicAmount) > 0) {
+                        var strTaxExciseAmount = $scope.TX.totalexcise || 0;
+                        var strTaxCESSAmount = $scope.TX.totalcess || 0;
+                        var strTaxSHCESSAmount = $scope.TX.totalshcess || 0;
+                        var strTaxvatorcstAmount = $scope.TX.totalvatorcst || 0;
+                        var strTransportCharges = $scope.TX.TransportCharges || 0;
+                        var strtaxtype = $scope.Product.taxtype;
+                        var TotalAmount = 0;
+                        debugger;
+                        if (strDiscountType === "PERCENTAGE") {
+                            strDiscountFlatAmount = (parseFloat(strBasicAmount) * (parseFloat($scope.TX.DiscountFlatPercentage) / 100));
+                        } else if (strDiscountType === "FLAT") {
+                            strDiscountFlatAmount = $scope.TX.DiscountFlatPercentage || 0;
+                        }
+                        //if (strtaxtype !== "NONE") {
+                        //    TotalAmount = parseFloat(strBasicAmount) - parseFloat(strDiscountFlatAmount) + parseFloat(strTransportCharges);
+                        //    if (strtaxtype === "EXCISE" || strtaxtype === "BOTH") {
+                        //        TotalAmount = TotalAmount + parseFloat(strTaxExciseAmount) + parseFloat(strTaxCESSAmount) + parseFloat(strTaxSHCESSAmount);
+                        //    }
+                        //    if (strtaxtype === "VAT" || strtaxtype === "BOTH") {
+                        //        TotalAmount = TotalAmount + parseFloat(strTaxvatorcstAmount);
+                        //    }
+
+                        //} else {
+                        //    TotalAmount = parseFloat(strBasicAmount) - parseFloat(strDiscountFlatAmount) + parseFloat(strTransportCharges);
+                        //}
+
+                        TotalAmount = (parseFloat(strBasicAmount) - parseFloat(strDiscountFlatAmount)) + parseFloat(strTransportCharges) + parseFloat(strTaxExciseAmount) + parseFloat(strTaxCESSAmount) + parseFloat(strTaxSHCESSAmount) + parseFloat(strTaxvatorcstAmount);
+
+                        //$scope.$apply();
+
+                        $scope.TX.TotalAmount = Math.round(parseFloat(TotalAmount) * 100) / 100;
+                    } else {
+                        $scope.TX.TotalAmount = 0;
+                    }
+                }
+                $scope.ExiseCalculations = function () {
+                    debugger;
+                    var BasicAmount = $scope.product.productamount || 0;
+                    if (parseFloat(BasicAmount) > 0) {
+                        //             Excise TAX  Details             //
+                        var strTaxType = $scope.TX.taxtype;
+
+                        var DiscountAmount = 0;
+                        var strDiscountType = $scope.TX.DiscountType;
+                        var strTaxExcisePercentage = $scope.TX.TaxExcisePercentage || 0;
+                        var strTaxExciseAmount = $scope.TX.TaxExciseAmount || 0;
+                        var strTaxCESSPercentage = $scope.TX.TaxCESSPercentage;
+                        var strTaxCESSAmount = $scope.TX.TaxCESSAmount || 0;
+                        var strTaxSHCESSPercentage = $scope.TX.TaxSHCESSPercentage;
+                        var strTaxSHCESSAmount = $scope.TX.TaxSHCESSAmount || 0;
+                        //             Excise TAX  Details             //
+                        if (strDiscountType === "PERCENTAGE") {
+                            DiscountAmount = (parseFloat(BasicAmount) * (parseFloat($scope.TX.DiscountFlatPercentage) / 100));
+                        } else if (strDiscountType === "FLAT") {
+                            DiscountAmount = $scope.TX.DiscountFlatPercentage || 0;
+                        }
+                        if (strTaxType === "EXCISE" || strTaxType === "BOTH") {
+                            if (strTaxExcisePercentage !== undefined && strTaxExcisePercentage != "Select") {
+                                strTaxExciseAmount = (parseFloat(BasicAmount) - parseFloat(DiscountAmount)) * (parseFloat(strTaxExcisePercentage) / 100);
+                                $scope.TX.TaxExciseAmount = Math.round(parseFloat(strTaxExciseAmount) * 100) / 100;
+                            }
+                            if (strTaxExcisePercentage != "Select") {
+                                if (strTaxCESSPercentage !== undefined) {
+                                    strTaxCESSAmount = parseFloat(strTaxExciseAmount) * (parseFloat(strTaxCESSPercentage) / 100);
+                                    $scope.TX.TaxCESSAmount = Math.round(parseFloat(strTaxCESSAmount) * 100) / 100;
+                                }
+                                if (strTaxCESSPercentage !== undefined) {
+                                    strTaxSHCESSAmount = parseFloat(strTaxExciseAmount) * (parseFloat(strTaxSHCESSPercentage) / 100);
+                                    $scope.TX.TaxSHCESSAmount = Math.round(parseFloat(strTaxSHCESSAmount) * 100) / 100;
+                                }
+                            } else {
+                                $scope.TX.TaxExciseAmount = '';
+                                $scope.TX.TaxCESSPercentage = '';
+                                $scope.TX.TaxSHCESSPercentage = '';
+                                $scope.TX.TaxCESSPercentage.$valid = true;
+                                $scope.TX.TaxSHCESSPercentage.$valid = true;
+                            }
+                        } else {
+                            $scope.TX.TaxExcisePercentage = 0;
+                            $scope.TX.TaxExciseAmount = 0;
+                            $scope.TX.TaxCESSPercentage = 0;
+                            $scope.TX.TaxCESSAmount = 0;
+                            $scope.TX.TaxSHCESSPercentage = 0;
+                            $scope.TX.TaxSHCESSAmount = 0;
+                        }
+                        //$scope.$apply();
+                        $scope.TotalCalculations();
+                    } else {
+                        $scope.TX.TaxExciseAmount = 0;
+                        $scope.TX.TaxCESSAmount = 0;
+                        $scope.TX.TaxSHCESSAmount = 0;
+                    }
+                }
+
+
+                $scope.VatorCstCalculations = function () {
+                    debugger;
+                    var BasicAmount = $scope.TX.BasicAmount || 0;
+                    if (parseFloat(BasicAmount) > 0) {
+                        //             VAT OR CST  Details             //
+                        var strTaxType = $scope.TX.taxtype;
+                        var strvatorcst = $scope.TX.vatorcst || 0;
+                        var strtaxvatcst = $scope.TX.taxvatcst;
+                        var strTaxvatorcstAmount = $scope.TX.TaxvatorcstAmount || 0;
+                        //             VAT OR CST  Details             //
+                        var VatAmount = 0;
+                        var DiscountAmount = 0;
+                        var strDiscountType = $scope.TX.DiscountType;
+                        if (strDiscountType === "PERCENTAGE") {
+                            DiscountAmount = (parseFloat(BasicAmount) * (parseFloat($scope.TX.DiscountFlatPercentage) / 100));
+                        } else if (strDiscountType === "FLAT") {
+                            DiscountAmount = $scope.TX.DiscountFlatPercentage || 0;
+                        }
+                        if (strTaxType === "VAT" || strTaxType === "BOTH") {
+                            if (strtaxvatcst !== undefined) {
+                                strTaxvatorcstAmount = (parseFloat(BasicAmount) - parseFloat(DiscountAmount)) * parseFloat(strtaxvatcst) / 100;
+                                $scope.TX.TaxvatorcstAmount = Math.round(parseFloat(strTaxvatorcstAmount) * 100) / 100;
+                            }
+                        } else {
+                            $scope.TX.vatorcst = 0;
+                            $scope.TX.taxvatcst = 0;
+                            $scope.TX.TaxvatorcstAmount = 0;
+                        }
+                        //$scope.$apply();
+                        $scope.TotalCalculations();
+                    } else {
+                        $scope.TX.vatorcst = 0;
+                        $scope.TX.taxvatcst = 0;
+                        $scope.TX.TaxvatorcstAmount = 0;
+                    }
+                }
+                BasicCalculations = function () {
+                    debugger;
+                    //             BASIC DETAILS             //
+                    var BasicAmount = 0;
+                    var Totalvatorcst = 0;
+                    var Totalshcess = 0;
+                    var Totalcess = 0;
+                    var Totalexcise = 0;
+                    var Totalprdtdiscount = 0;
+                    var Grid_data = $('#grdPurchaseOrder').jqGrid('getRowData');
+                    var grdlen = Grid_data.length;
+                    for (var i = 0; i < grdlen; i++) {
+                        var strQuantity = Grid_data[i].Quantity;
+                        var strEstimateRate = Grid_data[i].EstimateRate;
+                        var strtaxvatorcst = Grid_data[i].TaxvatorcstAmount;
+                        var strExcisevalue = Grid_data[i].TaxExciseAmount;
+                        var strcessvalue = Grid_data[i].TaxCESSAmount;
+                        var strshcessvalue = Grid_data[i].TaxSHCESSAmount;
+                        var strprdtdiscount = Grid_data[i].ProductDiscountValue;
+                        if (parseFloat(strQuantity) != 0 && parseFloat(strEstimateRate) != 0) {
+
+                            Totalprdtdiscount = parseFloat(Totalprdtdiscount) + parseFloat(strprdtdiscount);
+                            BasicAmount = parseFloat(BasicAmount) + (parseFloat(strQuantity) * parseFloat(strEstimateRate));
+                            Totalvatorcst = parseFloat(Totalvatorcst) + parseFloat(strtaxvatorcst);
+                            Totalshcess = parseFloat(Totalshcess) + parseFloat(strshcessvalue);
+                            Totalcess = parseFloat(Totalcess) + parseFloat(strcessvalue);
+                            Totalexcise = parseFloat(Totalexcise) + parseFloat(strExcisevalue);
+                            //var taxamount = parseFloat(strtaxvatorcst) + parseFloat(strshcessvalue) + parseFloat(strcessvalue) + parseFloat(strExcisevalue);
+                            //var amount = (parseFloat(strQuantity) * parseFloat(strEstimateRate)) + parseFloat(taxamount) - parseFloat(strprdtdiscount);
+                            //$('#grdPurchaseOrder').jqGrid('setCell', i, 'Amount', amount);
+
+                        }
+                    }
+                    $scope.TX.BasicAmount = Math.round((parseFloat(BasicAmount) - parseFloat(Totalprdtdiscount)) * 100) / 100;
+                    $scope.TX.totalvatorcst = Math.round(parseFloat(Totalvatorcst) * 100) / 100;
+                    $scope.TX.totalcess = Math.round(parseFloat(Totalcess) * 100) / 100;
+                    $scope.TX.totalshcess = Math.round(parseFloat(Totalshcess) * 100) / 100;
+                    $scope.TX.totalexcise = Math.round(parseFloat(Totalexcise) * 100) / 100;
+                    $scope.TX.totalproductdiscount = Math.round(parseFloat(Totalprdtdiscount) * 100) / 100;
+
+                    //             BASIC DETAILS             //
+                    //$scope.$apply();
+                    $scope.TotalCalculations();
+
+                }
+                $scope.DiscountCalculations = function () {
+                    debugger;
+                    var BasicAmount = $scope.TX.BasicAmount || 0;
+                    if (parseFloat(BasicAmount) > 0) {
+                        //             Discount Details             //
+                        var strDiscountType = $scope.TX.DiscountType;
+                        var strDiscountFlatAmount = $scope.TX.DiscountFlatPercentage;
+                        var DiscountAmount = 0;
+                        //             Discount Details             //
+                        if (strDiscountType === "PERCENTAGE") {
+                            DiscountAmount = (parseFloat(BasicAmount) * (parseFloat(strDiscountFlatAmount) / 100));
+                        } else if (strDiscountType === "FLAT") {
+                            DiscountAmount = strDiscountFlatAmount || 0;
+                        }
+                        if (parseFloat(strDiscountFlatAmount) > 0) {
+                            $scope.TX.DiscountValue = Math.round(parseFloat(DiscountAmount) * 100) / 100;
+                        }
+                        //$scope.$apply();
+                        $scope.TotalCalculations();
+                    } else {
+                        $scope.TX.DiscountValue = 0;
+                    }
+                }
+                $scope.DiscountFlatPercentageChange = function (e, myValue) {
+                    debugger;
+                    var strvalue = myValue;
+                    var strDiscountType = $scope.TX.DiscountType;
+                    var DiscountFlatPercentage = $scope.TX.DiscountFlatPercentage;
+                    var BasicAmount = $scope.TX.BasicAmount || 0;
+                    var DiscountAmount = 0;
+                    if (parseFloat(BasicAmount) > 0) {
+                        if (strDiscountType === "PERCENTAGE") {
+                            if (parseFloat(myValue) > 100) {
+                                alert('Discount Percentage Should not be more than 100%!');
+                                $scope.TX.DiscountFlatPercentage = '';
+                                $scope.TX.DiscountValue = '';
+                                $scope.TX.DiscountFlatPercentage.$invalid = true;
+                            } else {
+                                DiscountAmount = (parseFloat(BasicAmount) * (parseFloat($scope.TX.DiscountFlatPercentage) / 100));
+                            }
+                        } else if (strDiscountType === "FLAT") {
+                            if (parseFloat(myValue) > parseFloat(BasicAmount)) {
+                                //alert('');
+                                alert('Flat Discount Value not more than Basic Amount !');
+                                $scope.TX.DiscountFlatPercentage = '';
+                                $scope.TX.DiscountValue = '';
+                                $scope.TX.DiscountFlatPercentage.$invalid = true;
+                            } else {
+                                DiscountAmount = $scope.TX.DiscountFlatPercentage || 0;
+                            }
+                        }
+                        if (parseFloat(DiscountAmount) > 0) {
+                            // $scope.TX.DiscountValue = DiscountAmount;
+                            $scope.TX.DiscountValue = Math.round(parseFloat(DiscountAmount) * 100) / 100;
+                        }
+                        // $scope.ExiseCalculations();
+                        // $scope.VatorCstCalculations();
+                        $scope.TotalCalculations();
+                    } else {
+                        $scope.TX.DiscountValue = 0;
+                    }
+                };
+                //****************** TAX FORM  *******************************//
+
+                $scope.Loaddata = function () {
+                    $scope.Order.PurchseOrderDate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+                    $http({
+                        url: '/MMSMaster/GetVendorNamesData/',
+                        method: "get"
+                    }).success(function (data) {
+                        debugger;
+                        //$scope.Names = eval('(' + data.Data + ')');
+                        $scope.VendorNames = eval('(' + data.Data + ')');
+                    });
+                    $http({
+                        url: '/MMSMaster/GetPlaceofDeliveryData/',
+                        method: "get"
+                    }).success(function (data) {
+                        debugger;
+                        $scope.placeofdeliveries = eval('(' + data.Data + ')');
+                    });
+                    $http({
+                        url: '/MMSMaster/BindUOM/',
+                        method: "get"
+                    }).success(function (data) {
+                        debugger;
+                        $scope.UomNames = eval('(' + data.Data + ')');
+                    });
+                };
+                $scope.vendorchange = function () {
+                    debugger;
+                    var VID = $scope.Order.VendorID;
+                    var strpotype = $scope.Order.PoType;
+                    var strPoThrough = $scope.Order.PoThrough;
+                    var strPlaceofDelivery = $scope.Order.PlaceofDelivery;
+                    $scope.ponumbers = {};
+                    // ExciseTaxClear();
+                    // VatTaxClear();
+                    DiscountClear();
+                    BasicCalculations();
+                    if (strpotype !== undefined) {
+                        if (PoThrough !== undefined) {
+                            Clear();
+                            $scope.Names = $scope.VendorNames;
+                            $scope.Vendorrequired = true;
+                            $http.post('/MMSMaster/GetContactPerson', { VID: VID }).success(function (data) {
+                                var k = eval('(' + data.Data + ')');;
+                                if (k.length > 0) {
+                                    var contactperson = k[0]["vchcontactperson"];
+                                    var mobilenumber = k[0]["vchmobilenumber"];
+                                    debugger;
+                                    $scope.Order.ContactPerson = contactperson;
+                                    $scope.Order.Contactno = mobilenumber;
+                                    //$scope.$apply();
+                                }
+                                $scope.ProductNames = eval('(' + data.Data1 + ')');
+                                BasicCalculations();
+                            });
+                            if (strpotype != 'NEW' && VID != null && VID != "" && VID != undefined) {
+                                $scope.hdpo = false;
+                                $http.post('/MMSTransaction/getexistponumbers', { strType: strpotype, Vendorid: VID }).success(function (data) {
+                                    debugger;
+                                    if (data != null) {
+                                        $scope.ponumbers = eval('(' + data.Data + ')');
+                                    } else {
+                                        alert('There is No Existing POs to ' + strpotype + '!');
+                                    }
+                                });
+                            }
+                            $scope.Order.VendorID = VID;
+                            $scope.Order.PoType = strpotype;
+                            $scope.Order.PoThrough = strPoThrough;
+                            $scope.Order.PlaceofDelivery = strPlaceofDelivery;
+                        } else {
+                            $scope.Order.PoType = '';
+                            $scope.Order.VendorID = '';
+                            $scope.Order.VendorID.$valid = true;
+                        }
+                    } else {
+                        $scope.Order.VendorID = '';
+                        $scope.Order.VendorID.$valid = true;
+                    }
+                };
+                $scope.Reset = function () {
+                    Clear();
+                };
+                $scope.productChange = function () {
+                    var PrId = $scope.Product.ProductID;
+                    var VendorId = $scope.Order.VendorID;
+                    $scope.Product = {};
+                    $scope.taxtypeChange();
+                    //$scope.Product.Quantity.$valid = true;
+                    //$scope.Product.EstimateRate.$valid = true;
+                    $http.post('/MMSMaster/GetProductUomBy', { Prdid: PrId, vendorid: VendorId }).success(function (data) {
+                        debugger;
+                        var L = eval('(' + data.productdetails + ')');;
+                        var strUom = L[0]["uomname"];
+                        var strCode = L[0]["productcode"];
+                        var strcategory = L[0]["categoryname"];
+                        var strsubcategory = L[0]["subcategoryname"];
+                        var strEstimaterate = L[0]["estimaterate"];
+                        if (strcategory != null && strcategory != "") {
+                            var strcat = strcategory.split("+");
+                            $scope.Product.ProductCategoryID = strcat[1];
+                            $scope.Product.ProductCategoryName = strcat[0];
+                        }
+                        if (strsubcategory != null && strsubcategory != "") {
+                            var strsubcat = strsubcategory.split("+");
+                            $scope.Product.ProductSubcategoryID = strsubcat[1];
+                            $scope.Product.ProductSubCategoryName = strsubcat[0];
+                        }
+                        $scope.Product.EstimateRate = parseFloat(strEstimaterate);
+                        $scope.Product.Productcode = strCode;
+                        $scope.Product.Uom = strUom;
+                        $scope.Product.PurchaseUom = strUom;
+                        //$scope.Names = eval('(' + data.vendor + ')');
+                        $scope.$apply();
+                    });
+                    $scope.Product.ProductID = PrId;
+                    //$http.post('/MMSMaster/Getvendorsbyproduct', { ID: PrId }).success(function (data) {
+                    //    debugger;
+                    //    $scope.Names = eval('(' + data.Data + ')');
+                    //});
+                };
+                $scope.AddProduct = function (Product) {
+                    debugger;
+
+                    if (CheckGrid()) {
+
+                        $scope.AddProductsubmitted = true;
+                        if ($scope.AddProductisFormValid) {
+                            var prdtamount = $scope.Product.productamount;
+                            if (prdtamount >= 0) {
+                                if (parseFloat(Product.Quantity) <= 0 || Product.Quantity == undefined || Product.Quantity == null) {
+                                    alert('Quantity Should Not be Empty!')
+                                    return false;
+                                }
+                                if (parseFloat(Product.EstimateRate) <= 0 || Product.EstimateRate === undefined || Product.EstimateRate === null || Product.EstimateRate === '') {
+                                    alert('Rate Should Not be Empty or Zero!');
+                                    return false;
+                                }
+                                var strproductname = $("#ProductID option:selected").text();
+                                $scope.Product.ProductName = strproductname;
+                                var strdiscountamount = 0;
+                                var strvatorcst = 0;
+                                var strexcise = 0;
+                                var strcess = 0;
+                                var strshcess = 0;
+                                if ($scope.Product.ProductDiscountValue != undefined) {
+                                    strdiscountamount = $scope.Product.ProductDiscountValue || 0;
+                                }
+                                if ($scope.Product.TaxvatorcstAmount != undefined) {
+                                    strvatorcst = $scope.Product.TaxvatorcstAmount || 0;
+                                }
+                                if ($scope.Product.TaxExciseAmount != undefined) {
+                                    strexcise = $scope.Product.TaxExciseAmount || 0;
+                                }
+                                if ($scope.Product.TaxCESSAmount != undefined) {
+                                    strcess = $scope.Product.TaxCESSAmount || 0;
+                                }
+                                if ($scope.Product.TaxSHCESSAmount != undefined) {
+                                    strshcess = $scope.Product.TaxSHCESSAmount || 0;
+                                }
+
+
+                                //var strpurchaseuom = $("#PurchaseUom option:selected").text();
+                                //$scope.Product.PurchaseUom = strpurchaseuom;
+                                $scope.Product.PurchaseUom = Product.Uom;
+                                $scope.Product.Amount = (parseFloat(Product.EstimateRate) * parseFloat(Product.Quantity)) - parseFloat(strdiscountamount) + parseFloat(strvatorcst) + parseFloat(strexcise) + parseFloat(strcess) + parseFloat(strshcess);
+                                $scope.Product.ProductBasicAmount = parseFloat(Product.EstimateRate) * parseFloat(Product.Quantity);
+                                //$("#grdPurchaseOrder").jqGrid('addRowData', i + 1, BS);
+                                //var rowdata = jQuery('#grdPurchaseOrder').jqGrid('getRowData');
+                                var newrowid = 1;
+                                if (jQuery("#grdPurchaseOrder").jqGrid('getRowData').length > 0) {
+                                    var rids = $('#grdPurchaseOrder').jqGrid('getDataIDs');
+                                    var result = [];
+                                    for (var i = 0, l = rids.length; i < l; i++) result.push(+rids[i]);
+                                    newrowid = Math.max.apply(Math, result) + 1;
+                                }
+                                $('#grdPurchaseOrder').jqGrid("addRowData", newrowid, Product);
+
+                                BasicCalculations();
+                                $scope.Product = {};
+                                $scope.productaddfrm.$setPristine();
+                                $scope.AddProductsubmitted = false;
+                                $scope.Producthddiscount = false;
+                                $scope.DiscountCalculations();
+
+                                // $scope.ProductExiseCalculations();
+                                // $scope.ProductVatorCstCalculations();
+
+                                //$scope.Product.ProductCategoryID = "";
+                                //$scope.Product.ProductCategoryName = "";
+                                //$scope.Product.ProductSubcategoryID = "";
+                                //$scope.Product.ProductSubCategoryName = "";
+                                //$scope.Product.ProductName = "";
+                                //$scope.Product.ProductID = "";
+                                //$scope.Product.ProductCategoryName = "";
+                                //$scope.Product.Uom = "";
+                                //$scope.Product.PurchaseUom = "";
+                                //$scope.Product.Quantity = "";
+                                //$scope.Product.EstimateRate = "";
+                                //$scope.Product.DeliveredBefore = "";
+                                $("#ProductID").focus();
+                                $scope.taxtypeChange();
+
+                            }
+                            else {
+                                alert("Please Check the Values!");
+                            }
+
+                        }
+
+
+                    } else {
+                        $scope.Product = {};
+                        $scope.productaddfrm.$setPristine();
+                        $scope.AddProductsubmitted = false;
+                        alert('Prodcut Already Exist in Grid!');
+                        $scope.taxtypeChange();
+                    }
+
+                }
+                $scope.potypeChange = function () {
+                    debugger;
+                    var strpotype = $scope.Order.PoType;
+                    $scope.ponumbers = {};
+                    //  ExciseTaxClear();
+                    //VatTaxClear();
+                    DiscountClear();
+                    BasicCalculations();
+                    $scope.Names = {};
+                    if (strpotype !== undefined) {
+                        Clear();
+                        if (strpotype == "NEW") {
+                            $scope.hdpo = true;
+                            $scope.grdedit = false;
+                            $scope.Names = $scope.VendorNames;
+                            $scope.Vendorrequired = true;
+                        } else if (strpotype == "MODIFY") {
+                            $scope.hdpo = false;
+                            $scope.grdedit = true;
+                            $scope.Names = $scope.VendorNames;
+                            $scope.Vendorrequired = true;
+                            $scope.Order.PoThrough = "Direct";
+                        }
+                        else if (strpotype == "REORDER") {
+                            $scope.hdpo = false;
+                            $scope.grdedit = true;
+                            $scope.Names = $scope.VendorNames;
+                            $scope.Vendorrequired = true;
+                            $scope.Order.PoThrough = "Direct";
+                        }
+                        $scope.Order.PoType = strpotype;
+                    }
+                }
+                $scope.poChange = function () {
+                    debugger;
+                    var VID = $scope.Order.VendorID;
+                    var strpotype = $scope.Order.PoType;
+                    var strpoid = $scope.Order.poid;
+                    // ExciseTaxClear();
+                    // VatTaxClear();
+                    $scope.ProductReset();
+                    DiscountClear();
+                    //$scope.Order.PlaceofDelivery.$valid = true;
+                    //BasicCalculations();
+                    //BasicCalculations();
+                    //$scope.DiscountCalculations();
+                    //$scope.ExiseCalculations();
+                    //$scope.VatorCstCalculations();
+                    $('#grdPurchaseOrder').jqGrid('clearGridData');
+                    if (strpotype != undefined && strpotype != null && strpotype != "") {
+                        if (strpoid != undefined && strpoid != null && strpoid != "") {
+                            if (VID != undefined && VID != null && VID != "") {
+                                $http.post('/MMSTransaction/getpodetails', { poid: strpoid, Vendorid: VID }).success(function (data) {
+                                    debugger;
+                                    if (data != null) {
+                                        var grddata = eval('(' + data.Data + ')');
+                                        var datalen = grddata.length;
+                                        for (var i = 0; i < datalen; i++) {
+                                            //var BS = {ProductID:grddata[i].productid, Uom, ProductCategoryName, ProductCategoryID, ProductSubCategoryName,PurchaseUom, ProductSubcategoryID, Productcode,Quantity, EstimateRate, DeliveredBefore};
+                                            //productid,productname,productcategoryid,categoryname,productsubcategoryid,subcategoryname,vchuom,vchorderuom,numorderedqty,datdeliverybefore,numrate,productcode
+                                            var strdate = '';
+                                            strdate = new Date(grddata[i].datdeliverybefore);
+                                            var datdeleivery = '';
+                                            var day = strdate.getDate();
+                                            var monthIndex = strdate.getMonth() + 1;
+                                            var year = strdate.getFullYear();
+                                            datdeleivery = day + '/' + monthIndex + '/' + year;
+                                            if (datdeleivery === '1/1/1970') {
+                                                //if (strpotype == "MODIFY") {
+                                                datdeleivery = '';
+                                                //}
+                                            }
+                                            var strAmount = parseFloat(grddata[i].numorderedqty) * parseFloat(grddata[i].numrate);
+                                            var BS = {
+                                                Amount: strAmount,
+                                                ProductCategoryName: grddata[i].categoryname,
+                                                ProductSubCategoryName: grddata[i].subcategoryname,
+                                                ProductCategoryID: grddata[i].productcategoryid,
+                                                ProductSubcategoryID: grddata[i].productsubcategoryid,
+                                                ProductID: grddata[i].productid,
+                                                Productcode: grddata[i].productcode,
+                                                ProductName: grddata[i].productname,
+                                                Uom: grddata[i].vchuom,
+                                                PurchaseUom: grddata[i].vchorderuom,
+                                                Quantity: grddata[i].numorderedqty,
+                                                EstimateRate: grddata[i].numrate,
+                                                DeliveredBefore: datdeleivery,
+                                                ProductBasicAmount: parseFloat(grddata[i].numrate) * parseFloat(grddata[i].numorderedqty),
+                                                Amount: grddata[i].amount,
+                                                vatorcst: grddata[i].taxtype,
+                                                taxvatcst: grddata[i].vatorcsttaxpercentage,
+                                                TaxvatorcstAmount: grddata[i].vatorcsttaxamount,
+                                                TaxExcisePercentage: grddata[i].excisetaxpercentage,
+                                                TaxExciseAmount: grddata[i].excisetaxamount,
+                                                TaxCESSPercentage: grddata[i].cesstaxpercentage,
+                                                TaxCESSAmount: grddata[i].cesstaxamount,
+                                                TaxSHCESSPercentage: grddata[i].shcesstaxpercentage,
+                                                TaxSHCESSAmount: grddata[i].shcesstaxamount,
+                                                ProductDiscountType: grddata[i].vchdiscounttype,
+                                                ProductDiscountFlatPercentage: grddata[i].numdiscountvalue,
+                                                ProductDiscountValue: grddata[i].discountamount,
+                                                taxtype: grddata[i].vchtaxtype
+
+                                            };
+                                            //$('#grdPurchaseOrder').jqGrid("addRowData", BS, "last");
+                                            $("#grdPurchaseOrder").jqGrid('addRowData', i + 1, BS);
+                                        }
+                                        //if (strpotype != "MODIFY") {
+                                        //    BasicCalculations();
+                                        //    $scope.DiscountCalculations();
+                                        //    $scope.ExiseCalculations();
+                                        //    $scope.VatorCstCalculations();
+                                        //}
+                                        //$("#grdPurchaseOrder").trigger("reloadGrid");
+                                    }
+                                });
+                                //if (strpotype == "MODIFY") {
+                                $http.post('/MMSTransaction/getpotaxdetails', { poid: strpoid, Vendorid: VID }).success(function (data) {
+                                    if (data != null) {
+                                        debugger;
+                                        $scope.TX = eval('(' + data.Data + ')');
+                                        $scope.$apply();
+                                        $scope.Percentages = {};
+                                        //if (eval('(' + data.Data + ')').vatorcst === "VAT") {
+                                        //    var ROWS = ["0", "5", "14.5"];
+                                        //    $scope.Percentages = ROWS;
+                                        //} else if (eval('(' + data.Data + ')').vatorcst === "CST") {
+                                        //    var ROWS = ["2", "2.5", "12.5"];
+                                        //    $scope.Percentages = ROWS;
+                                        //} else {
+                                        //    $scope.hdtaxtypevatorcst = false;
+                                        //    $scope.Percentages = [];
+                                        //}
+
+
+                                        $scope.Purchaseorderfrm.PlaceofDelivery.$dirty = false;
+                                        $scope.Purchaseorderfrm.PlaceofDelivery.$invalid = false;
+                                        $scope.Purchaseorderfrm.PlaceofDelivery = eval('(' + data.Data + ')').PlaceofDelivery;
+                                        //$('#PlaceofDelivery').text(eval('(' + data.Data + ')').PlaceofDelivery);
+                                        $('#PlaceofDelivery').val('string:' + eval('(' + data.Data + ')').PlaceofDelivery);
+                                        //$("#PlaceofDelivery option").filter(function () {
+                                        //    return this.text == eval('(' + data.Data + ')').PlaceofDelivery;
+                                        //}).attr('selected', true);
+                                        //var strlen = $scope.placeofdeliveries.length;
+                                        //var strPlace = eval('(' + data.Data + ')').placeofdelivery;
+                                        //for (var i = 0; i < strlen; i++) {
+                                        //    var strPlaceofDelivery = $scope.placeofdeliveries[i].PlaceofDelivery;
+                                        //    if (strPlaceofDelivery === strPlace) {
+                                        //        $scope.Order.PlaceofDelivery = $scope.placeofdeliveries[i].PlaceofDelivery;
+                                        //    }
+                                        //}
+                                        //ng-model="selectedOption"
+                                        //$scope.Order.PlaceofDelivery.$valid = true;
+                                        //$scope.Purchaseorderfrm.PlaceofDelivery.$dirty = false;
+                                        $('#TermsandConditions').val(eval('(' + data.Data + ')').TermsandConditions);
+                                        $scope.$apply();
+
+                                        // var strTaxExcisePercentage = parseFloat(eval('(' + data.Data + ')').TaxExcisePercentage)
+
+                                        // $scope.TX.TaxExcisePercentage = '' + strTaxExcisePercentage + '';
+                                        $scope.TX.totalexcise = parseFloat(eval('(' + data.Data + ')').TaxExciseAmount);
+                                        // var strTaxCESSPercentage = parseFloat(eval('(' + data.Data + ')').TaxCESSPercentage)
+
+                                        // $scope.TX.TaxCESSPercentage = '' + strTaxCESSPercentage + ''
+                                        $scope.TX.totalcess = parseFloat(eval('(' + data.Data + ')').TaxCESSAmount);
+                                        //var strTaxSHCESSPercentage = parseFloat(eval('(' + data.Data + ')').TaxSHCESSPercentage)
+
+                                        //$scope.TX.TaxSHCESSPercentage = '' + strTaxSHCESSPercentage + '';
+                                        $scope.TX.totalshcess = parseFloat(eval('(' + data.Data + ')').TaxSHCESSAmount);
+                                        $scope.TX.totalvatorcst = eval('(' + data.Data + ')').TaxvatorcstAmount;
+                                        $scope.TX.DiscountType = eval('(' + data.Data + ')').DiscountType;
+                                        if (!isNaN(parseFloat(eval('(' + data.Data + ')').DiscountValue))) {
+                                            $('#DiscountValue').val(parseFloat(eval('(' + data.Data + ')').DiscountValue));
+                                        }
+                                        $scope.TX.DiscountFlatPercentage = parseFloat(eval('(' + data.Data + ')').DiscountFlatPercentage);
+                                        //$scope.TX.taxtype = eval('(' + data.Data + ')').taxtype;
+                                        // $scope.TX.vatorcst = eval('(' + data.Data + ')').vatorcst;
+                                        //if ($scope.TX.taxtype === "EXCISE") {
+                                        //    $scope.hdEXCISE = true;
+                                        //    $scope.hdVATCST = false;
+                                        //} else if ($scope.TX.taxtype === "VAT") {
+                                        //    $scope.hdEXCISE = false;
+                                        //    $scope.hdVATCST = true;
+                                        //} else if ($scope.TX.taxtype === "BOTH") {
+                                        //    $scope.hdVATCST = true;
+                                        //    $scope.hdEXCISE = true;
+                                        //} else {
+                                        //    $scope.hdEXCISE = false;
+                                        //    $scope.hdVATCST = false;
+                                        //}
+                                        $scope.$apply();
+                                        //if (parseFloat(eval('(' + data.Data + ')').taxvatcst) == 5) {
+                                        //    $('#taxvatcst').val('string:5');
+                                        //} else if (parseFloat(eval('(' + data.Data + ')').taxvatcst) == 14.5) {
+                                        //    $('#taxvatcst').val('string:14.5');
+                                        //} else if (parseFloat(eval('(' + data.Data + ')').taxvatcst) == 0) {
+                                        //    $('#taxvatcst').val('string:0');
+                                        //} else if (parseFloat(eval('(' + data.Data + ')').taxvatcst) == 2) {
+                                        //    $('#taxvatcst').val('string:2');
+                                        //} else if (parseFloat(eval('(' + data.Data + ')').taxvatcst) == 12.5) {
+                                        //    $('#taxvatcst').val('string:12.5');
+                                        //} else if (parseFloat(eval('(' + data.Data + ')').taxvatcst) == 2.5) {
+                                        //    $('#taxvatcst').val('string:2.5');
+                                        //}
+
+
+                                    }
+                                    BasicCalculations();
+                                    $scope.DiscountCalculations();
+                                    // $scope.ExiseCalculations();
+                                    // $scope.VatorCstCalculations();
+                                    $scope.isFormValid = true;
+                                    $scope.Purchaseorderfrm.$setPristine();
+                                    $scope.$apply();
+
+                                });
+                                //}
+                            }
+                        }
+                    }
+                };
+                CheckGrid = function () {
+                    var IsExists = true;
+                    var rowdata = jQuery('#grdPurchaseOrder').jqGrid('getRowData');
+                    var len = rowdata.length;
+                    for (var i = 0; i < len; i++) {
+                        var Productid = $scope.Product.ProductID;
+                        if (parseInt(rowdata[i].ProductID) == Productid) {
+                            IsExists = false;
+                        }
+                    }
+                    return IsExists;
+                }
+                jQuery("#grdPurchaseOrder").jqGrid({
+                    url: '',
+
+                    datatype: "local",
+                    //'VendorID', 'VendorName', --Columns
+                    colNames: ['Action', 'Product Name', 'UOM', 'Category', 'Subcategory', 'CategoryID', 'Sub CategoryID', 'ProductID', 'Productcode', 'Purchase Uom', 'Quantity', 'Estimate Rate', 'Basic Amount', 'Discount Type', 'Discount', 'Discount Value', 'vchtaxtype', 'Tax Type', 'Tax%', 'Tax Amount', 'Excise%', 'Excise Amount', 'Cess%', 'Cess Amount', 'Shcess%', 'Shcess Amount', 'Amount', 'Delivered Before'],
+                    colModel: [
+                        {
+                            width: 60, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                            //<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button>
+                        },
+                    { name: 'ProductName', index: 'ProductName', width: 150 },
+                    { name: 'Uom', index: 'Uom', width: 100 },
+                    { name: 'ProductCategoryName', index: 'ProductCategoryName', width: 150 },
+                    { name: 'ProductSubCategoryName', index: 'ProductSubCategoryName', width: 150 },
+                    { name: 'ProductCategoryID', index: 'ProductCategoryID', width: 150, hidden: true },
+                    { name: 'ProductSubcategoryID', index: 'ProductSubcategoryID', width: 150, hidden: true },
+                    { name: 'ProductID', index: 'ProductID', width: 150, hidden: true },
+                    { name: 'Productcode', index: 'Productcode', width: 150, hidden: true },
+                    //{ name: 'VendorID', index: 'VendorID', width: 150, hidden: true },
+                    //{ name: 'VendorName', index: 'VendorName', width: 150 },
+                    { name: 'PurchaseUom', index: 'PurchaseUom', width: 150, hidden: true },
+                    {
+                        name: 'Quantity', index: 'Quantity', width: 120, editable: true, formatter: 'number', sortable: false,
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                    },
+                    {
+                        name: 'EstimateRate', index: 'EstimateRate', width: 120, editable: true, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                    {
+                        name: 'ProductBasicAmount', index: 'ProductBasicAmount', width: 150, editable: false, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                     { name: 'ProductDiscountType', index: 'ProductDiscountType', width: 150 },
+                     {
+                         name: 'ProductDiscountFlatPercentage', index: 'ProductDiscountFlatPercentage', width: 150, editable: false, formatter: 'number', align: 'right',
+                         formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                     },
+                    {
+                        name: 'ProductDiscountValue', index: 'ProductDiscountValue', width: 150, editable: false, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                    { name: 'taxtype', index: 'taxtype', width: 100, hidden: true },
+                     {
+                         name: 'vatorcst', index: 'vatorcst', width: 100, editable: true, edittype: 'select', editoptions: {
+                             value: [" ", "VAT", "CST"], dataEvents: [
+                              {
+                                  type: 'change',
+                                  fn: function (e) {
+                                      debugger;
+
+                                      var rowid = $("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow');
+                                      $('#grdPurchaseOrder').saveRow(rowid);
+                                      $('#grdPurchaseOrder').jqGrid("setCell", rowid, "taxvatcst", "0.00");
+                                      $('#grdPurchaseOrder').jqGrid("setCell", rowid, "TaxvatorcstAmount", "0.00");
+
+                                      //$('#grdPurchaseOrder').setColProp('taxvatcst', { editoptions: { value: [], class: 'edit-select' }, editrules: { required: true, edithidden: true } });
+                                      // $('#grdPurchaseOrder').saveRow(rowid);
+                                      BasicCalculations();
+                                      GridCal(rowid);
+                                      $scope.$apply();
+                                  }
+                              }]
+                         },
+                     },
+                    {
+                        name: 'taxvatcst', index: 'taxvatcst', width: 100, editable: true, formatter: 'number', align: 'right', edittype: 'select', editoptions: {
+                            value: $scope.gridPercentages, dataEvents: [
+                             {
+                                 type: 'change',
+                                 fn: function (e) {
+                                     debugger;
+                                     var rowid = $("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow');
+                                     // $scope.grdedit == true;
+                                     //editRow(this.value);
+                                     $('#grdPurchaseOrder').saveRow(rowid);
+                                     BasicCalculations();
+                                     GridCal(rowid);
+                                     $scope.$apply();
+
+                                     // BasicCalculations();
+                                     // $('#grdPurchaseOrder').saveRow(rowid);
+                                 }
+
+                             }]
+                        },
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                    {
+                        name: 'TaxvatorcstAmount', index: 'TaxvatorcstAmount', width: 100, editable: false, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                    {
+                        name: 'TaxExcisePercentage', index: 'TaxExcisePercentage', width: 100, editable: true, formatter: 'number', align: 'right', edittype: 'select', editoptions: {
+                            value: ["", "2.00", "12.00", "12.50", "14.00", "14.50", "15.00"], dataEvents: [
+                              {
+                                  type: 'change',
+                                  fn: function (e) {
+                                      debugger;
+
+                                      var rowid = $("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow');
+                                      $('#grdPurchaseOrder').saveRow(rowid);
+                                      $('#grdPurchaseOrder').jqGrid("setCell", rowid, "TaxExciseAmount", "0.00");
+                                      BasicCalculations();
+                                      GridCal(rowid);
+                                      $scope.$apply();
+                                  }
+                              }]
+                        },
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                    {
+                        name: 'TaxExciseAmount', index: 'TaxExciseAmount', width: 120, editable: false, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                     {
+                         name: 'TaxCESSPercentage', index: 'TaxCESSPercentage', width: 100, editable: true, formatter: 'number', align: 'right', edittype: 'select', editoptions: {
+                             value: ["", "0.00", "2.00"], dataEvents: [
+                              {
+                                  type: 'change',
+                                  fn: function (e) {
+                                      debugger;
+
+                                      var rowid = $("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow');
+                                      $('#grdPurchaseOrder').saveRow(rowid);
+
+                                      $('#grdPurchaseOrder').jqGrid("setCell", rowid, "TaxCESSAmount", "0.00");
+                                      BasicCalculations();
+                                      GridCal(rowid);
+                                      $scope.$apply();
+                                  }
+                              }]
+                         },
+                         formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                     },
+                    {
+                        name: 'TaxCESSAmount', index: 'TaxCESSAmount', width: 100, editable: false, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+                     {
+                         name: 'TaxSHCESSPercentage', index: 'TaxSHCESSPercentage', width: 100, editable: true, formatter: 'number', align: 'right', edittype: 'select', editoptions: {
+                             value: ["", "0.00", "1.00"], dataEvents: [
+                              {
+                                  type: 'change',
+                                  fn: function (e) {
+                                      debugger;
+
+                                      var rowid = $("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow');
+                                      $('#grdPurchaseOrder').saveRow(rowid);
+                                      $('#grdPurchaseOrder').jqGrid("setCell", rowid, "TaxSHCESSAmount", "0.00");
+                                      BasicCalculations();
+                                      GridCal(rowid);
+                                      $scope.$apply();
+                                  }
+                              }]
+                         },
+                         formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                     },
+                    {
+                        name: 'TaxSHCESSAmount', index: 'TaxSHCESSAmount', width: 120, editable: false, formatter: 'number', align: 'right',
+                        formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                    },
+
+                     {
+                         name: 'Amount', index: 'Amount', width: 150, editable: false, formatter: 'number', align: 'right',
+                         formatoptions: { decimalSeparator: ".", decimalPlaces: 2, defaultValue: '0.00' }
+                     },
+                    {
+                        name: 'DeliveredBefore', index: 'DeliveredBefore',
+                        align: "center", sortable: false,
+
+                        editable: true,
+                        editoptions: {
+                            size: 20,
+                            dataInit: function (el) {
+                                $(el).datepicker({
+                                    dateFormat: 'dd-mm-yy',
+                                    format: "dd/mm/yyyy",
+                                    autoclose: true,
+                                    startDate: new Date()
+                                });
+                            },
+                            defaultValue: function () {
+                                var currentTime = new Date();
+                                var month = parseInt(currentTime.getMonth() + 1);
+                                month = month <= 9 ? "0" + month : month;
+                                var day = currentTime.getDate();
+                                day = day <= 9 ? "0" + day : day;
+                                var year = currentTime.getFullYear();
+                                return day + "-" + month + "-" + year;
+                            },
+                            dataEvents: [{
+                                type: 'keypress', // keydown
+                                fn: function (e) {
+                                    return false;
+                                    //Splecial Keys Preventing
+                                    //if (e.keyCode >= 48 && e.keyCode <= 57) {
+                                    //    return false;
+                                    //} else {
+                                    //    return true;
+                                    //}
+                                }
+                            }],
+                        }
+                        //editoptions: { dataInit: function (el) { setTimeout(function () { $(el).datepicker(); }, 200); } }
+                        //formatter: 'date',
+                        //formatoptions: { newformat: "dd/mm/yy" },
+                        //sortable: false,
+                        //width: 200,
+                        //align: 'right',
+                        //editable: true,
+                        //editoptions: {
+                        //    size: 20,
+                        //    maxlengh: 10,
+                        //    dataInit: function (element) {
+                        //        $(element).datepicker({
+                        //            dateFormat: 'd/m/Y',
+                        //            constrainInput: false,
+                        //            showOn: 'button',
+                        //            buttonText: '...'
+                        //        });
+                        //    }
+                        //},
+                        //editrules: {
+                        //    date: true,
+                        //    minValue: 0
+                        //},
+                        //formatoptions: {
+                        //    newformat: "dd/mm/yy"
+                        //}
+                        //formatter: "date", editable: true,
+                        //editoptions: { dataInit: initDateEdit }
+                        //formatter: "date",
+                        //formatoptions: { newformat: 'dd/MM/yyyy' },
+                        //editrules: { date: true, minValue: 0 },
+                        ////datefmt: 'dd-mm-yyyy',
+                        //editoptions: { dataInit: function (elem) { $(elem).datepicker({ dateFormat: 'dd-mm-yy' }); } }
+                    }
+                    ],
+                    height: 250,
+                    altRows: true,
+
+                    onSelectRow: editRow,
+                    viewrecords: true,
+                    caption: "Purchase Order Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+                });
+                $scope.lastSelection = "";
+                function editRow(id) {
+                    var grid = $("#grdPurchaseOrder");
+                    debugger;
+                    var VatorCst = "";
+                    var rowid = parseInt($("#grdPurchaseOrder").jqGrid('getGridParam', 'selrow'));
+                    var rowData = $("#grdPurchaseOrder").getRowData(rowid);
+                    VatorCst = rowData.vatorcst;
+                    VatorCstdropdown = [];
+                    if (VatorCst == "VAT") {
+                        VatorCstdropdown = ["0.00", "5.00", "14.50"];
+                    }
+                    else if (VatorCst == "CST") {
+
+                        VatorCstdropdown = ["2.00","5.50","2.50", "12.50"];
+                    }
+                    else {
+                        VatorCstdropdown = ["0.00"];
+                    }
+
+                    $('#grdPurchaseOrder').setColProp('taxvatcst', { editoptions: { value: VatorCstdropdown, class: 'edit-select' }, editrules: { required: true, edithidden: true } });
+                    grid.jqGrid('saveRow', $scope.lastSelection);
+
+                    if ($scope.grdedit == true) {
+                        grid.jqGrid("editRow", id, {
+                            keys: true,
+                            aftersavefunc: function (id) {
+                                debugger;
+                                GridCal(id);
+
+                            }
+                        });
+                        $scope.lastSelection = id;
+                    }
+                }
+                function GridCal(id) {
+
+
+                    var strQuantity = $('#grdPurchaseOrder').jqGrid("getCell", parseInt(id), "Quantity");
+                    var strEstimateRate = $('#grdPurchaseOrder').jqGrid("getCell", id, "EstimateRate");
+                    var strdiscountamount = $('#grdPurchaseOrder').jqGrid("getCell", id, "ProductDiscountValue") || 0;
+                    //-----------Taxdetails------------------//
+                    var strvatorcstpercentage = $('#grdPurchaseOrder').jqGrid("getCell", id, "taxvatcst") || 0;
+                    var strvatorcstamount = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxvatorcstAmount") || 0;
+                    $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxvatorcstAmount", "0.00");
+                    var strexcisepercentage = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxExcisePercentage") || 0;
+                    var strexciseamount = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxExciseAmount") || 0;
+                    $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxExciseAmount", "0.00");
+                    var strcesspercentage = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxCESSPercentage") || 0;
+                    var strcessamount = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxCESSAmount") || 0;
+                    $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxCESSAmount", "0.00");
+                    var strshcesspercentage = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxSHCESSPercentage") || 0;
+                    var strshcessamount = $('#grdPurchaseOrder').jqGrid("getCell", id, "TaxSHCESSAmount") || 0;
+                    $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxSHCESSAmount", "0.00");
+                    var BasicAmount = (parseFloat(strQuantity) * parseFloat(strEstimateRate)) - parseFloat(strdiscountamount);
+                    var indexOfColumn;
+                    if (parseFloat(strQuantity) > 0) {
+
+
+
+                        if (strexcisepercentage !== undefined && strexcisepercentage != 0.00) {
+                            strexciseamount = (parseFloat(BasicAmount)) * (parseFloat(strexcisepercentage) / 100);
+                            $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxExciseAmount", strexciseamount);
+                            //$scope.GD.TaxExciseAmount = Math.round(parseFloat(strTaxExciseAmount) * 100) / 100;
+                        }
+
+                        if (strexcisepercentage !== 0.00) {
+                            strcessamount = parseFloat(strexciseamount) * (parseFloat(strcesspercentage) / 100);
+                            $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxCESSAmount", strcessamount);
+                            // $scope.GD.TaxCESSAmount = Math.round(parseFloat(strcessamount) * 100) / 100;
+                        }
+                        if (strcesspercentage !== 0.00) {
+                            strshcessamount = parseFloat(strexciseamount) * (parseFloat(strshcesspercentage) / 100);
+                            $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxSHCESSAmount", strshcessamount);
+                            // $scope.GD.TaxSHCESSAmount = Math.round(parseFloat(strTaxSHCESSAmount) * 100) / 100;
+                        }
+                        if (strvatorcstpercentage !== 0.00) {
+                            strTaxvatorcstAmount = (parseFloat(BasicAmount)) * parseFloat(strvatorcstpercentage) / 100;
+                            $('#grdPurchaseOrder').jqGrid("setCell", id, "TaxvatorcstAmount", strTaxvatorcstAmount);
+                            //$scope.GD.TaxvatorcstAmount = Math.round(parseFloat(strTaxvatorcstAmount) * 100) / 100;
+                        }
+                        BasicCalculations();
+
+
+
+
+
+                        if (strQuantity === "0.000" || strQuantity === "" || parseFloat(strQuantity) == 0) {
+                            $('#grdPurchaseOrder').jqGrid("setCell", id, "receivedqty", "", "ui-state-error ui-state-error-text");
+                        }
+                        //else {
+                        //    // reomove
+                        //    indexOfColumn = getColumnIndexByName("receivedqty");
+                        //    $(this.rows.namedItem(id).cells[indexOfColumn]).removeClass("ui-state-error ui-state-error-text");
+                        //}
+                        if (strEstimateRate === "0.00" || strEstimateRate === "" || strEstimateRate === "0" || parseFloat(strEstimateRate) == 0) {
+                            $('#grdPurchaseOrder').jqGrid("setCell", id, "EstimateRate", "", "ui-state-error ui-state-error-text");
+                        }
+                        //else {
+                        //    // reomove
+                        //    indexOfColumn = getColumnIndexByName("grnrate");
+                        //    $(this.rows.namedItem(id).cells[indexOfColumn]).removeClass("ui-state-error ui-state-error-text");
+                        //}
+                        if (parseFloat(strQuantity) > 0 && parseFloat(strEstimateRate) > 0) {
+                            //indexOfColumn = getColumnIndexByName("grnrate");
+                            //$(this).jqGrid("setCell", id, "grnrate", "", "ui-state-error ui-state-error-text");
+                            // first change the cell in the visible part of grid
+                            //myGrid.jqGrid('setCell', id, 'Amount', (parseFloat(strQuantity) * parseFloat(strEstimateRate)));
+                            // now change the internal local data
+                            //myGrid.jqGrid('getLocalRow', id).Amount = (parseFloat(strQuantity) * parseFloat(strEstimateRate));
+                            var taxamount = parseFloat(strTaxvatorcstAmount) + parseFloat(strshcessamount) + parseFloat(strcessamount) + parseFloat(strexciseamount);
+                            var amount = (parseFloat(strQuantity) * parseFloat(strEstimateRate)) + parseFloat(taxamount) - parseFloat(strdiscountamount);
+                            $('#grdPurchaseOrder').jqGrid('setCell', id, 'Amount', amount);
+                            var productbasicamount = (parseFloat(strQuantity) * parseFloat(strEstimateRate));
+                            $('#grdPurchaseOrder').jqGrid('setCell', id, 'ProductBasicAmount', productbasicamount);
+                        } else {
+                            $('#grdPurchaseOrder').jqGrid('setCell', id, 'Amount', 0);
+                            $('#grdPurchaseOrder').jqGrid('setCell', id, 'ProductBasicAmount', 0);
+                        }
+                    }
+                    BasicCalculations();
+                    $scope.DiscountCalculations();
+                    // $scope.ExiseCalculations();
+                    //$scope.VatorCstCalculations();
+                    $scope.$apply();
+                }
+
+
+                $scope.gridcalculations = function (id) {
+                    debugger;
+                    var strQuantity = $(this).jqGrid("getCell", parseInt(id), "Quantity");
+                    var strEstimateRate = $(this).jqGrid("getCell", id, "EstimateRate");
+                    var strdiscountamount = $(this).jqGrid("getCell", id, "ProductDiscountValue");
+                    //-----------Taxdetails------------------//
+                    var strvatorcstpercentage = $(this).jqGrid("getCell", id, "taxvatcst");
+                    var strvatorcstamount = $(this).jqGrid("getCell", id, "TaxvatorcstAmount");
+                    $(this).jqGrid("setCell", id, "TaxvatorcstAmount", "0.00");
+                    var strexcisepercentage = $(this).jqGrid("getCell", id, "TaxExcisePercentage");
+                    var strexciseamount = $(this).jqGrid("getCell", id, "TaxExciseAmount");
+                    $(this).jqGrid("setCell", id, "TaxExciseAmount", "0.00");
+                    var strcesspercentage = $(this).jqGrid("getCell", id, "TaxCESSPercentage");
+                    var strcessamount = $(this).jqGrid("getCell", id, "TaxCESSAmount");
+                    $(this).jqGrid("setCell", id, "TaxCESSAmount", "0.00");
+                    var strshcesspercentage = $(this).jqGrid("getCell", id, "TaxSHCESSPercentage");
+                    var strshcessamount = $(this).jqGrid("getCell", id, "TaxSHCESSAmount");
+                    $(this).jqGrid("setCell", id, "TaxSHCESSAmount", "0.00");
+                    var BasicAmount = parseFloat(strQuantity) * parseFloat(strEstimateRate);
+                    var indexOfColumn;
+                    if (parseFloat(strQuantity) > 0) {
+
+
+
+                        if (strexcisepercentage !== undefined && strexcisepercentage != 0.00) {
+                            strexciseamount = (parseFloat(BasicAmount)) * (parseFloat(strexcisepercentage) / 100);
+                            $(this).jqGrid("setCell", id, "TaxExciseAmount", strexciseamount);
+                            //$scope.GD.TaxExciseAmount = Math.round(parseFloat(strTaxExciseAmount) * 100) / 100;
+                        }
+
+                        if (strexcisepercentage !== 0.00) {
+                            strcessamount = parseFloat(strexciseamount) * (parseFloat(strcesspercentage) / 100);
+                            $(this).jqGrid("setCell", id, "TaxCESSAmount", strcessamount);
+                            // $scope.GD.TaxCESSAmount = Math.round(parseFloat(strcessamount) * 100) / 100;
+                        }
+                        if (strcesspercentage !== 0.00) {
+                            strshcessamount = parseFloat(strexciseamount) * (parseFloat(strshcesspercentage) / 100);
+                            $(this).jqGrid("setCell", id, "TaxSHCESSAmount", strshcessamount);
+                            // $scope.GD.TaxSHCESSAmount = Math.round(parseFloat(strTaxSHCESSAmount) * 100) / 100;
+                        }
+                        if (strvatorcstpercentage !== 0.00) {
+                            strTaxvatorcstAmount = (parseFloat(BasicAmount)) * parseFloat(strvatorcstpercentage) / 100;
+                            $(this).jqGrid("setCell", id, "TaxvatorcstAmount", strTaxvatorcstAmount);
+                            //$scope.GD.TaxvatorcstAmount = Math.round(parseFloat(strTaxvatorcstAmount) * 100) / 100;
+                        }
+                        BasicCalculations();
+
+                        if (strQuantity === "0.000" || strQuantity === "" || parseFloat(strQuantity) == 0) {
+                            $(this).jqGrid("setCell", id, "receivedqty", "", "ui-state-error ui-state-error-text");
+                        }
+                        //else {
+                        //    // reomove
+                        //    indexOfColumn = getColumnIndexByName("receivedqty");
+                        //    $(this.rows.namedItem(id).cells[indexOfColumn]).removeClass("ui-state-error ui-state-error-text");
+                        //}
+                        if (strEstimateRate === "0.00" || strEstimateRate === "" || strEstimateRate === "0" || parseFloat(strEstimateRate) == 0) {
+                            $(this).jqGrid("setCell", id, "EstimateRate", "", "ui-state-error ui-state-error-text");
+                        }
+                        //else {
+                        //    // reomove
+                        //    indexOfColumn = getColumnIndexByName("grnrate");
+                        //    $(this.rows.namedItem(id).cells[indexOfColumn]).removeClass("ui-state-error ui-state-error-text");
+                        //}
+                        if (parseFloat(strQuantity) > 0 && parseFloat(strEstimateRate) > 0) {
+                            //indexOfColumn = getColumnIndexByName("grnrate");
+                            //$(this).jqGrid("setCell", id, "grnrate", "", "ui-state-error ui-state-error-text");
+                            // first change the cell in the visible part of grid
+                            //myGrid.jqGrid('setCell', id, 'Amount', (parseFloat(strQuantity) * parseFloat(strEstimateRate)));
+                            // now change the internal local data
+                            //myGrid.jqGrid('getLocalRow', id).Amount = (parseFloat(strQuantity) * parseFloat(strEstimateRate));
+                            var taxamount = parseFloat(strTaxvatorcstAmount) + parseFloat(strshcessamount) + parseFloat(strcessamount) + parseFloat(strexciseamount);
+                            var amount = (parseFloat(strQuantity) * parseFloat(strEstimateRate)) + parseFloat(taxamount) - parseFloat(strdiscountamount);
+                            $(this).jqGrid('setCell', id, 'Amount', amount);
+                            var productbasicamount = (parseFloat(strQuantity) * parseFloat(strEstimateRate));
+                            $(this).jqGrid('setCell', id, 'ProductBasicAmount', productbasicamount);
+                        } else {
+                            $(this).jqGrid('setCell', id, 'Amount', 0);
+                            $(this).jqGrid('setCell', id, 'ProductBasicAmount', 0);
+                        }
+                    }
+                    BasicCalculations();
+                    $scope.DiscountCalculations();
+                    // $scope.ExiseCalculations();
+                    //$scope.VatorCstCalculations();
+                    $scope.$apply();
+
+                }
+                $scope.SavePurchaseOrder = function (Order) {
+                    debugger;
+                    $scope.submitted = true;
+                    var Grid_data = $('#grdPurchaseOrder').jqGrid('getRowData');
+                    var strTermsandConditions = $("#TermsandConditions").val();
+                    //var TransportCharges = $("#TransportCharges").val();
+                    var isValid = false;
+                    //else {
+                    //    alert('Please Select Vendor!');
+                    //    isValid = false;
+                    //    return false;
+                    //}
+                    var strVendorName = $("#VendorName option:selected").text();
+                    if (strVendorName != undefined && strVendorName != "" && strVendorName != null && strVendorName != "select") {
+                        $scope.Order.VendorName = strVendorName;
+                        isValid = true;
+                    } else {
+                        isValid = false;
+                        //return false;
+                    }
+                    if (TransportCharges != null && TransportCharges != undefined && TransportCharges != "") {
+                        $scope.Order.TransportCharges = 0;
+                    }
+                    //$scope.Order.VendorName = $("#VendorName :selected").text();
+
+                    debugger;
+                    if ($scope.isFormValid && $scope.isTaxFormValid) {
+                        if (Grid_data.length > 0) {
+                            if (strTermsandConditions != undefined && strTermsandConditions != "" && strTermsandConditions != null) {
+                                $scope.Order.Terms = strTermsandConditions;
+                                isValid = true;
+                            } else {
+                                alert('Enter Terms and Conditions!');
+                                isValid = false;
+                                //return false;
+                            }
+                        } else {
+                            isValid = false;
+                            alert('Please Add Product Details in Grid!');
+                        }
+                        if (isValid) {
+                            if (CheckSaveGrid()) {
+                                var ans = confirm("Are You Sure? Do You Want To Save?");
+                                if (ans) {
+                                    $scope.Order.PlaceofDelivery = $("#PlaceofDelivery option:selected").text();
+                                    $scope.DiscountCalculations();
+                                    // $scope.ExiseCalculations();
+                                    // $scope.VatorCstCalculations();
+                                    $scope.Griddata = Grid_data;
+                                    $http.post('/MMSMaster/SavePurchaseOrder', { PurchaseOrderDTO: JSON.stringify($scope.Order), listPurchaseOrderDTO: JSON.stringify($scope.Griddata), TAX: JSON.stringify($scope.TX) })
+                                         .success(function (data) {
+                                             debugger;
+                                             if (data.isSaved) {
+                                                 alert("Purchase Order Saved Successfully !");
+                                                 Clear();
+                                                 $scope.PODetails = eval('(' + data.podetails + ')');
+                                                 //var Uniquevendornames = $.unique($scope.PODetails.map(function (d) {
+                                                 //    return d.vchvendorname;
+                                                 //}));
+                                                 $('#Terms').val('');
+                                                 for (var i = 0; i < $scope.PODetails.length; i++) {
+                                                     var w = window.open("/MMSReports/PurchaseOrderReport/?pono=" + $scope.PODetails[i].vchpurchaseorderno + "&vendorname=" + $scope.PODetails[i].vchvendorname + "", '_blank');
+                                                 }
+                                             }
+                                         });
+                                }
+                            } else {
+                                alert('Please Check Quantity and Estimate Rate in Grid!')
+                            }
+                        } else {
+                            //$('#PoType').focus();
+                            //$('#page-content')[0].scrollIntoView();
+                            //$('body').animate({
+                            //    scrollTop: $('body').position().top
+                            //}, 'slow');
+                            //window.scrollTo(600, 1);
+                            //window.scrollTo(0, document.body.scrollHeight);
+                            //document.getElementById('PoType').focus();
+                            //return true;
+                            //submit_button.addEventListener("click", test_click_event);
+                            //$window.scrollTo(0, 0);
+                            //$window.scrollTo(0, 0); //Scroll to top
+                            //$window.scrollTo(0, angular.element('PoType').offsetTop);   //Focus on element
+                            //angular.element("#page-content")[0].scrollTop = 0; //Scroll TOP on element
+                            //$(document).scrollTop(100);
+                            //var b = Math.min(500, Math.max(100, parseInt( / 3)));
+                            //a("html,body").animate( scrollTop: 0, b);
+                            $('html,body').scrollTop(0);
+                            $('html, body').animate({ scrollTop: 0 }, 'fast');
+                            window.scrollTo(10, 10);
+                        }
+                    }
+                };
+                function Clear() {
+                    debugger;
+                    var strDate = $scope.Order.PurchseOrderDate;
+                    $scope.Order = {};
+                    $scope.Product = {};
+                    $scope.TX = {};
+                    $scope.frmtx.$setPristine();
+                    $scope.ProductNames = {};
+                    $scope.hdpo = true;
+                    $scope.Names = {};
+                    $scope.hdEXCISE = false;
+                    $scope.hdVATCST = false;
+                    $scope.Vendorrequired = false;
+                    //$scope.ponumbers = {};
+                    $scope.Purchaseorderfrm.$setPristine();
+                    $scope.submitted = false;
+                    $scope.productaddfrm.$setPristine();
+                    $scope.AddProductsubmitted = false;
+                    $('#grdPurchaseOrder').jqGrid('clearGridData');
+                    $scope.Order.PurchseOrderDate = strDate;
+                    $("#TermsandConditions").val('');
+                }
+                CheckSaveGrid = function () {
+                    var IsValid = true;
+                    var rowdata = jQuery('#grdPurchaseOrder').jqGrid('getRowData');
+                    var len = rowdata.length;
+                    var rowid = 0;
+                    debugger;
+                    for (var i = 0; i < len; i++) {
+                        rowid++;
+                        if (rowdata[i].Quantity === "0.000" || rowdata[i].Quantity === "" || parseFloat(rowdata[i].Quantity) == 0) {
+                            //$(this).jqGrid("setCell", rowid, "receivedqty", "", "ui-state-error ui-state-error-text");
+                            $('#grdPurchaseOrder').jqGrid("setCell", rowid, "Quantity", "", "ui-state-error ui-state-error-text");
+                            IsValid = false;
+                        }
+                        if (rowdata[i].EstimateRate === "0.00" || rowdata[i].EstimateRate === "" || rowdata[i].EstimateRate === "0" || parseFloat(rowdata[i].EstimateRate) == 0) {
+                            //$(this).jqGrid("setCell", id, "grnrate", "", "ui-state-error ui-state-error-text");
+                            $('#grdPurchaseOrder').jqGrid("setCell", rowid, "EstimateRate", "", "ui-state-error ui-state-error-text");
+                            IsValid = false;
+                        }
+                    }
+                    return IsValid;
+                }
+            });
+            function edit(row) {
+                debugger;
+                var appElement = document.querySelector('[ ng-controller=PurchaseOrderController]');
+                var rowdata = jQuery('#grdPurchaseOrder').jqGrid('getRowData', row);
+                var $scope = angular.element(appElement).scope();
+                var copy = Object.assign({}, rowdata);
+                $scope.Product = copy;
+                $("#ProductID option:selected").value = copy.ProductID;
+                // $scope.Product.ProductID = copy.ProductID;
+                $scope.$apply();
+                $scope.ProductAmountcalculate();
+                $scope.taxtypeChange();
+            }
+            function CheckMobilenumber() {
+                var strmobilenumber = $('#Contactno').val();
+                if (strmobilenumber != undefined && strmobilenumber != null && strmobilenumber != '') {
+
+                    if (strmobilenumber.length != 10 || parseFloat(strmobilenumber) == 0) {
+                        alert('Invalid Contact No.');
+                        $('#Contactno').val('');
+                    }
+                }
+            }
+        </script>

@@ -1,0 +1,220 @@
+﻿@{
+
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<div ng-controller="BillCancel" ng-init="getBills()">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="page-header">
+                    <h1>
+                        BILL CANCEL<small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                    </h1>
+                </div>
+                <!-- PAGE CONTENT BEGINS -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="form-field-1">
+                        Table No :
+                    </label>
+                    <div class="col-sm-3">
+                        <input id="form-field-1" ng-model="tablesname" class="form-control"
+                               type="text" disabled="true">
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="col-sm-2 control-label" for="form-field-1">
+                            Bill No :
+                        </label>
+                        <div class="col-sm-3">
+                            <select ng-model="recordid" class=" form-control" name="BillName" ng-options="c.recordid as c.vchbillno for c in BillNOSExist"
+                                    ng-change="BillSelect(recordid)" required data-index="2" kt-focus>
+                                <option value="">Select BillNo</option>
+                            </select>
+                        </div>
+                    </div>*@
+
+
+            </div>
+        </div>
+
+
+        <table id="grid-BillCancel"></table>
+        <div id="grid-BillCancelPager">
+        </div>
+    </div>
+
+</div>
+<script>
+
+
+    var app = angular.module('RMS');
+    app.controller('BillCancel', function ($scope, $http, $rootScope, $location, myService) {
+        debugger
+
+
+        $scope.getBills = function () {
+            debugger;
+
+
+
+            $http({
+                url: '/POSTransaction/getData/',
+                method: "get"
+            }).success(function (data) {
+
+
+                $scope.tablesname = data.split('-')[0];
+
+                var TableId = $scope.tablesname;
+
+
+                //$scope.TableIdC=
+
+                $http({
+                    url: '/POSTransaction/getcancelBills/',
+                    method: "POST",
+                    data: { TableId: TableId }
+
+                }).success(function (data) {
+                    debugger;
+                    gridBillData(data);
+
+
+                });
+
+
+
+
+
+            });
+
+
+
+
+               
+
+          
+
+            debugger;
+
+
+
+           // var UrlData = $location.$$absUrl.split('/');
+          //  var TableId = $scope.tablesname;
+           // $scope.tablesname = TableId;
+           // $scope.TableIdC = TableId;
+            //$http({
+            //    url: '/POSTransaction/showBillno/',
+            //    method: "POST",
+            //    data: { TableId: TableId }
+            //}).success(function (data) {
+            //    debugger;
+            //    $scope.BillNOSExist = eval('(' + data.Data + ')');
+            //});
+
+            debugger;
+        
+
+        }
+
+
+
+
+
+        function gridBillData(data) {
+
+            var grid_data = eval('(' + data.Data + ')');
+            var grid_selector = "#grid-BillCancel";
+            var pager_selector = "#grid-BillCancelPager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+
+                data: grid_data,
+                datatype: "local",
+                height: 250,
+                colModel: [
+                        {
+                            label: ' ', sortable: false, width: 100, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "      <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+
+
+                        { label: 'Bill No', name: 'vchbillno', width: 200 },
+                        { label: 'Bill Date', name: 'datkotdate', width: 200 },
+                        { label: 'Bill Amount', name: 'numnet', width: 200 },
+
+
+
+                ],
+                viewrecords: true,
+                rowNum: 10,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                loadComplete: function () {
+                    var table = this;
+
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                },
+                caption: "Bill details <span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+    });
+    function Delete(row) {
+        debugger;
+        var appElement = document.querySelector('[ ng-controller=BillCancel]');
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+
+        var rowdata = $("#grid-BillCancel").getRowData(row);
+        rowdata["TableId"] = $scope.tablesname;
+        var ans = window.confirm("Are you sure?Do you want to Delete Record?");
+        if (ans) {
+            $http({
+                url: '/POSTransaction/CreateDeletedBills/',
+                method: "POST",
+                data: { JsonS: JSON.stringify(rowdata) }
+
+            }).success(function (data) {
+                debugger;
+                alert("Bill cancelled Successfully !");
+                var url = '@Url.Action("../POSTransaction/DashBoard")';
+                window.location.href = url;
+            });
+        }
+    }
+</script>
+

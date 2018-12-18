@@ -1,0 +1,799 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<style type="text/css">
+    .fullwidth {
+        width: 100% !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .ui-jqgrid-btable .ui-state-highlight {
+        background: #003366;
+    }
+
+    .ui-state-highlight {
+        background: lightblue !important;
+    }
+
+    .holdRow td {
+        font-weight: bold !important;
+        color: Blue !important;
+        background: gray;
+    }
+
+    .holdSelected td {
+        font-weight: bold !important;
+        color: green !important;
+        background: yellow;
+    }
+
+
+    .higLightholdRow td {
+        font-weight: bold !important;
+        color: Yellow !important;
+    }
+
+    .can_be_selected {
+        border: 1px solid #696;
+    }
+
+    .background_color_grey {
+        background: #ccc;
+    }
+
+    .ui-jqgrid .ui-jqgrid-title {
+        width: 100%;
+    }
+
+    .ui-jqgrid .ui-jqgrid-caption {
+        width: 100%;
+    }
+
+
+    .grid-ico {
+        width: auto;
+        float: right;
+        right: 20px;
+        position: relative;
+    }
+
+        .grid-ico li {
+            list-style: none;
+            float: left;
+            padding: 0px 5px;
+            font-size: 18px;
+            color: #fff;
+        }
+
+    .ui-jqgrid .ui-jqgrid-hbox {
+        background: none;
+        border-bottom: 0px solid #fc8b7f;
+    }
+
+
+
+
+    .background_color_grey {
+        background: #ccc;
+    }
+
+
+    /*#wrap {
+        margin: 00px 10px;
+        display: inline-block;
+        position: relative;
+        height: 60px;
+        float: right;
+        padding: 0;
+        position: relative;
+    }*/
+
+    #wrap-search input[type="text"] {
+        height: 40px;
+        font-size: 22px;
+        display: inline-block;
+        font-weight: 100;
+        border: none;
+        outline: none;
+        color: #333;
+        padding: 3px;
+        padding-right: 26px;
+        width: 0px;
+        position: absolute;
+        top: 0;
+        right: 0px;
+        background: none;
+        z-index: 3;
+        transition: width .4s cubic-bezier(0.000, 0.795, 0.000, 1.000);
+        cursor: pointer;
+        border-radius: 0px !important;
+    }
+
+        #wrap-search input[type="text"]:focus:hover {
+            border-bottom: 1px solid #BBB;
+        }
+
+        #wrap-search input[type="text"]:focus {
+            width: 400px;
+            z-index: 1;
+            border-bottom: 1px solid #BBB;
+            cursor: text;
+            background: #fff;
+            border-radius: none;
+        }
+
+    /*#wrap-search input[type="submit"] {
+        height: 30px;
+        width: 26px;
+        display: inline-block;
+        color: red;
+        float: right;
+        background: url(../../assets/Images/search-icon.png) center center no-repeat;
+        text-indent:111px;
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 0;
+        z-index: 2;
+        cursor: pointer;
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity .4s ease;
+        background-size: 30px;
+    }
+
+        input[type="submit"]:hover {
+            opacity: 0.8;
+        }*/
+
+
+    #wrap-search a.submit {
+        height: 30px;
+        width: 26px;
+        display: inline-block;
+        color: red;
+        float: right;
+        background: url(../../assets/Images/search-icon.png) center center no-repeat;
+        text-indent: 111px;
+        border: none;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 2;
+        cursor: pointer;
+        opacity: 0.4;
+        cursor: pointer;
+        transition: opacity .4s ease;
+        background-size: 30px;
+    }
+
+        #wrap-search a.submit:hover {
+            opacity: 0.8;
+        }
+
+
+
+    ul.menu-item {
+        width: 100%;
+        padding: 3px;
+        margin: 0px;
+    }
+
+        ul.menu-item li {
+            width: 100%;
+            height: 40px;
+            display: inline;
+            padding: 8px 10px;
+            line-height: 30px;
+            font-size: 16px;
+            margin: 2px 0px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+        }
+
+            ul.menu-item li span {
+                float: left;
+            }
+
+            ul.menu-item li .item-title {
+                width: auto;
+                min-width: 70%;
+                cursor: pointer;
+            }
+
+            ul.menu-item li .item-Code {
+                width: auto;
+                min-width: 70%;
+            }
+
+            ul.menu-item li .quantity {
+                width: auto;
+                min-width: 10%;
+            }
+
+        ul.menu-item .rate-item {
+            width: auto;
+            min-width: 20%;
+            text-align: right;
+        }
+
+            ul.menu-item .rate-item .fa {
+                color: #080000 !important;
+            }
+
+
+    .table > thead > tr {
+        background: #6fb3e0 !important;
+    }
+
+
+        .table > thead > tr > th {
+            font-weight: 400 !important;
+            font-size: 17px;
+            color: #fff;
+            text-transform: uppercase !important;
+            width: inherit;
+            padding: 8px 8px;
+        }
+
+    .table > tbody {
+        font-size: 16px;
+    }
+
+
+    .table > thead > tr > th:last-child {
+        text-align: right;
+        padding-right: 25px !important;
+    }
+
+    .table > tbody > tr > td:last-child {
+        text-align: right;
+    }
+
+
+    .fa-plus:before,
+    .fa-minus:before {
+        font-size: 12px !important;
+        font-kerning: none;
+        color: #444;
+        text-shadow: none;
+    }
+
+    .table > tfoot > tr > th:last-child {
+        text-align: right;
+    }
+
+
+    .table > tfoot > tr:first-child > th {
+        font-size: 16px;
+        font-weight: 600;
+        border-top: 1px double rgba(0, 0, 0, 0.4);
+        padding: 8px;
+    }
+
+    .table > tfoot > tr > th {
+        font-size: 16px;
+        font-weight: 400;
+        border: none;
+        padding: 4px;
+    }
+
+    .table > tfoot > tr:last-child > th {
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+        border-top: 1px solid rgba(0, 0, 0, 0.6);
+        padding: 8px;
+    }
+
+    .table > tfoot > tr:first-child > td {
+        border-top: 1px solid #ddd;
+    }
+
+
+
+    .table > tfoot > tr > td {
+        border: none;
+    }
+
+
+    .table input {
+        border: none !important;
+        border-bottom: 1px solid #ddd !important;
+        border-radius: 0px !important;
+    }
+</style>
+
+<div class="page-content" ng-controller="ThirPartyDetailsController" ng-init=" getGridData();">
+    <div class="row">
+
+        <div class=" col-sm-12 col-xs-12">
+
+
+            <div class="page-header" style="padding-bottom:42px !important; ">
+
+                <h1 style="width:auto; line-height:35px;  float:left">
+
+                    {{ThirpartyName}}
+                    <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+
+
+
+                </h1>
+
+                <a href="" ng-click="Back();" class="pull-right right " style="font-size:16px;">
+                    <i class="ace-icon fa fa-chevron-left"> </i> BACK TO HOME PAGE
+                </a>
+
+            </div>
+            <!-- PAGE CONTENT BEGINS -->
+
+
+            <div class="col-sm-2">
+                <button class="btn btn-success " ng-click="GoToNewOrder()">
+                    <i class="ace-icon fa fa-apple"></i> New Order
+                </button>
+                <div ng-hide="firstshow">
+                    <table id="grid-ThirPartyDetails"></table>
+                    <div id="grid-ThirPartyDetailspager">
+                    </div>
+                </div>
+                <div ng-hide="hidefirst">
+                    <table id="grid-ThirPartyDetailsPrevious"></table>
+                    <div id="grid-ThirPartyDetailsPreviouspager">
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right" style="margin-top:5px;">
+                <span style="float: left; margin-right: 5px;"> View Orders:</span>
+                <div class="switch-field pull-left">
+
+                    <input type="radio" id="switch_left" name="switch_2" value="WE" ng-click="GetSpecificDateData('W');" />
+                    <label for="switch_left" style="font-style:inherit;">1W</label>
+                    <input type="radio" id="switch_right" name="switch_2" value="MO" ng-click="GetSpecificDateData('M');" />
+                    <label for="switch_right" style="font-style:inherit;">1M</label>
+
+
+                </div>
+                <div class="switch-field pull-left">
+
+                    <input type="radio" id="switch_leftT" name="switch_2" value="TO" ng-click="GetSpecificDateData('T');" />
+                    <label for="switch_leftT" style="font-style:inherit;">T</label>
+                    <input type="radio" id="switch_rightR" name="switch_2" value="RU" checked ng-click="GetSpecificDateData('R');" />
+                    <label for="switch_rightR" style="font-style:inherit;">R</label>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal2" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">Order Details </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style="margin:3px 0px; border:#f5ecec; " width="100">
+                        <thead class="">
+                            <tr>
+
+                                <th align="center" style="width:45%">
+                                    Item
+                                </th>
+
+                                <th align="center" style="width:30%">
+                                    Qty.
+                                </th>
+
+                                <th style="width:25%">
+                                    Rate
+                                </th>
+
+
+                            </tr>
+                        </thead>
+                        <tr ng-repeat="Itema in GetItemsOfSpecicOrder1">
+
+
+
+                            <td>
+                                {{Itema.itemname}}
+                            </td>
+
+
+
+                            <td>
+
+                                {{Itema.itemqty}}
+
+                            </td>
+
+                            <td>
+                                {{Itema.numitemrate| currency:'₹ '}}
+                            </td>
+
+
+
+
+                        </tr>
+
+
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+
+    var app = angular.module('RMS');
+    app.controller("ThirPartyDetailsController", ['$filter', '$scope', '$http', '$rootScope', '$location', 'myService', function ($filter, $scope, $http, $rootScope, $location, myService) {
+        debugger;
+        $scope.hidefirst = true;
+        $scope.firstshow = false;
+        ThirdpartynameUndefine = window.location.href.split("/")[5];
+        if (ThirdpartynameUndefine !== undefined && ThirdpartynameUndefine != "") {
+            var Thirdpartyname = window.location.href.split("/")[5].split("?")[0].replace('%20',' ');
+            var ThirdpartyId = window.location.href.split("/")[5].split("?")[1];
+            var ThirdpartyRecorId = window.location.href.split("/")[5].split("?")[2];
+            $scope.ThirpartyName = Thirdpartyname;
+            $scope.ThirdpartyId = ThirdpartyId;
+            $scope.ThirdpartyRecorId = ThirdpartyRecorId;
+        }
+        else {
+
+            window.location.href = "/POSTransaction/DashBoard/";
+            return false;
+        }
+        $scope.GoToNewOrder = function (Third) {
+            debugger;
+            window.location.href = "/TakeAway/ThirdPartyNewOrders/" + $scope.ThirpartyName + "?" + $scope.ThirdpartyId + "?" + $scope.ThirdpartyRecorId + "";
+        }
+
+        $scope.getGridData = function () {
+            debugger;
+
+
+            $http({
+                url: '/TakeAway/GetThirdPartyOders/',
+                method: "POST",
+                data: { ThirdpartyRecorId: $scope.ThirdpartyRecorId, ThirdpartyId: $scope.ThirdpartyId }
+            }).success(function (data) {
+                debugger;
+
+
+                ThirdPartyDetailsGrid(data.JsonString);
+
+
+            });
+        }
+        $scope.Back = function () {
+
+            window.location.href = "/POSTransaction/DashBoard/";
+
+        }
+        $scope.GetSpecificDateData = function (WMTR) {
+            $scope.WMTR = WMTR;
+            debugger;
+            $http({
+                url: '/TakeAway/GetThirdPartyOdersWeekWiseAndMonthWise/',
+                method: "POST",
+                data: { ThirdpartyRecorId: $scope.ThirdpartyRecorId, ThirdpartyId: $scope.ThirdpartyId, Wise: WMTR }
+            }).success(function (data) {
+                debugger;
+
+
+                if ($scope.WMTR == "W" || $scope.WMTR == "M" || $scope.WMTR == "T") {
+
+                    ThirdPartyDetailsGridPrevious(data.JsonString);
+                    $scope.hidefirst = false;
+                    $scope.firstshow = true;
+                }
+                else {
+
+                    ThirdPartyDetailsGrid(data.JsonString);
+                    $scope.hidefirst = true;
+                    $scope.firstshow = false;
+                }
+
+            });
+        }
+
+
+
+
+    }]);
+
+</script>
+
+<script>
+
+    function ThirdPartyDetailsGrid(data) {
+        debugger;
+        var grid_data = eval('(' + data + ')');
+        var grid_selector = "#grid-ThirPartyDetails";
+        var pager_selector = "#grid-ThirPartyDetailspager";
+
+        //grid data refresh
+        jQuery(grid_selector).jqGrid('clearGridData')
+        jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+        debugger;
+        jQuery(grid_selector).jqGrid({
+
+            data: grid_data,
+            datatype: "local",
+            rownumbers: true,
+            height: 'auto',
+            colModel: [
+                //
+                 { label: 'Order Status.', name: 'vchstatuscode', width: 25, align: 'center', hidden: true },
+                     {
+                         label: ' ', sortable: false, width: 60, key: true, align: 'center', formatter: function (cellvalue, options, rowObject) {
+                             return " <button class='btn-grid' type='button' onclick='editThirdPartyorderDetails(" + options.rowId + ");'  ><img src='/assets/css/Images/Edit.png' width='20'><br/></button>";
+                         }
+                     },
+                    { label: 'Order No.', name: 'vchorderno', width: 75, formatter: 'showlink', formatoptions: { baseLinkUrl: 'javascript:', showAction: "Link('", addParam: "');" } },
+
+                    { label: 'Order Time', name: 'ordertime', width: 100 },
+                      {
+                          label: 'Bill Amount', name: 'numitemtotal', width: 60, align: 'Right', formatter: 'currency',
+                          formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                      },
+                    {
+                        label: 'Status', name: 'vchstatus', align: 'center', width: 100, editable: true, edittype: "select", editoptions: {
+                            value: ["In Preparation", "Order Prepared", "Out For Delivery", "Order Cancel"],
+                            dataEvents: [
+                                       {
+                                           type: 'change',
+                                           fn: function (e) {
+                                               debugger;
+                                           }
+                                       }]
+                        }
+                    },
+
+                    {
+                        label: ' ', sortable: false, width: 60, key: true, align: 'center', formatter: function (cellvalue, options, rowObject) {
+                            return " <button class='btn-grid' type='button' onclick='SaveStatus(" + options.rowId + ");'  ><img src='/assets/css/Images/save-btn.png' width='30'><br/></button>";
+                        }
+                    }
+
+
+
+            ],
+            onSelectRow: editRow,
+            viewrecords: true,
+
+            rowList: [8, 16, 25, 100],
+            //pager: pager_selector,
+            altRows: true,
+            ignoreCase: true,
+            loadComplete: function () {
+                var table = this;
+
+                setTimeout(function () {
+                    styleCheckbox(table);
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+
+            },
+            caption: "Orders <span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+        });
+        $(window).triggerHandler('resize.jqGrid');
+
+    }
+
+    function ThirdPartyDetailsGridPrevious(data) {
+        debugger;
+        var grid_data = eval('(' + data + ')');
+        var grid_selector = "#grid-ThirPartyDetailsPrevious";
+        var pager_selector = "#grid-ThirPartyDetailsPreviouspager";
+
+        //grid data refresh
+        jQuery(grid_selector).jqGrid('clearGridData')
+        jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+        debugger;
+        jQuery(grid_selector).jqGrid({
+
+            data: grid_data,
+            datatype: "local",
+            rownumbers: true,
+            height: 'auto',
+            colModel: [
+                //
+
+
+                    { label: 'Order No.', name: 'vchorderno', width: 75, formatter: 'showlink', formatoptions: { baseLinkUrl: 'javascript:', showAction: "Link('", addParam: "');" } },
+
+                    { label: 'Order Time', name: 'ordertime', width: 100 },
+                      {
+                          label: 'Bill Amount', name: 'numitemtotal', width: 60, align: 'Right', formatter: 'currency',
+                          formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                      }
+
+
+
+
+            ],
+            onSelectRow: editRow,
+            viewrecords: true,
+
+            rowList: [8, 16, 25, 100],
+            //pager: pager_selector,
+            altRows: true,
+            ignoreCase: true,
+            loadComplete: function () {
+                var table = this;
+
+                setTimeout(function () {
+                    styleCheckbox(table);
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+
+            },
+            caption: "Orders <span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+        });
+        $(window).triggerHandler('resize.jqGrid');
+
+    }
+    function editRow(id) {
+        debugger;
+
+        var grid = $("#grid-ThirPartyDetails");
+
+        grid.jqGrid('editRow', id, { keys: true });
+
+    }
+
+    var appElement = document.querySelector('[ ng-controller=ThirPartyDetailsController]');
+
+
+    function SaveStatus(row) {
+
+        $("#grid-ThirPartyDetails").saveRow(row);
+
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+
+        var rowdata = $("#grid-ThirPartyDetails").getRowData(row);
+        debugger;
+        updateStataus = "";
+        if (rowdata.vchstatuscode == "TPI") {
+
+            updateStataus = "In Preparation";
+
+        }
+        if (rowdata.vchstatuscode == "TPOR") {
+
+            updateStataus = "Order Prepared";
+
+        }
+        if (rowdata.vchstatuscode == "TPO") {
+
+            updateStataus = "Out For Delivery";
+
+        }
+        if (rowdata.vchstatuscode == "TPI" && rowdata.vchstatus == "In Preparation") {
+
+            alert("Order Already In Preparation!")
+            $("#grid-ThirPartyDetails").jqGrid('setCell', row, 'vchstatus', updateStataus);
+            return false;
+
+
+        }
+        if (rowdata.vchstatuscode == "TPOR" && rowdata.vchstatus == "Order Prepared" || rowdata.vchstatus == "In Preparation") {
+
+            alert("Order Already Prepared!")
+            $("#grid-ThirPartyDetails").jqGrid('setCell', row, 'vchstatus', updateStataus);
+            return false;
+
+
+        }
+
+
+        $http({
+            url: '/TakeAway/UpdateDliveryStatusInThirdPartyOrders/',
+            method: "POST",
+            data: { OderNo: rowdata.vchorderno, Status: rowdata.vchstatus, ThirdpartyRecorId: $scope.ThirdpartyRecorId, ThirdpartyId: $scope.ThirdpartyId }
+
+        }).success(function (data) {
+            debugger
+            ThirdPartyDetailsGrid(data.JsonString)
+
+        }).error(function (data) { alert("Error found"); });
+
+    }
+
+    function editThirdPartyorderDetails(row) {
+        debugger;
+        var rowdata = $("#grid-ThirPartyDetails").getRowData(row);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+
+        if (rowdata.vchstatuscode == "TPI" || rowdata.vchstatuscode == "TPOR") {
+
+            window.location.href = "/TakeAway/ThirdPartyNewOrders/" + $scope.ThirpartyName + "?" + $scope.ThirdpartyId + "?" + $scope.ThirdpartyRecorId + "?" + rowdata.vchstatuscode + "?" + rowdata.vchorderno + "";
+        }
+
+    }
+
+    function Link(id) {
+        debugger;
+        var row = id.split("=");
+        var row_ID = parseFloat(row[1]);
+
+        //  var rowdata = $("#grid-ThirPartyDetails").getRowData(row_ID);
+
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var content = $("#grid-ThirPartyDetailsPrevious").getCell(row_ID, 'vchorderno');
+        if (content == false) {
+
+            content = $("#grid-ThirPartyDetails").getCell(row_ID, 'vchorderno');
+
+        }
+
+        $http({
+            url: '/TakeAway/GetItemsOfSpecicOrder/',
+            method: "post",
+            data: { orderNo: content }
+        }).success(function (data) {
+            debugger;
+
+            $scope.GetItemsOfSpecicOrder1 = eval('(' + data.DeliveryBoyDetails + ')')
+
+            $("#myModal2").modal();
+
+        });
+
+
+    }
+</script>

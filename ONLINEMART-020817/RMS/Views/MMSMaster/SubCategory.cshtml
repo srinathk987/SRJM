@@ -1,0 +1,319 @@
+﻿@{
+    //ViewBag.Title = "SubCategory";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div ng-controller="ProductSubCategoryController" ng-init="LoadData()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="ProductSubCategoryMasterfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Category Name <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="productcategory" id="productcategory" ng-model="Isc.CategoryId" placeholder="Product Category" ng-options="c.CategoryId as c.CategoryName for c in Categories" ng-change="SelectCategory()"
+                                    class="form-control" required kt-focus data-index="1">
+                                <option value="">Select Category Name</option>
+                            </select>
+                            <span class="error" ng-show="(ProductSubCategoryMasterfrm.productcategory.$dirty || submitted) && ProductSubCategoryMasterfrm.productcategory.$error.required">
+                                Category Name Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Category Code :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="categorycode" ng-model="Isc.CategoryCode" placeholder="Category Code" disabled kit-alpha-numeric
+                                   class="form-control" />
+                            <span class="error" ng-show="(ProductSubCategoryMasterfrm.categorycode.$dirty || submitted) && ProductSubCategoryMasterfrm.categorycode.$error.required">
+                                Category Code Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Subcategory Name <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="TxtSbcategory" name="subcategory" ng-model="Isc.Subcategory" maxlength="100"  kt-focus data-index="2"
+                                   placeholder="Enter Subcategory Name" class="form-control" required />
+                            <span class="error" ng-show="(ProductSubCategoryMasterfrm.subcategory.$dirty || submitted) && ProductSubCategoryMasterfrm.subcategory.$error.required">
+                                Subcategory Name Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1" hidden>
+                            Sub-Category Code <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4" hidden>
+                            <input type="text" name="subcategorycode" ng-model="Isc.subcategorycode" maxlength="10"
+                                   placeholder="Enter Sub-Category Code" class="form-control" />
+                            <span class="error" ng-show="(ProductSubCategoryMasterfrm.subcategorycode.$dirty || submitted) && ProductSubCategoryMasterfrm.subcategorycode.$error.required">
+                                Sub-Category Code Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" ng-click="SaveSubCategory(Isc)" data-index="3">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table id="grdSubCategory"></table>
+        <div id="grid-pager">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=ProductSubCategoryController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdSubCategory"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdSubCategory").getRowData(row);
+        $scope.btnSave = "Update"
+        $scope.Isc = rowdata;
+        $scope.Isc.CategoryId = $.grep($scope.Categories, function (c) {
+            return c.CategoryCode == $scope.Isc.CategoryCode;
+        })[0].CategoryId;
+        $scope.$apply();
+    }
+    function Delete(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#grdSubCategory").getRowData(row);
+        if ($scope.btnSave == "Save") {
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+            if (ans) {
+                $http.post('/MMSMaster/DeleteSubCategory', rowdata).success(function (data) {
+                    if (data == true) {
+                        alert("Product Subcategory Details Deleted Successfully");
+                        $('#grdSubCategory').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                    else {
+                        alert("Sub Category Name Alredy Used");
+                    }
+                })
+            }
+        }
+       
+    }
+
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('ProductSubCategoryController', function ($scope, $http, $rootScope) {
+        debugger
+        $('#productcategory').focus();
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Product Subcategory";
+        $rootScope.ModuleName = "MMS Masters";
+
+        $scope.$watch('ProductSubCategoryMasterfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.SelectCategory = function () {
+            debugger
+            document.getElementById("TxtSbcategory").value = "";
+            $scope.Isc.CategoryCode = $.grep($scope.Categories, function (c) {
+                return c.CategoryId == $scope.Isc.CategoryId;
+            })[0].CategoryCode;
+
+            //$scope.Isc.Items = $.grep($scope.Items, function (item) {
+            //    return item.CategoryId == $scope.Isc.CategoryId && item.CategoryId == $scope.Isc.CategoryId;
+            //})[0].CategoryCode;
+        }
+
+        $http({
+            url: '/MMSMaster/ShowProductCategory/',
+            method: "get"
+
+        }).success(function (data) {
+            debugger;
+            $scope.Categories = data;
+
+        })
+
+
+        $scope.LoadData = function () {
+            debugger;
+            $http({
+                url: '/MMSMaster/ShowProductSubCategory/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                ProductSubcategoryGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+        $scope.SaveSubCategory = function (Isc) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http.post('/MMSMaster/SaveProductSubCategory', Isc).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                var CategorieName = Isc.CategoryId;
+                                alert("Product Subcategory Details Saved Successfully");
+                                $scope.LoadData();
+                                $('grdSubCategory').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                                $scope.Isc.CategoryId = CategorieName;
+                                $scope.Isc.CategoryCode = $.grep($scope.Categories, function (c) {
+                                    return c.CategoryId == CategorieName;
+                                })[0].CategoryCode;
+                                $scope.Isc = {};
+                            } else {
+                                alert("Product Subcategory Name Already Exist");
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+                }
+                else {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $http.post('/MMSMaster/UpdateProductSubCategory', Isc).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Product Subcategory Details Updated Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+
+                            } else {
+
+                                alert("Product Subcategory Name Already Exist");
+
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+                }
+
+
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+
+            $scope.Isc = {};
+            $scope.ProductSubCategoryMasterfrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+
+        }
+
+        //****************** JQ Grid  *******************************//
+        function ProductSubcategoryGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdSubCategory";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'Subcategory ID', name: 'SubCategoryId', width: 75, hidden: true },
+                         { label: 'Category Code', name: 'CategoryCode', width: 90 },
+                         { label: 'Category Name', name: 'Category', width: 90 },
+                        { label: 'Subcategory Code', name: 'SubcategoryCode', width: 75 },
+                        { label: 'Subcategory Name', name: 'Subcategory', width: 90 }
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Product Subcategories <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+
+    });
+</script>

@@ -1,0 +1,156 @@
+﻿@{
+    // ViewBag.Title = "CreateWeeklyWiseReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="WeeklyWiseReportController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> WEEKLY WISE </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="WeeklyWiseReportController" name="fmWeeklyWiseReport"
+                              ng-init="ngInitBindComboBoxes()">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" ng-change="changeDate(WeeklyWise.fromdate)" type="text" class=" form-control" ng-model="WeeklyWise.fromdate" id="calendar" data-date-format="yyyy-mm-dd" required />
+                                    <span class="error" ng-show="(fmWeeklyWiseReport.FromDate.$dirty || submitted ) && fmWeeklyWiseReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="ToDate" disabled type="text" id="datepicker" class=" form-control " ng-model="WeeklyWise.todate" data-date-format="yyyy-mm-dd" required />
+                                    <span class="error" ng-show="(fmWeeklyWiseReport.ToDate.$dirty || submitted ) && fmWeeklyWiseReport.ToDate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-1">
+                                    <button class="btn btn-success" type="button" ng-click="PrintWeeklyWiseReport(WeeklyWise)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        debugger
+        $("#calendar").datepicker({
+            endDate: '-6d'
+
+        });
+
+    });
+
+
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+        $scope.dateOptions = {
+
+            maxDate: -6
+        };
+
+
+
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('WeeklyWiseReportController', function ($scope, $http, $rootScope) {
+        $scope.WeeklyWise = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Weekly Wise";
+        $scope.isFormValid = false;
+
+        $scope.$watch('fmWeeklyWiseReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        function addDays(theDate, days) {
+            debugger
+            return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+        }
+
+        $scope.changeDate = function (fromdate) {
+            debugger
+
+            var date = new Date(fromdate);
+            var newdate = new Date(date);
+
+            newdate.setDate(newdate.getDate() + 6);
+
+
+            var dd = newdate.getDate();
+            var mm = newdate.getMonth() + 1;
+            var y = newdate.getFullYear();
+
+
+            if (mm < 10) {
+                mm = "0" + mm;
+            }
+            else {
+
+                mm = mm;
+            }
+            if (dd < 10) {
+                dd = "0" + dd;
+            }
+            else {
+
+                dd = dd;
+            }
+            //  var someFormattedDate = mm + '/' + dd + '/' + y;
+            var someFormattedDate = y + '-' + mm + '-' + dd;
+
+            //   var newDate = addDays(fromdate,7);
+            //  var res = new Date(fromdate);
+            //  var re2=res.Add
+
+            $scope.WeeklyWise.todate = someFormattedDate;
+
+        }
+
+        $scope.PrintWeeklyWiseReport = function (WeeklyWise) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+                var w = window.open("/POSReports/WeeklyWiseReport/?fromdate=" + WeeklyWise.fromdate + "&todate=" + WeeklyWise.todate + "", '_blank');
+                $scope.WeeklyWise = {};
+                $scope.fmWeeklyWiseReport.$setPristine();
+                $scope.submitted = false;
+            }
+        }
+    });
+</script>

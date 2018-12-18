@@ -1,0 +1,574 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>RAVI COMPUTERS</title>
+    <meta name="description" content="Common UI Features &amp; Elements" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.min.css")" />
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">*@
+    <link href="~/assets/font-awesome.min.css" rel="stylesheet" />
+
+
+    @*  <link rel=" stylesheet" href="@Url.Content(" ~ />assets/font-awesome/4.2.0/css/font-awesome.min.css")" />*@
+    <!-- page specific plugin styles -->
+    @*<link rel="stylesheet" href="@Url.Content("~/assets/css/jquery-ui.custom.min.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/jquery.gritter.min.css")" />
+        @*<link rel="stylesheet" href="@Url.Content("~/assets/css/jquery-ui.min.css")" />
+        <!-- Date & TIME piCKER MULTISELECTOR ANDSEARCH CSS -->
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/jquery-ui.min.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/datepicker.min.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap-timepicker.min.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/daterangepicker.min.css")" />
+        <link rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap-datetimepicker.min.css")" />
+        <!-- text fonts -->
+        <link rel="stylesheet" href="@Url.Content("~/assets/fonts/fonts.googleapis.com.css")" />
+        <link rel="stylesheet" href="@Url.Content("../../assets/font-awesome/4.2.0/css/font-awesome.min.css")" />*@
+    <!-- ace styles -->
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/mal1aka.css")" class="ace-main-stylesheet" id="main-ace-style" />
+    @*<link rel="stylesheet" href="~/assets/css/ui.jqgrid.min.css" />*@
+
+    <link href="~/assets/Css/animate.css" rel="stylesheet" />
+
+    <link href="~/Content/ui-select.css" rel="stylesheet" />
+    <link href="~/Content/select2.css" rel="stylesheet" />
+    <link href="~/Content/selectize.default.css" rel="stylesheet" />
+
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="~/assets/css/malaka.css" class="ace-main-stylesheet"
+          id="main-ace-style" />
+    <!-- inline styles related to this page -->
+    <style>
+        /* some elements used in demo only */
+
+        .spinner-preview {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .dropdown-preview {
+            margin: 0 5px;
+            display: inline-block;
+        }
+
+            .dropdown-preview > .dropdown-menu {
+                display: block;
+                position: static;
+                margin-bottom: 5px;
+            }
+    </style>
+    <style>
+        input {
+            padding: 5px;
+            border: 1px solid #A5A5A5;
+        }
+
+            input.ng-dirty.ng-invalid {
+                border: 1px solid red;
+                background-color: rgb(255, 244, 244);
+            }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        .ui-icon, .ui-widget-content .ui-icon {
+            background-image: none !important;
+        }
+    </style>
+
+
+
+    <!-- ace settings handler -->
+    @* <script src="assets/js/ace-extra.min.js"></script>*@
+    <script src="../../assets/js/ace-extra.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/layout/jquery.min.js"></script>
+    @*<script src="~/assets/js/jquery.jqGrid.min.js"></script>
+        <script src="~/assets/js/grid.locale-en.js"></script>*@
+
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/layout/angular-sanitize.js"></script>
+    <script src="~/Scripts/layout/select.js"></script>
+    <script src="../../Scripts/app.js" type="text/javascript"></script>
+    @*<link rel="stylesheet" href="~/assets/css/ui.jqgrid.css" />*@
+
+
+</head>
+<body class="no-skin" ng-app="RMS" ng-controller="rmsCtrl" ng-cloak ng-init="LoadChildNames()" style="height:100%;">
+
+    <div id="navbar" class="navbar navbar-default navbar-collapse h-navbar">
+        <button type="button" class="navbar-toggle menu-toggler" id="menu-toggler"
+                data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span> <span class="icon-bar"></span><span class="icon-bar">
+            </span><span class="icon-bar"></span>
+        </button>
+
+        <div class="navbar-container" id="navbar-container">
+
+            <div class="navbar-header pull-left">
+                <a href="~/POSTransaction/DashBoard" class="navbar-brand hidden-xs popoverData" data-content="Resto" rel="popover" data-placement="bottom" data-original-title="" data-trigger="hover"> <small> <img src="../assets/images/small-logo.png"> </small> </a>
+                <a href="~/POSTransaction/DashBoard" class="navbar-brand visible-xs popoverData" data-content="Resto" rel="popover" data-placement="bottom" data-original-title="" data-trigger="hover" style="width:65px !important; padding-left:20px; overflow:hidden"> <small style=""> <img src="../assets/images/small-logo.png"> </small> </a>
+
+                @*<h2 class="pull-left white hidden-xs" style="padding-left:14PX; text-shadow:0px 0px 5px #A5A5A5; color:#ffd800 !important "> POINT OF SALE</h2>
+                    <h2 class="pull-left white visible-xs" style="padding-left:20PX; text-shadow:0px 0px 5px #A5A5A5; color:#ffd800 !important "> POS</h2>*@
+            </div>
+            <div class="navbar-buttons navbar-header pull-right" role="navigation">
+
+                <ul class="nav ace-nav">
+                    <li class="">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <img class="nav-user-photo" src="../assets/images/user.png" alt="User Photo">
+                            <span class="user-info"> <small>Welcome,</small> {{username}} </span> <i class="ace-icon fa fa-caret-down"></i>
+                        </a>
+                        <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li> <a href="#"> <i class="ace-icon fa fa-cog"></i> Settings </a> </li>
+                            <li> <a href="#"> <i class="ace-icon fa fa-user"></i> Profile </a> </li>
+                            <li class="divider"></li>
+                            <li> <a href="@Url.Action("LogOff", "Login")"> <i class="ace-icon fa fa-power-off"></i> Logout </a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="accordion-nav" class="pull-right" style="z-index:99999; position:relative">
+
+                @*<div class="panel panel-bg" ng-repeat="mtable in ParentModule | orderBy:mtable" ng-click="ParentModuleClick(mtable);" ng-class="ActiveClass(mtable)">*@
+                <div class="panel panel-bg" ng-repeat="mtable in ParentModule | orderBy:mtable" ng-click="ParentModuleClick(mtable);" ng-class="ParentName==mtable?'active':''">
+                    <div class="pink p1">
+                        <span class="icon filter" ng-show="'POS'==mtable?true:false"> <img src="~/assets/Images/photo-1.png"></span>
+                        <span class="icon filter" ng-show="'MMS'==mtable?true:false"> <img src="~/assets/Images/food-6.png"></span>
+                        <span class="icon filter" ng-show="'HRIS'==mtable?true:false"> <img src="~/assets/Images/food-6.png"></span>
+                        <span class="main-menu1">{{mtable}}</span>
+                    </div>
+                    <div class="panelContent">
+                        <ul class="menu-bg head-menu">
+
+                            <li ng-repeat="mtable in ModuleNames | filter:{ParentModuleName:ParentName} " ng-click="ModuleNameClick(mtable)" ng-class="(menuname==mtable.ModuleName)?'active':''">
+
+                                <span class="menu-icon fa fa-file-pdf-o" ng-show="'REPORTS'==mtable.ModuleName?true:false"></span>
+                                <span class="menu-icon fa fa-cogs" ng-show="'MASTERS'==mtable.ModuleName?true:false"></span>
+                                <span class="menu-icon fa fa-exchange" ng-show="'TRANSACTIONS'==mtable.ModuleName?true:false"></span>
+                                <span class="menu-icon fa fa-user" ng-show="'ADMIN'==mtable.ModuleName?true:false"></span>
+                                <span class="menu-icon fa fa-dashboard" ng-show="'HOME'==mtable.ModuleName?true:false"></span>
+                                <span class="menu-icon fa fa-cogs" ng-show="'Employee Masters'==mtable.ModuleName?true:false"></span>
+                                <span class="menu-icon fa fa-exchange" ng-show="'Employee Transaction'==mtable.ModuleName?true:false"></span>
+                                @*<span class="menu-icon fa fa-cogs" ng-show="'Payroll Masters'==mtable.ModuleName?true:false"></span>
+                                    <span class="menu-icon fa fa-exchange" ng-show="'Payroll Transactions'==mtable.ModuleName?true:false"></span>*@
+
+                                <span class="hidden-xs ng-binding ">{{mtable.ModuleName}}</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="container navbar-more visible-xs">
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <!-- /header .navbar-container -->
+    <!-- Side Nav Starts Here -->
+    <div class="main-container" id="main-container">
+        @*<script type="text/javascript">
+                try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+            </script>*@
+        <div id="sidebar" class="sidebar menu-min responsive">
+            @*<script type="text/javascript">
+                    try { ace.settings.check('sidebar', 'fixed') } catch (e) { }
+                </script>*@
+            <div class="sidebar-collapse collapsed no-padding" id="sidebar-collapse">
+                @*<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left"
+                    data-icon2="ace-icon fa fa-angle-double-right"></i>*@
+                <div class="toggle-nav">
+                    @*<b>Z</b><b>C</b><b>R</b>*@
+                    <i class="fa fa-bars"></i> <i class="fa fa-times"></i>  <span>MENU</span>
+                </div>
+            </div>
+            <ul class="nav nav-list">
+                @*<li class="">
+                        <a href="~/POSTransaction/DashBoard">
+                            <i class="menu-icon fa fa-tachometer"></i><span class="menu-text">
+                                Dashboard
+                            </span>
+                        </a><b class="arrow"></b>
+                    </li>*@
+
+                <li ng-repeat="ctable in ChildNames" ng-click="ChildClick(ctable)">
+                    <div ng-class="getChildClass(ctable.FunctionName)">
+                        <a href="">
+                            @*<i class="{{ctable.Functionclass}}">
+                                </i>*@
+
+                            <span class="sidemenu-icon">
+                                @*<b>Z</b><b>C</b><b>R</b>*@
+                                <b> {{ctable.FunctionName|sri|uppercase}}</b>
+                            </span>
+
+                            @*<i class="menu-icon" style="width:20px; height:20px; border-radius:50%; padding:10px; text-align:center; overflow:hidden; ">{{ctable.FunctionName}}  </i>*@
+                            <span class="menu-text">{{ctable.FunctionName}} </span>
+                        </a>
+                    </div>
+
+                </li>
+
+
+            </ul>
+            <!-- /.nav-list -->
+            <!-- Minimize the side bar -->
+
+            <script type="text/javascript">
+                try { ace.settings.check('sidebar', 'collapsed') } catch (e) { }
+            </script>
+        </div>
+        <!-- Main Content Here -->
+        <div class="main-content">
+            <div class="main-content-inner">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <script type="text/javascript">
+                        try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+                    </script>
+                    <ul class="breadcrumb">
+                        @*<li><i class="ace-icon fa fa-home home-icon"></i><a href="~/POSTransaction/DashBoard">Home</a> </li>*@
+                        <li><a href="#">{{ModuleName}}</a> </li>
+                        @* <li class="active">Item Category</li>*@
+                        <li class="active">{{FormName}}</li>
+                    </ul>
+                    <!-- /.breadcrumb -->
+                    @*   <div class="nav-search" id="nav-search">
+                            <form class="form-search">
+                            <span class="input-icon">
+                                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input"
+                                    autocomplete="off" />
+                                <i class="ace-icon fa fa-search nav-search-icon"></i></span>
+                            </form>
+                        </div>*@
+                    <!-- /.nav-search -->
+                </div>
+
+                <section class="wrapper">
+
+                    @RenderBody()
+
+                </section>
+
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+        <!-- /.main-content -->
+        <div class="footer hidden">
+            <div class="footer-inner">
+                <div class="footer-content">
+                    <span class="bigger-120">
+                        <span class="blue bolder">Kapil IT Solutions</span> &copy; 2016-2017
+                    </span>&nbsp; &nbsp; <span class="action-buttons">
+                        <a href="#">
+                            <i class="ace-icon fa fa-twitter-square light-blue bigger-150">
+                            </i>
+                        </a><a href="#">
+                            <i class="ace-icon fa fa-facebook-square text-primary bigger-150">
+                            </i>
+                        </a><a href="#"><i class="ace-icon fa fa-rss-square orange bigger-150"></i></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110">
+            </i>
+        </a>
+    </div>
+    <!-- /.main-container -->
+    <!-- basic scripts -->
+    <!--[if !IE]> -->
+    @*  <script src="../../assets/js/jquery.2.1.1.min.js" type="text/javascript"></script>*@
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script src="assets/js/jquery.1.11.1.min.js"></script>
+    <![endif]-->
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='assets/js/jquery.min.js'>" + "<" + "/script>");
+    </script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript">
+     window.jQuery || document.write("<script src='assets/js/jquery1x.min.js'>"+"<"+"/script>");
+    </script>
+    <![endif]-->
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+    <script src="../../assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- page specific plugin scripts -->
+    <!--[if lte IE 8]>
+          <script src="assets/js/excanvas.min.js"></script>
+        <![endif]-->
+    @*<script src="../../assets/js/jquery-ui.custom.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/bootbox.min.js" type="text/javascript"></script>*@
+    <script src="../../assets/js/jquery.easypiechart.min.js" type="text/javascript"></script>
+    @*<script src="../../assets/js/jquery.gritter.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/spin.min.js" type="text/javascript"></script>
+        <!-- Date & TIME piCKER MULTISELECTOR ANDSEARCH JS -->
+        <script src="../../assets/js/jquery.bootstrap-duallistbox.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/jquery.raty.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/bootstrap-multiselect.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/select2.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/typeahead.jquery.min.js" type="text/javascript"></script>
+        @*<script src="../../assets/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+
+            <script src="../../assets/js/bootstrap-datepicker.js"></script>
+            <script src="../../assets/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/moment.min.js" type="text/javascript"></script>*@
+    @*<script src="../../assets/js/daterangepicker.min.js" type="text/javascript"></script>
+        <script src="../../assets/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>*@
+    <!-- ace scripts -->
+    <script src="../../assets/js/ace-elements.min.js" type="text/javascript"></script>
+    <script src="../../assets/js/ace.min.js" type="text/javascript"></script>
+    <!-- inline scripts related to this page -->
+    <!-- inline scripts related to this page -->
+    @*       Date & TIME piCKER  *@
+    <script type="text/javascript">
+        $('.date-picker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startDate: 'today'
+        })
+    </script>
+    <script type="text/javascript">
+
+        function aceSwitch(cellvalue, options, cell) {
+            setTimeout(function () {
+                $(cell).find('input[type=checkbox]')
+                            .addClass('ace ace-switch ace-switch-5')
+                            .after('<span class="lbl"></span>');
+            }, 0);
+        }
+        //enable datepicker
+        function pickDate(cellvalue, options, cell) {
+            setTimeout(function () {
+                $(cell).find('input[type=text]')
+                                .datepicker({ format: 'dd-mm-yyyy', autoclose: true });
+            }, 0);
+        }
+
+
+
+
+
+
+        function style_edit_form(form) {
+            //enable datepicker on "sdate" field and switches for "stock" field
+            form.find('input[name=sdate]').datepicker({ format: 'yyyy-mm-dd', autoclose: true })
+
+            form.find('input[name=stock]').addClass('ace ace-switch ace-switch-5').after('<span class="lbl"></span>');
+            //don't wrap inside a label element, the checkbox value won't be submitted (POST'ed)
+            //.addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
+
+
+            //update buttons classes
+            var buttons = form.next().find('.EditButton .fm-button');
+            buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide(); //ui-icon, s-icon
+            buttons.eq(0).addClass('btn-primary').prepend('<i class="ace-icon fa fa-check"></i>');
+            buttons.eq(1).prepend('<i class="ace-icon fa fa-times"></i>')
+
+            buttons = form.next().find('.navButton a');
+            buttons.find('.ui-icon').hide();
+            buttons.eq(0).append('<i class="ace-icon fa fa-chevron-left"></i>');
+            buttons.eq(1).append('<i class="ace-icon fa fa-chevron-right"></i>');
+        }
+
+        function style_delete_form(form) {
+            var buttons = form.next().find('.EditButton .fm-button');
+            buttons.addClass('btn btn-sm btn-white btn-round').find('[class*="-icon"]').hide(); //ui-icon, s-icon
+            buttons.eq(0).addClass('btn-danger').prepend('<i class="ace-icon fa fa-trash-o"></i>');
+            buttons.eq(1).addClass('btn-default').prepend('<i class="ace-icon fa fa-times"></i>')
+        }
+
+        function style_search_filters(form) {
+            form.find('.delete-rule').val('X');
+            form.find('.add-rule').addClass('btn btn-xs btn-primary');
+            form.find('.add-group').addClass('btn btn-xs btn-success');
+            form.find('.delete-group').addClass('btn btn-xs btn-danger');
+        }
+        function style_search_form(form) {
+            var dialog = form.closest('.ui-jqdialog');
+            var buttons = dialog.find('.EditTable')
+            buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'ace-icon fa fa-retweet');
+            buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'ace-icon fa fa-comment-o');
+            buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'ace-icon fa fa-search');
+        }
+
+        function beforeDeleteCallback(e) {
+            var form = $(e[0]);
+            if (form.data('styled')) return false;
+
+            form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+            style_delete_form(form);
+
+            form.data('styled', true);
+        }
+
+        function beforeEditCallback(e) {
+            var form = $(e[0]);
+            form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
+            style_edit_form(form);
+        }
+
+
+
+        //it causes some flicker when reloading or navigating grid
+        //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
+        //or go back to default browser checkbox styles for the grid
+        function styleCheckbox(table) {
+            /**
+            $(table).find('input:checkbox').addClass('ace')
+            .wrap('<label />')
+            .after('<span class="lbl align-top" />')
+
+
+            $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
+            .find('input.cbox[type=checkbox]').addClass('ace')
+            .wrap('<label />').after('<span class="lbl align-top" />');
+            */
+        }
+
+
+        //unlike navButtons icons, action icons in rows seem to be hard-coded
+        //you can change them like this in here if you want
+        function updateActionIcons(table) {
+            /**
+            var replacement =
+            {
+            'ui-ace-icon fa fa-pencil' : 'ace-icon fa fa-pencil blue',
+            'ui-ace-icon fa fa-trash-o' : 'ace-icon fa fa-trash-o red',
+            'ui-icon-disk' : 'ace-icon fa fa-check green',
+            'ui-icon-cancel' : 'ace-icon fa fa-times red'
+            };
+            $(table).find('.ui-pg-div span.ui-icon').each(function(){
+            var icon = $(this);
+            var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+            if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+            })
+            */
+        }
+
+        //replace icons with FontAwesome icons like above
+        function updatePagerIcons(table) {
+            var replacement =
+                    {
+                        'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+                        'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+                        'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+                        'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
+                    };
+            $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
+                var icon = $(this);
+                var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+                if ($class in replacement) icon.attr('class', 'ui-icon ' + replacement[$class]);
+            })
+        }
+
+        function enableTooltips(table) {
+            $('.navtable .ui-pg-button').tooltip({ container: 'body' });
+            $(table).find('.ui-pg-div').tooltip({ container: 'body' });
+        }
+
+        function RefreshGrid(gname, grid_data) {
+
+            jQuery(gname).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+        }
+        //var selr = jQuery(grid_selector).jqGrid('getGridParam','selrow');
+
+        $(document).one('ajaxloadstart.page', function (e) {
+            $(grid_selector).jqGrid('GridUnload');
+            $('.ui-jqdialog').remove();
+        });
+    </script>
+</body>
+</html>
+<!--Multi selector scripts -->
+<script src="../../assets/js/jquery.bootstrap-duallistbox.min.js" type="text/javascript"></script>
+<script src="../../assets/js/jquery.raty.min.js" type="text/javascript"></script>
+<script src="../../assets/js/bootstrap-multiselect.min.js" type="text/javascript"></script>
+<script src="../../assets/js/select2.min.js" type="text/javascript"></script>
+@*<script src="../../assets/js/typeahead.jquery.min.js" type="text/javascript"></script>*@
+<script>
+    jQuery(function ($) {
+        debugger;
+
+        //        //typrahead
+        //        $('input.typeahead').typeahead({
+        //            hint: true,
+        //            highlight: true,
+        //            minLength: 1
+        //        }, {
+        //            name: 'states',
+        //            displayKey: 'value',
+        //            source: substringMatcher(ace.vars['US_STATES'])
+        //        });
+
+        //select2
+        $('.select2').css('width', '200px').select2({ allowClear: true })
+        $('#select2-multiple-style .btn').on('click', function (e) {
+            var target = $(this).find('input[type=radio]');
+            var which = parseInt(target.val());
+            if (which == 2) $('.select2').addClass('tag-input-style');
+            else $('.select2').removeClass('tag-input-style');
+        });
+
+        //        $('.multiselect').multiselect({
+        //            enableFiltering: true,
+        //            buttonClass: 'btn btn-white btn-primary',
+        //            templates: {
+        //                button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
+        //                ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+        //                filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+        //                filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+        //                li: '<li><a href="javascript:void(0);"><label></label></a></li>',
+        //                divider: '<li class="multiselect-item divider"></li>',
+        //                liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
+        //            }
+        //        });
+
+    });
+</script>
+
+
+<link href="~/Scripts/style.min.css" rel="stylesheet" />
+@*<script src="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>*@
+<script src="~/Scripts/jstree.min.js"></script>
+
+
+<!-- HRMS SCRIPTS -->
+
+<link href="~/Scripts/ParamQuery/jquery-ui.css" rel="stylesheet" />
+<script src="../../Scripts/ParamQuery/jquery-ui.min.js" type="text/javascript"></script>
+<link href="../../Scripts/ParamQuery/pqgrid.min.css" rel="stylesheet" type="text/css" />
+<script src="../../Scripts/ParamQuery/pqgrid.min.js" type="text/javascript"></script>
+<script src="../../Scripts/ParamQuery/gridFilter.js" type="text/javascript"></script>
+<script src="~/Scripts/ParamQuery/jquery.ui.touch-punch.min.js"></script>
+@*<script src="../../Content/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>*@
+
+<!-- HRMS SCRIPTS -->
+
+
+<script src="http://code.jquery.com/jquery-migrate-1.3.0.js"></script>
+<script src="https://cloud.github.com/downloads/digitalBush/jquery.maskedinput/jquery.maskedinput-1.3.min.js"></script>
+

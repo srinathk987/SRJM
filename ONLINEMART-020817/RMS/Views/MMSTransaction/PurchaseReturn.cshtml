@@ -1,0 +1,566 @@
+﻿@{
+    //ViewBag.Title = "PurchaseReturn";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+@*<h2>PurchaseReturn</h2>*@
+
+<div ng-controller="PurchaseReturnController" ng-init="pageloaddata()">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="PurchaseReturnfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">
+                            Transaction Type<span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <div class="switch-field">
+                                @*<input type="radio" id="switch_right1" name="switch_21" value="PURCHASE CANCEL" ng-model="PUR.Type" ng-change="TransactionChange()">
+                                <label for="switch_right1">PC</label>*@
+                                @*<label for="switch_right1" style="width:100px;">PURCHASE CANCEL</label>*@
+                                <input type="radio" id="switch_left1" name="switch_21" value="PURCHASE RETURN" ng-model="PUR.Type" ng-change="TransactionChange()">
+                                <label for="switch_left1">PR</label>
+                                @*<label for="switch_left1" style="width:100px;">PURCHASE RETURN</label>*@
+                            </div>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">
+                            Date <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input name="PurchseReturnDate" type="text" ng-model="PUR.PurchseReturnDate" class=" form-control" id="PurchseReturnDate" data-date-format="dd/mm/yyyy" required disabled />
+                            @*<input type="date" class="form-control" placeholder="Date" name="Date" ng-model="Order.Date" required />*@
+                            <span class="error" ng-show="(PurchaseReturnfrm.PurchseReturnDate.$dirty || submitted) && PurchaseReturnfrm.PurchseReturnDate.$error.required">
+                                Date Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">
+                            Vendor Name <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="vendorid" id="vendorid" ng-model="PUR.vendorid" class="form-control" ng-options="v.vendorid as v.vchvendorname for v in VendorNames" required ng-change="vendorchange()">
+                                <option value="" selected>Select Vendor Name </option>
+                            </select>
+                            <span class="error" ng-show="(PurchaseReturnfrm.vendorid.$dirty || submitted) && PurchaseReturnfrm.vendorid.$error.required">
+                                <label> Vendor Name Required!</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">
+                            GRN No.<span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-4">
+                            <select required name="transactionvalue" id="transactionvalue" ng-model="PUR.transactionvalue" class="form-control" ng-options="t.transactionvalue as t.transactionname for t in transactions" ng-change="transactionnochange()">
+                                <option value="" selected>Select GRN No.</option>
+                            </select>
+                            <span class="error" ng-show="(PurchaseReturnfrm.transactionvalue.$dirty || submitted) && PurchaseReturnfrm.transactionvalue.$error.required">
+                                GRN No. Required!
+                            </span>
+                        </div>
+                        @*<label class="col-sm-2 control-label no-padding-right" ng-hide="hdtransCheck">
+                            GRN No.<span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-4" ng-hide="hdtransCheck">
+                            <select ng-required="!hdtransCheck" name="transvalue" id="transvalue" ng-model="PUR.transvalue" class="form-control" ng-options="v.transactionvalue as v.transactionname for v in transactionnos" ng-change="grnnoChange()">
+                                <option value="" selected>Select GRN  No.</option>
+                            </select>
+                            <span class="error" ng-show="(PurchaseReturnfrm.transvalue.$dirty || submitted) && PurchaseReturnfrm.transvalue.$error.required">
+                                PO No. Required!
+                            </span>
+                        </div>*@
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">
+                            Reason<span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-4">
+                            <textarea id="Reason" placeholder="Enter Reason" class="col-xs-12"
+                                      style="resize:none" ng-model="PUR.Reason" rows="3" name="Reason" required></textarea>
+                            @*<input id="TermsandConditions" ng-model="GR.TermsandConditions" class=" form-control" name="TermsandConditions" placeholder="Enter Remarks" required>*@
+                            <span class="error" ng-show="(PurchaseReturnfrm.Reason.$dirty || submitted ) && PurchaseReturnfrm.Reason.$error.required">
+                                Reason Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                        <table id="grdpurchasereturn" style="width:1250px;"></table>
+                    </div>
+                    <div class="form-group">
+                        <span></span>
+                    </div>
+                    <div class="form-group pull-right">
+                        <div class="form-group pull-right" style="padding-right:30px;">
+                            <button class="btn btn-success" data-index="2" type="button" ng-click="Save()">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('PurchaseReturnController', function ($scope, $http, $rootScope) {
+        $scope.PUR = {};
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.hdtransCheck = true;
+        $rootScope.FormName = "Purchase Return";
+        $rootScope.ModuleName = "MMSTransaction";
+        $scope.PUR.Type = "PURCHASE RETURN";
+        //$scope.hidetransactionlabel = false;
+        $scope.$watch('PurchaseReturnfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.pageloaddata = function () {
+            GRID([]);
+
+            $("#grdpurchasereturn").showCol("shelfname");
+            $("#grdpurchasereturn").showCol("storagelocation");
+            $("#grdpurchasereturn").showCol("availableqty");
+            $("#grdpurchasereturn").showCol("receivedqty");
+            $("#grdpurchasereturn").hideCol("orderedqty");
+            $("#grdpurchasereturn").showCol("returnqty");
+            $("#grdpurchasereturn").showCol("previousreturnqty");
+            $("#grdpurchasereturn").showCol("uomconversionvalue");
+            //$("#grdpurchasereturn").showCol("dueamount");
+            //$("#grdpurchasereturn").showCol("orderuom");
+            $("#grdpurchasereturn").showCol("receiveduom");
+            $("#grdpurchasereturn").showCol("grnrate");
+            //$("#grdpurchasereturn").hideCol("shelfname");
+            //$("#grdpurchasereturn").hideCol("storagelocation");
+            //$("#grdpurchasereturn").hideCol("availableqty");
+            //$("#grdpurchasereturn").hideCol("receivedqty");
+            //$("#grdpurchasereturn").hideCol("returnqty");
+            //$("#grdpurchasereturn").showCol("orderedqty");
+            //$("#grdpurchasereturn").hideCol("previousreturnqty");
+            //$("#grdpurchasereturn").hideCol("uomconversionvalue");
+            //$("#grdpurchasereturn").hideCol("receiveduom");
+            //$("#grdpurchasereturn").hideCol("grnrate");
+            $http({
+                url: '/MMSMaster/GetVendorNamesData/',
+                method: "get"
+            }).success(function (data) {
+                //$scope.Names = eval('(' + data.Data + ')');
+                $scope.VendorNames = eval('(' + data.Data + ')');
+                //$("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+                $("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+            });
+        }
+        $scope.TransactionChange = function () {
+            var strtype = $scope.PUR.Type;
+            //$scope.transactions = {};
+            //$scope.PUR.vendorid = null;
+            //$scope.PurchaseReturnfrm.$setPristine();
+            //$scope.PUR.vendorid.$valid = true;
+            //var ROW = [];
+            ClearAll();
+            $scope.PUR.Type = strtype;
+            if (strtype === "PURCHASE CANCEL") {
+                //$scope.hidetransactionlabel = false;
+                $("#grdpurchasereturn").hideCol("shelfname");
+                $("#grdpurchasereturn").hideCol("storagelocation");
+                $("#grdpurchasereturn").hideCol("availableqty");
+                $("#grdpurchasereturn").hideCol("receivedqty");
+                $("#grdpurchasereturn").hideCol("returnqty");
+                $("#grdpurchasereturn").showCol("orderedqty");
+                $("#grdpurchasereturn").hideCol("previousreturnqty");
+                $("#grdpurchasereturn").hideCol("uomconversionvalue");
+                //$("#grdpurchasereturn").hideCol("dueamount");
+                //$("#grdpurchasereturn").hideCol("orderuom");
+                $("#grdpurchasereturn").hideCol("receiveduom");
+                $("#grdpurchasereturn").hideCol("grnrate");
+            } else {
+                //$scope.hidetransactionlabel = true;
+                $("#grdpurchasereturn").showCol("shelfname");
+                $("#grdpurchasereturn").showCol("storagelocation");
+                $("#grdpurchasereturn").showCol("availableqty");
+                $("#grdpurchasereturn").showCol("receivedqty");
+                $("#grdpurchasereturn").hideCol("orderedqty");
+                $("#grdpurchasereturn").showCol("returnqty");
+                $("#grdpurchasereturn").showCol("previousreturnqty");
+                $("#grdpurchasereturn").showCol("uomconversionvalue");
+                //$("#grdpurchasereturn").showCol("dueamount");
+                //$("#grdpurchasereturn").showCol("orderuom");
+                $("#grdpurchasereturn").showCol("receiveduom");
+                $("#grdpurchasereturn").showCol("grnrate");
+            }
+            GRID([]);
+            $("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+        }
+        $scope.vendorchange = function () {
+            var strtype = $scope.PUR.Type;
+            var strvendorid = $scope.PUR.vendorid;
+            //GRID([]);
+            GRID([]);
+            $("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $scope.transactions = {};
+            $http.post("/MMSTransaction/getdropdownvalues/", { strType: strtype, vendorid: strvendorid }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    debugger;
+                    $scope.transactions = eval('(' + data.Data + ')');;
+                    //$scope.shelfnames = data1;
+                }
+            });
+        }
+        $scope.transactionnochange = function () {
+            debugger;
+            var strtype = $scope.PUR.Type;
+           // alert(); $("#countryNameSelect option:selected").html();
+            var strtransactionvalue = $('#transactionvalue option:selected').text();
+            var transCheck = strtransactionvalue.indexOf("GRN");
+            //$("#transactionvalue:contains(PO)");
+            if (transCheck != -1 && strtype != 'PURCHASE CANCEL') {
+                $scope.hdtransCheck = false;
+                $scope.transactionnos = {};
+            } else {
+                $scope.hdtransCheck = true;
+            }
+            GRID([]);
+            $("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+            if (strtype != null && strtype != undefined && strtype != "") {
+                $http.post("/MMSTransaction/getpurchasereturnGridValues/", { strType: strtype, ID: strtransactionvalue }).success(function (data) {
+                    debugger;
+                    if (data != null) {
+                        debugger;
+                        if (transCheck != -1 && strtype == 'PURCHASE CANCEL') {
+                            GRID(eval('(' + data.Data + ')'));
+                        } else if (strtype == 'PURCHASE RETURN') {
+                            GRID(eval('(' + data.Data + ')'));
+                        } else {
+                            $scope.transactionnos = eval('(' + data.Data + ')');
+                        }
+                    }
+                });
+            }
+        }
+        $scope.grnnoChange = function () {
+            debugger;
+            var strtype = $scope.PUR.Type;
+            var strtransactionvalue = $('#transvalue option:selected').text();
+            if (strtype != null && strtype != undefined && strtype != "" && strtransactionvalue != 'Select GRN  No.') {
+                $http.post("/MMSTransaction/getpurchasereturnGridValues/", { strType: strtype, ID: strtransactionvalue }).success(function (data) {
+                    debugger;
+                    if (data != null) {
+                        debugger;
+                        //if (!transCheck) {
+                        GRID([]);
+                        $("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+                        GRID(eval('(' + data.Data + ')'));
+                        //} else {
+                        //    $scope.transactionnos = eval('(' + data.Data + ')');
+                        //}
+                    }
+                });
+            }
+        }
+        function GRID(data) {
+            debugger;
+            var lastSelection;
+            var grid_data = data;
+            var grid_selector = "#grdpurchasereturn";
+            //var pager_selector = "#griddirect-pager";
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+            //jQuery("#grdgrnpo").numberTemplate = {formatter: 'number', align: 'right', sorttype: 'number',
+            //    editrules: {number: true, required: true},
+            //    searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'nu', 'nn', 'in', 'ni'] }};
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 250,
+                rownumbers: true,
+                colModel: [
+                        //{
+                        //    label: 'Action', width: 45, sortable: false, editable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                        //        return "<button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        //    }
+                        //},
+                        { label: 'productid', name: 'productid', hidden: true },
+                        { label: 'productcode', name: 'productcode', hidden: true },
+                        { label: 'Product Name', name: 'productname' },
+                        { label: 'productcategoryid', name: 'productcategoryid', hidden: true },
+                        { label: 'categoryname', name: 'categoryname', hidden: true },
+                        { label: 'productsubcategoryid', name: 'productsubcategoryid', hidden: true },
+                        { label: 'subcategoryname', name: 'subcategoryname', hidden: true },
+                        { label: 'UOM', name: 'orderuom', sortable: false },
+                        { label: 'Received UOM', name: 'receiveduom', sortable: false, hidden: true },
+                        {
+                            label: 'Conversion Value', name: 'uomconversionvalue', editable: false, hidden: false, formatter: 'number', sortable: false,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 4, defaultValue: '0.000' }
+                        },
+                        { label: 'storagelocationid', name: 'storagelocationid', hidden: true },
+                        {
+                            label: 'Storage Location', name: 'storagelocation', editable: false, sortable: true, hidden: true
+                        },
+                        { label: 'shelfid', name: 'shelfid', hidden: true },
+                        { label: 'Shelf Name', name: 'shelfname', editable: false, sortable: false, hidden: true },
+                        {
+                            label: 'Received Qty.', name: 'receivedqty', editable: false, hidden: true, formatter: 'number', sortable: false,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        },
+                        {
+                            label: 'Rate', name: 'grnrate', editable: false, hidden: true, formatter: 'number', sortable: false,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        },
+                        {
+                            label: 'Available Stock in System.', name: 'availableqty', editable: false, formatter: 'number', sortable: false, hidden: true,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        },
+                        {
+                            label: 'Ordered Qty.', name: 'orderedqty', editable: false, formatter: 'number', sortable: false,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        },
+                        {
+                            label: 'Previous Return Qty.', name: 'previousreturnqty', editable: false, formatter: 'number', sortable: false,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        },
+                        {
+                            label: 'Due Amount', name: 'dueamount', editable: false, formatter: 'number', sortable: false, hidden: true,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        },
+                        {
+                            label: 'Return Qty.', name: 'returnqty', hidden: true, editable: true, formatter: 'number', sortable: false,
+                            formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' }
+                        }
+                ],
+                viewrecords: true,
+                //rowNum: 8,
+                //rowList: [8, 16, 25, 100],
+                //pager: pager_selector,
+                altRows: true,
+                search: true,
+                onSelectRow: editRow,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                    }, 0);
+                },
+                //caption: "Goods Received Note Details."
+                caption: "Product Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+        }
+        $scope.lastSelection = "0";
+        function editRow(id) {
+            var grid = $("#grdpurchasereturn");
+            debugger;
+            grid.jqGrid('saveRow', $scope.lastSelection);
+            if ($scope.PUR.Type === "PURCHASE RETURN") {
+                grid.jqGrid("editRow", id, {
+                    keys: true,
+                    aftersavefunc: function (id) {
+                        debugger;
+                        var availableqty = $(this).jqGrid("getCell", id, "availableqty");
+                        var returnqty = $(this).jqGrid("getCell", id, "returnqty");
+                        var receivedqty = $(this).jqGrid("getCell", id, "receivedqty");
+                        var previousreturnqty = $(this).jqGrid("getCell", id, "previousreturnqty");
+                        var indexOfColumn;
+                        if (parseFloat(availableqty) < parseFloat(returnqty)) {
+                            alert('Return Quantity Should be Less Than or Equal to Available Quantity');
+                            $(this).jqGrid("setCell", id, "returnqty", "", "ui-state-error ui-state-error-text");
+                        } else {
+                            if (parseFloat(receivedqty) < parseFloat(returnqty)) {
+                                alert('Return Quantity Should be Less Than or Equal to Received Quantity');
+                                $(this).jqGrid("setCell", id, "returnqty", "", "ui-state-error ui-state-error-text");
+                            } else if ((parseFloat(previousreturnqty) + parseFloat(returnqty)) > receivedqty) {
+                                alert('Sum of Previous Return Qty + Return Quantity Should be Less Than or Equal to Received Quantity');
+                                $(this).jqGrid("setCell", id, "returnqty", "", "ui-state-error ui-state-error-text");
+                            } else {
+                                // reomove
+                                indexOfColumn = getColumnIndexByName("returnqty");
+                                $(this.rows.namedItem(id).cells[indexOfColumn]).removeClass("ui-state-error ui-state-error-text");
+                            }
+                        }
+                    }
+
+                });
+            }
+            $scope.lastSelection = id;
+        }
+        getColumnIndexByName = function (columnName) {
+            var cm = $("#grdpurchasereturn").jqGrid("getGridParam", "colModel"), i, l = cm.length;
+            for (i = 0; i < l; i++) {
+                if (cm[i].name === columnName) {
+                    return i; // return the index
+                }
+            }
+            return -1;
+        };
+        function CheckGrid() {
+            debugger;
+            var IsExists = true;
+            var grid = $("#grdpurchasereturn");
+            var grdlen = grid.jqGrid('getRowData').length;
+            for (var i = 0; i < grdlen; i++) {
+                grid.jqGrid('saveRow', i + 1);
+            }
+            var rowdata = jQuery('#grdpurchasereturn').jqGrid('getRowData');
+            var len = rowdata.length;
+            if (len == 0) {
+                IsExists = false;
+                alert('No data in Grid to return!');
+            }
+            if (IsExists) {
+                var TotalAmount = 0;
+                var indexOfColumn, least = 0;
+                var strdueamount = rowdata[0].dueamount;
+                for (var i = 0; i < len; i++) {
+                    if ($scope.PUR.Type == "PURCHASE RETURN") {
+                        var availableqty = rowdata[i].availableqty;
+                        var returnqty = rowdata[i].returnqty;
+                        var receivedqty = rowdata[i].receivedqty;
+                        var previousreturnqty = rowdata[i].previousreturnqty;
+                        var rate = rowdata[i].grnrate;
+                        if (parseFloat(returnqty) > 0) {
+                            if (parseFloat(availableqty) < parseFloat(returnqty)) {
+                                jQuery('#grdpurchasereturn').jqGrid("setCell", i + 1, "returnqty", "", "ui-state-error ui-state-error-text");
+                                IsExists = false;
+                            } else {
+                                if (parseFloat(receivedqty) < parseFloat(returnqty)) {
+                                    jQuery('#grdpurchasereturn').jqGrid("setCell", i + 1, "returnqty", "", "ui-state-error ui-state-error-text");
+                                    IsExists = false;
+                                } else if ((parseFloat(previousreturnqty) + parseFloat(returnqty)) > receivedqty) {
+                                    jQuery('#grdpurchasereturn').jqGrid("setCell", i + 1, "returnqty", "", "ui-state-error ui-state-error-text");
+                                    IsExists = false;
+                                }
+                            }
+                            //TotalAmount += parseFloat(rowdata[i].grnrate) * (parseFloat(previousreturnqty) + parseFloat(returnqty));
+                            TotalAmount += parseFloat(rowdata[i].grnrate) * parseFloat(returnqty);
+                            least++;
+                        }
+                    }
+                }
+                if ($scope.PUR.Type == "PURCHASE RETURN") {
+                    if (least == 0) {
+                        IsExists = false;
+                        if (rowdata[0].returnqty == "" || rowdata[0].returnqty == "0.000" || parseFloat(rowdata[0].returnqty) == 0) {
+                            IsExists = false;
+                            jQuery('#grdpurchasereturn').jqGrid("setCell", 1, "returnqty", "", "ui-state-error ui-state-error-text");
+                        }
+                        alert('Please Enter Values in Grid!');
+                    }
+                    if (TotalAmount > 0) {
+                        if (strdueamount < TotalAmount) {
+                            alert('Cannot Return Products More than Available Stock!');
+                            IsExists = false;
+                        }
+                    }
+                }
+            }
+            return IsExists;
+        }
+        function ClearAll() {
+            var strDate = $scope.PUR.PurchseReturnDate;
+            $scope.PUR = {};
+            $scope.transactions = {};
+            $scope.transactionnos = {};
+            $scope.hdtransCheck = true;
+            $scope.PUR.vendorid = null;
+            $scope.submitted = false;
+            $scope.PurchaseReturnfrm.$setPristine();
+            $scope.PUR.Type = "PURCHASE RETURN";
+            GRID([]);
+            $("#grdpurchasereturn").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $scope.PUR.PurchseReturnDate = strDate;
+        }
+        $scope.Reset = function () {
+            ClearAll();
+        }
+        $scope.Save = function () {
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if (CheckGrid()) {
+                    var confirmmessage = "";
+                    var aftersavemessage = "";
+                    if ($scope.PUR.Type == "PURCHASE RETURN") {
+                        confirmmessage = "Are you Sure? Do You Want to Return This PO Products?";
+                        aftersavemessage = "PO Products Returned Succesfully!";
+                    } else {
+                        confirmmessage = "Are you Sure? Do You Want to Cancel This PO?";
+                        aftersavemessage = "PO Canceled Succesfully!";
+                    }
+                    var ans = confirm(confirmmessage);
+                    if (ans) {
+                        $scope.PUR.Date = $scope.PUR.PurchseReturnDate;
+                        var strtransactionvalue = $('#transactionvalue option:selected').text();
+                        var transCheck = strtransactionvalue.indexOf("GRN");
+                        //$scope.PUR.Type = $scope.PUR.Type;
+                        //$scope.PUR.transactionname = $('#transactionvalue option:selected').text();
+                        if (transCheck == 0 && $scope.PUR.Type == "PURCHASE CANCEL") {
+                            $scope.PUR.transactionname = $('#transactionvalue option:selected').text();
+                        } else if (transCheck == -1 && $scope.PUR.Type == "PURCHASE RETURN") {
+                            $scope.PUR.transactionname = $('#transactionvalue option:selected').text();
+                        } else if (transCheck != -1 && $scope.PUR.Type == "PURCHASE RETURN") {
+                            $scope.PUR.transactionname = $('#transvalue option:selected').text();
+                            $scope.PUR.transactionvalue = $('#transvalue option:selected').text();
+                        }
+                        $scope.PUR.vendorname = $('#vendorid option:selected').text();
+                        $scope.PUR.transactionvalue = $('#transactionvalue option:selected').text();
+                        //alert($scope.PUR.transactionvalue);
+                        var Griddata = jQuery('#grdpurchasereturn').jqGrid('getRowData');
+                        $http({ method: 'POST', data: { PURCHASE: $scope.PUR, lstPURCHASE: Griddata }, url: '/MMSTransaction/SavePurchaseReturnCancel/' }).success(function (data) {
+                            debugger;
+                            if (data === true) {
+                                debugger;
+                                alert(aftersavemessage);
+                                ClearAll();
+                            }
+                            //else {
+                            //    alert("Error While Saving Data!");
+                            //}
+                        });
+                    } else {
+
+                    }
+                }
+            }
+
+        }
+    });
+</script>
+<script>
+    $(function () {
+        $('#PurchseReturnDate').datepicker('setDate', 'today');
+        $("#PurchseReturnDate").datepicker({
+            endDate: '+0d',
+        });
+    });
+    //var appElement = document.querySelector('[ ng-controller=GrnController]');
+    function Search() {
+        debugger;
+        //var $scope = angular.element(appElement).scope();
+        debugger;
+        JqCustomSearch($("#globalSearchText").val().toUpperCase(), $("#grdpurchasereturn"));
+    }
+</script>
+<style>
+    .ui-jqgrid .ui-jqgrid-view {
+        width: 1250px;
+    }
+</style>

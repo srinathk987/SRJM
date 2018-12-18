@@ -1,0 +1,1271 @@
+﻿@{
+    // ViewBag.Title = "BillSettlement";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div ng-controller="BillSettlementController" ng-init="LoadData()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: #FFEB3B">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="closeModel()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Company Details <i class="fa  fa-hand-o-down animated bounce"></i></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <div class="widget-box">
+                                            <div class="widget-body" style="display: block;">
+                                                <div class="widget-main">
+                                                    <form class="form-horizontal" role="form" name="frConversionValue" novalidate style="border:inherit;border-bottom-width:1px;">
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-5 control-label">
+                                                                Company Name<span style="color: Red">*</span>:
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <input type="text" kit-alphabets name="CompanyName" class="form-control" id="CompanyNameId" ng-model="C.CompanyName" placeholder="Enter Company Name" required />
+                                                                <span class="error" ng-show="(frConversionValue.CompanyName.$dirty || submittedCompany ) && frConversionValue.CompanyName.$error.required">
+                                                                    Company Name required!
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-5 control-label">
+                                                                Phone No<span style="color: Red">*</span>:
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <input type="text" name="PhoneNo" class="form-control" id="PhoneNoId" kit-digits ng-model="C.PhoneNo" placeholder="Enter Phone No" required />
+                                                                <span class="error" ng-show="(frConversionValue.PhoneNo.$dirty || submittedCompany ) && frConversionValue.PhoneNo.$error.required">
+                                                                    Phone No required!
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-5 control-label">
+                                                                Contact Person Name<span style="color: Red">*</span>:
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <input type="text" kit-alphabets name="ContactPersonName" class="form-control" id="ContactPersonNameId" ng-model="C.ContactPersonName" placeholder="Enter Contact Person Name" required />
+                                                                <span class="error" ng-show="(frConversionValue.ContactPersonName.$dirty || submittedCompany ) && frConversionValue.ContactPersonName.$error.required">
+                                                                    Contact Person Name required!
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-5 control-label">
+                                                                Mobile No<span style="color: Red">*</span>:
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <input type="text" name="MobileNo" class="form-control" kit-digits id="MobileNoId" ng-model="C.MobileNo" placeholder="Enter Mobile No" required />
+                                                                <span class="error" ng-show="(frConversionValue.MobileNo.$dirty || submittedCompany ) && frConversionValue.MobileNo.$error.required">
+                                                                    Mobile No required!
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-5 control-label">
+                                                                Address<span style="color: Red">*</span>:
+                                                            </label>
+                                                            <div class="col-sm-5">
+                                                                <textarea id="form-field-1" ng-model="C.Address"
+                                                                          maxlength="500" rows="5" placeholder="Enter Address" class="form-control " required name="Customeraddress"></textarea>
+                                                                <span class="error" ng-show="(frConversionValue.Customeraddress.$dirty || submittedCompany ) && frConversionValue.Customeraddress.$error.required">
+                                                                    Address required!
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12" style="border-top-style:initial">
+                                                                <div class="pull-right">
+                                                                    <button class="btn btn-success" type="button" id="submit_btn" ng-click="SaveCompanyDetails(C)">
+                                                                        <i class="ace-icon fa fa-plus bigger-110"></i>SAVE
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- PAGE CONTENT BEGINS -->
+
+            <form class="form-horizontal" role="form" name="fmBillSettlement">
+                <div class="col-sm-6 col-xs-12">
+                    <label class="col-sm-6 control-label" for="form-field-1"> Bill No <span style="color: Red">*</span>:</label>
+                    <div class="col-sm-6">
+
+                        <select name="BillNo" class="form-control" ng-model="B.BillNo" ng-options="s.BillNo as s.BillNo  for s in BillNos" ng-change="ChangeBillNo()" required>
+                            <option value="">Select Bill </option>
+                        </select>
+                        <span class="error" ng-show="(fmBillSettlement.BillNo.$dirty || submitted ) && fmBillSettlement.BillNo.$error.required">
+                            Bill No required!
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6 col-xs-12 no-padding ">
+                    <label class="col-sm-6 control-label" for="form-field-1"> Table No :</label>
+                    <div class="col-sm-6 ">
+                        <input id="form-field-1" ng-model="BS.TableName" class="form-control" type="text" disabled>
+                        <input id="form-field-1" ng-model="BS.TableId" class="form-control" type="text" disabled ng-hide="true">
+                    </div>
+                </div>
+
+            </form>
+
+
+
+        </div>
+
+        <div class="hr hr-2 dotted hr-double"></div>
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+            </div>
+            <form class="form-horizontal" role="form" name="">
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1"> Total Amount :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.TotalAmount" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1"> Discount :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.Dicount" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-hide="true">
+
+                        <label class="col-sm-6 control-label" for="form-field-1">Voucher Discount :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.VoucherDiscount" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1"> Gross Amount :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.Gross" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1">Service Tax ({{BS.ServiceTax}} %):</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.ServiceTax" class="form-control " type="text" disabled ng-hide="true">
+                            <input id="form-field-1" ng-model="BS.ServiceTaxValue" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1"> Service Charges ({{BS.ServiceCharges}} %):</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.ServiceCharges" class="form-control" type="text" disabled ng-hide="true">
+                            <input id="form-field-1" ng-model="BS.ServiceChargesValue" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="ShowAndHidetrans">
+
+                        <label class="col-sm-6 control-label" for="form-field-1"> Delivery Charges :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.DeliveryCharges" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1"> Service Tax (15 %) On Service Charge : :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.ServiceTaxOnServiceCharge" class="form-control text-right" type="text" disabled>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-6 control-label" for="form-field-1">Vat Tax ({{BS.VatTax}} %):</label>
+                        <div class="col-sm-6">
+
+                            <input id="form-field-1" ng-model="BS.VatTax" class="form-control text-right" type="text" disabled ng-hide="true">
+                            <input id="form-field-1" ng-model="BS.VatTaxvalue" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-6 control-label" for="form-field-1">Net Payable :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" ng-model="BS.NetAmount" class="form-control text-right" type="text" disabled>
+                        </div>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+        <div class="widget-box">
+            <form name="frmBillToCompany" class="form-horizontal" role="form" novalidate>
+
+
+                <div class="panel-group driving-license-settings" id="accordion">
+                    <div class="panel panel-default">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#panel3">
+
+                                    </a>
+                                    <input type="checkbox" id="TEST" class="ace ace-switch ace-switch-5" ng-model="BS.BilltoCompany" data-index="7" ng-change="showandHidePanel(BS.BilltoCompany)" />
+                                    <span class="lbl"></span>
+                                    Bill To Company
+                                </h4>
+                            </div>
+                            <div id="panel3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+
+                                            <label class="col-sm-6 control-label" for="form-field-1">Company Name <span style="color: Red">*</span>:</label>
+                                            <div class="col-sm-6">
+
+                                                <select name="BillNo" class="form-control" ng-model="BS.CompanyName" ng-options="s.vchcompanyname as s.vchcompanyname  for s in CompanyNames">
+                                                    <option value="">Select Company </option>
+                                                    @*
+                                                        <option value="1">Micro Soft </option>*@
+                                                </select>
+                                                @*ng-options="s.vchcompanyname as s.vchcompanyname  for s in CompanyNames"*@
+                                                <span class="add-btn-popup" data-toggle='modal'  ng-click="openpopUp()" ><i class="fa fa-plus"></i></span>
+                                                                                                @*<span class="error" ng-show="(frmBillToCompany.BillNo.$dirty || submittedCompanyName ) && frmBillToCompany.BillNo.$error.required">
+        data-target='#myModal'    Company Name required!
+        </span>*@
+                                            </div>
+
+                                        </div>
+
+
+
+
+
+                                        @*<button class="btn btn-success" ng-click="Save(BS)" type="button"><i class="ace-icon fa fa-save bigger-110"></i>Save</button>*@
+
+
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <div class="pull-right">
+
+
+
+                                                <button class="btn btn-success" ng-click="Save(BS)" type="button"><i class="ace-icon fa fa-save bigger-110"></i>Save</button>
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="widget-box" ng-hide="hideonBc">
+            <form name="frmCard" class="form-horizontal" role="form" novalidate>
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>   CARD DETAILS </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-6 control-label" for="form-field-1"> Transaction No :</label>
+                                    <div class="col-sm-6">
+
+                                        <input id="txtTransaction" name="Transaction" placeholder="Enter Transaction No" class="form-control" kit-digits maxlength="20" type="text" ng-model="BS.CardDetails.TransactionNo" required>
+                                        <span class="error" ng-show="(frmCard.Transaction.$dirty || submittedAdd) && frmCard.Transaction.$error.required">
+                                            Transaction No required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-hide="true">
+                                    <label class="col-sm-6 control-label" for="form-field-1"> Card No :</label>
+                                    <div class="col-sm-6">
+
+                                        <input id="txtCardNo" name="CardNo" placeholder="Enter Card No" class="form-control" kit-digits maxlength="20" type="text" ng-model="BS.CardDetails.CardNo" ng-minlength="4">
+                                        <span class="error" ng-show="(frmCard.CardNo.$dirty || submittedAdd) && frmCard.CardNo.$error.required">
+                                            Card No required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-hide="true">
+                                    <label class="col-sm-6 control-label" for="form-field-1"> Type of Card:</label>
+                                    <div class="col-sm-6">
+                                        <input name="CardType" kit-alphabets id="form-field-1" placeholder="Enter Card Type" class="form-control" type="text" ng-model="BS.CardDetails.CardType">
+                                        <span class="error" ng-show="(frmCard.CardType.$dirty || submittedAdd) && frmCard.CardType.$error.required">
+                                            Card Type required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-hide="true">
+                                    <label class="col-sm-6 control-label" for="form-field-1">Card Holder Name :</label>
+                                    <div class="col-sm-6">
+                                        <input kit-alphabets name="CardName" id="form-field-1" placeholder="Enter Card Name" class="form-control" type="text" ng-model="BS.CardDetails.CardName">
+                                        <span class="error" ng-show="(frmCard.CardName.$dirty || submittedAdd) && frmCard.CardName.$error.required">
+                                            Card Name required!
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" ng-hide="true">
+                                    <label class="col-sm-6 control-label" for="form-field-1"> Exp. Date:</label>
+                                    <div class="col-sm-6">
+
+                                        <input name="ExpireDate" id="ExpireDate" placeholder="Enter Expire Date" class="form-control date-picker" data-date-format="dd-mm-yyyy" type="text" kit-date ng-model="BS.CardDetails.ExpireDate">
+                                        <span class="error" ng-show="(frmCard.ExpireDate.$dirty || submittedAdd) && frmCard.ExpireDate.$error.required">
+                                            Expire Date required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <label class="col-sm-6 control-label" for="form-field-1"> Amount:</label>
+                                    <div class="col-sm-6">
+                                        <input name="CardAmount" id="form-field-1" placeholder="Enter Amount" class="form-control" type="text" ng-model="BS.CardDetails.CardAmount" required kit-amount maxlength="16">
+                                        <span class="error" ng-show="(frmCard.CardAmount.$dirty || submittedAdd) && frmCard.CardAmount.$error.required">
+                                            Card Amount required!
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-sm-6 col-xs-12">
+                                <table id="grdCard"></table>
+                                @*<div id="grdCardpager">
+                                    </div>*@
+                                <br />
+                                <button class="btn btn-success" type="button" ng-click="AddCardDetalis(BS)"> <i class="ace-icon fa fa-save bigger-110"></i> {{btnAdd}}</button>
+
+                                <button class="btn orange" type="reset" ng-click="Clear()">
+                                    <i class="ace-icon fa fa-undo bigger-110"></i>Clear
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+
+
+        <div class="widget-box" ng-show="ShowAndHideCashDetails" ng-hide="hideonBc">
+            <form name="frmCash" class="form-horizontal" role="form" novalidate>
+
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-money"></i>   CASH DETAILS </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main">
+
+                        <div class="form-group">
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 1000</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="2" placeholder="Enter No" ng-model="BS.CashDetails.Thousand" kit-digits class="form-control" type="text" ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 500</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="3" placeholder="Enter No" ng-model="BS.CashDetails.fiveHundred" kit-digits class="form-control" type="text" ng-change="TotalCash(BS)">
+
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 100</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="4" placeholder="Enter No" ng-model="BS.CashDetails.Hundred" kit-digits class="form-control" type="text" ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 50</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="4" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.Fifty" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 20</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="4" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.Twenty" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 10</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="4" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.Ten" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 5</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="2" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.Five" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 2</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="2" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.Two" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> 1</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="2" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.One" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> .50</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" maxlength="2" placeholder="Enter No" class="form-control" type="text" ng-model="BS.CashDetails.Half" kit-digits ng-change="TotalCash(BS)">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-xs-12">
+                                <label class="col-sm-4 col-xs-6  control-label" for="form-field-1"> TOTAL</label>
+                                <div class="col-sm-8">
+                                    <input id="form-field-1" class="form-control" type="text" ng-model="BS.CashDetails.CashAmount" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+
+        <form name="" class="form-horizontal" role="form" novalidate ng-hide="hideonBc">
+            <div class="form-group">
+                <div class="col-sm-6 col-xs-12" ng-hide="hidecashAmount">
+                    <label class="col-sm-6 control-label" for="form-field-1"> Cash Amount :</label>
+                    <div class="col-sm-6">
+                        <input id="form-field-1" placeholder="" ng-disabled="DisablePaidAmount" class="form-control" type="text" ng-model="BS.PaidAmount" ng-keyup="calBalanceAmount(BS.PaidAmount)">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12" ng-hide="hidePaidAmount">
+                    <label class="col-sm-6 control-label" for="form-field-1"> Paid Amount :</label>
+                    <div class="col-sm-6">
+                        <input id="form-field-1" placeholder="" ng-disabled="DisablePaidAmount" class="form-control" type="text" ng-model="BS.PaidAmount" ng-keyup="calBalanceAmount(BS.PaidAmount)">
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <label class="col-sm-6 control-label" for="form-field-1"> Balance Amount :</label>
+                    <div class="col-sm-6">
+                        <input id="form-field-1" class="form-control" type="text" ng-model="BS.BalanceAmount" disabled>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <button class="btn btn-success" id="Btnsave" type="button" ng-click="Save(BS)"> <i class="ace-icon fa fa-save bigger-110"></i> Save</button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()"> <i class="ace-icon fa fa-times bigger-110"></i> Reset </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+
+
+
+</div>
+
+
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=BillSettlementController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpDepartment"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdCard").getRowData(row);
+        $scope.btnAdd = "Update"
+        $scope.BS.CardDetails = rowdata;
+
+        $scope.BS.CardDetails.row = row;
+        $scope.$apply();
+    }
+    function Delete(row) {
+        debugger
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnAdd != "Update") {
+            if ($scope.btnSave == "Save") {
+                var $http = angular.element(appElement).injector().get('$http');
+                var rowdata = $("#grdCard").getRowData(row);
+
+                var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+                if (ans) {
+                    $scope.BS.PaidAmount = FnNotNull($scope.BS.PaidAmount) - FnNotNull(rowdata.CardAmount);
+                    $scope.BS.BalanceAmount = FnNotNull($scope.BS.NetAmount) - FnNotNull($scope.BS.PaidAmount);
+                    $("#grdCard").jqGrid("delRowData", row);
+                    $scope.$apply();
+                    alert("Card Details Deleted Successfully !");
+                }
+            }
+        }
+        else {
+
+            alert("Right Now Card Details Can Not Delete ");
+        }
+    }
+    $(document).ready(function () {
+        debugger;
+        $("#panel3").collapse('hide');
+    });
+</script>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('BillSettlementController', function ($scope, $http, $rootScope, $filter) {
+        debugger
+        //document.getElementById('').checked = true;
+        //document.getElementById("TEST").checked = true;
+        $scope.hideonBc = false;
+        $scope.hidecashAmount = true;
+        $scope.hidePaidAmount = false;
+        $scope.submitted = false;
+        $scope.submittedAdd = false;
+        $scope.submittedCompany = false;
+        $scope.submittedCompanyName = false;
+
+        $scope.isFormValid = false;
+        $scope.isFormValidAdd = false;
+        $scope.isFormValidCompany = false;
+        $scope.isFormValidCompanyName = false;
+        $scope.btnSave = "Save";
+        $scope.btnAdd = "Add"
+        $rootScope.FormName = "Bill Settlement";
+        $rootScope.ModuleName = "Transactions";
+        $scope.ShowAndHideCashDetails = true;
+        $scope.ShowAndHidetrans = false;
+        $scope.DisablePaidAmount = true;
+        $scope.BS = { DeliveryCharges: "", BilltoCompany: false }
+        //$("#ExpireDate").mask("99/99/9999");
+        //$("#txtCardNo").mask("9999-9999-9999-9999");
+        $scope.B = {};
+
+        $scope.$watch('fmBillSettlement.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+        $scope.$watch('frmCard.$valid', function (newValue) {
+            debugger
+            $scope.isFormValidAdd = newValue;
+        });
+        $scope.$watch('frConversionValue.$valid', function (newValue) {
+            debugger
+            $scope.isFormValidCompany = newValue;
+        });
+        $scope.$watch('frmBillToCompany.$valid', function (newValue) {
+            debugger
+            $scope.submittedCompanyName = newValue;
+        });
+        $scope.SaveCompanyDetails = function (C) {
+            debugger;
+            $scope.submittedCompany = true;
+            if ($scope.isFormValidCompany) {
+                var ans = confirm($rootScope.msgSave);
+                if (ans) {
+                    $http({
+                        url: '/POSTransaction/SaveCompanyDetails/',
+                        method: "POST",
+                        data: { C: C }
+
+                    }).success(function (data) {
+                        debugger;
+
+                        if (data == true) {
+
+                            alert("Company Details Saved Successfully !");
+                            $scope.C = {};
+                            $scope.submittedCompany = false;
+                            $scope.frConversionValue.$setPristine();
+
+                            $http({
+                                url: '/POSTransaction/getComapnynames/',
+                                method: "get"
+                            }).success(function (data) {
+                                debugger;
+                                $scope.CompanyNames = eval('(' + data.JsonString + ')');
+
+                            });
+
+                        }
+                    });
+                }
+            }
+        }
+        $scope.openpopUp = function () {
+            debugger;
+            $scope.C = {};
+            $scope.submittedCompany = false;
+            $scope.frConversionValue.$setPristine();
+            $("#myModal").modal();
+        }
+        $scope.closeModel = function () {
+            debugger;
+
+            $scope.C = {};
+            $scope.submittedCompany = false;
+            $scope.frConversionValue.$setPristine();
+        }
+
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSTransaction/ShowBillNos/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.BillNos = data;
+                var tesr = {};
+                CardGridBinding(tesr);
+                $('#grdCard').jqGrid('clearGridData');
+
+            });
+
+            $http({
+                url: '/POSTransaction/getComapnynames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.CompanyNames = eval('(' + data.JsonString + ')');
+
+            });
+        }
+
+
+        $scope.showandHidePanel = function (BilltoCompany) {
+            debugger;
+            if (BilltoCompany == true) {
+
+                $("#panel3").collapse('show');
+                $scope.hideonBc = true;
+            }
+            else {
+
+                $("#panel3").collapse('hide');
+                $scope.hideonBc = false;
+                $("#panel3").collapse('hide');
+            }
+        }
+        $scope.ChangeBillNo = function () {
+            debugger
+
+            var result = $scope.BillNos.filter(function (obj) {
+                return obj.BillNo == $scope.B.BillNo;
+            });
+
+            if (result.length == 0) {
+
+                $scope.ShowAndHideCashDetails = true;
+                $scope.ShowAndHidetrans = false;
+                $scope.DisablePaidAmount = true;
+                $scope.BS.BilltoCompany = false;
+
+                $scope.hideonBc = false;
+                $scope.showandHidePanel($scope.BS.BilltoCompany);
+
+
+            }
+            if (result[0].HDStatus.includes("H") || result[0].HDStatus.includes("T")) {
+
+
+                $scope.ShowAndHideCashDetails = false;
+                $scope.ShowAndHidetrans = true;
+                $scope.DisablePaidAmount = false;
+                var Delviry = result[0].HDStatus.split('-')
+                $scope.hidecashAmount = false;
+                $scope.hidePaidAmount = true;
+
+                $scope.hideonBc = false;
+                $scope.BS.BilltoCompany = false;
+                $scope.showandHidePanel($scope.BS.BilltoCompany);
+
+            }
+            else {
+                $scope.ShowAndHideCashDetails = true;
+                $scope.ShowAndHidetrans = false;
+                $scope.DisablePaidAmount = true;
+                $scope.hidecashAmount = true;
+                $scope.hidePaidAmount = false;
+
+                $scope.BS.BilltoCompany = false;
+
+                $scope.hideonBc = false;
+                $scope.showandHidePanel($scope.BS.BilltoCompany);
+
+            }
+
+            if (angular.isDefined($scope.B.BillNo)) {
+                var Bills = $scope.BillNos;
+                var ss = $scope.B.BillNo;
+                for (var i = 0; i < Bills.length; i++) {
+
+
+                    if (Bills[i].BillNo === ss) {
+
+                        $scope.BS = $scope.BillNos[i];
+                        if (result[0].Deliverycharges === undefined) {
+
+                            $scope.BS["DeliveryCharges"] = 0;
+                        }
+                        else {
+                            $scope.BS["DeliveryCharges"] = result[0].Deliverycharges;
+                        }
+
+                        break;
+                    }
+                }
+
+
+            }
+            else {
+                ClearForm();
+            }
+
+
+            $http({
+                url: '/POSTransaction/GetPendingBillstatus/',
+                method: "POST",
+                data: { TableId: $scope.BS.TableId }
+
+            }).success(function (data) {
+                debugger;
+                var pendingbills = data.Data;
+                var status = pendingbills.indexOf("N");
+                if (status >= 0) {
+
+                    alert("Generate Bills For Kot'S in Billgeneration ");
+                    document.getElementById("Btnsave").disabled = true;
+                }
+                else {
+
+                    document.getElementById("Btnsave").disabled = false;
+                }
+
+
+            });
+
+
+        }
+
+        $scope.TotalCash = TotalCash;
+
+        //function FnNotNull(x) {
+        //    var res = 0;
+        //    if (angular.isDefined(x) && x != "") {
+        //        return parseInt(x);
+        //    }
+        //    else {
+        //        return 0;
+        //    }
+
+        //}
+        function TotalCash(BS) {
+            debugger
+            var Grid_data = {};
+            Grid_data = $('#grdCard').jqGrid('getRowData');
+
+            var res = 0;
+            for (var i = 0; i < Grid_data.length; i++) {
+                res = res + parseFloat(Grid_data[i].CardAmount);
+            }
+
+
+            if (angular.isUndefined(BS.CardDetails)) {
+                BS.CardDetails = {};
+            }
+            if (angular.isUndefined(BS.CashDetails)) {
+                BS.CashDetails = {};
+            }
+
+            var total = (1000 * FnNotNull(BS.CashDetails.Thousand)) + (500 * FnNotNull(BS.CashDetails.fiveHundred)) + (100 * FnNotNull(BS.CashDetails.Hundred)) + (50 * FnNotNull(BS.CashDetails.Fifty)) + (20 * FnNotNull(BS.CashDetails.Twenty)) + (10 * FnNotNull(BS.CashDetails.Ten)) + (5 * FnNotNull(BS.CashDetails.Five)) + (2 * FnNotNull(BS.CashDetails.Two)) + (1 * FnNotNull(BS.CashDetails.One)) + (0.5 * FnNotNull(BS.CashDetails.Half));
+            $scope.BS.CashDetails.CashAmount = total;
+            var truecheck = $scope.BS.BillNo.startsWith("B");
+            if (truecheck == true) {
+
+                $scope.BS.PaidAmount = res + total;
+                $scope.BS.BalanceAmount = parseFloat(BS.NetAmount) - total;
+                $scope.BS.BalanceAmount = parseFloat(BS.NetAmount) - parseFloat($scope.BS.PaidAmount);
+            }
+            else {
+
+                $scope.BS.BalanceAmount = parseFloat(BS.NetAmount) - total;
+                $scope.BS.BalanceAmount = parseFloat(BS.NetAmount) - parseFloat($scope.BS.CardDetails.CardAmount);
+                if ($scope.BS.BalanceAmount == 0 || $scope.BS.BalanceAmount < 0) {
+                    $scope.BS.PaidAmount = res;
+                }
+                else { $scope.BS.PaidAmount = 0; }
+            }
+
+
+
+
+        }
+        var row = 0;
+        $scope.AddCardDetalis = function (BS) {
+            debugger
+
+            $scope.submittedAdd = true;
+            if ($scope.isFormValidAdd) {
+                if (angular.isDefined(BS.CardDetails.row)) {
+                    row = parseInt(BS.CardDetails.row) + 1;
+                }
+
+                if ($scope.btnAdd == "Add") {
+                    row = row++;
+
+                    var CardNoZERO = /^0*$/.test(BS.CardDetails.CardNo)
+                    var CardTypeZERO = /^0*$/.test(BS.CardDetails.CardType)
+                    var CardNameZERO = /^0*$/.test(BS.CardDetails.CardName)
+                    $scope.BS.CardDetails.ExpireDate = $filter('date')(new Date(), 'dd-MM-yyyy');;
+                    //if (BS.CardDetails.CardNo == "0") {
+
+                    //    alert("Card No Should Be 16 Digits ");
+                    //    return false;
+
+                    //}
+                    //if (BS.CardDetails.CardType.length < 4 || BS.CardDetails.CardType == "0") {
+
+                    //    alert("Card Type Should Be  Greater than or Equal to 4 characters ");
+                    //    return false;
+
+                    //}
+                    //if (BS.CardDetails.CardName.length < 4 || BS.CardDetails.CardName == "0") {
+
+                    //    alert("Card Name Should Be  Greater than or Equal to 4 characters ");
+                    //    return false;
+
+                    //}
+                    //if (CardNoZERO == true) {
+
+                    //    alert("Card No Should Be 16 Digits ");
+                    //    return false;
+
+                    //}
+                    //if (CardTypeZERO == true) {
+
+                    //    alert("Card Type Should Be  Greater than or Equal to 4 characters ");
+                    //    return false;
+
+                    //}
+                    //if (CardNameZERO == true) {
+
+                    //    alert("Card Name Should Be  Greater than or Equal to 4 characters");
+                    //    return false;
+
+                    //}
+
+                    $('#grdCard').jqGrid("addRowData", row, $scope.BS.CardDetails, "last");
+
+                }
+                else {
+
+
+                    var CardNoZERO = /^0*$/.test(BS.CardDetails.CardNo)
+                    var CardTypeZERO = /^0*$/.test(BS.CardDetails.CardType)
+                    var CardNameZERO = /^0*$/.test(BS.CardDetails.CardName)
+
+
+                    //if (BS.CardDetails.CardNo == "0") {
+
+                    //    alert("Card No Should Be 16 Digits ");
+                    //    return false;
+
+                    //}
+                    //if (BS.CardDetails.CardType.length < 4 || BS.CardDetails.CardType == "0") {
+
+                    //    alert("Card Type Should Be  Greater than or Equal to 4 characters ");
+                    //    return false;
+
+                    //}
+                    //if (BS.CardDetails.CardName.length < 4 || BS.CardDetails.CardName == "0") {
+
+                    //    alert("Card Name Should Be  Greater than or Equal to 4 characters ");
+                    //    return false;
+
+                    //}
+                    //if (CardNoZERO == true) {
+
+                    //    alert("Card No Should Be 16 Digits");
+                    //    return false;
+
+                    //}
+                    //if (CardTypeZERO == true) {
+
+                    //    alert("Card Type Should Be  Greater than or Equal to 4 characters ");
+                    //    return false;
+
+                    //}
+                    //if (CardNameZERO == true) {
+
+                    //    alert("Card Name Should Be  Greater than or Equal to 4 characters");
+                    //    return false;
+
+                    //}
+                    //else {
+                    row = $scope.BS.CardDetails.row;
+                    $('#grdCard').jqGrid("setRowData", row, $scope.BS.CardDetails);
+                    //}
+
+
+
+                }
+                TotalCash(BS);
+                ClearCardDetails();
+            }
+        }
+
+        $scope.Clear = function () {
+            ClearCardDetails();
+            $scope.hidecashAmount = true;
+            $scope.hidePaidAmount = false;
+
+            $("#panel3").collapse('hide');
+            $scope.hideonBc = false;
+        }
+
+        function ClearCardDetails() {
+            $scope.btnAdd = "Add";
+            $scope.submittedAdd = false;
+            $scope.frmCard.$setPristine();
+            $scope.BS.CardDetails = {}
+
+            $("#panel3").collapse('hide');
+            $scope.hideonBc = false;
+        }
+
+        $scope.Save = function (BS) {
+            debugger
+            $scope.BS.CardDetails = {};
+            var Grid_data = {};
+            Grid_data = $('#grdCard').jqGrid('getRowData');
+            $scope.submitted = true;
+            if (parseFloat(BS.NetAmount) == 0) {
+                SaveBillSettlementData(BS, Grid_data);
+            } else if ($scope.isFormValid) {
+
+                if (BS.BilltoCompany == true) {
+
+                    if (BS.CompanyName === undefined || BS.CompanyName == null || BS.CompanyName == "") {
+
+                        alert("Select Company Name !");
+                        return false;
+                    }
+
+                }
+
+                if (BS.BilltoCompany == true) {
+                    BS.PaidAmount = BS.NetAmount;
+                    BS.BalanceAmount = 0;
+                    SaveBillSettlementData(BS, Grid_data);
+                }
+                else {
+
+                    if (angular.isDefined($scope.BS.CardDetails.CardNo) || angular.isDefined($scope.BS.CardDetails.CardType) || angular.isDefined($scope.BS.CardDetails.CardName) || angular.isDefined($scope.BS.CardDetails.ExpireDate) || angular.isDefined($scope.BS.CardDetails.CardAmount)) {
+                        alert('Add Card Details to grid');
+                    }
+
+                    else if (parseFloat(BS.PaidAmount) > 0) {
+                        if (parseFloat(BS.BalanceAmount) <= 0) {
+
+                            SaveBillSettlementData(BS, Grid_data);
+                        }
+                        else {
+                            alert("Paid Amount Shoud be greater than or equal to Net Payable ");
+                        }
+                    }
+                    else {
+                        alert("Enter Cash or Card Details");
+                        $('#txtCardNo').focus();
+                    }
+
+                }
+            }
+        }
+
+
+        function SaveBillSettlementData(BS, Grid_data) {
+
+            if (BS.CashDetails === undefined) {
+
+                BS.CashDetails = [];
+
+            }
+
+            var ans = confirm($rootScope.msgSave);
+            if (ans) {
+                $http.post('/POSTransaction/SaveBillSettlement', { BS: JSON.stringify(BS), lstCashDetails: (BS.CashDetails), lstCardDetails: JSON.stringify(Grid_data) }).success(function (data) {
+                    debugger
+                    if (data) {
+                        alert("Bill Settlement Details Saved Successfully");
+                        $scope.LoadData();
+                        ClearForm();
+                        var url = '@Url.Action("../POSTransaction/DashBoard")';
+                        window.location.href = url;
+                    }
+                    // })
+                    //.error(function (data) {
+                    //    alert("Error found");
+                });
+            }
+        }
+
+        $scope.calBalanceAmount = function (Amount) {
+            debugger;
+
+
+
+            Grid_data = $('#grdCard').jqGrid('getRowData');
+            var res = 0;
+            for (var i = 0; i < Grid_data.length; i++) {
+                res = res + parseFloat(Grid_data[i].CardAmount);
+            }
+
+            if (Amount == "") {
+
+                $scope.BS.BalanceAmount = $scope.BS.NetAmount - res;
+
+            }
+            else {
+                $scope.BS.NetAmount = $scope.BS.NetAmount - res;
+                var kkj = parseFloat($scope.BS.NetAmount) - parseFloat(Amount);
+                $scope.BS.BalanceAmount = kkj;
+                $scope.BS.NetAmount = $scope.BS.NetAmount + res;
+            }
+
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+        function ClearForm() {
+            debugger
+            $scope.BS = {};
+            $scope.B = {};
+            //$scope.$apply();
+            $scope.ShowAndHideCashDetails = true;
+            $scope.ShowAndHidetrans = false;
+            $scope.DisablePaidAmount = true;
+
+            $scope.btnSave = "Save";
+            $scope.fmBillSettlement.$setPristine();
+            $scope.submitted = false;
+
+        }
+    });
+
+    function CardGridBinding(data) {
+        debugger
+
+        var grid_data = data;
+        var grid_selector = "#grdCard";
+        var pager_selector = "#grdCardpager";
+
+        //grid data refresh
+        jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".col-sm-6").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+
+
+        jQuery(grid_selector).jqGrid({
+            data: grid_data,
+            datatype: "local",
+            height: 100,
+            rownumbers: true,
+            colModel: [
+                    {
+                        label: ' ', width: 15, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                            return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        }
+                    },
+                     { label: 'Transaction No', name: 'TransactionNo', width: 30 },
+                     { label: 'Card No', name: 'CardNo', width: 30, hidden: true },
+                         { label: 'Card Name', name: 'CardName', width: 40, hidden: true },
+                        { label: 'Card Type', name: 'CardType', width: 25, hidden: true },
+                        { label: 'Expire Date', name: 'ExpireDate', width: 25, hidden: true },
+                        { label: 'Amount', name: 'CardAmount', width: 20, align: 'right' }
+
+            ],
+
+            viewrecords: true,
+            rowNum: 8,
+            rowList: [8, 16, 25, 100],
+            pager: pager_selector,
+            altRows: true,
+            search: true,
+            loadComplete: function (id) {
+                var table = this;
+                setTimeout(function () {
+                    styleCheckbox(table);
+
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+            },
+
+
+            // caption: "Card Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            caption: "Card Details  "
+
+
+        });
+        $(window).triggerHandler('resize.jqGrid');
+
+
+
+    }
+
+
+    function VoucherGridBinding(data) {
+        debugger
+
+        var grid_data = data;
+        var grid_selector = "#grdVoucher";
+        var pager_selector = "#grdVoucherpager";
+
+        //grid data refresh
+        jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+
+
+        jQuery(grid_selector).jqGrid({
+            data: grid_data,
+            datatype: "local",
+            height: 100,
+            rownumbers: true,
+            colModel: [
+                    {
+                        label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                            return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        }
+                    },
+                   { label: 'Card No', name: 'CardNo', width: 20, hidden: false },
+                         { label: 'Card Name', name: 'CardName', width: 20, hidden: false },
+                        { label: 'Card Type', name: 'CardType', width: 20 },
+                        { label: 'Expire Date', name: 'ExpireDate', width: 20 },
+                        { label: 'Card Amount', name: 'CardAmount', width: 90 }
+
+            ],
+
+            viewrecords: true,
+            rowNum: 8,
+            rowList: [8, 16, 25, 100],
+            pager: pager_selector,
+            altRows: true,
+            search: true,
+            loadComplete: function (id) {
+                var table = this;
+                setTimeout(function () {
+                    styleCheckbox(table);
+
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+            },
+
+
+            caption: "Card Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+        });
+        $(window).triggerHandler('resize.jqGrid');
+
+
+
+    }
+
+
+</script>

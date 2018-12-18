@@ -1,0 +1,1992 @@
+﻿@{
+    // ViewBag.Title = "VendorDetails";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@*<link rel="stylesheet" href="~/assets/css/jquery-ui.custom.min.css" />
+    <link rel="stylesheet" href="~/assets/css/jquery.gritter.min.css" />*@
+<link rel="stylesheet" href="~/assets/css/select2.min.css" />
+
+<link rel="stylesheet" href="~/assets/css/bootstrap-editable.min.css" />
+
+<style>
+    .btn-light {
+    }
+
+    input[type=search] {
+    }
+</style>
+
+
+<script src="~/assets/js/ace-editable.min.js"></script>
+<script src="~/assets/js/bootstrap-editable.min.js"></script>
+<div class="page-content content-bg" ng-controller="VendordetailsController" ng-init="CountryDetails();;vendornames();;products();">
+    <div class="row padding-0">
+        <div class="col-sm-2 no-padding-right">
+            <div class="row">
+                <div class="form-group">
+
+
+                    <div class="col-sm-12 ">
+                        @*<input type="text" name="searchvendorname" placeholder="Search Vendor Name"
+                            class="form-control" id="searchvendorname" required maxlength="245" />*@
+                        <span class="input-icon width-100 grid-search input-icon-right">
+                            <input onkeyup="" id="" ng-model="q" placeholder="Search Vendor" class="nav-search-input width-100" autocomplete="off" type="search">
+                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-sm-12 ">
+                        <button class="btn width-100 padding-0 btn-message " type="button" ng-click="VendorCancel(1);" ng-hide="btnSave=='Update'">
+                            <i class=" fa fa-plus ">
+                            </i> Add New Vendor
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget-box transparent no-padding-right">
+                <div class="widget-header widget-header-small">
+                    <h5 class="widget-title red dark no-padding " style="font-size:16px; font-weight:600; margin:5px 0px;">
+                        <i class="ace-icon fa fa-users"></i>
+                        VENDOR DETAILS
+                    </h5>
+                    @*<button ng-click='VendorCancel(1)' class="red2" style="border:none;background-color:white;">
+                            <i class="ace-icon fa fa-times bigger-125"></i>Clear All
+                        </button>*@
+                </div>
+                <div class="widget-body no-padding  ">
+                    <div class="widget-main no-padding" style="height:350px; overflow-y:auto;">
+                        <div id="profile-feed-1" class="profile-feed" ng-repeat="vendor in VendorDetails | filter:q as results">
+                            <div class="profile-activity clearfix">
+                                @*<div class="time">
+                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                        {{vendor.vendorcode}}
+                                    </div>*@
+                                <div class="">
+                                    <div class="col-sm-12">
+
+                                        @*<img class="pull-left ace-icon fa fa-user" alt="vendor" src="" />*@
+
+                                        <div>{{vendor.vendorname}}</div>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button ng-click='VendorEdit(vendor.vendorid)' class="blue no-border transparent-bg">
+                                            <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                        </button>
+                                        <button ng-click='VendorDelete(vendor.vendorid)' class="red no-border transparent-bg">
+                                            <i class="ace-icon fa fa-trash bigger-125"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="results.length == 0" class="animate-repeat">
+                            <strong>No results found...</strong>
+                        </div>
+
+                    </div>
+                    <div>
+                        <button class="btn btn-block" type="button" ng-click="Vendordetailsexport()">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <div class="tabbable">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active">
+                        <a aria-expanded="false" data-toggle="tab" href="#home">
+                            <i class="green ace-icon fa fa-home bigger-120"></i>
+                            Vendor Details
+                        </a>
+                    </li>
+
+                    <li>
+                        <a aria-expanded="true" data-toggle="tab" href="#messages">
+                            Vendor Products List
+                            @*<span class="badge badge-danger">4</span>*@
+                        </a>
+                    </li>
+
+                    <li>
+                        <a aria-expanded="true" data-toggle="tab" href="#dropdown1">
+                            Order Details
+                            @*<span class="badge badge-danger">4</span>*@
+                        </a>
+                    </li>
+
+                </ul>
+                <div class="tab-content white-bg">
+                    <div id="home" class="tab-pane fade active in">
+                        <form class="form-horizontal no-padding" role="form" name="fmVendordetails" novalidate style="border:inherit;border-bottom-width:1px;">
+
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label for="form-field-1">
+                                        Vendor Name<span style="color: Red">*</span>:
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" name="vendorname" ng-model="VD.vendorname" placeholder="Enter Vendor Name"
+                                           class="form-control" id="vendorname" style="text-transform:uppercase" required maxlength="145" kit-propercase ng-disabled="vndrvsble" />
+                                    <span class="error" ng-show="(fmVendordetails.vendorname.$dirty || VDsubmitted) && fmVendordetails.vendorname.$error.required">
+                                        Vendor Name Required!
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <fieldset class="scheduler-border" ng-show="!Editmode">
+                                <legend class="scheduler-border blue"><i class="fa fa-map-marker red"></i> ADDRESS DETAILS</legend>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label no-padding-right">
+                                        Address1<span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="line1" ng-model="VD.line1" placeholder="Enter Address1"
+                                               class="form-control" id="line1" ng-required="!Editmode" maxlength="245" />
+                                        <span class="error" ng-show="(fmVendordetails.line1.$dirty || VDsubmitted) && fmVendordetails.line1.$error.required">
+                                            Address1 Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-1 control-label no-padding-right">
+                                        Address2@*<span style="color: Red">*</span>*@:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="line2" ng-model="VD.line2" placeholder="Enter Address2"
+                                               class="form-control" id="line2" maxlength="245" />
+                                        @*<span class="error" ng-show="(fmVendordetails.Line2.$dirty || VDsubmitted) && fmVendordetails.Line2.$error.required">
+                                                Address2  Required!
+                                            </span>*@
+                                    </div>
+                                    <label class="col-sm-1 control-label no-padding-right">
+                                        Country<span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select id="countryid" ng-model="VD.countryid" class=" form-control" name="Countryname" ng-options="c.countryid as c.countryname for c in Countries"
+                                                ng-required="!Editmode" ng-change="CountryChange();">
+                                            <option value="">Select Country</option>
+                                        </select>
+                                        <span class="error" ng-show="(fmVendordetails.Countryname.$dirty || VDsubmitted ) && fmVendordetails.Countryname.$error.required">
+                                            Country  Required!
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">
+                                        State<span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select id="stateid" ng-model="VD.stateid" class=" form-control" name="statename" ng-options="c.stateid as c.statename for c in States"
+                                                ng-required="!Editmode" ng-change="StateChange();">
+                                            <option value="">Select State</option>
+                                        </select>
+                                        <span class="error" ng-show="(fmVendordetails.statename.$dirty || VDsubmitted ) && fmVendordetails.statename.$error.required">
+                                            State Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-1 control-label">
+                                        City <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select id="cityid" ng-model="VD.cityid" class=" form-control" name="cityname" ng-options="c.cityid as c.cityname for c in cities"
+                                                ng-required="!Editmode">
+                                            <option value="">Select City</option>
+                                        </select>
+                                        <span class="error" ng-show="(fmVendordetails.cityname.$dirty || VDsubmitted) && fmVendordetails.cityname.$error.required">
+                                            City Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-1 control-label">
+                                        PIN Code<span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="pincode" ng-model="VD.pincode" placeholder="Enter PIN Code"
+                                               class="form-control" id="pincode" ng-required="!Editmode" maxlength="6" minlength="6" kit-digits min="100000" />
+                                        <span class="error" ng-show="(fmVendordetails.pincode.$dirty || VDsubmitted) && fmVendordetails.pincode.$error.required">
+                                            PIN Code Required!
+                                        </span>
+                                        <span class="error" ng-show="(fmVendordetails.pincode.$dirty || VDsubmitted) && fmVendordetails.pincode.$error.minlength">
+                                            Enter Valid PIN Code!
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+                            <div class="row" ng-show="Editmode">
+                                @*Existing Address*@
+                                <div class="col-sm-4" ng-repeat="Address in VendorAddressDetails">
+                                    <div style="width:100%; border:2px solid #ddd; border-radius:10px; padding:15px 0px; min-height:110px; ">
+                                        <div class="profile-user-info">
+                                            <div class="profile-info-row">
+                                                <div>
+                                                    <strong class="pull-left">Address</strong>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <i class="fa fa-edit right bigger-125" ng-click="EditAddress(Address.addressid)" data-toggle="modal" data-target="#myModal"></i>
+                                                    <button ng-click='DeleteAddress(Address.addressid)' class="red" style="border:none;background-color:white;">
+                                                        <i class="ace-icon fa fa-trash bigger-125"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-value">
+                                                    <i class="fa fa-map-marker light-orange bigger-110"></i>&nbsp;&nbsp;&nbsp;
+                                                    <span>{{Address.line1}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-value">
+                                                    <span class="editable" id="address">{{Address.line1}}</span>
+                                                    <br />
+                                                    <span class="editable" id="city">{{Address.line2}}</span>
+                                                    <br />
+                                                    <span class="editable" id="cityname">{{Address.cityname}}</span>
+                                                    <br />
+                                                    <span class="editable" id="statename">{{Address.statename}}</span>
+                                                    <br />
+                                                    <span class="editable" id="country">{{Address.countryname}}</span>
+                                                    <br />
+                                                    <span class="editable" id="country">{{Address.pincode}}</span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*Add Address*@
+                                <div class="col-sm-4 no-padding">
+                                    <div style="width: 100%; border: 2px solid #ddd; border-radius: 10px; padding: 15px 0px; overflow:auto;  min-height: 110px; text-align: center; color: #ddd; height: 145px; ">
+                                        <h2 ng-click="AddAddress()" data-toggle="modal" data-target="#myModal" style="font-size:48px; line-height:56px; font-weight:600;">+</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 no-padding">
+                                <fieldset class="scheduler-border ">
+                                    <legend class="scheduler-border blue"><i class="fa fa-phone red"></i> CONTACT DETAILS</legend>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            Person<span style="color: Red"></span>:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="contactperson" ng-model="VD.contactperson" placeholder="Enter Conatct Person Name"
+                                                   class="form-control" id="contactperson" maxlength="245" kit-alphabets />
+                                            <span class="error" ng-show="(fmVendordetails.contactperson.$dirty || VDsubmitted) && fmVendordetails.contactperson.$error.required">
+                                                Contact Person Required!
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            Mobile<span style="color: Red"></span>:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="mobileno" ng-model="VD.mobileno" placeholder="Enter Mobile No." ng-pattern="/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/"
+                                                   class="form-control" id="mobileno" maxlength="10" minlength="10" kit-digits min="7000000000" />
+                                            <span class="error" ng-show="(fmVendordetails.mobileno.$dirty || VDsubmitted) && fmVendordetails.mobileno.$error.required">
+                                                Mobile No. Required!
+                                            </span>
+                                            <span class="error" ng-show="(fmVendordetails.mobileno.$dirty || VDsubmitted) && fmVendordetails.mobileno.$error.minlength && fmVendordetails.mobileno.$error.min">
+                                                Enter Valid Mobile No.!
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            Landline@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="landlineno" ng-model="VD.landlineno" placeholder="Enter Landline No."
+                                                   class="form-control" id="landlineno" maxlength="20" ng-pattern="/^[0-9]\d{2,4}-\d{6,8}$/" />
+                                            <div>
+                                                <label>
+                                                    Ex:- 040-12345678
+                                                </label>
+                                            </div>
+                                            <span class="error" ng-show="(fmVendordetails.landlineno.$dirty || VDsubmitted) && fmVendordetails.landlineno.$error.pattern">
+                                                Invalid Landline!
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label class="col-sm-4 control-label">
+                                            Email@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="email" name="email" ng-model="VD.email" placeholder="Enter Email Address"
+                                                   class="form-control" id="email" maxlength="100" />
+                                            @*<span class="error" ng-show="(fmVendordetails.email.$dirty || VDsubmitted) && fmVendordetails.email.$error.required">
+                                                    Email Address Required!
+                                                </span>*@
+                                            <span class="error" ng-show="(fmVendordetails.email.$dirty || VDsubmitted) && fmVendordetails.email.$error.email">
+                                                Invalid Email !
+                                            </span>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4">
+                                            <label class="control-label">
+                                                Fax@*<span style="color: Red">*</span>*@:
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="fax" ng-model="VD.fax" placeholder="Enter Fax No."
+                                                   class="form-control" id="fax" maxlength="15" />
+                                            @*<span class="error" ng-show="(fmVendordetails.fax.$dirty || VDsubmitted) && fmVendordetails.fax.$error.required">
+                                                    FAX Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            Website@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="website" ng-model="VD.website" placeholder="Enter Website"
+                                                   class="form-control" id="website" maxlength="75" />
+                                            @*<span class="error" ng-show="(fmVendordetails.website.$dirty || VDsubmitted) && fmVendordetails.website.$error.required">
+                                                    Website Required!
+                                                </span>*@
+                                            @*<span class="error" ng-show="(fmVendordetails.email.$dirty || VDsubmitted) && fmVendordetails.website.$error.url">
+                                                    Invalid Website!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </div>
+
+
+                            <div class="col-sm-4 no-padding">
+                                <fieldset class="scheduler-border height-320">
+                                    <legend class="scheduler-border blue"><i class="fa fa-calculator  red"></i> BANK DETAILS</legend>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            BANK@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="bankname" ng-model="VD.bankname" placeholder="Enter Bank Name"
+                                                   class="form-control" id="bankname" maxlength="195" kit-alphabets />
+                                            @*<span class="error" ng-show="(fmVendordetails.bankname.$dirty || VDsubmitted) && fmVendordetails.bankname.$error.required">
+                                                    Bank Name Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            A/C No.@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="bankacno" ng-model="VD.bankacno" placeholder="Enter Bank A/C No."
+                                                   class="form-control" id="bankacno" maxlength="45" kit-alpha-numeric />
+                                            @*<span class="error" ng-show="(fmVendordetails.bankacno.$dirty || VDsubmitted) && fmVendordetails.bankacno.$error.required">
+                                                    Bank A/C No. Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            IFSC @*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="bankifsc" ng-model="VD.bankifsc" placeholder="Enter Bank IFSC No."
+                                                   class="form-control" id="bankifsc" maxlength="45" kit-alpha-numeric />
+                                            @*<span class="error" ng-show="(fmVendordetails.bankifsc.$dirty || VDsubmitted) && fmVendordetails.bankifsc.$error.required">
+                                                    Bank IFSC Required!
+                                                </span>*@
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label class="col-sm-4 control-label">
+                                            Branch @*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="bankaddress" ng-model="VD.bankaddress" placeholder="Enter Branch "
+                                                   class="form-control" id="bankaddress" maxlength="245" />
+                                            @*<span class="error" ng-show="(fmVendordetails.bankaddress.$dirty || VDsubmitted) && fmVendordetails.bankaddress.$error.required">
+                                                    Bank Address Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-sm-4 no-padding " style="display:none">
+                                <fieldset class="scheduler-border height-320">
+                                    <legend class="scheduler-border blue"><i class="fa fa-scissors red"></i>TAXATION</legend>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            PAN No.@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="panno" ng-model="VD.panno" placeholder="Enter PAN No."
+                                                   class="form-control" id="panno" ng-pattern="/^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}$/" maxlength="45" kit-alpha-numeric />
+                                            <span class="error" ng-show="(fmVendordetails.panno.$dirty || VDsubmitted) && fmVendordetails.panno.$error.pattern">
+                                                Enter Valid PAN No!
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            TIN No.@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="tinno" ng-model="VD.tinno" placeholder="Enter TIN No."
+                                                   class="form-control" id="tinno" maxlength="45" kit-alpha-numeric />
+                                            @*<span class="error" ng-show="(fmVendordetails.tinno.$dirty || VDsubmitted) && fmVendordetails.tinno.$error.required">
+                                                    Tin No. Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            Tax Type@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <select id="taxtype" ng-model="VD.taxtype" class=" form-control" name="taxtype" ng-change="selecttax()">
+                                                <option value="">Select Tax Type</option>
+                                                <option value="VAT">VAT</option>
+                                                <option value="CST">CST</option>
+                                            </select>
+                                            @*<span class="error" ng-show="(fmVendordetails.taxtype.$dirty || VDsubmitted) && fmVendordetails.taxtype.$error.required">
+                                                    Tax Type Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            VAT/CST@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="vatorcst" ng-model="VD.vatorcst" placeholder="Enter VAT OR CST"
+                                                   class="form-control" id="vatorcst" maxlength="45" kit-amount />
+                                            @*<span class="error" ng-show="(fmVendordetails.vatorcst.$dirty || VDsubmitted) && fmVendordetails.vatorcst.$error.required">
+                                                    VAT OR CST Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 no-padding-right control-label">
+                                            Ser. Tax@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="servicetax" ng-model="VD.servicetax" placeholder="Enter Service Tax"
+                                                   class="form-control" id="servicetax" maxlength="45" kit-amount />
+                                            @*<span class="error" ng-show="(fmVendordetails.servicetax.$dirty || VDsubmitted) && fmVendordetails.servicetax.$error.required">
+                                                    Service Tax Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">
+                                            Excise@*<span style="color: Red">*</span>*@:
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="excise" ng-model="VD.excise" placeholder="Enter Excise"
+                                                   class="form-control" id="excise" maxlength="45" kit-amount />
+                                            @*<span class="error" ng-show="(fmVendordetails.excise.$dirty || VDsubmitted) && fmVendordetails.excise.$error.required">
+                                                    Excise  Required!
+                                                </span>*@
+                                        </div>
+                                        @*<label class="col-sm-1 control-label">
+                                                Remark<span style="color: Red">*</span>:
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="remarks" ng-model="VD.remarks" placeholder="Enter Remarks"
+                                                       class="form-control" id="remarks" maxlength="245" />
+                                                <span class="error" ng-show="(fmVendordetails.remarks.$dirty || VDsubmitted) && fmVendordetails.remarks.$error.required">
+                                                    Remarks  Required!
+                                                </span>
+                                            </div>*@
+                                    </div>
+                                </fieldset>
+
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="">
+                                            <div class="pull-right" style="margin:10px;">
+                                                <button class="btn btn-success" type="button" ng-click="Save(VD);">
+                                                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                                </button>
+                                                <button class="btn orange" type="reset" ng-click="Reset()">
+                                                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                        </form>
+                    </div>
+                    <div id="messages" class="tab-pane fade">
+                        <div class="row">
+                            <form class="form-horizontal" role="form" name="fmvendorproductdetails" novalidate style="border:inherit;border-bottom-width:1px;">
+                                <div class="widget-box">
+                                    <div class="widget-header widget-header-flat widget-header-large">
+                                        <h5 class="widget-title"> <i class="fa fa-product-hunt"></i> VENDOR DETAILS</h5>
+                                    </div>
+                                    <div class="widget-body" style="display: block; width:auto; align-items:center;">
+                                        <div class="widget-main">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    Vendor name<span style="color: Red"></span>:
+                                                </label>
+
+                                                <div class="col-sm-5">
+                                                    <input type="text" name="vendorname" ng-model="VP.vendorname" placeholder="vendor Name"
+                                                           class="form-control" id="vendorname" disabled />
+
+                                                </div>
+                                                @*<label class="col-sm-3 control-label">
+                                                      Vendor id<span style="color: Red"></span>:
+                                                    </label>*@
+
+                                                <div class="col-sm-4">
+                                                    <input type="text" name="vendorid" ng-model="VP.vendorid" placeholder="Enter vendor id"
+                                                           class="form-control" id="vendorid" disabled ng-hide="true" />
+
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input type="text" name="vendorcode" ng-model="VP.vendorcode" placeholder="Enter vendor code"
+                                                           class="form-control" id="vendorcode" ng-hide="true" />
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    Product Name<span style="color: Red">*</span>:
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <select id="productid" ng-model="VP.productid" class=" form-control" name="productid" ng-options="c.productid as c.productname for c in products"
+                                                            required ng-change="productchange();" ng-disabled="prdtedit">
+                                                        <option value="">Select Product</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(fmvendorproductdetails.productid.$dirty || VPsubmitted) && fmvendorproductdetails.productid.$error.required">
+                                                        Product  Required!
+                                                    </span>
+                                                </div>
+                                                <label class="col-sm-3 control-label">
+                                                    Product Code<span style="color: Red"></span>:
+                                                </label>
+
+                                                <div class="col-sm-4">
+                                                    <input type="text" name="productcode" ng-model="VP.productcode" placeholder="Product Code"
+                                                           class="form-control" id="productcode" disabled />
+                                                    <span class="error" ng-show="(fmvendorproductdetails.productcode.$dirty || VPsubmitted) && fmvendorproductdetails.productcode.$error.required">
+                                                        Product Code Required!
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    Category<span style="color: Red"></span>:
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" name="productcategory" ng-model="VP.productcategory" placeholder="Category"
+                                                           class="form-control" id="productcategory" disabled />
+                                                    <span class="error" ng-show="(fmvendorproductdetails.productcategory.$dirty || VPsubmitted) && fmvendorproductdetails.productcategory.$error.required">
+                                                        Category Required!
+                                                    </span>
+                                                </div>
+                                                <label class="col-sm-3 control-label">
+                                                    Subcategory<span style="color: Red"></span>:
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" name="productsubcategory" ng-model="VP.productsubcategory" placeholder="Subcategory"
+                                                           class="form-control" id="productsubcategory" disabled />
+                                                    <span class="error" ng-show="(fmvendorproductdetails.productsubcategory.$dirty || VPsubmitted) && fmvendorproductdetails.productsubcategory.$error.required">
+                                                        Subcategory Required!
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">
+                                                    UOM<span style="color: Red"></span>:
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" name="productuom" ng-model="VP.productuom" placeholder="UOM"
+                                                           class="form-control" id="productuom" disabled />
+                                                    <span class="error" ng-show="(fmvendorproductdetails.productcode.$dirty || VPsubmitted) && fmvendorproductdetails.productcode.$error.required">
+                                                        Product UOM Required!
+                                                    </span>
+                                                </div>
+                                                <label class="col-sm-3 control-label">
+                                                    Cost<span style="color: Red"></span>:
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" name="productcost" ng-model="VP.productcost" placeholder="Enter Cost"
+                                                           class="form-control" id="productcost" kit-amount maxlength="45" style="text-align:right;" />
+                                                    @*<span class="error" ng-show="(fmvendorproductdetails.productcost.$dirty || VPsubmitted) && fmvendorproductdetails.productcost.$error.required">
+                                                            Cost Required!
+                                                        </span>*@
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12" style="border-top-style:initial">
+                                        <div class="pull-right">
+                                            <button class="btn btn-success" type="button" ng-click="SaveProducts(VP);">
+                                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnProductsSave}}
+                                            </button>
+                                            <button class="btn orange" type="button" ng-click="ResetProducts()">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <table id="grdProductsList" ng-show="Editmode" ng-hide="if(VendorProductsDetails.length==0)" class="table" style="border:medium;">
+                                <tr class="row">
+                                    <th></th>
+                                    <th hidden>Product ID</th>
+                                    <th>Product Name</th>
+                                    <th> Category</th>
+                                    <th> UOM</th>
+                                    <th> Cost</th>
+                                    <th hidden>Product Code</th>
+                                    <th hidden>Product Date</th>
+                                </tr>
+                                <tr ng-repeat="product in VendorProductsDetails" class="row" style="border:medium;border-bottom-width:5px;">
+                                    <td>
+                                        <button ng-click='edit(product);' class="blue" style="border:none;background-color:white;">
+                                            <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                        </button>
+                                        <button ng-click='Delete(product);' class="red" style="border:none;background-color:white;">
+                                            <i class="ace-icon fa fa-trash bigger-125"></i>
+                                        </button>
+                                    </td>
+                                    <td hidden>{{product.productid}}</td>
+                                    <td>{{product.productname}}</td>
+                                    <td>{{product.productcategory}}</td>
+                                    <td>{{product.productuom}}</td>
+                                    <td>{{product.productcost}}</td>
+                                    <td hidden>{{product.productcode}}</td>
+                                    <td hidden>{{product.productuptodate}}</td>
+                                </tr>
+                            </table>
+                            @*<table id="grid-pager" ng-show="Editmode"></table>*@
+                        </div>
+                    </div>
+                    <div id="dropdown1" class="tab-pane fade">
+                        <table id="grdVenderDetailsList" class="table" style="border:medium;">
+                            <tr class="row">
+                                <th></th>
+                                <th>Order No</th>
+                                <th>Order Date</th>
+                                <th>Vender</th>
+                                <th> Order Amount</th>
+                                @*<th></th>
+                                    <th hidden>Status</th>
+                                    <th hidden>Paid Amount</th>*@
+                            </tr>
+                            <tr ng-repeat="Vendor in vendorpDetails" class="row" style="border:medium;border-bottom-width:5px;">
+                                <td>
+                                    @*<button ng-click='edit(Vendor);' class="blue" style="border:none;background-color:white;">
+                                            <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                        </button>
+                                        <button ng-click='Delete(Vendor);' class="red" style="border:none;background-color:white;">
+                                            <i class="ace-icon fa fa-trash bigger-125"></i>
+                                        </button>*@
+                                </td>
+                                <td>{{Vendor.PurchaseOrderId}}</td>
+                                <td>{{Vendor.PurchseOrderDate}}</td>
+                                <td>{{Vendor.VendorName}}</td>
+                                <td>{{Vendor.EstimateRate}}</td>
+                                @*<td hidden>{{Vendor.productcost}}</td>
+                                    <td hidden>{{Vendor.productcode}}</td>
+                                    <td hidden>{{Vendor.productuptodate}}</td>*@
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="dropdown2" class="tab-pane fade">
+                        <p>tab3 2.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #FFEB3B">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Vendor Address <i class="fa  fa-hand-o-down animated bounce"></i></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" ng-show="VAFormhide">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <form class="form-horizontal" role="form" name="fmaddressdetails" novalidate style="border:inherit;border-bottom-width:1px;">
+                                    <div class="widget-box">
+                                        @*<div class="widget-header widget-header-flat widget-header-large">
+                                                                                    <h5 class="widget-title"> <i class="glyphicon glyphicon-envelope"></i> ADDRESS </h5>
+                                                                                    <div class="widget-toolbar">
+                                                        <a href="#" data-action="collapse">
+                                                            <i class="ace-icon fa fa-chevron-up"></i>
+                                                        </a>
+                                                    </div>
+                                            </div>*@
+                                        <div class="widget-body" style="display: block;">
+                                            <div class="widget-main">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">
+                                                        Address 1<span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" name="line11" ng-model="VA.line1" placeholder="Enter Line1"
+                                                               class="form-control" id="line11" required maxlength="245" />
+                                                        <span class="error" ng-show="(fmaddressdetails.line11.$dirty || VAsubmitted) && fmaddressdetails.line11.$error.required">
+                                                            Address1 Required!
+                                                        </span>
+                                                    </div>
+                                                    <label class="col-sm-3 control-label">
+                                                        Address 2@*<span style="color: Red">*</span>*@:
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" name="line12" ng-model="VA.line2" placeholder="Enter Address 2"
+                                                               class="form-control" id="line2" maxlength="245" />
+                                                        @*<span class="error" ng-show="(fmaddressdetails.line12.$dirty || VAsubmitted) && fmaddressdetails.line12.$error.required">
+                                                                Line2  Required!
+                                                            </span>*@
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">
+                                                        Country<span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <select id="countryid1" ng-model="VA.countryid" class=" form-control" name="countryid1" ng-options="c.countryid as c.countryname for c in Countries"
+                                                                required ng-change="CountryChange();">
+                                                            <option value="">Select Country</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(fmaddressdetails.countryid1.$dirty || VAsubmitted) && fmaddressdetails.countryid1.$error.required">
+                                                            Country  Required!
+                                                        </span>
+                                                    </div>
+                                                    <label class="col-sm-3 control-label">
+                                                        State<span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <select id="statename1" ng-model="VA.stateid" class=" form-control" name="statename1" ng-options="c.stateid as c.statename for c in States"
+                                                                required ng-change="StateChange();">
+                                                            <option value="">Select State</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(fmaddressdetails.statename1.$dirty || VAsubmitted) && fmaddressdetails.statename1.$error.required">
+                                                            State Required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+
+                                                    <label class="col-sm-3 control-label">
+                                                        City <span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <select id="cityname1" ng-model="VA.cityid" class=" form-control" name="cityname1" ng-options="c.cityid as c.cityname for c in cities"
+                                                                required>
+                                                            <option value="">Select City</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(fmaddressdetails.cityname1.$dirty || VAsubmitted) && fmaddressdetails.cityname1.$error.required">
+                                                            City Required!
+                                                        </span>
+                                                    </div>
+                                                    <label class="col-sm-3 control-label">
+                                                        PIN Code<span style="color: Red">*</span>:
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <input type="text" name="pincode1" ng-model="VA.pincode" placeholder="Enter PIN Code"
+                                                               class="form-control" id="pincode1" required maxlength="6" kit-digits />
+                                                        <span class="error" ng-show="(fmaddressdetails.pincode1.$dirty || VAsubmitted) && fmaddressdetails.pincode1.$error.required">
+                                                            PIN Code Required!
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12" style="border-top-style:initial">
+                                            <div class="pull-right">
+                                                <button class="btn btn-success" type="button" ng-click="SaveAddress(VA);">
+                                                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnAddressSave}}
+                                                </button>
+                                                <button class="btn orange" type="button" ng-click="ResetAddress()">
+                                                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('VendordetailsController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.VD = {};
+        $scope.VP = {};
+        $scope.VDsubmitted = false;
+        $scope.VDisFormValid = false;
+        $scope.prdtedit = false;
+        $scope.btnSave = "Save";
+        $scope.Editmode = false;
+        $scope.vndrvsble = false;
+        $scope.word = /^[a-z]+[a-z0-9._]+[a-z]+\.[a-z.]{2,5}$/;
+        $scope.edit = function (product) {
+            debugger;
+            var copy = Object.assign({}, product);
+            $scope.VP = copy;
+            $scope.VP.productid = parseInt($scope.VP.productid);
+            //$scope.vp.vendorname = strvendorname;
+            $scope.btnProductsSave = "Update";
+            $scope.prdtedit = true;
+            var ID = $scope.VD.vendorid;
+            $scope.VP.vendorid = ID;
+            $scope.VP.vendorname = $scope.VD.vendorname;
+            $scope.$apply();
+        };
+
+        $(function () {
+            $('#panno').keyup(function () {
+                this.value = this.value.toUpperCase();
+            });
+        });
+
+
+
+        $scope.Delete = function (product) {
+            debugger;
+            if ($scope.btnProductsSave == "Save") {
+                var ans = confirm("Are You Sure? Do You Want To Delete?");
+                if (ans) {
+                    var VP = Object.assign({}, product);
+                    var id = $scope.VD.vendorid;
+                    $http.post('/MMSMaster/Deletevendorproducts', { VP: JSON.stringify(VP) }).success(function (data) {
+                        if (data === true) {
+                            debugger;
+                            alert("Product Details Deleted Successfully");
+                            ClearProducts();
+                            $scope.VendorEdit(id);
+                        }
+                        else if (data === false) {
+                            alert("Cannot Delete Product as it is in use by the application");
+                        }
+                    })
+                }
+            } else {
+                alert("Cannot Delete Product as it is in Edit Mode by the application");
+            }
+        };
+        //--------<Address FORM>
+        $scope.VAisFormValid = false;
+        $scope.VAsubmitted = false;
+        $scope.btnAddressSave = "Save";
+
+        $rootScope.FormName = "Vendor Details";
+        $rootScope.ModuleName = "MMS Masters";
+
+        $scope.VPsubmitted = false;
+        $scope.VPisFormValid = false;
+        $scope.btnProductsSave = "Save";
+
+        $scope.Vendordetailsexport = function () {
+            debugger;
+            var w = window.open("/MMSReports/VendorDetailsReport/", '_blank');
+        }
+
+        $scope.vendornames = function () {
+            $http({
+                url: '/MMSMaster/vendornamesComboData/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    $scope.VendorDetails = data;
+                }
+            })
+
+
+        };//--------<Binding Vendor Names >
+        $scope.CountryDetails = function () {
+            $http({
+                url: '/MMSMaster/ShowVendorCountry/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    $scope.Countries = data;
+                }
+            });
+        };//--------<Country Details When Page Load >
+        $scope.CountryChange = function () {
+            debugger;
+            var idCountry;
+            if ($scope.Editmode == false) {
+                idCountry = $scope.VD.countryid;
+            } else if ($scope.Editmode == true) {
+                idCountry = $scope.VA.countryid;
+            }
+            if (idCountry != null && idCountry !== undefined) {
+                $http({
+                    url: '/MMSMaster/ShowState/',
+                    method: "POST",
+                    data: { Countryid: idCountry }
+                }).success(function (data) {
+                    debugger;
+                    if (data != null) {
+                        $scope.States = data;
+                    }
+                });
+            }
+
+                //1)))
+            else {
+                $scope.States = [];
+                $scope.cities = [];
+            }
+            //1)))
+
+        };//--------<For Country Change Method >
+        $scope.StateChange = function () {
+            debugger;
+            var idCountry;
+            var idstate;
+            if ($scope.Editmode == false) {
+                idCountry = $scope.VD.countryid
+                idstate = $scope.VD.stateid;
+            } else if ($scope.Editmode == true) {
+                idCountry = $scope.VA.countryid;
+                idstate = $scope.VA.stateid;
+            }
+            if (idstate != null && idCountry != null && idCountry != undefined && idstate != undefined) {
+                $http({
+                    url: '/MMSMaster/Showcities/',
+                    method: "POST",
+                    data: { Countryid: idCountry, stateid: idstate }
+                }).success(function (data) {
+                    debugger;
+                    if (data != null) {
+                        $scope.cities = data;
+                    }
+                });
+            }
+            else {
+                $scope.cities = [];
+            }
+        };//--------<For State Change Method >
+        $scope.products = function () {
+            debugger;
+            $http({
+                url: '/MMSMaster/productlist/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    $scope.products = data;
+                }
+            });
+        };//--------<Binding Product Names >
+        $scope.productchange = function () {
+            debugger;
+            var strvendorid = $scope.VP.vendorid;
+            var strvendorname = $scope.VP.vendorname;
+            var strvendorcode = $scope.VP.vendorcode;
+            var Productid = $scope.VP.productid;
+            ClearProducts();
+
+            $http({
+                url: '/MMSMaster/getProductDetails/',
+                method: "POST",
+                data: { Productid: Productid }
+            }).success(function (data) {
+                //$http({
+                //    url: '/MMSMaster/ShowProductDetails/',
+                //    method: "POST",
+                //    data: { Productid: Productid }
+                //}).success(function (data) {
+                debugger;
+                if (data != null) {
+
+                    $scope.VP = data;
+                    $scope.VP.vendorid = strvendorid;
+                    $scope.VP.vendorname = strvendorname;
+                    $scope.VP.vendorcode = strvendorcode;
+                    $scope.VP.productid = Productid;
+                }
+            })
+            //$http.post('/MMSMaster/ShowProductDetails', Productid)
+            //    .success(function (data) {
+            //    debugger
+            //    if (data != null) {
+            //        $scope.VP = data;
+            //    }
+            //}).error(function (data) {
+            //    alert("Error found");
+            //});
+        };//--------<Product Change Event >
+        $scope.$watch('fmVendordetails.$valid', function (newValue) {
+            debugger;
+            $scope.VDisFormValid = newValue;
+        });
+        $scope.$watch('fmaddressdetails.$valid', function (newValue) {
+            debugger;
+            $scope.VAisFormValid = newValue;
+        });
+        $scope.$watch('fmvendorproductdetails.$valid', function (newValue) {
+            debugger;
+            $scope.VPisFormValid = newValue;
+        });
+
+        $scope.Save = function (VD) {
+            debugger;
+            $scope.VDsubmitted = true;
+            if ($scope.btnSave == "Save" && $scope.VDisFormValid) {
+                var ans = confirm($rootScope.msgSave);
+                if (ans) {
+                    $http.post('/MMSMaster/SaveVendordetails', VD).success(function (data) {
+                        debugger
+                        if (data.Data == true) {
+                            alert("Vendor Details Saved Successfully");
+                            var vendorname = $scope.VD.vendorname;
+                            $scope.vndrname = vendorname;
+                            //VP.productuptodate = new Date().getYear() + "-" + new Date().getMonth() + "-" + new Date().getDate();
+                            //$scope.LoadData();
+                            //$('#grdVendordetails').trigger("reloadGrid", [{ page: 2 }])
+                            ClearForm();
+                            $scope.vendornames();
+                            $scope.VP.vendorid = data.Data1;
+                            $scope.VP.vendorname = vendorname;
+                            $scope.VP.vendorcode = data.Data2;
+
+                        } else {
+                            alert("Vendor Details Name  Already Exist!");
+                        }
+                    })
+                };
+            }
+            else if ($scope.VDisFormValid && $scope.btnSave == "Update") {
+                var ans = confirm($rootScope.msgUpdate);
+                if (ans) {
+                    $http.post('/MMSMaster/UpdateVendordetails', VD).success(function (data) {
+                        debugger
+                        if (data) {
+                            alert("Vendor Details Updated Successfully");
+                            //$scope.LoadData();
+
+                            ClearForm();
+                            $scope.vendornames();
+                        } else {
+                            alert("Cannot Update Vendor Details as it is in use by the application");
+                        }
+                    })
+                }
+            }
+        };
+
+        //---------- Existing Vendor  Address Save and Update ---------- //
+        $scope.SaveAddress = function (VA) {
+            debugger;
+            $scope.VAsubmitted = true;
+            if ($scope.VAisFormValid) {
+                var ID = $scope.VD.vendorid;
+                VA.vendorid = ID;
+                if ($scope.btnAddressSave == "Save" && $scope.VAisFormValid) {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http.post('/MMSMaster/SaveAddressdetails', VA).success(function (data) {
+                            debugger
+                            if (data) {
+                                alert("Vendor Address Details Saved Successfully");
+                                ClearAddress();
+                                $scope.VendorEdit(ID);
+                            } else {
+                                alert("Vendor Address Details Already Exist!");
+                            }
+                        })
+                    }
+                }
+                else {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        debugger;
+                        $http.post('/MMSMaster/UpdateVendorAddress', VA).success(function (data) {
+                            debugger;
+                            if (data) {
+                                alert("Vendor Address Details Updated Successfully");
+                                ClearAddress();
+                                $scope.VendorEdit(ID);
+                            } else {
+                                alert("Cannot Update Vendor Address Details as it is in use by the application");
+                            }
+                        })
+                    }
+                }
+            }
+        };
+        //---------- Existing Vendor Product Save and Update ---------- //
+        $scope.SaveProducts = function (VP) {
+            debugger;
+            $scope.VPsubmitted = true;
+            if ($scope.VPisFormValid) {
+                if ($scope.btnProductsSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        //VP.vendorid = $scope.VD.vendorid;
+                        VP.productuptodate = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate();
+                        if ($scope.VP.productcost == '' || $scope.VP.productcost == null) {
+                            $scope.VP.productcost = 0;
+                        }
+                        $http.post('/MMSMaster/SavevendorProducts', VP).success(function (data) {
+                            debugger
+                            if (data) {
+                                alert("Vendor Product Details Saved Successfully");
+                                $scope.VendorEdit($scope.VP.vendorid);
+                            } else {
+                                alert("Product Name Already Exist in Grid!");
+                            }
+                        })
+                    }
+                } else if ($scope.btnProductsSave == "Update") {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        debugger;
+                        var ID = $scope.VD.vendorid;
+                        VP.vendorid = $scope.VD.vendorid;
+                        VP.productuptodate = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate();
+                        if ($scope.VP.productcost == '' || $scope.VP.productcost == null) {
+                            $scope.VP.productcost = 0;
+                        }
+                        $http.post('/MMSMaster/UpdatevendorProducts', VP).success(function (data) {
+                            debugger
+                            if (data) {
+                                alert("Vendor Product Details Updated Successfully");
+                                $scope.prdtedit = false;
+                                ClearProducts();
+                                $scope.VendorEdit(ID);
+                            } else {
+                                alert("Cannot Update Vendor Product Details as it is in use by the application");
+                            }
+                        })
+                    }
+                }
+            }
+        };
+        $scope.ResetProducts = function () {
+
+            var kk = ClearProducts();
+            assignVendoronReset(kk);
+        }
+        function ClearProducts() {
+            debugger;
+            var kk = $scope.VP.vendorname;
+
+            $scope.VP.productcategory = "";
+            $scope.VP.productcode = "";
+            $scope.VP.productcost = "";
+            $scope.VP.productid = "";
+            $scope.VP.productname = "";
+            $scope.VP.productsubcategory = "";
+            $scope.VP.productuom = "";
+            $scope.VP.productuptodate = "";
+            $scope.VP.recordid = "";
+            $scope.VP.vendorcode = "";
+            $scope.VP.vendorid = "";
+            $scope.prdtedit = false;
+
+
+
+            $scope.btnProductsSave = "Save";
+            $scope.fmvendorproductdetails.$setPristine();
+            $scope.VPsubmitted = false;
+            $scope.VPisFormValid = false;
+            return kk;
+        }
+        function assignVendoronReset(kk) {
+            debugger;
+            var vvendorname = kk;
+            $scope.VP.vendorname = vvendorname;
+        }
+
+
+
+        $scope.Reset = function () {
+            debugger;
+            $scope.vendorpDetails = {};
+            ClearProducts();
+            ClearForm();
+        }
+
+
+        $scope.selecttax = function () {
+            $scope.VD.vatorcst = "";
+
+        }
+        //---------- Existing Vendor Edit  & Cancel for Details Showing---------- //
+        $scope.VendorEdit = function (id) {
+            debugger;
+            $http({
+                url: '/MMSMaster/getVendorData/',
+                method: "POST",
+                data: { ID: id }
+            }).success(function (data) {
+                debugger;
+                if (data != null) {
+                    ClearAddress();
+                    ClearProducts();
+                    $scope.VD = data.Vendors[0];//Display Data
+                    $scope.VP.vendorid = data.Vendors[0].vendorid;
+                    $scope.VP.vendorname = data.Vendors[0].vendorname;
+                    $scope.VP.vendorcode = data.Vendors[0].vendorcode;
+                    $scope.vndrvsble = true;
+                    $scope.$apply();
+                    $scope.VendorAddressDetails = data.Address;//Display Address
+                    //if (data.Products != null) {
+                    //    VendorProductsGridBinding(data.Products);//Display Products
+                    //} else {
+                    //    VendorProductsGridBinding([]);//Display Products
+                    //}
+                    $scope.VendorProductsDetails = data.Products;
+                    $http({
+                        url: '/MMSMaster/GetVendorOrderDetails/',
+                        method: "post",
+                        data: { ID: id }
+                    }).success(function (data) {
+                        debugger;
+                        if (data != null) {
+                            $scope.vendorpDetails = data.vendorDetails;
+
+                        }
+                    });
+                    $scope.vendorpDetails = data.vendorDetails;
+
+                    $scope.btnSave = "Update";
+                    $scope.Editmode = true;
+                    $scope.products();
+                }
+            });
+            $scope.$apply();
+        }
+        $scope.VendorCancel = function (id) {
+            ClearForm();
+            $scope.VendorAddressDetails = {};
+            $scope.VP = {};
+            $scope.vendorpDetails = {};
+            $scope.Editmode = false;
+        }
+        $scope.VendorDelete = function (id) {
+            var ans = confirm("Are you Sure?Do you Want to Delete?");
+            if (ans) {
+                $http.post('/MMSMaster/DeleteVendorData', { ID: id }).success(function (data) {
+                    debugger
+                    if (data.TorF) {
+                        alert("Vendor Details Deleted Successfully");
+                        ClearForm();
+                        $scope.VendorAddressDetails = {};
+                        $scope.vendornames();
+                        $scope.Editmode = false;
+                    } else {
+                        alert("Cannot Delete Vendor Details as it is in use by the application");
+                        ClearForm();
+                        $scope.VendorAddressDetails = {};
+                        $scope.vendornames();
+                        $scope.Editmode = false;
+                    }
+                })
+            }
+        }
+
+        //---------- Existing Vendor Address Edit  & Cancel ---------- //
+        $scope.EditAddress = function (id) {
+            debugger;
+            if (id === undefined || id === null) {
+                ClearAddress();
+            } else {
+                var data = $scope.VendorAddressDetails;
+                var dLength = data.length;
+                var rowid;
+                for (var i = 0; i < dLength; i++) {
+                    if (data[i].addressid === id) {
+                        rowid = i;
+                    }
+                }
+                var copy = Object.assign({}, data[rowid]);
+                $scope.VA = copy;
+                $scope.VAFormhide = true;
+                $scope.btnAddressSave = "Update";
+                $scope.CountryChange();
+                $scope.StateChange();
+            }
+        }
+        $scope.AddAddress = function () {
+            debugger;
+            $scope.VAFormhide = true;
+            $scope.ResetAddress();
+            $scope.btnAddressSave = "Save";
+            //$scope.CountryChange();
+            //$scope.StateChange();
+        }
+        $scope.DeleteAddress = function (id) {
+            debugger;
+            var ID = $scope.VD.vendorid;
+            var ans = confirm("Are you Sure?Do you Want to Delete?");
+            if (ans) {
+                $http.post('/MMSMaster/DeleteVendorAddress', { id: id }).success(function (data) {
+                    debugger
+                    if (data.TorF) {
+                        alert("Vendor Address Deleted Successfully");
+                        ClearAddress();
+                        $scope.VendorEdit(ID);
+                    } else {
+                        alert("Cannot Delete Vendor Address as it is in use by the application");
+                    }
+                })
+            }
+        }
+        //---------- Address Form ---------- //
+        $scope.ResetAddress = function () {
+            debugger;
+            //var btntext = $scope.btnContactSave;
+            //var d = $scope.VA;
+            ClearAddress();
+            //if (btntext === "Update") {
+            //    $scope.EditContact(d.contactid);
+            //    $scope.btnContactSave = "Update";
+            //}
+        }
+        function ClearAddress() {
+            debugger;
+            $scope.VA = {};
+            $scope.States = {};
+            $scope.cities = {};
+            $scope.btnAddressSave = "Save";
+            $scope.fmaddressdetails.$setPristine();
+            $scope.VAsubmitted = false;
+            $scope.VAisFormValid = false;
+            //$scope.CountryDetails();
+        }
+
+        //****************** Clear Details *******************************//
+        function ClearForm() {
+            debugger;
+            $('#VendorName').focus();
+            $scope.VD = {};
+            $scope.btnSave = "Save";
+            $scope.Editmode = false;
+            $scope.VDsubmitted = false;
+            $scope.VDisFormValid = false;
+            $scope.vndrvsble = false;
+
+            $scope.fmVendordetails.$setPristine();
+        }
+
+        //****************** JQ Grid  *******************************//
+        function VendorProductsGridBinding(data) {
+            debugger
+            var grid_data = data;
+            var grid_selector = "#grdProductsList";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                width: 600,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+            { label: 'record id', name: 'recordid', width: 75, hidden: true },
+            { label: 'product id', name: 'productid', width: 75, hidden: true },
+            { label: 'Product Category', name: 'productcategory', width: 90 },
+            { label: 'Product Subcategory', name: 'productsubcategory', width: 75 },
+            { label: 'Product Uom', name: 'productuom', width: 75 },
+            { label: 'Product Cost', name: 'productcost', width: 75 },
+            { label: 'Product Code', name: 'productcode', width: 75, hidden: true },
+            { label: 'Product Upto Date', name: 'productuptodate', width: 75, hidden: true }
+                ],
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                caption: "Products <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='SearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+        }
+
+    });
+</script>
+<script type="text/javascript">
+    jQuery(function ($) {
+
+        //editables on first profile page
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
+        $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>' +
+                                    '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
+
+        //editables
+
+        //text editable
+        $('#username')
+        .editable({
+            type: 'text',
+            name: 'username'
+        });
+
+        //text editable
+        $('#address')
+        .editable({
+            type: 'textarea',
+            name: 'address'
+        });
+
+
+
+        //select2 editable
+        var countries = [];
+        $.each({ "CA": "Canada", "IN": "India", "NL": "Netherlands", "TR": "Turkey", "US": "United States" }, function (k, v) {
+            countries.push({ id: k, text: v });
+        });
+
+        var cities = [];
+        cities["CA"] = [];
+        $.each(["Toronto", "Ottawa", "Calgary", "Vancouver"], function (k, v) {
+            cities["CA"].push({ id: v, text: v });
+        });
+        cities["IN"] = [];
+        $.each(["Delhi", "Mumbai", "Bangalore", "Hyderabad"], function (k, v) {
+            cities["IN"].push({ id: v, text: v });
+        });
+        cities["NL"] = [];
+        $.each(["Amsterdam", "Rotterdam", "The Hague"], function (k, v) {
+            cities["NL"].push({ id: v, text: v });
+        });
+        cities["TR"] = [];
+        $.each(["Ankara", "Istanbul", "Izmir"], function (k, v) {
+            cities["TR"].push({ id: v, text: v });
+        });
+        cities["US"] = [];
+        $.each(["New York", "Miami", "Los Angeles", "Chicago", "Wysconsin"], function (k, v) {
+            cities["US"].push({ id: v, text: v });
+        });
+
+        var currentValue = "NL";
+        $('#country').editable({
+            type: 'select2',
+            value: 'NL',
+            //onblur:'ignore',
+            source: countries,
+            select2: {
+                'width': 140
+            },
+            success: function (response, newValue) {
+                if (currentValue == newValue) return;
+                currentValue = newValue;
+
+                var new_source = (!newValue || newValue == "") ? [] : cities[newValue];
+
+                //the destroy method is causing errors in x-editable v1.4.6+
+                //it worked fine in v1.4.5
+                /**
+                $('#city').editable('destroy').editable({
+                    type: 'select2',
+                    source: new_source
+                }).editable('setValue', null);
+                */
+
+                //so we remove it altogether and create a new element
+                var city = $('#city').removeAttr('id').get(0);
+                $(city).clone().attr('id', 'city').text('Select City').editable({
+                    type: 'select2',
+                    value: null,
+                    //onblur:'ignore',
+                    source: new_source,
+                    select2: {
+                        'width': 140
+                    }
+                }).insertAfter(city);//insert it after previous instance
+                $(city).remove();//remove previous instance
+
+            }
+        });
+
+        $('#city').editable({
+            type: 'select2',
+            value: 'Amsterdam',
+            //onblur:'ignore',
+            source: cities[currentValue],
+            select2: {
+                'width': 140
+            }
+        });
+
+
+
+        //custom date editable
+        $('#signup').editable({
+            type: 'adate',
+            date: {
+                //datepicker plugin options
+                format: 'yyyy/mm/dd',
+                viewformat: 'yyyy/mm/dd',
+                weekStart: 1
+
+                //,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+                //,format: 'yyyy-mm-dd',
+                //viewformat: 'yyyy-mm-dd'
+            }
+        })
+
+        $('#age').editable({
+            type: 'spinner',
+            name: 'age',
+            spinner: {
+                min: 16,
+                max: 99,
+                step: 1,
+                on_sides: true
+                //,nativeUI: true//if true and browser support input[type=number], native browser control will be used
+            }
+        });
+
+
+        $('#login').editable({
+            type: 'slider',
+            name: 'login',
+
+            slider: {
+                min: 1,
+                max: 50,
+                width: 100
+                //,nativeUI: true//if true and browser support input[type=range], native browser control will be used
+            },
+            success: function (response, newValue) {
+                if (parseInt(newValue) == 1)
+                    $(this).html(newValue + " hour ago");
+                else $(this).html(newValue + " hours ago");
+            }
+        });
+
+        $('#about').editable({
+            mode: 'inline',
+            type: 'wysiwyg',
+            name: 'about',
+
+            wysiwyg: {
+                //css : {'max-width':'300px'}
+            },
+            success: function (response, newValue) {
+            }
+        });
+
+
+
+        // *** editable avatar *** //
+        try {//ie8 throws some harmless exceptions, so let's catch'em
+
+            //first let's add a fake appendChild method for Image element for browsers that have a problem with this
+            //because editable plugin calls appendChild, and it causes errors on IE at unpredicted points
+            try {
+                document.createElement('IMG').appendChild(document.createElement('B'));
+            } catch (e) {
+                Image.prototype.appendChild = function (el) { }
+            }
+
+            var last_gritter
+            $('#avatar').editable({
+                type: 'image',
+                name: 'avatar',
+                value: null,
+                image: {
+                    //specify ace file input plugin's options here
+                    btn_choose: 'Change Avatar',
+                    droppable: true,
+                    maxSize: 110000,//~100Kb
+
+                    //and a few extra ones here
+                    name: 'avatar',//put the field name here as well, will be used inside the custom plugin
+                    on_error: function (error_type) {//on_error function will be called when the selected file has a problem
+                        if (last_gritter) $.gritter.remove(last_gritter);
+                        if (error_type == 1) {//file format error
+                            last_gritter = $.gritter.add({
+                                title: 'File is not an image!',
+                                text: 'Please choose a jpg|gif|png image!',
+                                class_name: 'gritter-error gritter-center'
+                            });
+                        } else if (error_type == 2) {//file size rror
+                            last_gritter = $.gritter.add({
+                                title: 'File too big!',
+                                text: 'Image size should not exceed 100Kb!',
+                                class_name: 'gritter-error gritter-center'
+                            });
+                        }
+                        else {//other error
+                        }
+                    },
+                    on_success: function () {
+                        $.gritter.removeAll();
+                    }
+                },
+                url: function (params) {
+                    // ***UPDATE AVATAR HERE*** //
+                    //for a working upload example you can replace the contents of this function with
+                    //examples/profile-avatar-update.js
+
+                    var deferred = new $.Deferred
+
+                    var value = $('#avatar').next().find('input[type=hidden]:eq(0)').val();
+                    if (!value || value.length == 0) {
+                        deferred.resolve();
+                        return deferred.promise();
+                    }
+
+
+                    //dummy upload
+                    setTimeout(function () {
+                        if ("FileReader" in window) {
+                            //for browsers that have a thumbnail of selected image
+                            var thumb = $('#avatar').next().find('img').data('thumb');
+                            if (thumb) $('#avatar').get(0).src = thumb;
+                        }
+
+                        deferred.resolve({ 'status': 'OK' });
+
+                        if (last_gritter) $.gritter.remove(last_gritter);
+                        last_gritter = $.gritter.add({
+                            title: 'Avatar Updated!',
+                            text: 'Uploading to server can be easily implemented. A working example is included with the template.',
+                            class_name: 'gritter-info gritter-center'
+                        });
+
+                    }, parseInt(Math.random() * 800 + 800))
+
+                    return deferred.promise();
+
+                    // ***END OF UPDATE AVATAR HERE*** //
+                },
+
+                success: function (response, newValue) {
+                }
+            })
+        } catch (e) { }
+
+        /**
+        //let's display edit mode by default?
+        var blank_image = true;//somehow you determine if image is initially blank or not, or you just want to display file input at first
+        if(blank_image) {
+            $('#avatar').editable('show').on('hidden', function(e, reason) {
+                if(reason == 'onblur') {
+                    $('#avatar').editable('show');
+                    return;
+                }
+                $('#avatar').off('hidden');
+            })
+        }
+        */
+
+        //another option is using modals
+        $('#avatar2').on('click', function () {
+            var modal =
+            '<div class="modal fade">\
+					  <div class="modal-dialog">\
+					   <div class="modal-content">\
+						<div class="modal-header">\
+							<button type="button" class="close" data-dismiss="modal">&times;</button>\
+							<h4 class="blue">Change Avatar</h4>\
+						</div>\
+						\
+						<form class="no-margin">\
+						 <div class="modal-body">\
+							<div class="space-4"></div>\
+							<div style="width:75%;margin-left:12%;"><input type="file" name="file-input" /></div>\
+						 </div>\
+						\
+						 <div class="modal-footer center">\
+							<button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i> Submit</button>\
+							<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> Cancel</button>\
+						 </div>\
+						</form>\
+					  </div>\
+					 </div>\
+					</div>';
+
+
+            var modal = $(modal);
+            modal.modal("show").on("hidden", function () {
+                modal.remove();
+            });
+
+            var working = false;
+
+            var form = modal.find('form:eq(0)');
+            var file = form.find('input[type=file]').eq(0);
+            file.ace_file_input({
+                style: 'well',
+                btn_choose: 'Click to choose new avatar',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-picture-o',
+                thumbnail: 'small',
+                before_remove: function () {
+                    //don't remove/reset files while being uploaded
+                    return !working;
+                },
+                allowExt: ['jpg', 'jpeg', 'png', 'gif'],
+                allowMime: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
+            });
+
+            form.on('submit', function () {
+                if (!file.data('ace_input_files')) return false;
+
+                file.ace_file_input('disable');
+                form.find('button').attr('disabled', 'disabled');
+                form.find('.modal-body').append("<div class='center'><i class='ace-icon fa fa-spinner fa-spin bigger-150 orange'></i></div>");
+
+                var deferred = new $.Deferred;
+                working = true;
+                deferred.done(function () {
+                    form.find('button').removeAttr('disabled');
+                    form.find('input[type=file]').ace_file_input('enable');
+                    form.find('.modal-body > :last-child').remove();
+
+                    modal.modal("hide");
+
+                    var thumb = file.next().find('img').data('thumb');
+                    if (thumb) $('#avatar2').get(0).src = thumb;
+
+                    working = false;
+                });
+
+
+                setTimeout(function () {
+                    deferred.resolve();
+                }, parseInt(Math.random() * 800 + 800));
+
+                return false;
+            });
+
+        });
+
+
+
+        //////////////////////////////
+        $('#profile-feed-1').ace_scroll({
+            height: '250px',
+            mouseWheelLock: true,
+            alwaysVisible: true
+        });
+
+        $('a[ data-original-title]').tooltip();
+
+        $('.easy-pie-chart.percentage').each(function () {
+            var barColor = $(this).data('color') || '#555';
+            var trackColor = '#E2E2E2';
+            var size = parseInt($(this).data('size')) || 72;
+            $(this).easyPieChart({
+                barColor: barColor,
+                trackColor: trackColor,
+                scaleColor: false,
+                lineCap: 'butt',
+                lineWidth: parseInt(size / 10),
+                animate: false,
+                size: size
+            }).css('color', barColor);
+        });
+
+        ///////////////////////////////////////////
+
+        //right & left position
+        //show the user info on right or left depending on its position
+        $('#user-profile-2 .memberdiv').on('mouseenter touchstart', function () {
+            var $this = $(this);
+            var $parent = $this.closest('.tab-pane');
+
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+
+            var off2 = $this.offset();
+            var w2 = $this.width();
+
+            var place = 'left';
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) place = 'right';
+
+            $this.find('.popover').removeClass('right left').addClass(place);
+        }).on('click', function (e) {
+            e.preventDefault();
+        });
+
+
+        ///////////////////////////////////////////
+        $('#user-profile-3')
+        .find('input[type=file]').ace_file_input({
+            style: 'well',
+            btn_choose: 'Change avatar',
+            btn_change: null,
+            no_icon: 'ace-icon fa fa-picture-o',
+            thumbnail: 'large',
+            droppable: true,
+
+            allowExt: ['jpg', 'jpeg', 'png', 'gif'],
+            allowMime: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
+        })
+        .end().find('button[type=reset]').on(ace.click_event, function () {
+            $('#user-profile-3 input[type=file]').ace_file_input('reset_input');
+        })
+        .end().find('.date-picker').datepicker().next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        })
+        $('.input-mask-phone').mask('(999) 999-9999');
+
+        $('#user-profile-3').find('input[type=file]').ace_file_input('show_file_list', [{ type: 'image', name: $('#avatar').attr('src') }]);
+
+
+        ////////////////////
+        //change profile
+        $('[data-toggle="buttons"] .btn').on('click', function (e) {
+            var target = $(this).find('input[type=radio]');
+            var which = parseInt(target.val());
+            $('.user-profile').parent().addClass('hide');
+            $('#user-profile-' + which).parent().removeClass('hide');
+        });
+
+
+
+        /////////////////////////////////////
+        $(document).one('ajaxloadstart.page', function (e) {
+            //in ajax mode, remove remaining elements before leaving page
+            try {
+                $('.editable').editable('destroy');
+            } catch (e) { }
+            $('[class*=select2]').remove();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=VendordetailsController]');
+    function Search() {
+        JqCustomSearch($("#SearchText").val(), $("#grdProductsList"))
+    }
+    function edit(row) {
+        debugger;
+        //var Grid = $("#grdCountry");
+        //var rowdata = Grid.getRowData(row);
+        //var $http = angular.element(appElement).injector().get('$http');
+        //var $scope = angular.element(appElement).scope();
+        //var rowdata = $("#grdProductsList").getRowData(row);
+        //alert(row);
+        //var copy = Object.assign({}, row);
+        //$scope.VP = copy;
+        //$scope.VP.productid = parseInt($scope.VP.productid);
+
+        //$scope.$watch('$scope.VP.productid', function (oldvalue, newValue) {
+        //    debugger;
+        //    alert($scope.VP.productid);
+        //    var s = $scope.VP.productid;
+        //    $scope.VP.productid = parseInt(s);
+        //});
+        // $scope.VP.productid = copy.Productid;
+        $scope.btnProductsSave = "Update";
+        $scope.$apply();
+    }
+    function Delete(row) {
+        debugger
+        //var $scope = angular.element(appElement).scope();
+        //var rowdata = $("#grdProductsList").getRowData(row);
+        if ($scope.btnSave == "Save") {
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+            if (ans) {
+                alert("Delete");
+                //var $http = angular.element(appElement).injector().get('$http');
+                //$http.post('/MMSMaster/Deletevendorproducts', rowdata).success(function (data) {
+                //    if (data == "True") {
+                //        alert("Product Details Deleted Successfully");
+                //        $('#grdProductsList').jqGrid('delRowData', row);
+                //        $scope.LoadData();
+                //    }
+                //    else if (data == "False") {
+                //        alert("Cannot Delete Product as it is in use by the application");
+                //    }
+                //}).error(function (data) { alert("Error Occuerd"); });
+            }
+        }
+    }
+
+</script>
+

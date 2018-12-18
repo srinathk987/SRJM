@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsDaywiseWastage" targetNamespace="http://tempuri.org/dsDaywiseWastage.xsd" xmlns:mstns="http://tempuri.org/dsDaywiseWastage.xsd" xmlns="http://tempuri.org/dsDaywiseWastage.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsDaywiseWastage" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsDaywiseWastage" msprop:Generator_UserDSName="dsDaywiseWastage">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dsDaywisewastage" msprop:Generator_TableClassName="dsDaywisewastageDataTable" msprop:Generator_TableVarName="tabledsDaywisewastage" msprop:Generator_RowChangedName="dsDaywisewastageRowChanged" msprop:Generator_TablePropName="dsDaywisewastage" msprop:Generator_RowDeletingName="dsDaywisewastageRowDeleting" msprop:Generator_RowChangingName="dsDaywisewastageRowChanging" msprop:Generator_RowEvHandlerName="dsDaywisewastageRowChangeEventHandler" msprop:Generator_RowDeletedName="dsDaywisewastageRowDeleted" msprop:Generator_RowClassName="dsDaywisewastageRow" msprop:Generator_UserTableName="dsDaywisewastage" msprop:Generator_RowEvArgName="dsDaywisewastageRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="datreconcilationdate" msprop:Generator_ColumnVarNameInTable="columndatreconcilationdate" msprop:Generator_ColumnPropNameInRow="datreconcilationdate" msprop:Generator_ColumnPropNameInTable="datreconcilationdateColumn" msprop:Generator_UserColumnName="datreconcilationdate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="productname" msprop:Generator_ColumnVarNameInTable="columnproductname" msprop:Generator_ColumnPropNameInRow="productname" msprop:Generator_ColumnPropNameInTable="productnameColumn" msprop:Generator_UserColumnName="productname" type="xs:string" minOccurs="0" />
+              <xs:element name="vchuom" msprop:Generator_ColumnVarNameInTable="columnvchuom" msprop:Generator_ColumnPropNameInRow="vchuom" msprop:Generator_ColumnPropNameInTable="vchuomColumn" msprop:Generator_UserColumnName="vchuom" type="xs:string" minOccurs="0" />
+              <xs:element name="wastage" msprop:Generator_ColumnVarNameInTable="columnwastage" msprop:Generator_ColumnPropNameInRow="wastage" msprop:Generator_ColumnPropNameInTable="wastageColumn" msprop:Generator_UserColumnName="wastage" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numgrnrate" msprop:Generator_ColumnVarNameInTable="columnnumgrnrate" msprop:Generator_ColumnPropNameInRow="numgrnrate" msprop:Generator_ColumnPropNameInTable="numgrnrateColumn" msprop:Generator_UserColumnName="numgrnrate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="amount" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_UserColumnName="amount" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

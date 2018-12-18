@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "BillReprint";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div id="Xyx" class="page-content" ng-controller="BillReprintController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> BILL DETAILS</h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="BillReprintController" name="fmbilldetailReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>
+                                        <input type="radio" name="Billtype" value="Dinning" id="Dinning" ng-model="bill.Billtype" checked="checked" ng-change="ngInitBindComboBoxes()" ng-required="!bill.Billtype" />Dinning
+                                    </label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>
+                                        <input type="radio" name="Billtype" value="HomeDelivery" id="HomeDelivery" ng-model="bill.Billtype" ng-change="ngInitBindComboBoxes()" ng-required="!bill.Billtype" />Home Delivery
+                                    </label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>
+                                        <input type="radio" name="Billtype" value="TakeAway" id="TakeAway" ng-model="bill.Billtype" ng-change="ngInitBindComboBoxes()" ng-required="!bill.Billtype" />Take Away
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Bill No :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-model="bill.Billno" class=" form-control" id="Billno" name="Billno" ng-options="c.recordid as c.vchbillno for c in BillnoDetails" required>
+                                        <option value="">Select Bill NO.</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmbilldetailReport.Billno.$dirty || submitted ) && fmbilldetailReport.Billno.$error.required">
+                                        Bill No required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintBillReprintReport(bill)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>SHOW
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('BillReprintController', function ($scope, $http, $rootScope) {
+        $scope.bill = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Bill Details";
+        $scope.bill.Billtype = 'Dinning';
+        $scope.isFormValid = false;
+
+        $scope.$watch('fmbilldetailReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/POSReports/GetBillNumbers/',
+                data: { Billtype: $scope.bill.Billtype },
+                method: "post"
+            }).success(function (data) {
+                debugger;
+                $scope.BillnoDetails = eval('(' + data.Data + ')');
+
+            });
+        }
+        
+        $scope.PrintBillReprintReport = function (bill) {
+            debugger
+            var billnumber = $('#Billno option:selected').text();
+
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+                var w = window.open("/POSReports/BillReprintReport/?Billno=" + billnumber + "&Billtype=" + bill.Billtype + "&Printtype=- REPRINT -", '_blank');
+                $http({
+                    url: '/POSReports/Billprintdetails/',
+                    data: { Billno:billnumber,Billtype:bill.Billtype },
+                    method: "post"
+                });
+                $scope.bill = {};
+                $scope.fmbilldetailReport.$setPristine();
+                $scope.submitted = false;
+               // $scope.bill.Billno = 0;
+                $scope.bill.Billtype = 'Dinning';
+                $scope.ngInitBindComboBoxes();
+            }
+        }
+    });
+</script>
+
+

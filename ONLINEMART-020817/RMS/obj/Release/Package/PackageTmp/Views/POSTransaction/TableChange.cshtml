@@ -1,0 +1,417 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<div ng-controller="rmsCtrl" ng-init="GetTableName();">
+
+    <!-- /.page-header begins -->
+    <div class="page-content">
+        <!-- /.page-header ends -->
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="frmtablechange" novalidate>
+                    <div class="page-header">
+                        <h1>
+                            Table Change<small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                        </h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="widget-box widget-color-blue3 ui-sortable-handle">
+                                <div class="widget-header widget-header-flat widget-header-small">
+                                    <h5 class="widget-title"> <i class="ace-icon fa fa-table"></i>From Table  </h5>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-box">
+                                        <div class="widget-main">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Table No :
+                                                </label>
+                                                @*<label id="form-field-1" name="fromtableid" class="col-sm-1 control-label"
+                                                           ng-bind="table.fromtableid" required>
+                                                    </label>*@
+                                                <div class="col-sm-4">
+                                                    @*<select class="form-control" name="fromtableid" ng-model="table.fromtableid" required ng-options="v.totableid as v.totableid for v in FromTableslist"></select>*@
+
+
+                                                    @*<select class="form-control" name="fromtableid" ng-model="table.fromtableid" required></select>*@
+
+                                                    <input type="text" class="form-control" name="fromtableid" ng-model="table.fromtableid" required disabled="true" />
+                                                </div>
+                                                @*<div class="col-sm-4">
+                                                        <input type="text" class="form-control" name="fromtableid" ng-model="table.fromtableid" required disabled />
+                                                    </div>*@
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Covers :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    @*<label id="form-field-1" class="col-sm-1 control-label no-padding-right" name="frmcovers"
+                                                               ng-bind="table.numfromcovers" required>
+                                                        </label>*@
+                                                    <input type="text" class="form-control" name="frmcovers" ng-model="table.numfromcovers" required disabled />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Adults :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    @*<label id="form-field-1" class="col-sm-1 control-label no-padding-right" name="frmadults"
+                                                               ng-bind="table.numfromadults" required>
+                                                        </label>*@
+                                                    <input type="text" class="form-control" name="frmadults" ng-model="table.numfromadults" required disabled />
+                                                </div>
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Kids :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    @*<label id="form-field-1" placeholder="Auto Populated/ Enter" name="frmkids" ng-bind="table.numfromkids"
+                                                               required>
+                                                        </label>*@
+                                                    <input type="text" class="form-control" name="frmkids" ng-model="table.numfromkids" required disabled />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+
+
+                                                @* <div class="col-sm-3">
+                                                    <select id="form-field-1" class="form-control" name="kotid" ng-model="table.kotid"
+                                                        ng-options="x.kotid as x.kot for x in KOTS"></select>*@
+                                                @*<input type="text" name="kotid" ng-model="table.kotid" class="form-control" disabled />*@
+                                                @*<label id="form-field-1" class="col-sm-1 control-label no-padding-right" name="frmadults"
+                                                           ng-bind="table.kotid">
+                                                    </label>*@
+                                                @*<textarea class="form-control">
+                                                                {{table.kotid}}
+
+                                                            </textarea>
+                                                        {{table.kotid}}
+                                                    </div>*@
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    KOTS :
+                                                </label>
+
+                                                <div class="col-sm-10">
+                                                    <label id="form-field-1" class="control-label no-padding-right" name="kotid"
+                                                           ng-bind="table.kotid">
+                                                    </label>
+                                                    @*{{table.kotid}}*@
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="widget-box widget-color-green ui-sortable-handle">
+                                <div class="widget-header widget-header-flat widget-header-small">
+                                    <h5 class="widget-title"> <i class="ace-icon fa fa-table"></i>To Table  </h5>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-box">
+                                        <div class="widget-main">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Table No :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" name="totableid" ng-model="table.totableid" required ng-options="v.totableid as v.totableid for v in totables" ng-change="ShowToTableData()">
+                                                        <option value="" selected>select</option>
+                                                    </select>
+                                                    <span class="error" ng-show="(frmtablechange.totableid.$dirty || submitted ) && frmtablechange.totableid.$error.required">
+                                                        To Table No required!
+                                                    </span>
+                                                </div>
+
+
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Covers :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" placeholder="Auto Populated/ Enter" name="tocovers"
+                                                           ng-model="table.numtocovers" required disabled />
+                                                    <span class="error" ng-show="(frmtablechange.tocovers.$dirty || submitted ) && frmtablechange.tocovers.$error.required">
+                                                        Covers required!
+                                                    </span>
+                                                </div>
+                                                @*<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                                                        To Table Existing Covers :
+                                                    </label>
+                                                    <div class="col-sm-3">
+                                                        <input class="form-control" type="text" name="toExistingCovers" id="toExistingCovers"
+                                                               disabled />
+                                                    </div>*@
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Adults :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" placeholder="Enter" name="toadults" ng-model="table.numtoadults"
+                                                           required disabled />
+                                                    <span class="error" ng-show="(frmtablechange.toadults.$dirty || submitted ) && frmtablechange.toadults.$error.required">
+                                                        Adults required!
+                                                    </span>
+                                                </div>
+                                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                    Kids :
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" type="text" placeholder="Enter" name="tokids" ng-model="table.numtokids"
+                                                           required disabled />
+                                                    <span class="error" ng-show="(frmtablechange.tokids.$dirty || submitted ) && frmtablechange.tokids.$error.required">
+                                                        Kids required!
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" id="btnsave" ng-click="Save()">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>SAVE
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" type="button" ng-click="reset()">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('rmsCtrl', function ($scope, $http, $rootScope) {
+
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.table = {};
+
+        $scope.$watch('frmtablechange.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.GetTableName = function () {
+            $http({
+                url: '/POSTransaction/getData/',
+                method: "get"
+            }).success(function (data) {
+                debugger
+                $scope.table.fromtableid = data.split('-')[0];
+                $scope.taClick = data.split('-')[1];
+                ShowFromTableData(data.split('-')[1]);
+                BindToTable(data.split('-')[1]);
+            });
+        }
+
+        //From TextBox Table No code starts here
+        function ShowFromTableData(tableId) {
+            $http.post('/POSTransaction/ShowTableData', { TableId: tableId }).success(function (data) {
+                $scope.table.numfromcovers = data.numfromcovers;
+                $scope.table.numfromadults = data.numfromadults;
+                $scope.table.numfromkids = data.numfromkids;
+
+                $scope.table.kotid = data.kotid;
+                $scope.table.numtocovers = data.numtocovers;
+                $scope.table.numtoadults = data.numtoadults;
+                $scope.table.numtokids = data.numtokids;
+
+                return false;
+            });
+        }
+        //function BindToTable(tableId) {
+        //    $http.post('/POSTransaction/ShowTableDetails', { Table: tableId }).success(function (data) {
+        //        debugger;
+        //        var x = [];
+        //        for (var i = 0; i < data.lstTableChange.length; i++) {
+        //            var y = { totableid: data.lstTableChange[i].totableid };
+        //            x.push(y);
+        //        }
+        //        $scope.ALLTableData = data.lstTableChange;
+        //        $scope.totables = x;
+
+        //        //Merging Tables
+
+        //        var FromTables = [];
+        //        for (var i = 0; i < data.lstTablesandMerge.length; i++) {
+        //            var y = { totableid: data.lstTablesandMerge[i].totableid };
+        //            FromTables.push(y);
+        //        }
+        //        // $scope.ALLTableData = data.lstTableChange;
+        //        $scope.FromTableslist = FromTables;
+
+
+        //    });
+        //}
+        //$scope.ShowToTableData = function () {
+        //    debugger;
+        //    var Table = $scope.table.totableid;
+        //    if (Table != 'undefined') {
+        //        //$http.post('/POSTransaction/ShowTableData', { TableId: $scope.table.totableid }).success(function (data) {
+        //        //    debugger;
+        //        //    $scope.table.numtocovers = data.numfromcovers;
+        //        //    //$('#toExistingCovers').val(data.numfromcovers);
+        //        //});
+        //        var TableData = $scope.ALLTableData;
+        //        for (var i = 0; i < TableData.length; i++) {
+        //            if (Table === TableData[i].totableid) {
+        //                $scope.table.numtocovers = TableData[i].numtocovers;
+        //            }
+        //        }
+        //    }
+        //}
+        //$http.get('/POSTransaction/ShowTableDetails').success(function (data) {
+        //    debugger;
+        //    $scope.table = data[0];
+        //    var x = [];
+
+        //    for (var i = 0; i < data.length; i++) {
+        //        var y = { kotid: data[i].kotid, kot: data[i].kotid };
+        //        x.push(y);
+        //    }
+        //    $scope.KOTS = x;
+        //    return false;
+        //});
+
+
+        function BindToTable(tableId) {
+            debugger;
+            $http.post('/POSTransaction/ShowTableDetails', { Table: tableId }).success(function (data) {
+                debugger;
+                var x = [];
+                for (var i = 0; i < data.lstTableChange.length; i++) {
+                    var y = { totableid: data.lstTableChange[i].totableid, TOID: data.lstTableChange[i].TOID };
+                    x.push(y);
+                }
+                $scope.ALLTableData = data.lstTableChange;
+                $scope.totables = x;
+
+                //Merging Tables
+
+                var FromTables = [];
+                for (var i = 0; i < data.lstTablesandMerge.length; i++) {
+                    var y = { totableid: data.lstTablesandMerge[i].totableid };
+                    FromTables.push(y);
+                }
+                // $scope.ALLTableData = data.lstTableChange;
+                 $scope.FromTableslist = FromTables;
+
+                //$scope.FromTableslist = $scope.table.fromtableid;
+
+
+            });
+        }
+        $scope.ShowToTableData = function () {
+            debugger;
+            var XYZ = $scope.table.totableid;
+
+            Table = $.grep($scope.totables, function (c) {
+                debugger;
+                return c.totableid == $scope.table.totableid;
+            })[0].TOID;
+
+            $scope.table["TOID"] = Table;
+
+            if (Table != 'undefined') {
+                //$http.post('/POSTransaction/ShowTableData', { TableId: $scope.table.totableid }).success(function (data) {
+                //    debugger;
+                //    $scope.table.numtocovers = data.numfromcovers;
+                //    //$('#toExistingCovers').val(data.numfromcovers);
+                //});
+                var TableData = $scope.ALLTableData;
+                for (var i = 0; i < TableData.length; i++) {
+                    if (Table === TableData[i].TOID) {
+                        $scope.table.numtocovers = TableData[i].numtocovers;
+                    }
+                }
+            }
+        }
+
+        //From TextBox Table No code ends here
+        $scope.AfterSave = function () {
+            $http.get('/POSTransaction/ShowTableDetails').success(function (data) {
+                $scope.table = data[0];
+                var x = [];
+
+                for (var i = 0; i < data.length; i++) {
+                    var y = { kotid: data[i].kotid, kot: data[i].kotid };
+                    x.push(y);
+                }
+                $scope.KOTS = x;
+                return false;
+            });
+        }
+
+        //saving button starts here
+        $scope.Save = function () {
+            debugger;
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                //confirmbox starts here
+                var r = confirm("Are You Sure Do You Want To Save The Record");
+                if (r == true) {
+                    $http.post('/POSTransaction/SaveFroToTableDetails', { tab: $scope.table, tableclick: $scope.taClick }).success(function (data) {
+                        if (data) {
+                            //if (data.cnt == 1) {
+                            if (data == 1) {
+                                alert("Saved Successfully...");
+                                // ClearForm();
+                                var url = '@Url.Action("../POSTransaction/DashBoard")';
+                                window.location.href = url;
+                            }
+                            else {
+                                alert("Error While Saving...");
+                            }
+                        }
+                    }).error(function (data) { alert("Error Occuerd"); });
+                    //confirmbox ends here
+                }
+
+            }
+        };
+        //saving button ends here
+
+        //cancel button starts here
+        $scope.reset = function () {
+            debugger;
+            $scope.table.totableid = "";
+
+            $scope.table.numtocovers = "";
+
+            // ClearForm();
+            //$scope.GetTableName();
+            //$scope.frmtablechange.$setPristine();
+            //$scope.submitted = false;
+        };
+
+        function ClearForm() {
+            ////$scope.table = {};
+            ////$scope.table.numtocovers = {};
+            ////$scope.table.numtoadults = {};
+            ////$scope.table.numtokids = {};
+            //$scope.GetTableName();
+            //$scope.frmtablechange.$setPristine();
+            //$scope.submitted = false;
+        }
+        //cancel button ends here
+
+    });
+
+</script>

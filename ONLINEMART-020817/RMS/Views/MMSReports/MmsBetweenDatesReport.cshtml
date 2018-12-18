@@ -1,0 +1,194 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="BetweenDatesReportController">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i>  Stock Update Report </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="BetweenDatesReportController" name="BetweenDatesReport">
+                            @*ng-init="ngInitBindComboBoxes()"*@
+
+                            @*<div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                    Report Type <span style="color: Red">*</span>:
+                </label>
+                <div class="col-sm-3">
+                    <select ng-model="Section.ReportType" class=" form-control" name="ReportType" ng-change="change()" required>
+                        <option value="">Select Report Type</option>
+                        <option value="Closing Stock">Closing Stock</option>
+                        <option value="Stock Ledger">Stock Ledger</option>
+                    </select>
+                    <span class="error" ng-show="(fmStockReport.ReportType.$dirty || submitted ) && fmStockReport.ReportType.$error.required">
+                        Report Type required!
+                    </span>
+                </div>
+                <div class="col-sm-3" ng-hide="asdatehide">
+                    <input type="checkbox" name="type" value="Direct" id="Direct" ng-model="Section.Date" ng-change="changeReporttype(Section.Date)" /> As on Date
+                </div>
+            </div>*@
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-hide="showandhidedatelabel">
+                                    Date <span style="color: Red">*</span>:
+                                </label>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-show="showandhidedatelabel">
+                                    From Date <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="Section.fromdate" id="calendar" placeholder="Select From Date" class=" form-control" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(BetweenDatesReport.FromDate.$dirty || submitted ) && BetweenDatesReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <div ng-hide="showandhide">
+                                    <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                                        To Date <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="ToDate" type="text" id="datepicker" ng-model="Section.todate" placeholder="Select To Date" class=" form-control" data-date-format="dd/mm/yyyy" ng-required="Valid" />
+                                        <span class="error" ng-show="(BetweenDatesReport.ToDate.$dirty || submitted ) && BetweenDatesReport.ToDate.$error.required">
+                                            To Date required!
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-success" type="button" ng-click="PrintBetweenDatesReport(Section)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script>
+    var app = angular.module('RMS');
+    app.controller('BetweenDatesReportController', function ($scope, $http, $rootScope) {
+        $scope.Section = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Stock Update";
+        $scope.Valid = true;;
+        $scope.isFormValid = false;
+        $scope.asdatehide = true;
+
+        $scope.$watch('BetweenDatesReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.showandhide = false;
+        $scope.showandhidedatelabel = true;
+
+        //$scope.changeReporttype = function (reporttype) {
+        //    debugger;
+        //    if (reporttype === true) {
+        //        $scope.showandhide = true;
+        //        $scope.showandhidedatelabel = false;
+        //        $scope.Section.fromdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+        //        $scope.Valid = false;;
+        //    }
+        //    else {
+        //        $scope.showandhide = false;
+        //        $scope.showandhidedatelabel = true;
+        //        $scope.Valid = true;;
+        //    }
+        //}
+
+
+        //$scope.change = function () {
+        //    debugger;
+        //    var rpttype = $scope.Section.ReportType;
+        //    if (rpttype == 'Closing Stock') {
+        //        $scope.asdatehide = false;
+
+        //    }
+        //    else {
+        //        $scope.asdatehide = true;
+        //        $scope.showandhide = false;
+
+        //    }
+        //}
+
+
+        $scope.checkDate = function (date1, date2) {
+            debugger;
+            // if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                //if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+
+        //$scope.ngInitBindComboBoxes = function () {
+        //    debugger;
+        //    $http({
+        //        url: '/MMSReports/ShowStorageLocation/',
+        //        method: "get"
+        //    }).success(function (data) {
+        //        debugger;
+        //        $scope.SectionnamesDetails = eval('(' + data.Data + ')');
+        //    });
+        //}
+
+
+        $scope.PrintBetweenDatesReport = function (Section) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+                    var w = window.open("/MMSReports/MMsBetweenDates/?fromdate=" + Section.fromdate + "&todate=" + Section.todate + "", '_blank');
+                    $scope.Section = {};
+                    $('#calendar').datepicker('setDate', null);
+                    $('#datepicker').datepicker('setDate', null);
+                    $scope.BetweenDatesReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.Section.fromdate = "";
+                    $scope.Section.todate = "";                    
+                    //$scope.changeReporttype($scope.Section.Date);
+                    $scope.asdatehide = true;
+                }
+                else {
+                    alert("To Date Should Be GreterThan or Equal to From Date");
+                }
+            }
+        }
+    });
+</script>

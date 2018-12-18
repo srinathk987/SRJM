@@ -1,0 +1,191 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+
+
+
+
+<div class="page-content" ng-controller="TakeAwayAtHotelController" ng-init=" getGridData();">
+    <div class="row">
+
+        <div class=" col-sm-12 col-xs-12">
+
+
+            <div class="page-header" style="padding-bottom:42px !important; ">
+
+                <h1 style="width:auto; line-height:35px;  float:left">
+
+                    Take Away
+                    <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+
+
+
+                </h1>
+
+                <a href="" ng-click="Back();" class="pull-right right " style="font-size:16px;">
+                    <i class="ace-icon fa fa-chevron-left"> </i> BACK TO HOME PAGE
+                </a>
+
+
+            </div>
+            <!-- PAGE CONTENT BEGINS -->
+
+            <script>
+                function OpenNewOrder() {
+                    debugger;
+                    window.location.href = "/TakeAway/TakeAwayAtHotelNewOrder";
+                }
+
+            </script>
+            <div class="col-sm-2">
+                <button class="btn btn-success " onclick="OpenNewOrder()">
+                    <i class="ace-icon fa fa-apple"></i> New Order
+                </button>
+                <table id="grid-TakeAway"></table>
+                <div id="grid-TakeAwaypager">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    var app = angular.module('RMS');
+    app.controller("TakeAwayAtHotelController", ['$filter', '$scope', '$http', '$rootScope', '$location', 'myService', function ($filter, $scope, $http, $rootScope, $location, myService) {
+        debugger;
+        $scope.hidesave = true;
+        $scope.getGridData = function () {
+            debugger;
+            $http({
+                url: '/TakeAway/DeliveryItemsForCustomerInTakeAway/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                TakeAwayAtHotelGrid(data.lstItems)
+
+            });
+        }
+
+        $scope.Back = function () {
+
+            window.location.href = "/POSTransaction/DashBoard/";
+
+        }
+        $scope.selectreason = function (ReasonForOrdercancel) {
+            debugger;
+            if (ReasonForOrdercancel == "") {
+
+                $scope.hidesave = true;
+
+            }
+            else {
+
+                $scope.hidesave = false;
+
+            }
+
+        }
+
+    }]);
+
+    function TakeAwayAtHotelGrid(data) {
+
+        var grid_data = eval('(' + data + ')');
+        var grid_selector = "#grid-TakeAway";
+        var pager_selector = "#grid-TakeAwaypager";
+
+        //grid data refresh
+        jQuery(grid_selector).jqGrid('clearGridData')
+        jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+        debugger;
+        jQuery(grid_selector).jqGrid({
+
+            data: grid_data,
+            datatype: "local",
+            rownumbers: true,
+            height: 250,
+            colModel: [
+                {
+                    label: ' ', sortable: false, width: 60, key: true, formatter: function (cellvalue, options, rowObject) {
+                        return " <button class='btn-grid' type='button' onclick='editHomeDelivery(" + options.rowId + ");'  ><img src='/assets/css/Images/Edit.png' width='20'><br/></button>";
+                    }
+                },
+            { label: 'Order Date', name: 'ordertimevchorderno', width: 200 },
+    { label: 'Order No.', name: 'vchorderno', width: 200 },
+
+    { label: 'Bill No.', name: 'vchbillno', width: 200 },
+    {
+        label: 'Bill Amount', name: 'numnet', width: 100, align: 'Right', formatter: 'currency',
+        formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+    },
+
+
+
+
+
+            ],
+            //onSelectRow: editRow,
+            viewrecords: true,
+            rowNum: 500,
+            //rowList: [8, 16, 25, 100],
+
+            altRows: true,
+            ignoreCase: true,
+            loadComplete: function () {
+                var table = this;
+
+                setTimeout(function () {
+                    styleCheckbox(table);
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+
+            },
+            caption: "Items <span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+        });
+        $(window).triggerHandler('resize.jqGrid');
+
+    }
+
+    var appElement = document.querySelector('[ ng-controller=TakeAwayAtHotelController]');
+
+    var lastSelection;
+
+
+
+    function editHomeDelivery(row) {
+
+        debugger;
+
+
+        var rowdata = $("#grid-TakeAway").getRowData(row);
+        debugger;
+
+        window.location.href = "/TakeAway/TakeAwayAtHotelNewOrder/" + rowdata.vchorderno + "?" + rowdata.vchbillno + "";
+
+
+
+    }
+
+</script>

@@ -1,0 +1,5 @@
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\bin\Release\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\bin\Release\RMS.Core.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\obj\Release\RMS.Core.csprojResolveAssemblyReference.cache
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\obj\Release\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Core\obj\Release\RMS.Core.pdb

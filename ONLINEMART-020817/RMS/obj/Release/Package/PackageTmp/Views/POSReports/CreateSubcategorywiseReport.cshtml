@@ -1,0 +1,224 @@
+﻿@{
+    // ViewBag.Title = "CreateSubcategorywiseReport";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" ng-controller="subcategorywiseReportController" ng-init="ngInitBindComboBoxes()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+
+
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat widget-header-large">
+                        <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i>SUBCATEGORY WISE </h5>
+                        <div class="widget-toolbar">
+                            @*<a href="#" data-action="settings">
+                                    <i class="ace-icon fa fa-cog"></i>
+                                </a>
+
+                                <a href="#" data-action="reload">
+                                    <i class="ace-icon fa fa-refresh"></i>
+                                </a>*@
+
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-up"></i>
+                            </a>
+
+
+                            @*<a href="#" data-action="fullscreen" class="orange2">
+                                    <i class="ace-icon fa fa-expand"></i>
+                                </a>*@
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <form class="form-horizontal" role="form" ng-controller="subcategorywiseReportController" name="fmsubcategorywiseReport"
+                                  ng-init="ngInitBindComboBoxes()" novalidate>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        From Date :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="FromDate" type="text" ng-model="subcategory.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                        <span class="error" ng-show="(fmsubcategorywiseReport.FromDate.$dirty || submitted ) && fmsubcategorywiseReport.FromDate.$error.required">
+                                            From Date required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        To Date :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="ToDate" type="text" id="datepicker" class=" form-control " ng-model="subcategory.todate" data-date-format="dd/mm/yyyy" required />
+                                        <span class="error" ng-show="(fmsubcategorywiseReport.ToDate.$dirty || submitted ) && fmsubcategorywiseReport.ToDate.$error.required">
+                                            To Date required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        Category Name :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select ng-init="subcategory.categoryid=0" ng-model="subcategory.categoryid" class=" form-control" name="categoryName" ng-options="c.categoryid as c.itemcategoryname for c in categoryDetails" ng-change="categoryChange(subcategory.categoryid)" required>
+                                            @*<option value="">Select Name</option>
+                                                <option value="1">All</option>*@
+                                        </select>
+                                        <span class="error" ng-show="(fmsubcategorywiseReport.categoryName.$dirty || submitted ) && fmsubcategorywiseReport.categoryName.$error.required">
+                                            Category Name required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        Subcategory Name :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select ng-init="subcategory.subcategoryid=0" ng-model="subcategory.subcategoryid" class=" form-control" name="subcategoryName" ng-options="c.subcategoryid as c.itemsubcategoryname for c in SubcategoryDetails" required>
+                                            @*<option value="">Select Name</option>
+                                                <option value="1">All</option>*@
+                                        </select>
+                                        <span class="error" ng-show="(fmsubcategorywiseReport.subcategoryName.$dirty || submitted ) && fmsubcategorywiseReport.subcategoryName.$error.required">
+                                            Subcategory Name required!
+                                        </span> b
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <button class="btn btn-success" type="button" ng-click="PrintsubcategoryReport(subcategory)">
+                                            <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+        });
+    });
+
+
+    //$('.date-picker').datepicker({
+    //    autoclose: true,
+    //    setDate: new Date(),
+    //    todayHighlight: true,
+
+    //})
+
+    //$("#calendar").datepicker({
+    //    autoclose: true,
+    //    setDate: new Date(),
+    //    todayHighlight: true,
+    //})
+
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker(
+            {
+                endDate: '+0d'
+            });
+    });
+</script>
+<script>
+
+    var app = angular.module('RMS');
+    app.controller('subcategorywiseReportController', function ($scope, $http, $rootScope) {
+        $scope.subcategory = {};
+
+        var date = new Date();
+        var dt = date.toLocaleDateString("en-au", { year: "numeric", day: "numeric", month: "numeric" }).replace(/\s/g, '-')
+        //$scope.subcategory.fromdate = dt;
+        //$scope.subcategory.todate = dt;
+        // $('.date-picker').datepicker('setDate', new Date(   ));
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Subcategory Wise";
+        $scope.isFormValid = false;
+        $scope.$watch('fmsubcategorywiseReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            //$http({
+            //    url: '/POSReports/Getsubcategorynames/',
+            //    method: "get"
+            //}).success(function (data) {
+            //    debugger;
+            //    $scope.SubcategoryDetails = eval('(' + data.Data + ')');
+            //});
+
+            $http({
+                url: '/POSReports/GetCategorynames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.categoryDetails = eval('(' + data.Data + ')');
+            });
+        }
+
+
+        $scope.categoryChange = function (categoryid) {
+            debugger;
+            if (categoryid != null && categoryid != "ALL" && categoryid != undefined && categoryid != "")
+                $http.post('/POSReports/Getsubcategorynames', { CategoryID: categoryid }).success(function (data) {
+                    if (data != null) {
+                        $scope.SubcategoryDetails = eval('(' + data.Data + ')');
+                    }
+                });
+        }
+
+
+
+        $scope.checkDate = function (date1, date2) {
+            // if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                // if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+        $scope.PrintsubcategoryReport = function (subcategory) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+
+                    $scope.subcategory.itemcategoryname = $.grep($scope.categoryDetails, function (c) {
+                        return c.categoryid == $scope.subcategory.categoryid;
+                    })[0].itemcategoryname;
+
+                    if ($scope.subcategory.itemsubcategoryname != undefined) {
+                        $scope.subcategory.itemsubcategoryname = $.grep($scope.SubcategoryDetails, function (c) {
+                            return c.subcategoryid == $scope.subcategory.subcategoryid;
+                        })[0].itemsubcategoryname;
+                    }
+
+                    var w = window.open("/POSReports/subCategorywiseReport/?fromdate=" + changedate(subcategory.fromdate) + "&todate=" + changedate(subcategory.todate) + "&CategoryName=" + subcategory.categoryid + "&subcategoryName=" + subcategory.subcategoryid + "", '_blank');
+                    $scope.subcategory = {};
+                    $scope.fmsubcategorywiseReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.subcategory.categoryid = 0;
+                    $scope.subcategory.subcategoryName = 0;
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+        }
+    });
+</script>

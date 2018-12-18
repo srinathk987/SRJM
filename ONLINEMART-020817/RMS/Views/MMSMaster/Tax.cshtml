@@ -1,0 +1,303 @@
+﻿@{
+    //ViewBag.Title = "Tax";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="page-content" ng-controller="ProducttaxController" ng-init="LoadData()">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmTax" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Tax Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Name" id="txtName" ng-model="Tax.TaxName" placeholder="Enter Tax Name" class="form-control" maxlength="100" data-index="1" kt-focus
+                               kitalph-anumeric-withdot required autofocus type="text" />
+                        <span class="error" ng-show="(fmTax.Name.$dirty || submitted ) && fmTax.Name.$error.required">
+                            Tax Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-3">
+                       Tax Percentage <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Percentage" ng-model="Tax.Percentage" placeholder="Enter Tax Percentage" class="form-control" maxlength="5" kit-amount id="txtPercentage" data-index="2"
+                               onkeypress="return CheckPercentage(event)" required type="text" />
+                        <span class="error" ng-show="(fmTax.Percentage.$dirty || submitted) && fmTax.Percentage.$error.required">
+                            Tax Percentage required!
+                        </span>
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="Save(Tax)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpTax"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=ProducttaxController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpTax"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#gpTax").getRowData(row);
+        debugger;
+        $http({
+            url: '/MMSMaster/CountUpdateTax/',
+            method: "POST",
+            data: { name: rowdata.TaxName }
+
+        }).success(function (data) {
+            debugger
+            if (data == 0) {
+                $scope.btnSave = "Update";
+                $scope.Tax = rowdata;
+                $scope.$apply();
+            }
+            else {
+
+                alert("Cannot Update Tax Details as it is in use by the application");
+                //alert("Tax Name Already Exist");
+            }
+        }).error(function (data) { alert("Error found"); });
+
+    }
+
+
+    function Delete(row) {
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnSave == "Save") {
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#gpTax").getRowData(row);
+            debugger;
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+            if (ans) {
+                $http({
+                    url: '/MMSMaster/DeleteTax/',
+                    method: "POST",
+                    data: { id: rowdata.TaxId, name: rowdata.TaxName }
+                }).success(function (data) {
+                    if (data) {
+                        alert("Tax Details Deleted Successfully");
+                        $('#gpTax').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                    else {
+                        alert("Cannot Delete Tax Details as it is in use by the application");
+                    }
+                }).error(function (data) {
+                    alert("Error Occuerd");
+                });
+            }
+        }
+    }
+
+
+
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('ProducttaxController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Tax Master";
+        $rootScope.ModuleName = "MMS Masters";
+
+        $scope.CheckZero = function () {
+            $scope.Tax.Percentage = '';
+            $('#txtPercentage').focus();
+        }
+
+        $scope.LoadData = function () {
+            $http({
+                url: '/MMSMaster/ShowTaxDetails/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+
+        $scope.$watch('fmTax.$valid', function (newValue) {
+
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Save = function (Tax) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+
+                if (parseFloat(Tax.Percentage) > 0) {
+
+
+                    if ($scope.btnSave == "Save") {
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+                            $http.post('/MMSMaster/SaveTax', Tax).success(function (data) {
+                                debugger
+                                if (data == 0) {
+                                    alert("Tax Details Saved Successfully");
+                                    $scope.LoadData();
+                                    $('gpTax').trigger("reloadGrid", [{ page: 2 }])
+                                    ClearForm();
+                                }
+                                else {
+                                    alert("Tax Name Already Exist");
+                                }
+                            }).error(function (data) { alert("Error found"); });
+                        }
+                    }
+                    else if ($scope.btnSave == "Update") {
+                        var ans = confirm($rootScope.msgUpdate);
+                        if (ans) {
+                            debugger;
+                            $http.post('/MMSMaster/UpdateTax', Tax).success(function (data) {
+                                debugger
+                                if (data == 0) {
+                                    alert("Tax Details Updated Successfully");
+                                    $scope.LoadData();
+                                    ClearForm();
+                                }
+                                else {
+
+                                    // alert("Cannot Update Tax Details as it is in use by the application");
+                                    alert("Tax Name Already Exist");
+                                }
+                            }).error(function (data) { alert("Error found"); });
+                        }
+
+                    }
+                }
+                else {
+                    alert('Tax Percentage Should be greater than Zero');
+                    $('#txtPercentage').focus();
+
+                }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $scope.Tax = {};
+            $scope.btnSave = "Save";
+            $scope.fmTax.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#gpTax";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                // return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'TaxId', name: 'TaxId', width: 75, hidden: true },
+            { label: 'Tax Name', name: 'TaxName', width: 75 },
+            { label: 'Tax Percentage', name: 'Percentage', width: 90 }
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Taxes <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+
+        }
+
+    });
+</script>
+
+

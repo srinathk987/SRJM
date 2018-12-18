@@ -1,0 +1,341 @@
+﻿@{
+    ViewBag.Title = "Origin";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<head>
+
+</head>
+<body class="no-skin">
+    <!-- /header .navbar-container -->
+    <!-- Side Nav Starts Here -->
+    <!-- Main Content Here -->
+    <div ng-controller="OriginController">
+        <div class="page-content">
+
+            <!-- /.page-header -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- PAGE CONTENT BEGINS -->
+                    <form class="form-horizontal" id='formBody' name="Originfrm" role="form">
+                        <div class="form-group" hidden>
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                                Origin Code <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-5" hidden>
+                                <input id="txtOriginCode" placeholder="Enter Origin Code" name="origincode" ng-model="Origin.origincode" autofocus
+                                       class="form-control" type="text" ng-maxlength="50" maxlength="10"
+                                       kit-alpha-numeric />
+                                <span class="error" ng-show="(Originfrm.origincode.$dirty || submitted) && Originfrm.origincode.$error.required">
+                                    Origin Code required!
+                                </span> <span class="error" ng-show="Originfrm.origincode.$error.maxlength">
+                                    Enter Only 50 characters
+                                </span><span class="error" ng-show="Originfrm.origincode.$error.pattern">
+                                    Enter letters and numbers only
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                                Origin Name <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-5">
+                                <input id="txtOriginName" name="originname" placeholder="Enter Origin Name" ng-model="Origin.originname" autofocus
+                                       class="form-control" type="text" ng-maxlength="50" maxlength="100" required
+                                       kit-alpha-numeric />
+                                <span class="error" ng-show="(Originfrm.originname.$dirty || submitted) && Originfrm.originname.$error.required">
+                                    Origin Name required!
+                                </span> <span class="error" ng-show="Originfrm.originname.$error.maxlength">
+                                    Enter Only 50 characters
+                                </span><span class="error" ng-show="Originfrm.originname.$error.pattern">
+                                    Enter letters and numbers only
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class=" col-sm-8">
+                            <div class="pull-right">
+                                <button class="btn btn-success" type="button" ng-click="SaveOrigin(Origin)">
+                                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                </button>
+                                &nbsp; &nbsp; &nbsp;
+                                <button class="btn orange" type="reset" ng-click="Reset(Origin)">
+                                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <table id="grid-table"></table>
+            <div id="grid-pager">
+            </div>
+        </div>
+
+        <!-- /.main-content -->
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110">
+            </i>
+        </a>
+    </div>
+    <script>
+
+        var appElement = document.querySelector('[ ng-controller=OriginController]');
+
+
+        function edit(row) {
+            debugger;
+
+
+           
+          
+           
+            var $scope = angular.element(appElement).scope();
+           var $http = angular.element(appElement).injector().get('$http');
+
+           var rowdata = $("#grid-table").getRowData(row);
+           $scope.originnameCheck =rowdata. originname
+            var OriginDetails = JSON.stringify(rowdata);
+
+            $http({
+                url: '/POSMasters/UpdateOrigin/',
+                method: "POST",
+                data: { JsonData: OriginDetails }
+
+            }).success(function (data) {
+                debugger;
+                if (data.TorF == 1) {
+                    $scope.Origin = rowdata;
+                    $scope.btnSave = "Update";
+                    $scope.$apply();
+                }
+                else {
+                    alert("Cannot Update Origin Details as it is in use by the application");
+                }
+            });
+
+
+        }
+
+        function Delete(row) {
+            debugger;
+            var $scope = angular.element(appElement).scope();
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#grid-table").getRowData(row);
+
+            if ($scope.btnSave == "Save") {
+                $http({
+                    url: '/POSMasters/DeleteOrigin/',
+                    method: "POST",
+                    data: { Id: rowdata.originid }
+
+                }).success(function (data) {
+                    if (data.TorF == true) {
+                        if ($scope.btnSave == "Save") {
+
+                            debugger;
+                            var ans = window.confirm("Are you sure?Do you want to Delete Record?");
+                            if (ans) {
+                                alert("Origin Details Deleted Successfully !");
+                                $('#grid-table').jqGrid('delRowData', row);
+                                OriginGridBinding(data.Data);
+                            }
+
+                        }
+                    }
+                    else if (data.TorF == false) {
+                        alert("Cannot Delete Origin Details as it is in use by the application");
+                    }
+                });
+            }else
+            {
+                alert("Cannot Delete Origin Details In Edit Mode");
+            }
+        }
+
+        function GridSearch() {
+
+            JqCustomSearch($("#globalSearchText").val().toUpperCase(), $("#grid-table"))
+
+        }
+
+    </script>
+    <script>
+
+        var app = angular.module('RMS');
+        app.controller('OriginController', function ($scope, $http, $rootScope) {
+            debugger
+            $rootScope.FormName = "Origin";
+            $rootScope.ModuleName = "Masters";
+            //validation
+            $scope.btnSave = "Save";
+            $scope.Origin = { originname: "", origincode: "" };
+            $scope.submitted = false;
+            $scope.isFormValid = false;
+            $scope.$watch('Originfrm.$valid', function (newValue) {
+                $scope.isFormValid = newValue;
+            });
+
+            $http({
+                url: '/POSMasters/ShowOrigin/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data.Data);
+            });
+
+
+            //Save & Update
+            $scope.SaveOrigin = function (Origin) {
+                debugger;
+
+                $scope.submitted = true;
+                if ($scope.isFormValid) {
+
+                    var OriginDetails = JSON.stringify(Origin);
+                    var text = $scope.btnSave;
+                    //Save
+                    if (text == "Save") {
+                        var ans = window.confirm("Are you sure?Do you want to Save?");
+                        if (ans) {
+
+                            $http({
+                                url: '/POSMasters/CreateOrigin/',
+                                method: "POST",
+                                data: { JsonData: OriginDetails }
+
+                            }).success(function (data) {
+                                debugger;
+                                if (data.TorF == 0) {
+                                    OriginGridBinding(data.Data);
+                                    $scope.Reset();
+                                    alert("Origin Details Saved Successfully !");
+                                }
+                                else {
+                                    alert("Origin Name  Already Existed ");
+                                }
+                            });
+
+                        }
+                    }
+                    else if (text == "Update") {
+
+
+                        if ($scope.originnameCheck != Origin.originname) {
+                            $http({
+                                url: '/POSMasters/UpdateOrigin/',
+                                method: "POST",
+                                data: { JsonData: OriginDetails }
+
+                            }).success(function (data) {
+                                debugger;
+                                if (data.TorF > 0) {
+                                    alert("Origin Name  Already Existed");
+
+                                }
+                                else {
+                                    var ans = window.confirm("Are you sure?Do you want to Update?");
+                                    if (ans) {
+                                        OriginGridBinding(data.Data);
+                                        $scope.Reset();
+                                        alert("Origin Details Updated Successfully !");
+                                    }
+
+                                }
+                            });
+
+                            //  }
+
+                        }
+                        else {
+                           
+                            $scope.Reset();
+                            alert("Origin Details Updated Successfully !");
+                        }
+                    }
+                    else {
+
+
+                    }
+
+                }
+            }
+
+            $scope.Reset = function (Origin) {
+                debugger;
+
+                $scope.btnSave = "Save";
+                $scope.submitted = false;
+                $scope.Origin.origincode = "";
+                $scope.Origin.originname = "";
+                $scope.Originfrm.$setPristine();
+            }
+
+
+        });
+
+        function OriginGridBinding(data) {
+
+            var grid_data = eval('(' + data + ')');
+            var grid_selector = "#grid-table";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            jQuery(grid_selector).jqGrid({
+
+                data: grid_data,
+                datatype: "local",
+                height: 280,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 15, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button><button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+
+			            { label: 'Origin Id', name: 'originid', width: 20, hidden: true },
+                         { label: 'Origin Code', name: 'origincode', width: 90 },
+			            { label: 'Origin Name', name: 'originname', width: 75 }
+
+                ],
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [10, 20, 100],
+                pager: pager_selector,
+                altRows: true,
+                ignoreCase: true,
+                loadComplete: function () {
+                    var table = this;
+
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+
+                },
+                caption: "Origins<span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+    </script>
+</body>

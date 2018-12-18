@@ -1,0 +1,380 @@
+﻿@{
+    //ViewBag.Title = "RestaurantLocation";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div ng-controller="RestaurentLocationController" ng-init="LoadData()" ng-app="RMS">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="RestaurantLocationfrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Restaurant Name <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="RestaurantName" ng-model="ResLoc.RestaurantName" placeholder="Enter Restaurant Name" kit-alpha-numeric required
+                                   class="form-control" maxlength="95" kt-focus data-index="1" />
+                            <span class="error" ng-show="(RestaurantLocationfrm.RestaurantName.$dirty || submitted) && RestaurantLocationfrm.RestaurantName.$error.required">
+                                Restaurant Name Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                            Line 1 <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="Line1" ng-model="ResLoc.Line1" placeholder="Enter Line 1" kt-focus required
+                                   class="form-control" maxlength="50" data-index="2" />
+                            <span class="error" ng-show="(RestaurantLocationfrm.Line1.$dirty || submitted) && RestaurantLocationfrm.Line1.$error.required">
+                                Line1 Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Line 2 <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="Line2" ng-model="ResLoc.Line2"  kt-focus data-index="3"
+                                   placeholder="Enter Line 2" class="form-control" required maxlength="50" />
+                            <span class="error" ng-show="(RestaurantLocationfrm.Line2.$dirty || submitted) && RestaurantLocationfrm.Line2.$error.required">
+                                Line2 Required!
+                            </span>
+                        </div>
+                        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                            Area <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="Area" ng-model="ResLoc.Area" placeholder="Enter Area"  required
+                                   class="form-control" maxlength="50"  data-index="4" kt-focus/>
+                            <span class="error" ng-show="(RestaurantLocationfrm.Area.$dirty || submitted) && RestaurantLocationfrm.Area.$error.required">
+                                Area Required!
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            State <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+
+                            <select name="StateName" id="StateName" ng-change="SelectState()" ng-model="ResLoc.Stateid" placeholder="Select State" ng-options="c.Stateid as c.StateName for c in Statelist"
+                                    class="form-control" required kt-focus data-index="5">
+                                <option value="">Select State</option>
+
+                            </select>
+                            <span class="error" ng-show="(RestaurantLocationfrm.StateName.$dirty || submitted) && RestaurantLocationfrm.StateName.$error.required">
+                                State Required!
+                            </span>
+
+                        </div>
+
+                        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                            City <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-4">
+
+                            <select name="CityName" id="CityName" ng-model="ResLoc.Cityid" placeholder="Select City" ng-options="c.Cityid as c.CityName for c in Test"
+                                    class="form-control" required kt-focus data-index="6">
+                                <option value="">Select City</option>
+
+                            </select>
+                            <span class="error" ng-show="(RestaurantLocationfrm.CityName.$dirty || submitted) && RestaurantLocationfrm.CityName.$error.required">
+                                City Required!
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            PIN Code <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="Pincode" ng-model="ResLoc.Pincode" placeholder="Enter PIN Code" class="form-control" required maxlength="6" minlength="6" kit-digits data-index="7" kt-focus />
+                            <span class="error" ng-show="(RestaurantLocationfrm.Pincode.$dirty || submitted) && RestaurantLocationfrm.Pincode.$error.required">
+                                PIN Code Required!
+                            </span>
+                            <span class="error" ng-show="(RestaurantLocationfrm.Pincode.$dirty || submitted) && RestaurantLocationfrm.Pincode.$error.minlength">
+                                Enter valid PIN Code!
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" ng-click="Save(ResLoc)" data-index="8">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" id="Reset" ng-click="Reset()" type="button">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+        <table id="grdrestaurantlocation"></table>
+        <div id="grid-pager">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('RestaurentLocationController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.ResLoc = {};
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Restaurant Location";
+        $rootScope.ModuleName = "MMS Masters";
+        $scope.LoadData = function () {
+            $http({
+                url: '/MMSMaster/ShowRestaurantLocation/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.Statelist = data.lstState;
+                $scope.Citylist = data.lstCity;
+                OriginGridBinding(data.lstRestaurantLocation);
+            })
+        }
+
+        $scope.SelectState = function () {
+            debugger
+            // alert('fsdfsd');
+            $scope.Test = $.grep($scope.Citylist, function (c) {
+                return c.Stateid == $scope.ResLoc.Stateid;
+            });
+
+        }
+
+      
+
+        $scope.$watch('RestaurantLocationfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Save = function (ResLoc) {
+            debugger
+
+
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        //alert($('#StateName').val());
+                        //alert($('#CityName').val());
+                        //$scope.$apply();
+                        var statecalue = $('#StateName').val();
+                        var cityvalue = $('#CityName').val();
+                        ResLoc.Stateid = statecalue.replace("number:", "");
+                        ResLoc.Cityid = cityvalue.replace("number:", "");
+                        debugger;
+
+                        $http.post('/MMSMaster/SaveRestaurantLocation', ResLoc).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Restaurant Location Details Saved Successfully");
+                                $scope.LoadData();
+                                $('grdrestaurantlocation').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                            } else {
+                                alert("Restaurant Location  Name  Already Exist");
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+                }
+                else {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $http({ method: 'POST', data: ResLoc, url: '/MMSMaster/UpdateRestaurantLocation' }).success(function (data) {
+                            debugger
+                            if (data == 1) {
+
+                                alert("Restaurant Location Details Updated Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+                            } else {
+                                alert("Cannot Update Restaurant Location Details as it is in use by the application");
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+                }
+
+                // }
+
+            }
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+
+            $scope.ResLoc = {};
+            $scope.RestaurantLocationfrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+
+        }
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+        function OriginGridBinding(data) {
+            debugger
+            var grid_data = data;
+            var grid_selector = "#grdrestaurantlocation";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                         {
+                             label: ' ', width: 40, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                 return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                             }
+                         },
+            { label: 'RecordId', name: 'RecordId', width: 75, hidden: true },
+            { label: 'Restaurant Name', name: 'RestaurantName', width: 90 },
+            { label: 'Line 1', name: 'Line1', width: 75 },
+               { label: 'Line 2', name: 'Line2', width: 75 },
+                  { label: 'Area', name: 'Area', width: 75 },
+                     { label: 'State', name: 'StateName', width: 75 },
+                        { label: 'City', name: 'CityName', width: 75 },
+                        { label: 'Cityid', name: 'Cityid', width: 75, hidden: true },
+                         { label: 'PIN Code', name: 'Pincode', width: 75 },
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                caption: "Restaurant Locations <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+        }
+
+    });
+</script>
+<script type="text/javascript">
+
+
+    var appElement = document.querySelector('[ ng-controller=RestaurentLocationController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdrestaurantlocation"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdrestaurantlocation").getRowData(row);
+        debugger;
+        $scope.btnSave = "Update"
+        $scope.ResLoc = rowdata;
+        // alert(rowdata.CityName);
+        $scope.ResLoc.Stateid = $.grep($scope.Statelist, function (c) {
+            return c.StateName == $scope.ResLoc.StateName;
+        })[0].Stateid;
+
+        $scope.Test = $.grep($scope.Citylist, function (c) {
+            return c.Stateid == $scope.ResLoc.Stateid;
+        });
+        $scope.ResLoc.Cityid =parseInt(rowdata.Cityid);
+        //$scope.ResLoc.Cityid = $.grep($scope.Test, function (c) {
+        //    return c.CityName == $scope.ResLoc.CityName;
+        //})[0].Cityid;
+
+        //$scope.ResLoc.StateName = $.grep($scope.Statelist, function (c) {
+        //    return c.StateName == $scope.ResLoc.StateName;
+        //})[0].StateName;
+        //$scope.ResLoc.CityName = $.grep($scope.Citylist, function (c) {
+        //    return c.CityName == $scope.ResLoc.CityName;
+        //})[0].CityName;
+
+
+        $scope.$apply();
+    }
+    function Delete(row) {
+        debugger;
+        // alert('hii');
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdrestaurantlocation").getRowData(row);
+        if ($scope.btnSave == "Save") {
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+            if (ans) {
+                $http.post('/MMSMaster/DeleteRestaurantLocation', rowdata)
+                    .success(function (data) {
+                        if (data == true) {
+                            alert("Restaurant Location Details Deleted Successfully");
+                            $('#grdrestaurantlocation').jqGrid('delRowData', row);
+                            $scope.LoadData();
+                        }
+                        else if (data == false) {
+                            alert("Cannot Delete Restaurant Location Details as it is in use by the application");
+                        }
+                    })
+            }
+        }
+        else {
+            alert("Cannot Delete Restaurant Location in Editable Mode");
+        }
+    }
+
+
+
+</script>
+
+
+
+
+
+

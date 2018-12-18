@@ -1,0 +1,1331 @@
+﻿@{
+    //ViewBag.Title = "ProductMaster";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+@*<style>
+        .modal-backdrop .in {
+            opacity: 0.04;
+            filter: alpha(opacity=04);
+        }
+    </style>*@
+
+@*<link rel="stylesheet" href="~/assets/css/select2.min.css" />
+    <link rel="stylesheet" href="~/assets/css/bootstrap-editable.min.css" />
+    <script src="~/assets/js/ace-editable.min.js"></script>
+    <script src="~/assets/js/bootstrap-editable.min.js"></script>*@
+
+
+
+<div class="page-content content-bg" ng-controller="ProductMasterController as ctrl" ng-init="CountryDetails();LoadProductData();vendornames();">
+    <div class="row padding-0">
+        <div class="col-sm-2 no-padding-right ">
+            <div class="row">
+                <div class="form-group">
+                    @*<label class="col-sm-12 control-label">
+                            Search
+                        </label>*@
+                    <div class="col-sm-12">
+                        <span class="input-icon width-100 grid-search input-icon-right">
+                            <input name="Line1" ng-model="q" placeholder="Type Product Name"
+                                   class="form-control" id="SearchVendorName" autocomplete="off" type="search" />
+                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                        </span>
+                    </div>
+                </div>
+
+
+                @*<div class="col-sm-12 ">
+                        <button class="btn width-100 padding-0 btn-message " type="button" ng-click="Reset();" ng-hide="btnSave=='Update'">
+                            <i class="fa fa-plus "></i> Add New Product
+                        </button>
+                    </div>*@
+
+
+
+            </div>
+
+
+            <div class="widget-box transparent no-padding">
+                <div class="widget-header widget-header-small">
+                    <h5 class="widget-title red dark-10 no-padding " style="font-size:16px; font-weight:600; margin:5px 0px;">
+                        <i class="ace-icon fa fa-cart-plus"></i>
+                        PRODUCTS
+                    </h5>
+
+                    <button class="btn btn-xs btn-primary pull_right   " type="button" ng-click="Reset();" ng-hide="btnSave=='Update'" style="float:right;">
+                        <i class="fa fa-plus "></i> Add
+                    </button>
+                    @*<button ng-click='VendorCancel(1)' class="red2" style="border:none;background-color:white;">
+                            <i class="ace-icon fa fa-times bigger-125"></i>Clear All
+                        </button>*@
+                </div>
+                <div class="widget-body no-padding" style="height:420px; overflow-y:auto;">
+                    <div class="widget-main no-padding">
+                        <div id="profile-feed-1" class="profile-feed" ng-repeat="x in Product | filter:q as results">
+                            <div class="profile-activity clearfix">
+                                @*<div class="time">
+                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                        {{vendor.vendorcode}}
+                                    </div>*@
+                                <div class="">
+                                    <div class="col-sm-12">
+
+                                        @*<img class="pull-left ace-icon fa fa-user" alt="vendor" src="" />*@
+
+                                        <div>
+                                            {{x.productname}}
+                                        </div>
+                                        <div class="pull-right">
+                                            <button ng-click="EditProduct(x)" class=" blue no-border transparent-bg">
+                                                <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                            </button>
+                                            <button ng-click="DeleteProduct(x) " class="red no-border transparent-bg">
+                                                <i class="ace-icon fa fa-trash bigger-125"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="results.length == 0" class="animate-repeat">
+                            <strong>No results found...</strong>
+                        </div>
+                    </div>
+                </div>
+                <div>
+
+                    <button class="btn btn-block" type="button" ng-click="Productdetailsexport()">
+                        <i class="ace-icon fa fa-plus bigger-110"></i>Export
+                    </button>
+
+
+
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+        @*<div class="widget-box transparent" style="margin:20px 0px; !important">
+                <div class="widget-header widget-header-small">
+                    <h4 class="widget-title blue smaller">
+                        <i class="ace-icon fa fa-rss orange"></i>
+                        Product Details
+                    </h4>
+                </div>
+                <div class="widget-body" style="display: block; height:200px; overflow:scroll">
+                    <div class="widget-main padding-8" ng-init="LoadProductData()">
+                        <div id="profile-feed-1" class="profile-feed" ng-repeat="x in Product">
+                            <div class="profile-activity clearfix">
+                                <div>
+                                    {{x.productname}}
+
+
+                                </div>
+
+                            </div>
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue" ng-click="EditProduct(x) ">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red" ng-click="DeleteProduct(x) ">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>*@
+
+
+
+
+
+        <div class="col-sm-10">
+            <div class="tabbable">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active">
+                        <a aria-expanded="false" data-toggle="tab" href="#home">
+                            <i class="green ace-icon fa fa-home bigger-120"></i>
+                            Product
+                        </a>
+                    </li>
+                    <li>
+                        <a aria-expanded="true" data-toggle="tab" href="#messages">
+                            Vendor Info.
+                        </a>
+                    </li>
+                    <li>
+                        <a aria-expanded="true" data-toggle="tab" href="#messages1">
+                            Order Details
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content  white-bg">
+                    <div id="home" class="tab-pane fade active in">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <form class="form-horizontal" role="form" name="ProductMasterfrm" novalidate>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Product Name<span style="color: Red">*</span> :
+                                        </label>
+
+                                        <input type="text" name="productcode" ng-model="PM.productcode" hidden />
+                                        <input type="text" name="productcode" ng-model="PM.productid" hidden />
+                                        <div class="col-sm-10">
+                                            <input type="text" name="productname" ng-model="PM.productname" maxlength="250" capitalize kt-focus data-index="1"
+                                                   placeholder="Enter Product Name" class="form-control" ng-disabled="dsbProductname" required />
+
+                                            <span class="error" ng-show="(ProductMasterfrm.productname.$dirty || submitted) && ProductMasterfrm.productname.$error.required">
+                                                Product Name Required!
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Category <span style="color: Red">*</span> :
+                                        </label>
+
+                                        <div class="col-sm-4">
+
+                                            <ui-select name="category" reset-search-input="true" id="category" required ng-model="ctrl.category.selected" on-select="Categoryfirstchange(ctrl.category.selected.CategoryId)" title="Choose a Product Category">
+                                                <ui-select-match placeholder="Select Product Category">{{$select.selected.CategoryName}}</ui-select-match>
+                                                <ui-select-choices repeat="category in Categories | propsFilter: {CategoryName: $select.search}">
+                                                    <div ng-bind-html="category.CategoryName | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            @*<span href="#" class="add-btn-popup" data-toggle="modal" data-target="#myModal"></span>*@
+                                            <span class="error" ng-show="(ProductMasterfrm.category.$dirty || submitted) && ProductMasterfrm.category.$error.required">
+                                                Category Name Required!
+                                            </span>
+
+                                        </div>
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Subcategory :
+                                        </label>
+                                        <div class="col-sm-4">
+                                            <ui-select reset-search-input="true" name="subcategory" id="subcategory" ng-model="ctrl.subcategory.selected">
+                                                <ui-select-match placeholder="Select Product SubCategory">{{$select.selected.Subcategory}}</ui-select-match>
+                                                <ui-select-choices group-by="'Category'" repeat="subcategory in SubCategories | propsFilter: {Subcategory: $select.search}">
+                                                    <div ng-bind-html="subcategory.Subcategory | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            @*<span class="error" ng-show="(ProductMasterfrm.subcategory.$dirty || submitted) && ProductMasterfrm.subcategory.$error.required">
+                                                    Subcategory Required!
+                                                </span>*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Product Type <span style="color: Red">*</span> :
+                                        </label>
+                                        <div class="col-sm-4">
+                                            <ui-select name="producttypename" reset-search-input="true" required ng-model="ctrl.product.selected" on-select="SelectProductType()" title="Choose a Product">
+                                                <ui-select-match placeholder="Select Product Type">{{$select.selected.producttypename}}</ui-select-match>
+                                                <ui-select-choices repeat=" product in ProductTypes | propsFilter: {producttypename: $select.search}">
+                                                    <div ng-bind-html="product.producttypename | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="error" ng-show="(ProductMasterfrm.producttypename.$dirty || submitted) && ProductMasterfrm.producttypename.$error.required">
+                                                Product Type Required!
+                                            </span>
+                                        </div>
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            UOM <span style="color: Red">*</span> :
+                                        </label>
+                                        <div class="col-sm-4">
+                                            <ui-select name="uom" id="uom" reset-search-input="true" required ng-model="ctrl.uom.selected" on-select="SelectMeasuredUOM(ctrl.uom.selected.uomid)" style="min-width: 200px;" title="Choose a Category" ng-disabled="DisableUOM">
+                                                <ui-select-match placeholder="Select Product UOM">{{$select.selected.uom}}</ui-select-match>
+                                                <ui-select-choices name="uom" repeat=" uom in UOMs | propsFilter: {uom: $select.search}">
+                                                    <div ng-bind-html="uom.uom | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="error" ng-show="(ProductMasterfrm.uom.$dirty || submitted) && ProductMasterfrm.uom.$error.required">
+                                                UOM Required!
+                                            </span>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Sale Amount<span style="color: Red"></span> :
+                                        </label>
+
+
+                                        <div class="col-sm-10">
+                                            <input type="text" name="numsalerate" ng-model="PM.numsalerate" maxlength="10" placeholder="Enter Sale Amount" kit-amount class="form-control" />
+
+
+                                            @*<span class="error" ng-show="(ProductMasterfrm.SaleAmount.$dirty || submitted) && ProductMasterfrm.SaleAmount.$error.required">
+                                                    Sale Amount Required!
+                                                </span>*@
+
+                                        </div>
+
+                                    </div>
+                                    @*<div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Storage Location<span style="color: Red">*</span> :
+                                        </label>
+                                        <div class="col-sm-4">
+
+                                            <ui-select name="storage" ng-model="ctrl.storage.selected" on-select="SelectStorage2(ctrl.storage.selected.storagelocationid)" style="min-width: 300px;" title="Choose a Category">
+                                                <ui-select-match placeholder="Select storage Location">{{$select.selected.storagelocationname}}</ui-select-match>
+                                                <ui-select-choices repeat="storage in Storages | propsFilter: {storagelocationname: $select.search}">
+                                                    <div ng-bind-html="storage.storagelocationname | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+
+
+                                            @*<ui-select name="storage" required multiple ng-model="ctrl.storage.selected" class="form-control" on-remove="SelectStorage($item.storagelocationid, $model, ctrl.storage.selected.storagelocationid)" on-select=" SelectStorage($item.storagelocationid, $model, ctrl.storage.selected)">
+                                                    <ui-select-match placeholder="Select a person in the list or search his name/age...">{{$item.storagelocationname}}</ui-select-match>
+                                                    <ui-select-choices repeat="storage in Storages | propsFilter: {storagelocationname: $select.search}">
+                                                        <div ng-bind-html="storage.storagelocationname | highlight: $select.search"></div>
+
+                                                    </ui-select-choices>
+                                                </ui-select>*@
+                                    @*<span class="error" ng-show="(ProductMasterfrm.storage.$dirty || submitted) && ProductMasterfrm.storage.$error.required">
+                                            Storage Location Required!
+                                        </span>*@
+                                    @*</div>*@
+                                    @*<label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                            Shelf Name  :
+                                        </label>
+                                        <div class="col-sm-4">
+                                            <ui-select ng-model="ctrl.shelf.selected" style="min-width: 300px;">
+                                                <ui-select-match placeholder="Select Shelf Name">{{$select.selected.shelfname}}</ui-select-match>
+                                                <ui-select-choices name="shelf" repeat=" shelf in Shelfs | propsFilter: {shelfname: $select.search}">
+                                                    <div ng-bind-html="shelf.shelfname | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>*@
+                                    @*</div>*@
+                                    @*<div class="form-group">
+                                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                Min Qty. :
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="Minqty" ng-model="PM.Minqty" maxlength="7" kit-quantity kt-focus data-index="8"
+                                                       placeholder="Enter Min Qty." class="form-control" />
+                                                <span class="error" ng-show="(ProductMasterfrm.Minqty.$dirty || submitted) && ProductMasterfrm.Minqty.$error.required">Min Qty. Required!</span>
+
+                                            </div>
+                                            <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                                Max Qty. :
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="maxqty" ng-model="PM.Maxqty" maxlength="7" placeholder="Enter Max Qty." kit-quantity kt-focus data-index="9"
+                                                       class="form-control" />
+                                                <span class="error" ng-show="(ProductMasterfrm.maxqty.$dirty || submitted) && ProductMasterfrm.maxqty.$error.required">Max Qty. Required!</span>
+
+                                            </div>
+                                        </div>*@
+
+
+                                    <div class="col-sm-12">
+                                        <div class="pull-right">
+                                            @*<button class="btn-app" type="button" ng-click="Productdetailsexport()">
+                                                <i class="ace-icon fa fa-plus bigger-110"></i>Export
+                                                            </button>
+                                                               &nbsp; &nbsp; &nbsp;*@
+                                            <button class="btn btn-success" type="button" ng-click="Save(PM)" data-index="10">
+                                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                            </button>
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div id="messages" class="tab-pane fade ">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <form class="form-horizontal" role="form" name="fmvendorproductdetails" novalidate style="border:inherit;border-bottom-width:1px;">
+                                    <div class="widget-box">
+
+
+                                        <div class="form-group">
+
+                                            <label class="col-sm-2 control-label">
+                                                Product Name:
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="vendorproductname" ng-model="VP.productname" placeholder="Product Name"
+                                                       class="form-control" id="vendorproductname" maxlength="100" required disabled />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <label class="col-sm-2 control-label">
+                                                Product UOM<span style="color: Red">*</span>:
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="uomname" ng-model="VP.productuom" placeholder="Product UOM"
+                                                       class="form-control" id="uomname" required disabled />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">
+                                                Vendor Name<span style="color: Red">*</span>:
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <select name="vendor" id="vendor" ng-model="VP.vendorid" placeholder="Vendor Name" ng-options="c.vendorid as c.vendorname for c in Vendors"
+                                                        class="form-control" required kt-focus data-index="1" ng-disabled="VPvendorname">
+                                                    <option value="">Select Vendor Name</option>
+                                                </select>
+                                                <span class="error" ng-show="(fmvendorproductdetails.vendor.$dirty || VPsubmitted) && fmvendorproductdetails.vendor.$error.required">
+                                                    Vendor Required!
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">
+                                                Product Cost<span style="color: Red"></span>:
+                                            </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="productcost" ng-model="VP.productcost" placeholder="Enter Cost"
+                                                       class="form-control" id="productcost" maxlength="7" kit-amount style="text-align:right;" />
+                                                <span class="error" ng-show="(fmvendorproductdetails.productcost.$dirty || VPsubmitted) && fmvendorproductdetails.productcost.$error.required">
+                                                    Cost Required!
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-6" style="border-top-style:initial">
+                                                <div class="pull-right">
+                                                    <button class="btn btn-success" type="button" ng-click="SaveVendors(VP);">
+                                                        <i class="ace-icon fa fa-plus bigger-110"></i>{{btnProductsSave}}
+                                                    </button>
+                                                    <button class="btn orange" type="button" ng-click="ResetVendors()">
+                                                        <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <table id="grdProductsList" class="table " style="border:medium;">
+                                    <tr class="row">
+                                        <th></th>
+                                        @*<th hidden>Product ID</th>*@
+                                        <th>Vendor Name</th>
+                                        <th>Product Name</th>
+                                        <th hidden>Product MesuredUOM</th>
+                                        <th>Product UOM</th>
+                                        <th>Product Cost</th>
+                                        <th hidden>Vendor Id</th>
+                                        @*< <th hidden>Product Date</th>*@
+                                    </tr>
+                                    <tr ng-repeat="product in VendorProductsDetails" class="row" style="border:medium;border-bottom-width:5px;">
+                                        <td>
+                                            <button ng-click='editVendor(product);' class="blue" style="border:none;background-color:white;">
+                                                <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                            </button>
+                                            <button ng-disabled="btnDeletevendor" ng-click='DeleteVendor(product);' class="red" style="border:none;background-color:white;">
+                                                <i class="ace-icon fa fa-trash bigger-125"></i>
+                                            </button>
+                                        </td>
+
+                                        <td>{{product.vendorname}}</td>
+                                        <td>{{product.productname}}</td>
+
+                                        <td hidden>{{PM.MeasuredUOMName}}</td>
+                                        <td>{{product.uom}}</td>
+                                        <td>{{product.productcost}}</td>
+                                        <td hidden>{{product.vendorid}}</td>
+
+                                    </tr>
+                                </table>
+                                @*<table id="grid-pager" ng-show="Editmode"></table>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="messages1" class="tab-pane fade ">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table id="grdOrdersList1" class="table  white-bg" style="border:medium;">
+
+
+                                    <tr class="row">
+                                        <th>Order No.</th>
+                                        <th>Vendor Name</th>
+                                        <th>Product Name</th>
+                                        <th>Qty.</th>
+                                        <th>Rate</th>
+                                    </tr>
+                                    <tr ng-repeat="Orders in OrdersDetails" class="row" style="border:medium;border-bottom-width:5px;">
+                                        <td>{{Orders.OrderNo}}</td>
+                                        <td>{{Orders.vendorname}}</td>
+                                        <td>{{Orders.productname}}</td>
+
+                                        <td>{{Orders.orderqty}}</td>
+                                        <td>{{Orders.Rate}}</td>
+
+
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal add categories -->
+<div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog add-popup animated fadeInRightBig " role="document">
+        <div class="modal-content" style="height:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('ProductMasterController', function ($scope, $http, $rootScope) {
+        debugger
+
+        //****************** Declarations *******************************//
+        var vm = this;
+        //Product
+
+        $scope.PM = {};
+
+        $scope.submitted = false;
+        $scope.VDisFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Product Master";
+        $rootScope.ModuleName = "MMS Masters";
+        $scope.Editmode = false;
+
+        //Vendor
+
+        $scope.VPsubmitted = false;
+        $scope.VPisFormValid = false;
+        $scope.VPvendorname = false;
+        $scope.btnProductsSave = "Save";
+        $scope.editData = {};
+        $scope.VP = {};
+        $scope.personAsync = { selected: "wladimir@email.com" };
+        $scope.peopleAsync = [];
+
+        //$scope.onSelectCallback = function (item, model) {
+        //    debugger
+        //    $scope.test = item;
+        //    // alert(5);
+        //    //  vm.counter++;
+        //    $scope.eventResult = { item: item, model: model };
+        //};
+        //  vm.person = {};
+
+
+        $scope.createSearchChoice = function (item) {
+            return { id: Math.floor((Math.random() * 10000) + 1), name: item };
+        };
+
+        //****************** Click Events Product  *******************************//
+
+        $scope.EditProduct = function (x) {
+            debugger;
+            vm.category = {};
+            vm.subcategory = {};
+            vm.product = {};
+            vm.uom = {};
+            vm.storage = {};
+            vm.shelf = {};
+            vm.category.selected = {};
+            vm.subcategory.selected = {};
+            vm.product.selected = {};
+            vm.uom.selected = {};
+            vm.storage.selected = {};
+            vm.shelf.selected = {};
+
+
+
+            var copy = Object.assign({}, x);
+            $scope.PM = copy;
+            $scope.dsbProductname = true;
+
+            vm.category.selected.CategoryName = $scope.PM.CategoryName;
+            vm.category.selected.CategoryId = $scope.PM.CategoryId;
+
+            if (angular.isDefined(vm.subcategory.selected)) {
+                vm.subcategory.selected.Subcategory = $scope.PM.Subcategory;
+                vm.subcategory.selected.SubcategoryId = $scope.PM.SubCategoryId;
+            }
+            vm.product.selected.producttypename = $scope.PM.producttypename;
+            vm.product.selected.producttypeid = $scope.PM.producttypeid;
+            vm.product.selected.productid = $scope.PM.productid;
+            vm.uom.selected.uom = $scope.PM.MeasuredUOMName;
+            vm.uom.selected.uomid = $scope.PM.uomid;
+            $scope.VP.productuom = vm.uom.selected.uom;
+
+            vm.storage.selected.storagelocationname = $scope.PM.storagelocationname;
+            vm.storage.selected.storagelocationid = $scope.PM.storagelocationid;
+
+            if (angular.isDefined(vm.shelf.selected)) {
+                vm.shelf.selected.shelfname = $scope.PM.shelfname;
+                vm.shelf.selected.shelfid = $scope.PM.shelfid;
+            }
+
+
+            /////////////////////////////////////////
+
+            $http.post('/MMSMaster/CheckGRNCount', { ProductCode: $scope.PM.productcode }).success(function (data) {
+                debugger;
+                var dd = parseInt(data);
+                if (dd > 0) {
+                    debugger;
+                    $scope.DisableUOM = true;                   
+                }
+                else if (dd <= 0) {
+                    $scope.DisableUOM = false;
+                }
+            })
+
+
+
+            //  vm.category.selected = $scope.PM.CategoryName;
+            //vm.subcategory.selected.Subcategory = $scope.PM.Subcategory;
+            //vm.product.selected.producttypename = '';
+            //vm.uom.selected.uom = '';
+            //vm.storage.selected.storagelocationname = '';
+            //vm.shelf.selected.shelfname = '';
+
+
+            //  alert($scope.x.SubCategoryId);
+            //  $("#subcategory option:selected").text = x.Subcategory;
+            //  $("#subcategory").val( $scope.x.SubCategoryId);
+            //$("#subcategory").attr('selectedIndex', $scope.x.SubCategoryId);
+            // $scope.PM = angular.copy(x);
+
+            $scope.PM.CategoryId = parseInt(copy.CategoryId);
+            $scope.Categorychange(copy.CategoryId);
+            // vm.subcategory.selected.SubCategoryId = (copy.SubCategoryId);
+            //  $scope.PM.SubCategoryId = parseInt(copy.SubCategoryId);
+            //  $scope.SelectStorage(copy.storagelocationid);
+
+            // vm.shelf.selected.shelfid = parseInt(copy.shelfid);
+            $scope.btnSave = "Update";
+            $scope.VP.productname = $scope.PM.productname;
+            $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+
+            //   $scope.PM.SaleAmount = $scope.PM.SaleAmount;
+            //  vm.uom.selected.uom = $scope.PM.MeasuredUOMName;
+            $scope.LoadVendorDetails();
+            // $scope.Editmode = true;
+            // $scope.$apply();
+        }
+
+        $scope.DeleteProduct = function (x) {
+
+            var productcode = x.productcode;
+            debugger;
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+            if (ans) {
+                $http({
+                    url: '/MMSMaster/DeleteProductMaster/',
+                    method: "POST",
+                    data: { productcode: x.productcode }
+                }).success(function (data) {
+                    if (data == true) {
+                        alert("Product Details Deleted Successfully");
+                        $scope.LoadProductData();
+                        ClearForm();
+                    }
+                    else if (data == false) {
+                        alert("Cannot Delete Product Details  as it is in use by the application");
+                    }
+                })
+
+            }
+
+        };
+        $scope.Save = function (PM) {
+            debugger;
+            var tee = vm;
+
+            $("#uom option:selected").text();
+            $scope.uompresent = PM.uom;
+            PM.storagelocationid = 1;
+            PM.storagelocationname = "MAIN STORAGE";
+            // var rt = $select;
+            //  var ts = $("select[name='category'] option:selected");
+            $scope.submitted = true;
+            if ($scope.VDisFormValid) {
+
+                if (angular.isDefined($scope.PM.Minqty) || angular.isDefined($scope.PM.Maxqty)) {
+                    if (parseInt($scope.PM.Minqty) > parseInt($scope.PM.Maxqty)) {
+                        alert("Min Qty. Should be less than or equal to Max Qty.");
+                        return false;
+                    }
+                }
+                // vm.subcategory = {};
+                if ($scope.btnSave == "Save") {
+                    // vm.shelf = {};
+                }
+                // $scope.PM.SubCategoryId = {};
+                $scope.PM.CategoryName = vm.category.selected.CategoryName;
+                $scope.PM.CategoryId = vm.category.selected.CategoryId;
+                if (angular.isDefined(vm.subcategory.selected)) {
+                    $scope.PM.Subcategory = vm.subcategory.selected.Subcategory;
+                    $scope.PM.SubcategoryId = vm.subcategory.selected.SubCategoryId;
+                }
+                else {
+
+
+                    PM["SubCategoryId"] = "0";
+                    PM["Subcategory"] = "";
+                }
+                $scope.PM.producttypename = vm.product.selected.producttypename;
+                $scope.PM.producttypeid = vm.product.selected.producttypeid;
+                $scope.PM.uomid = vm.uom.selected.uomid;
+                $scope.PM.uom = vm.uom.selected.uom;
+
+                $scope.PM.SaleAmount = $scope.PM.SaleAmount;
+
+
+                //var storageNames = vm.storage.selected.map(function (l, f, d) {
+                //    return l.storagelocationname;
+                //});
+                //var storagelocationid = vm.storage.selected.map(function (l, f, d) {
+                //    return l.storagelocationid;
+                //})
+                //$scope.PM.storagelocationname = storageNames.toString();
+                // $scope.PM.storagelocationid = storagelocationid.toString();
+                $scope.PM.storagelocationname = "";
+                $scope.PM.storagelocationid = 0;
+                if (vm.shelf !== undefined) {
+                    if (angular.isDefined(vm.shelf.selected)) {
+                        $scope.PM.shelfid = vm.shelf.selected.shelfid;
+                        $scope.PM.shelfname = vm.shelf.selected.shelfname;
+                    }
+                    else {
+                        PM["shelfid"] = "0";
+                        PM["shelfname"] = "";
+                    }
+                }
+
+                else {
+                    PM["shelfid"] = "0";
+                    PM["shelfname"] = "";
+                }
+                // $scope.PM.storagelocationname = vm.storage.selected;
+
+
+
+
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+
+                        $http.post('/MMSMaster/SaveProductMaster', { PM: JSON.stringify(PM) }).success(function (data) {
+                            debugger
+                            if (data.Data > 0) {
+                                alert("Product Details Saved Successfully");
+                                $scope.ProductMasterfrm.$setPristine();
+                                $scope.submitted = false;
+                                $scope.LoadProductData();
+                                $scope.VP.productname = $scope.PM.productname;
+                                // $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+                                $scope.VP.productuom = vm.uom.selected.uom;
+                                $scope.VP.productid = data.Data;
+                                $scope.VP.productcode = data.Data1;
+                                $scope.VP.productuptodate = new Date().getYear() + "-" + new Date().getMonth() + "-" + new Date().getDate();
+
+                                ClearForm();
+
+
+                            } else {
+                                alert("Product Name  Already Exist!");
+                            }
+                        })
+                    }
+                }
+                else {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $http.post('/MMSMaster/UpdateProductdetails', { PM: JSON.stringify(PM) }).success(function (data) {
+                            debugger
+                            if (data == 1) {
+
+                                alert("Product Details Updated Successfully");
+                                $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+                                $scope.LoadProductData();
+                                ClearForm();
+
+                            } else {
+                                alert("Cannot Update Product Details as it is in use by the application");
+                            }
+                        })
+                    }
+                }
+            }
+        };
+        $scope.Reset = function () {
+            debugger
+            ClearForm();
+            ClearVendorForm();
+            $scope.VendorProductsDetails = {};
+            $scope.OrdersDetails = {};
+            $scope.DisableUOM = false;
+        }
+
+        $scope.Productdetailsexport = function () {
+
+            var w = window.open("/MMSReports/Productdetailsreport/", '_blank');
+        }
+
+        $scope.Categoryfirstchange = function (x) {
+            debugger;
+
+            $scope.Categorychange(x);
+            $scope.ctrl.subcategory = {};
+
+            //1))
+            $scope.ctrl.product = {};
+
+
+
+           // $scope.ctrl.uom = {};
+
+
+
+
+            //1))
+
+            // $scope.ctrl.subcategory.selected = {};
+            // $scope.ctrl.subcategory.selected.SubCategoryId = '';
+
+        };
+
+
+
+
+
+        //****************** Change Events  *******************************//
+        //$scope.sri = function (name) {
+        //    $scope.SelectStorage(name);
+        //    alert(name);
+        //}
+        //$scope.test = ['A', 'C'];
+
+        $scope.Categorychange = function (x) {
+            debugger;
+
+            if (angular.isDefined(x)) {
+                $http({
+                    url: '/MMSMaster/getProductSubCategory/',
+                    method: "POST",
+                    data: { CategoryId: x }
+                }).success(function (data) {
+                    debugger;
+
+                    $scope.SubCategories = data;
+
+                })
+            }
+        };
+
+
+
+
+
+        $scope.$watch('ProductMasterfrm.$valid', function (newValue) {
+            $scope.VDisFormValid = newValue;
+        });
+        $scope.SelectStorage2 = function (x) {
+            debugger
+            //  alert(x);
+            if (x != "") {
+
+                if (angular.isDefined(x) && x != "") {
+                    $scope.ctrl.shelf = {};
+                    $http({
+                        url: '/MMSMaster/getShelfnames/',
+                        method: "POST",
+                        data: { Storageid: x }
+                    }).success(function (data) {
+                        debugger;
+
+                        $scope.Shelfs = data;
+
+                    }).error(function () {
+                        // alert("Error Occurred");
+                    });
+                }
+            } else {
+                $scope.test = undefined;
+                $scope.shelfid = undefined;
+                vm.shelfid = undefined;
+                $scope.Shelfs = [];
+            }
+        }
+        $scope.SelectStorage = function (x, model, items) {
+            debugger
+
+
+            var ty = items.map(function (l, f, d) {
+                return l.storagelocationid;
+            })
+            var test = ty.toString();
+            // var sri = this.ngModel.$modelValue;
+
+
+            if (test != "") {
+
+                if (angular.isDefined(x) && x != "") {
+                    $http({
+                        url: '/MMSMaster/getShelfnames/',
+                        method: "POST",
+                        data: { Storageid: test }
+                    }).success(function (data) {
+                        debugger;
+
+                        $scope.Shelfs = data;
+
+                    }).error(function () {
+                        // alert("Error Occurred");
+                    });
+                }
+            } else {
+                $scope.test = undefined;
+                $scope.shelfid = undefined;
+                vm.shelfid = undefined;
+                $scope.Shelfs = [];
+            }
+        }
+
+
+
+
+        $scope.SelectMeasuredUOM = function (X) {
+
+            debugger;
+
+
+            $scope.PM.MeasuredUOMName = $.grep($scope.UOMs, function (c) {
+
+                return c.uomid == X;
+            })[0].uom;
+
+            if ($scope.btnSave == 'Update') {
+
+                $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+            }
+
+            $scope.PM.Purchaseuom = $scope.PM.uomid;;
+            $scope.PM.Salesuom = $scope.PM.uomid;;
+
+
+            $scope.PM.PurchaseuomName = $.grep($scope.UOMs, function (c) {
+                debugger;
+                return c.uomid == $scope.PM.uomid;
+            })[0].uom;
+            $scope.PM.SalesuomName = $.grep($scope.UOMs, function (c) {
+                debugger;
+                return c.uomid == $scope.PM.uomid;
+            })[0].uom;
+
+
+            $scope.PM.PurchaseUOMfrom = 1;
+            $scope.PM.PurchaseUOMTo = 1;
+            $scope.PM.SalesuomFrom = 1;
+            $scope.PM.SalesuomTo = 1;
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $scope.SelectSalesuom = function (c) {
+
+            debugger;
+            $scope.PM.SalesuomName = $.grep($scope.UOMs, function (c) {
+                debugger;
+                return c.uomid == $scope.PM.Salesuom;
+            })[0].uom;
+        }
+        $scope.SelectPurchaseuom = function (c) {
+
+            debugger;
+            $scope.PM.PurchaseuomName = $.grep($scope.UOMs, function (c) {
+                debugger;
+                return c.uomid == $scope.PM.Purchaseuom;
+            })[0].uom;
+        }
+        $scope.$watch('ProductMasterfrm.$valid', function (newValue) {
+            $scope.VDisFormValid = newValue;
+        });
+        $scope.$watch('fmvendorproductdetails.$valid', function (newValue) {
+            debugger
+            $scope.VPisFormValid = newValue;
+        });
+
+        //****************** Binding Product Details *******************************//
+
+        $scope.LoadProductData = function () {
+            //$scope.PM.PurchaseUOMTo = 1;
+            //$scope.PM.SalesuomTo = 1;
+            //$scope.PM.Minqty = 0;
+            //$scope.PM.Maxqty = 0;
+            debugger;
+
+            $http({
+                url: '/MMSMaster/ShowProductdetails/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.Product = data.lstDetails;
+                $scope.Vendors = data.lstvendors;
+                $scope.UOMs = data.lstUOM;
+            }).error(function (data) {
+                //alert("Error Occurred");
+            });
+        };
+
+        $http({
+            url: '/MMSMaster/ShowProductCategory/',
+            method: "get"
+
+        }).success(function (data) {
+            debugger;
+            $scope.Categories = data;
+
+        })
+           .error(function () {
+               //console.log("Error Occurred");
+           });
+
+
+        $http({
+            url: '/MMSMaster/ShowProductType1/',
+            method: "get"
+
+        }).success(function (data) {
+            debugger;
+            $scope.ProductTypes = data;
+
+        }).error(function () {
+            // console.log("Error Occurred");
+        });
+
+
+
+        $http({
+            url: '/MMSMaster/ShowStorageLocation1/',
+            method: "get"
+
+        }).success(function (data) {
+            debugger;
+            $scope.Storages = data;
+
+            $scope.Test = []
+            for (var i = 0; i < data.length; i++) {
+                $scope.Test.push({ 'id': $scope.Storages[i].storagelocationid, 'name': data[i].storagelocationname })
+            }
+
+
+        }).error(function () {
+            // console.log("Error Occurred");
+        });
+
+
+
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $('#ProductName').focus();
+            $scope.PM = {};
+            if (vm.category !== undefined) {
+                vm.category.selected = '';
+                vm.subcategory.selected = '';
+                vm.product.selected = '';
+                vm.uom.selected = '';
+                vm.storage.selected = '';
+                vm.shelf.selected = '';
+                //  vm = [];
+
+                vm.CategoryId = undefined;
+                // $scope.CategoryId = undefined;
+                vm.SubCategoryId = undefined;
+                vm.producttypeid = undefined;
+                vm.shelfid = undefined;
+                vm.test = undefined;
+                vm.uomid = undefined;
+                // vm.producttypename = undefined;
+            }
+
+
+            $scope.btnSave = "Save";
+
+            $scope.submitted = false;
+            // $scope.Editmode = false;
+            $scope.dsbProductname = false;
+            $scope.ProductMasterfrm.$setPristine();
+        }
+
+
+
+        //****************** Vendor Save  *******************************//
+
+        //****************** Click Events Vendor  *******************************//
+
+        $scope.SaveVendors = function (VP) {
+            debugger;
+            $scope.VPsubmitted = true;
+            if ($scope.VPisFormValid) {
+
+                if ($scope.btnProductsSave == "Save") {
+
+                    var ans = confirm($rootScope.msgSave);
+
+                    if (ans) {
+                        if ($scope.btnSave == "Update") {
+                            $scope.VP.productname = $scope.PM.productname;
+                            $scope.VP.productcode = $scope.PM.productcode;
+                            $scope.VP.productid = $scope.PM.productid;
+                            $scope.VP.productuptodate = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate();
+                        }
+                        else {
+                            $scope.PM.productname = $scope.VP.productname;
+                            $scope.PM.productcode = $scope.VP.productcode;
+                            $scope.PM.productid = $scope.VP.productid;
+                        }
+                        // var VP = '';
+                        if ($scope.VP.productcost == '' || $scope.VP.productcost == null) {
+                            $scope.VP.productcost = 0;
+                        }
+                        $scope.VP.productuptodate = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate();
+                        //$http.post('/MMSMaster/SavevendorProductsMaster', { VP: JSON.stringify(VP) }).success(function (data) {
+                        $http.post('/MMSMaster/SavevendorProductsMaster', { VP: JSON.stringify($scope.VP) }).success(function (data) {
+
+                            debugger
+                            if (data) {
+                                alert("Vendor Details Saved Successfully");
+                                // var prdtname = $scope.PM.productname;
+                                $scope.LoadProductData();
+                                $scope.LoadVendorDetails();
+                                // $scope.VP.productcode = $scope.PM.productcode;
+                                //$scope.VP.productid = $scope.PM.productid;
+
+                                var prdtname = $scope.VP.productname;
+                                var prdtcode = $scope.VP.productcode;
+                                var prdtuom = $scope.VP.productuom;
+                                var id = $scope.VP.productid;
+                                ClearVendorForm();
+
+                                $scope.VP.productname = prdtname;
+                                $scope.VP.productcode = prdtcode;
+                                $scope.VP.productuom = prdtuom;
+                                $scope.VP.productid = id;
+
+                            } else {
+                                alert("Vendor Name  Already Exist!");
+                            }
+                        }).error(function (data) {
+                            // alert("Error found");
+                        });
+                    }
+
+                }
+                else if ($scope.btnProductsSave == "Update") {
+                    debugger;
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        debugger;
+                        var ID = $scope.VP.vendorid;
+                        // var ID = $scope.VP.vendorcode;
+                        $scope.VP.productuptodate = new Date().getYear() + "-" + new Date().getMonth() + "-" + new Date().getDate();
+                        if ($scope.VP.productcost == '' || $scope.VP.productcost == null) {
+                            $scope.VP.productcost = 0;
+                        }
+                        var prdtuom = $scope.VP.productuom;
+
+
+
+                        $http.post('/MMSMaster/UpdatevendorProductsinfo', { VP: JSON.stringify(VP) }).success(function (data) {
+                            debugger
+                            if (data) {
+                                alert("Vendor Product Details Updated Successfully");
+                                $scope.LoadProductData();
+                                $scope.LoadVendorDetails();
+                                var prdtuom = $scope.VP.uom;
+                                var prdtid = $scope.VP.productid;
+                                ClearVendorForm();
+                                $scope.VP.productname = $scope.PM.productname;
+                                $scope.VP.productcode = $scope.PM.productcode;
+                                if ($scope.PM.MeasuredUOMName !== undefined) {
+                                    $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+                                    $scope.VP.productid = $scope.PM.productid;
+                                }
+                                else {
+                                    $scope.VP.productuom = prdtuom;
+                                    $scope.VP.productid = prdtid;
+                                }
+
+
+                            } else {
+                                alert("Cannot Update Vendor Product Details as it is in use by the application");
+                            }
+                        }).error(function (data) {
+                            //alert("Error found");
+                        });
+                    }
+                }
+
+
+
+            }
+        };
+        $scope.editVendor = function (product) {
+            debugger;
+            var copy = Object.assign({}, product);
+            $scope.VP = copy;          
+
+            if ($scope.PM.MeasuredUOMName !== undefined) {
+                $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+                $scope.VP.productid = parseInt($scope.PM.productid);
+            }
+            else {
+                $scope.VP.productuom = $scope.VP.uom;
+                $scope.VP.productid = $scope.PM.productid;
+            }
+
+            $scope.btnProductsSave = "Update";
+            $scope.VPvendorname = true;
+            $scope.$apply();
+            $scope.btnDeletevendor = true;
+        };
+        $scope.DeleteVendor = function (product) {
+            debugger;
+            if ($scope.btnProductsSave == "Save") {
+                var ans = confirm("Are You Sure? Do You Want To Delete?");
+                if (ans) {
+                    var VP = Object.assign({}, product);
+                    var id = $scope.VP.vendorid;
+                    $http.post('/MMSMaster/Deletevendorproducts', { VP: JSON.stringify(VP) }).success(function (data) {
+                        if (data === true) {
+                            debugger;
+                            alert("Product Details Deleted Successfully");
+
+                            $scope.LoadProductData();
+                            $scope.LoadVendorDetails();
+                            ClearProducts();
+                            //$scope.VendorEdit(id);
+                        }
+                        else if (data === false) {
+                            alert("Cannot Delete Product as it is in use by the application");
+                        }
+                    })
+                }
+            }
+            //else {
+            //    alert("Cannot Delete Product as it is in Edit Mode by the application");
+            //}
+        };
+        $scope.ResetVendors = function () {
+            debugger
+            ClearVendorForm();
+        }
+
+        //****************** Binding Vendor  *******************************//
+        $scope.LoadVendorDetails = function () {
+            debugger;
+            // alert(555);
+            $http({
+                url: '/MMSMaster/vendorProductsMaster/',
+                method: "POST",
+                data: { productcode: $scope.PM.productcode, productname: $scope.PM.productname }
+            }).success(function (data) {
+                debugger;
+
+                $scope.VendorProductsDetails = data.lstvendorproducts;
+                $scope.OrdersDetails = data.lstOrderDetails;
+
+            }).error(function (data) {
+                //  alert("Error Occurred");
+            });
+        }
+
+        //****************** Clear Details Vendor *******************************//
+        function ClearVendorForm() {
+            debugger;
+            $scope.VP = {};
+            //$scope.VP.productcost = '';
+            //$scope.VP.vendorid = '';
+            if ($scope.PM.productname !== undefined) {
+                $scope.VP.productname = $scope.PM.productname;
+                $scope.VP.productcode = $scope.PM.productcode;
+                $scope.VP.productuom = $scope.PM.MeasuredUOMName;
+            }
+
+            $scope.btnProductsSave = "Save";
+            $scope.fmvendorproductdetails.$setPristine();
+            $scope.VPsubmitted = false;
+            $scope.btnDeletevendor = false;
+            $scope.VPvendorname = false;
+        }
+
+
+    });
+</script>

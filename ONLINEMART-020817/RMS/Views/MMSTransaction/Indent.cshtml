@@ -1,0 +1,1308 @@
+﻿@model RMS.Core.IndentGenerationDTO
+@{
+    ViewBag.Title = "ItemIndent";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+    .btn-group .btn {
+        background: none !important;
+        border: none !important;
+        color: #333 !important;
+        text-shadow: none !important;
+    }
+
+    .ui-select-bootstrap .ui-select-toggle > .caret {
+        position: absolute;
+        height: 10px;
+        top: 50%;
+        right: 30px;
+        margin-top: -2px;
+    }
+
+    .widget-main li {
+        width: 100%;
+    }
+</style>
+<div ng-controller="IndentController as ctrl" ng-init="LoadData()">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" name="ItemAddfrm" role="form" novalidate>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="form-field-1">
+                            Indent Type
+                            <span style="color: Red"></span>:
+                        </label>
+                        <div class="col-sm-3">
+                            <label>
+                                <input type="radio" ng-model="BE.Indenttypenew" id="Indenttypenew" value="New" ng-change="Indentyperadio(BE)">
+                                New
+                            </label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <input type="radio" ng-model="BE.Indenttypenew" id="Indenttypenew" value="modify" ng-change="Indentyperadio(BE)">
+                                Modify
+                            </label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <input type="radio" ng-model="BE.Indenttypenew" id="Indenttypenew" value="reorder" ng-change="Indentyperadio(BE)">
+                                Re-Order
+                            </label>
+
+                        </div>
+                        <label class="col-sm-1 control-label" for="form-field-2">
+                            Date <span style="color: Red"></span>:
+                        </label>
+                        <div class="col-sm-2">
+                            <input name="Date" id="vchdate" placeholder="Enter Date" class="form-control date-picker" data-date-format="dd-mm-yyyy" type="text" kit-date ng-model="BE.vchdate" ng-disabled="vchdatereadonly">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div id="dvnew" ng-style="disableTagButton">
+                            <div id="dvnew" class="check-element animate-show" ng-hide="hideindentno">
+
+                                <label class="col-sm-2 control-label" id="lblindentno" for="form-field-1" ng-keypress="myFunction($event,'RequestedBy')">
+                                    Indent No. <span style="color: Red">*</span>:
+                                </label>
+                                <p class="col-sm-2">
+                                    <select class=" form-control" ng-model="BE.IndentNo" ng-change="IndentTypechanges(BE)" name="IndentNo" id="IndentNo" ng-options=" c.recordid as c.IndentNo for c in existedIndents"
+                                            ng-required="BE.Indenttypenew=='modify'">
+                                        <option value="">Select Indent No.</option>
+                                    </select>
+                                    <span class="error" ng-show="(ItemAddfrm.IndentNo.$dirty || submitted) && ItemAddfrm.IndentNo.$error.required">
+                                        Indent Number Required!
+                                    </span>
+                                </p>
+                            </div>
+                            <div id="dvnew" class="check-element animate-show" ng-hide="hidereorderindent">
+                                <label class="col-sm-2 control-label" id="lblreorderindentno" for="form-field-1" ng-keypress="myFunction($event,'RequestedBy')">
+                                    Indent No. <span style="color: Red">*</span>:
+                                </label>
+                                <p class="col-sm-2">
+                                    <select class=" form-control" ng-model="BE.reorderIndentNo" ng-change="ReorderIndentschange(BE)" name="reorderIndentNo" id="reorderIndentNo" ng-options=" c.recordid as c.IndentNo for c in ReorderIndents"
+                                            ng-required="BE.Indenttypenew=='reorder'">
+                                        <option value="">Select Indent No.</option>
+                                    </select>
+                                    <span class="error" ng-show="(ItemAddfrm.reorderIndentNo.$dirty || submitted) && ItemAddfrm.reorderIndentNo.$error.required">
+                                        Indent Number Required!
+                                    </span>
+                                </p>
+
+                            </div>
+                            <label class="col-sm-2 control-label" for="form-field-1">
+                                Requested By <span style="color: Red">*</span>:
+                            </label>
+                            <div class="col-sm-2">
+                                <select class=" form-control" ng-model="BE.RequestedBy" ng-keypress="myFunction($event,'DeparmentName')" name="RequestedBy" autofocus id="RequestedBy" ng-options=" c.vchindentno as c.RequestedBy for c in Requestedby" required>
+                                    <option value="">Select Request By</option>
+                                </select>
+                                <span class="error" ng-show="(ItemAddfrm.RequestedBy.$dirty || submitted) && ItemAddfrm.RequestedBy.$error.required">
+                                    Requested By Required!
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="form-field-1">
+                            Department <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-2">
+                            <select class=" form-control" ng-model="BE.DeparmentName" ng-keypress="myFunction($event,'ApprovedBy')" name="DeparmentName" id="DeparmentName" ng-options=" c.DeparmentCode as c.DeparmentName for c in Deportments" required>
+                                <option value="">Select Department</option>
+                            </select>
+                            <span class="error" ng-show="(ItemAddfrm.DeparmentName.$dirty || submitted) && ItemAddfrm.DeparmentName.$error.required">
+                                Department Required!
+                            </span>
+                        </div>
+
+                        <label class="col-sm-2 control-label" for="form-field-1">
+                            Approved By <span style="color: Red"></span>:
+                        </label>
+                        <div class="col-sm-2">
+                            <input name="ApprovedBy" ng-model="BE.ApprovedBy" maxlength="50" name="ApprovedBy" id="ApprovedBy" ng-keypress="myFunction($event,'productname')"
+                                   class="form-control text-left" type="text">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <a class="btn btn-primary" id="collapseExamplea" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-disabled="isdisabled">
+            <i class="fa fa-plus" style="color:#fff;"></i> Add Product
+        </a>
+
+
+        <div class="collapse widget-box" id="collapseExample">
+            <form class="form-horizontal" role="form" name="fmProductDetails">
+                <div class="widget-header widget-header-flat widget-header-small">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>  PRODUCT DETAILS </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="form-field-1"> Product Name <span style="color: Red">*</span>:</label>
+                                    <div class="col-sm-9">
+                                        <span class="input-icon width-100 grid-search input-icon-right">
+                                            <ui-select name="productname" id="productname" required ng-model="ctrl.v.selected.productname" on-select=" Product_Change(ctrl.v.selected)" title="Choose a Product Name" ng-disabled="isdisabled">
+                                                <ui-select-match placeholder="Select Product Name">{{$select.selected.productname}}</ui-select-match>
+                                                <ui-select-choices repeat="v in productss | propsFilter: {productname: $select.search}">
+                                                    <div ng-bind-html="v.productname | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                        <span class="error" ng-show="(fmProductDetails.productname.$dirty || submittedAdd) && fmProductDetails.productname.$error.required">
+                                            Product Name Required!
+                                        </span>
+                                        @*<select id="productname" ng-change="Product_Change(BS.productname);" ng-keypress="myFunction($event,'storagelocationname')" class=" form-control" name="productname" ng-model="BS.productname" ng-options="c.productname as c.productname for c in productss"
+                                                      required ng-disabled="isdisabled">
+                                                <option value="">Select Product Name</option>
+                                            </select>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <fieldset class="scheduler-border">
+                                        @*<legend class="scheduler-border">Prodcuts</legend>*@
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1">Category :</label>
+                                        <label class="col-sm-2 padding-0 control-label" ng-model="BS.lblCategory" for="form-field-1" name="lblCategory" id="lblCategory">{{lblCategory}}</label>
+
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1">Subcategory :</label>
+                                        <label class="col-sm-2  padding-0 control-label" for="form-field-1" ng-model="BS.lblsubcategory" name="lblsubcategory" id="lblsubcategory">{{lblsubcategory}}</label>
+
+                                        <label class="col-sm-2  padding-0 control-label" for="form-field-1">Product Type :</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" name="lblproducttype" id="lblproducttype" ng-model=" bs.lblproducttype">{{lblproducttype}}</label>
+
+                                        @* Hidden Fields *@
+
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductid" id="lblproductid" ng-model=" bs.lblproductid">{{lblproductid}}</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductcode" id="lblproductcode" ng-model=" bs.lblproductcode">{{lblproductcode}}</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductcategoryid" id="lblproductcategoryid" ng-model=" bs.lblproductcategoryid">{{lblproductcategoryid}}</label>
+                                        <label class="col-sm-2 padding-0 control-label" for="form-field-1" hidden name="lblproductsubcategoryid" id="lblproductsubcategoryid" ng-model=" bs.lblproductsubcategoryid">{{lblproductsubcategoryid}}</label>
+                                    </fieldset>
+                                </div>
+                                <div class="form-group">
+                                    <fieldset class="scheduler-border">
+                                        @*<legend class="scheduler-border">Prodcuts</legend>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">UOM :</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" ng-model="BS.uomname" name="uomname" id="uomname">{{lbluom}}</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1">Min. Stock :</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" name="minqty" ng-model="BS.minqty" name="minqty" id="minqty">{{lblminstock}}</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1">Max. Stock:</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" name="maxqty" ng-model="BS.maxqty" name="maxqty" id="maxqty">{{lblmaxstock}}</label>
+                                    </fieldset>
+                                </div>
+                                <div class="form-group">
+                                    <fieldset class="scheduler-border">
+                                        @*<legend class="scheduler-border">Prodcuts</legend>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">Storage Area <span style="color: Red">*</span>:</label>
+                                        @*<div class="col-sm-2">
+                                        *@
+                                        @*<select class=" form-control" name="storagelocationname" hidden id="storagelocationname" ng-keypress="myFunction($event,'shelfname')" ng-change="Storagechage(BS.storagelocationname)" ng-model="BS.storagelocationname" ng-options=" c.storagelocationcode as c.storagelocationname for c in Storages" required>
+                                                <option value="">Select Storage Area</option>
+                                            </select>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1" ng-model="BS.storagelocationname" name="storagelocationname" id="storagelocationname">{{lblstoragelocationname}}</label>
+                                        @*<span class="error" ng-show="(fmProductDetails.storagelocationname.$dirty || submittedAdd) && fmProductDetails.storagelocationname.$error.required">
+                                                Storage Area Required!
+                                            </span>*@
+                                        @*
+                                            </div>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">Shelf Name :</label>
+                                        @*<div class="col-sm-2">
+                                        *@
+                                        @*<select class=" form-control" name="shelfname" id="shelfname" ng-keypress="myFunction($event,'indentqty')" ng-change="Shelfchanged(BS.shelfname)" ng-model="BS.shelfname" ng-options="c.shelfname as c.shelfname for c in selfnamecmb">
+                                                <option value="">Select Shelf Name</option>
+                                            </select>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1" ng-model="BS.shelfname" name="shelfname" id="shelfname">{{lblshelfname}}</label>
+                                        @*<span class="error" ng-show="(fmProductDetails.shelfname.$dirty || submittedAdd) && fmProductDetails.shelfname.$error.required">
+                                                Shelf Name Required!
+                                            </span>*@
+                                        @*
+                                            </div>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">Available Qty. :</label>
+                                        <label class="col-sm-2 control-label" for="form-field-1" name="AvailableQty" ng-model="BS.AvailableQty">{{lblavailabilty}}</label>
+                                    </fieldset>
+                                </div>
+                                <div class="form-group" id="divself">
+                                    <fieldset class="scheduler-border">
+                                        @*<label class="col-sm-2 control-label" for="form-field-1">Indent UOM :</label>
+                                            <div class="col-sm-2">
+                                                <select class=" form-control" name="UOM" id="UOM" ng-model="BS.UOM" ng-options=" c.uomid as c.uom for c in ShowUOM" required>
+                                                    <option value="">Select UOM </option>
+                                                </select>
+                                                <span class="error" ng-show="(fmProductDetails.UOM.$dirty || submittedAdd) && fmProductDetails.UOM.$error.required">
+                                                    Product  required!
+                                                </span>
+                                            </div>*@
+                                        <label class="col-sm-2 control-label" for="form-field-1">Indent Qty. <span style="color:red">*</span>:</label>
+                                        <div class="col-sm-2">
+                                            <input kit-liter-qty name="indentqty" min="0" maxlength="8" ng-blur="Indentqtychange(BS.indentqty)" id="indentqty" placeholder="Enter Indent Qty" autofocus class="form-control" type="text" ng-model="BS.indentqty" required>
+                                            <span class="error" ng-show="(fmProductDetails.indentqty.$dirty || submittedAdd) && fmProductDetails.indentqty.$error.required">
+                                                Indent Quantity Required!
+                                            </span>
+
+                                        </div>
+
+                                        <div class="pull-right">
+                                            <button class="btn btn-success " type="button" ng-click="AddProductDetalis(BS,BE)"> <i class="ace-icon fa fa-save bigger-110"></i> {{btnAdd}}</button>
+                                            <button class="btn orange" type="button" ng-click="GridClear();">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>Clear
+                                            </button>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            @*<div class="col-sm-12 col-xs-12">
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <!--new query starts-->
+        <div class="col-sm-12">
+            <table id="grdCard"></table>
+            <div id="jqGridPager"></div>
+        </div>
+        <!--new query ends-->
+        <hr />
+        <div class="col-sm-12">
+            <div class="pull-right">
+                <button class="btn btn-success" type="btnSave" ng-click="Save_IndentDetails(BS,BE)">
+                    <i class="ace-icon fa fa-save bigger-110"></i>{{btnSave}}
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn orange" type="reset" ng-click="ClearForm()">
+                    <i class="ace-icon fa fa-times bigger-110"></i>Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link href="~/assets/Css/ui.jqgrid.css" rel="stylesheet" />
+<link href="~/assets/Css/ajax-jquery.ui-1.11.1-themes-start-jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('IndentController', function ($scope, $http, $rootScope, $filter) {
+        debugger
+        var pim = this;
+        $scope.submitted = false;
+        $scope.submittedAdd = false;
+        $scope.isFormValid = false;
+        $scope.isFormValidAdd = false;
+        $scope.isdisabled = false;
+        $scope.btnSave = "Save";
+        $scope.btnAdd = "Add"
+        $rootScope.FormName = "Product Indent";
+        $rootScope.ModuleName = "Transactions";
+        $scope.BS = {};
+        $scope.BE = {};
+        $scope.BE.vchdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+        $scope.vchdatereadonly = true;
+        $scope.$watch('ItemAddfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.$watch('fmProductDetails.$valid', function (newValue) {
+            $scope.isFormValidAdd = newValue;
+        });
+
+        $scope.hideindentno = true;
+        $scope.hidereorderindent = true;
+        $scope.BE.Indenttypenew = "New";
+        //************* Page Init Method ********************//
+        $scope.edit = function (row) {
+            debugger;
+
+            $("#collapseExamplea").removeClass("btn btn-primary collapsed").addClass("btn btn-primary");
+            $("#collapseExample").removeClass("widget-box collapsed collapse").addClass("widget-box collapsed collapse in");
+
+            var rowdata = jQuery('#grdCard').jqGrid('getRowData', row);
+            $scope.btnAdd = "Update";
+            $scope.TempRow = row;
+            //  alert($scope.TempRow);
+            var copy = Object.assign({}, rowdata);
+            //$scope.BS.Product = copy.Product;
+            //$scope.BS.storagelocationname = copy.storagelocationname;
+            $scope.lblCategory = copy.categoryname;
+            $scope.lblavailabilty = copy.AvailableQty;
+            $scope.lblmaxstock = copy.maxqty;
+            $scope.lblminstock = copy.minqty;
+            $scope.lbluom = copy.uomname;
+            $scope.lblsubcategory = copy.subcategoryname;
+            $scope.lblproducttype = copy.producttype;
+            //Hidden Fields
+            $scope.BS.lblproductid = copy.productid;
+            $scope.BS.lblproductcode = copy.productcode;
+            $scope.BS.lblproductcategoryid = copy.productcategoryid;
+            $scope.BS.lblproductsubcategoryid = copy.productsubcategoryid;
+            //  $scope.BS.productname = copy.productname;
+            $scope.BS.indentqty = copy.indentqty;
+            $scope.lblshelfname = copy.shelfname;
+            $scope.lblstoragelocationname = copy.storagelocationname;
+            $scope.BS.lblproductid = copy.productid;
+            //  $scope.BS.productname = copy.productname;
+            //Storage Area and Shelf Old Code
+            //if (copy.storagelocationcode == "") {
+            //    $scope.BS.storagelocationname = copy.storagelocationname;
+            //}
+            //$scope.BS.storagelocationname = copy.storagelocationcode;
+            //if ($scope.BS.storagelocationname == "") {
+            //  $scope.BS.storagelocationname = copy.storagelocationname;
+            //}
+            //  $scope.Storagechage($scope.BS.storagelocationname);
+            //  $scope.BS.shelfname = copy.shelfname;
+            //   $select.selected.productname = copy.productname;
+            pim.v = {};
+            pim.v.selected = {};
+            pim.v.selected.productname = {};
+            pim.v.selected.productname.productname = copy.productname;
+            $scope.isdisabled = true;
+            $scope.$apply();
+        }
+        $scope.Delete = function (row) {
+            debugger;
+            if ($scope.btnAdd != "Update") {
+                //  if ($scope.btnSave == "Save") {
+                var rowdata = $("#grdCard").getRowData(row);
+                var ans = confirm("Are You Sure? Do You Want To Delete?");
+                if (ans) {
+                    var rowdata = $("#grdCard").getRowData(row);
+                    $("#grdCard").jqGrid("delRowData", row);
+                    // var griddata = $('#grdCard').jqGrid('getGridParam', 'data');
+                    var data = $('#grdCard').jqGrid('getGridParam', 'data');
+                    OriginGridBinding(data);
+                    $('#grdCard').trigger('reloadGrid');
+                    // Delete the Selected row data in the database also
+                    //$http({
+                    //    method: 'POST',
+                    //    url: '/MMSTransaction/Deleteproductdetails',
+                    //    data: { 'gridrowdata': rowdata }
+                    //}).success(function (data) {
+                    //    debugger;
+                    //    $("#grdCard").jqGrid("delRowData", row);
+                    //    alert("Indent Details Deleted Successfully !");
+
+                    //}).error(function (data) {
+                    //    $scope.message = 'Unexpected Error';
+                    //});
+                }
+
+                //  }
+            }
+            else {
+
+                alert("Right Now Indent Detail Can Not Be Delete ");
+            }
+        }
+
+        $scope.LoadData = function () {
+            //   Loading Products
+            $http({
+                url: '/MMSTransaction/ShowIndentProducts/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                $scope.productsdummy = data.products;
+                $scope.productss = data.products;
+                //  $scope.Storages = data.storages;
+                $scope.vwavailableqty = data.vwavailableqty;
+                $scope.Requestedby = data.Requestedby;
+                $scope.Deportments = data.deportments;
+                $scope.Hiddendata = data.products;
+                da = [];
+                console.log(data);
+                OriginGridBinding(da);
+            });
+        }
+
+        //****************** Auto Focus Method  ********************//
+
+        $scope.myFunction = function ($event, nxtid) {
+            if ($event.keyCode == 13) {
+                $event.preventDefault();
+                $("#" + nxtid).focus();
+            }
+        }
+
+        //****************** Indent Qty Blur Event ***********************//
+
+        $scope.Indentqtychange = function (sdfsd) {
+            debugger;
+            if (parseFloat($scope.BS.indentqty) <= 0) {
+                $scope.BS.indentqty = "";
+            }
+
+        }
+        // ******* Updating the Availaibility Qty ****************//
+        $scope.updatedAvailableQty = function () {
+            angular.forEach($scope.vwavailableqty, function (value, key) {
+                debugger;
+                if (tag.productname == value.productname) {
+                    console.log(value.productname);
+                    $scope.singleavadata = value;
+                    if ($scope.lblstoragelocationname == value.storagelocationname) {
+                        if ($scope.lblshelfname == value.shelfname) {
+                            $scope.lblavailabilty = value.AvailableQty;
+                        }
+                        $scope.lblavailabilty = value.AvailableQty;
+                        $scope.BS.AvailableQty = value.AvailableQty;
+                        alert($scope.BS.AvailableQty);
+                    }
+                    else {
+                        $scope.singleavadata = [];
+                        $scope.lblavailabilty = 0;
+                    }
+                }
+            });
+        }
+        // ****************** Product Chage Events And Grid Operation Events ******************** //
+
+
+
+        $scope.Product_Change = function (productchaged) {
+            debugger;
+            var productslctd = productchaged;
+            var found = false;
+            //  var val = $("#productname option:selected").text();
+            var val = productchaged.productname.productname;
+            // $scope.BS.productname = productchaged.productname;
+            //   $scope.pim.v.selected.productname = productchaged.productname;
+            angular.forEach($scope.productss, function (tag) {
+                if (val.indexOf(tag.productname) != -1) {
+                    debugger;
+                    if (val == tag.productname) {
+                        $scope.BS.storagelocationname = {};
+                        $scope.BS.shelfname = '';
+                        if ($scope.lblavailabilty == 0) {
+                            $scope.lblavailabilty = 0;
+                        }
+                        $scope.lblCategory = tag.categoryname;
+                        $scope.lblmaxstock = tag.maxqty || 0;
+                        $scope.lblminstock = tag.minqty || 0;
+                        $scope.lbluom = tag.uomname;
+                        $scope.lblsubcategory = tag.subcategoryname;
+                        $scope.lblproducttype = tag.producttype;
+                        // Hidden fields to save
+                        $scope.BS.lblproductid = tag.productid;
+                        $scope.BS.lblproductid || 'NULL';
+                        $scope.BS.lblproductcode = tag.productcode;
+                        $scope.BS.lblproductcategoryid = tag.productcategoryid;
+                        $scope.BS.lblproductcategoryid || 'NULL';
+                        $scope.BS.lblproductsubcategoryid = tag.productsubcategoryid;
+                        $scope.BS.lblproductsubcategoryid || 'NULL';
+                        if ($scope.BS.lblproductsubcategoryid == 0) {
+                            $scope.BS.lblproductsubcategoryid = "NULL";
+                        }
+                        $scope.BS.productname = val;
+                        console.log(tag.storageareavalue);
+                        $scope.lblstoragelocationname = tag.storagelocationname;
+                        $scope.lblshelfname = tag.shelfname;
+                    }
+                    // Getting available Qty With Shelf and Storage Location
+                    debugger;
+                    angular.forEach($scope.vwavailableqty, function (value, key) {
+                        debugger;
+                        if (tag.productname == value.productname) {
+                            console.log(value.productname);
+                            $scope.singleavadata = value;
+                            if ($scope.lblstoragelocationname == value.storagelocationname) {
+                                if ($scope.lblshelfname == value.shelfname) {
+                                    $scope.lblavailabilty = value.AvailableQty;
+                                }
+                                $scope.lblavailabilty = value.AvailableQty;
+                                $scope.BS.AvailableQty = value.AvailableQty;
+                            }
+                            else {
+                                $scope.singleavadata = [];
+                                $scope.lblavailabilty = 0;
+                            }
+                        }
+                    });
+                    //  $scope.BS.storagelocationname = tag.storagelocationname;
+                    //  $scope.BS.shelfname = tag.shelfname;
+                    //  alert($scope.BS.lblproductsubcategoryid);
+                    // var row123 = [];
+                    // var row = { shelfname: tag.shelfname };
+                    // row123.push(row);
+                    // $scope.selfnamecmb = row123;
+                    $scope.BS.storagelocationname = tag.storageareavalue;
+                    // $scope.BS.shelfname = tag.shelfname;
+                    // $scope.Storagechage(tag.storageareavalue);
+                    // alert(tag.shelfname);
+                    // $scope.BS.shelfname = tag.shelfname;
+                    $scope.BindStorageArea(tag.storageareavalue);
+                    var strstoragelocationarea = $scope.BS.storagelocationname;
+                    var strstoragedata = $scope.Storages;
+                    //var storageloen = strstoragedata.length;
+                    //var storagearea = '';
+                    //for (var i = 0; i < storageloen; i++) {
+                    //    if (strstoragedata[i].storagelocationcode === strstoragelocationarea) {
+                    //        storagearea = strstoragedata[i].storagelocationname;
+                    //    }
+                    //}
+                    var productid = $scope.BS.lblproductid;
+                    found = true;
+                    $scope.BS.indentqty = '';
+                }
+            });
+            return found;
+        }
+        $scope.BindStorageArea = function (storageareavalue) {
+            $http({
+                url: '/MMSTransaction/BindStorageAreas/',
+                method: "POST",
+                data: { 'storageareavalue': storageareavalue }
+            }).success(function (data) {
+                debugger;
+                $scope.Storages = data.storages;
+                da = [];
+                OriginGridBinding(da);
+            });
+
+
+        }
+        $scope.Shelfchanged = function (shelfname) {
+            debugger;
+            var shelfid = $("#shelfname option:selected").text();
+            //  $scope.Product_Change();
+            var productid = $scope.BS.lblproductid;
+            if (productid == null || productid == "") {
+                productid = $scope.BS.productid;
+                // alert(productid);
+            }
+            var productname = $scope.productname;
+            var uomname = $scope.lbluom;
+            var strstoragelocationarea = $scope.BS.storagelocationname;
+            var strstoragedata = $scope.Storages;
+            //  var storageloen = strstoragedata.length;
+            debugger;
+            var storagearea = '';
+            for (var i = 0; i < storageloen; i++) {
+                if (strstoragedata[i].storagelocationcode === strstoragelocationarea) {
+                    storagearea = strstoragedata[i].storagelocationname;
+                }
+            }
+            if ($scope.singleavadata.shelfname == shelfid) {
+                $scope.lblavailabilty = $scope.singleavadata.AvailableQty;
+            }
+            else {
+                $scope.lblavailabilty = 0;
+            }
+        }
+        //$scope.GetAvailaibilityQty = function (productid, productname, uomname, storagearea, shelfname) {
+        //    debugger;
+        //    $http({
+        //        method: 'POST',
+        //        url: '/MMSTransaction/GetAvailaibilityQty',
+        //        data: { 'productid': productid, 'productname': productname, 'uomname': uomname, 'storagearea': storagearea, 'shelfname': shelfname }
+        //    }).success(function (data) {
+        //        debugger;
+        //        if (data.AvailbleQty.length != 0) {
+        //            $scope.lblavailabilty = data.AvailableQty;
+        //            $scope.lblavailabilty = $scope.lblavailabilty || 0;
+        //        } else {
+        //            $scope.lblavailabilty = 0;
+        //        }
+        //        //    alert($scope.lblavailabilty);
+        //    }).error(function (data) {
+        //        $scope.message = 'Unexpected Error';
+        //    });
+        //}
+        $scope.Storagechage = function (storagelocationcode) {
+            debugger;
+            var storagelocationcode = storagelocationcode;
+            var productid = $scope.BS.lblproductid;
+            var productname = $scope.BS.productname;
+            var keyvalue = $("#storagelocationname option:selected").text();
+            var uomname = $scope.lbluom;
+
+            if (keyvalue != "Select Storage Area") {
+
+                $http({
+                    method: 'POST',
+                    url: '/MMSTransaction/GetSelfNames',
+                    data: { 'showroomselected': storagelocationcode }
+                }).success(function (data) {
+                    debugger;
+                    $scope.selfnamecmb = data.selfnames;
+                    angular.forEach(data.selfnames, function (tab) {
+                        if (storagelocationcode == tab.storagecode) {
+                            $scope.selfnamecmb.shelfname = tab.shelfname;
+                        }
+                    });
+                }).error(function (data) {
+                    $scope.message = 'Unexpected Error';
+                });
+
+                debugger;
+                angular.forEach($scope.vwavailableqty, function (value, key) {
+                    if (productname == value.productname) {
+                        $scope.singleavadata = value;
+                        if (keyvalue == value.storagelocationname) {
+                            $scope.lblavailabilty = value.AvailableQty;
+                        }
+                        else {
+                            $scope.singleavadata = [];
+                            $scope.lblavailabilty = 0;
+                        }
+                    }
+                    else {
+                        $scope.lblavailabilty = 0;
+                    }
+                    if (storagelocationcode.indexOf(':') !== -1) {
+                        // string code has "ST1" in it
+                        storagelocationcode = storagelocationcode.split(':')[1];
+                    }
+                });
+
+            }
+            else {
+                $scope.BS.storagelocationname = {};
+                $scope.BS.shelfname = '';
+                $scope.lblavailabilty = 0;
+            }
+
+        }
+
+        //****************** Re-Order Event  *******************************//
+
+        $scope.ReorderIndentschange = function (BE) {
+            debugger;
+
+            jQuery("#grdCard").jqGrid("clearGridData");
+            var IndentNo = $('#reorderIndentNo option:selected').text();
+            //  alert(987);
+            if (IndentNo != "Select Indent No.") {
+                $http({
+                    method: 'POST',
+                    url: '/MMSTransaction/GetExistedIndenNo',
+                    data: { IndentType: IndentNo }
+                }).success(function (data) {
+                    debugger;
+                    for (var i = 0; i < data.Indentdetails.length; i++) {
+                        $scope.BE.ApprovedBy = data.Indentdetails[i].ApprovedBy;
+                    }
+                    var reqval = data.Indentdetails[0].RequestedBy;
+                    var depval = data.Indentdetails[0].DeparmentName;
+                    console.log($scope.Requestedby);
+                    $scope.BE.RequestedBy = "";
+                    angular.forEach($scope.Requestedby, function (key, value) {
+
+                        if (reqval == key.RequestedBy)
+                            $scope.BE.RequestedBy = key.vchindentno;
+                    })
+                    $scope.BE.DeparmentName = "";
+                    console.log($scope.Deportments);
+                    angular.forEach($scope.Deportments, function (key, value) {
+                        if (depval == key.DeparmentName) {
+                            $scope.BE.DeparmentName = key.DeparmentCode;
+                        }
+                    })
+
+                    // Updating The Availaible Qty
+                    var length = data.Indentdetails.length;
+                    for (var i = 0; i < length; i++) {
+                        var productname = data.Indentdetails[i].productname;
+                        var storagelctn = data.Indentdetails[i].storagelocationname;
+                        var shelfname = data.Indentdetails[i].shelfname;
+
+                        angular.forEach($scope.vwavailableqty, function (value, key) {
+                            debugger;
+                            if (productname == value.productname) {
+                                console.log(value.productname);
+                                $scope.singleavadata = value;
+                                if (storagelctn == value.storagelocationname) {
+                                    if (shelfname == value.shelfname) {
+                                        //   $scope.lblavailabilty = value.AvailableQty;
+                                        //  $scope.BS.AvailableQty = value.AvailableQty;
+                                        data.Indentdetails[i].AvailableQty = value.AvailableQty;
+                                    }
+                                    //  $scope.lblavailabilty = value.AvailableQty;
+                                    // $scope.BS.AvailableQty = value.AvailableQty;
+                                    data.Indentdetails[i].AvailableQty = value.AvailableQty;
+                                    //  alert($scope.BS.AvailableQty);
+                                }
+                                else {
+                                    $scope.singleavadata = [];
+                                    $scope.lblavailabilty = 0;
+                                }
+                            }
+                        });
+                    }
+                    OriginGridBinding(data.Indentdetails);
+                }).error(function (data) {
+                    $scope.message = 'Unexpected Error';
+                });
+            }
+        }
+        $scope.IndentTypechanges = function (BE) {
+            debugger;
+            // alert("callled Function IndentTypechanges");
+            $scope.BS["ExistingIndentNo"] = BE.IndentNo;
+            var IndentNo = $('#IndentNo option:selected').text();
+            jQuery("#grdCard").jqGrid("clearGridData");
+            if (IndentNo != 'Select Indent No.') {
+                $http({
+                    method: 'POST',
+                    url: '/MMSTransaction/GetExistedIndenNo',
+                    data: { IndentType: IndentNo }
+                }).success(function (data) {
+                    debugger;
+                    for (var i = 0; i < data.Indentdetails.length; i++) {
+                        $scope.BE.ApprovedBy = data.Indentdetails[i].ApprovedBy;
+                    }
+                    //  $scope.Requestedby
+                    //  $scope.Deportments
+                    var reqval = data.Indentdetails[0].RequestedBy;
+                    var depval = data.Indentdetails[0].DeparmentName;
+
+
+                    console.log($scope.Requestedby);
+                    $scope.BE.RequestedBy = "";
+                    angular.forEach($scope.Requestedby, function (key, value) {
+                        //   alert(key.RequestedBy);
+                        // alert(reqval +""+ key.RequestedBy);
+                        if (reqval == key.RequestedBy)
+                            $scope.BE.RequestedBy = key.vchindentno;
+                    })
+                    $scope.BE.DeparmentName = "";
+                    console.log($scope.Deportments);
+                    angular.forEach($scope.Deportments, function (key, value) {
+                        // alert(key + "asdf" + value);
+                        if (depval == key.DeparmentName) {
+                            $scope.BE.DeparmentName = key.DeparmentCode;
+                        }
+                    })
+                    // Getting Availaibility Qty
+                    debugger;
+                    var length = data.Indentdetails.length;
+                    for (var i = 0; i < length; i++) {
+                        var storagename = data.Indentdetails[i].storagelocationname;
+                        var productname = data.Indentdetails[i].productname;
+                        var shelfname = data.Indentdetails[i].shelfname;
+
+                        angular.forEach($scope.vwavailableqty, function (value, key) {
+                            debugger;
+                            if (productname == value.productname) {
+                                console.log(value.productname);
+                                $scope.singleavadata = value;
+                                if (storagename == value.storagelocationname) {
+                                    if (shelfname == value.shelfname) {
+                                        //   $scope.lblavailabilty = value.AvailableQty;
+                                        //   $scope.BS.AvailableQty = value.AvailableQty;
+                                        data.Indentdetails[i].AvailableQty = value.AvailableQty;
+                                    }
+                                    //  $scope.lblavailabilty = value.AvailableQty;
+                                    //   $scope.BS.AvailableQty = value.AvailableQty;
+                                    data.Indentdetails[i].AvailableQty = value.AvailableQty;
+                                    // alert(data.Indentdetails[i].AvailableQty);
+                                }
+                                else {
+                                    $scope.singleavadata = [];
+                                    $scope.lblavailabilty = 0;
+                                }
+                            }
+                        });
+
+                    }
+
+
+
+                    OriginGridBinding(data.Indentdetails);
+
+                }).error(function (data) {
+                    $scope.message = 'Unexpected Error';
+                });
+            }
+            else {
+            }
+        }
+        $scope.Indentyperadio = function (BE) {
+            debugger;
+            if (BE.Indenttypenew == "New") {
+                debugger;
+                jQuery("#grdCard").jqGrid("clearGridData", true);
+                $scope.BE.vchdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+                $scope.btnSave = "Save";
+                $scope.isdisabled = false;
+                $scope.hidereorderindent = true;
+                $scope.BS.productname = '';
+                $scope.BE.DeparmentName = '';
+                $scope.lblCategory = '';
+                $scope.lblavailabilty = '';
+                $scope.lblmaxstock = '';
+                $scope.lblminstock = '';
+                $scope.lbluom = '';
+                $scope.lblsubcategory = '';
+                $scope.lblproducttype = '';
+                $scope.lblstoragelocationname = '';
+                $scope.lblshelfname = '';
+                // $scope.pim.v.productname = '';
+                $scope.BS.shelfname = '';
+                $scope.BS.storagelocationname = '';
+                $scope.BE.ApprovedBy = '';
+                $scope.BS.indentqty = '';
+                $scope.BE.IndentNo = '';
+                $scope.BE.RequestedBy = '';
+                $scope.ItemAddfrm.$setPristine();
+                $scope.fmProductDetails.$setPristine();
+                $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+                $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+
+                $scope.submitted = false;
+                $scope.submittedAdd = false;
+            }
+            if (BE.Indenttypenew == "modify") {
+                jQuery("#grdCard").jqGrid("clearGridData", true);
+                $scope.BE.vchdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+                $scope.btnSave = "Update";
+                $scope.isdisabled = false;
+                $scope.hidereorderindent = true;
+                $scope.BS.productname = '';
+                $scope.BE.DeparmentName = '';
+                $scope.lblCategory = '';
+                $scope.lblavailabilty = '';
+                $scope.lblmaxstock = '';
+                $scope.lblminstock = '';
+                $scope.lbluom = '';
+                $scope.BE.IndentNo = '';
+                $scope.lblsubcategory = '';
+                $scope.lblproducttype = '';
+                $scope.lblstoragelocationname = '';
+                $scope.lblshelfname = '';
+                // $scope.pim.v.productname = '';
+                //      $scope.pim.v.selected.productname = '';
+
+                $scope.BS.shelfname = '';
+                $scope.BS.storagelocationname = '';
+                $scope.BE.ApprovedBy = '';
+                $scope.BS.indentqty = '';
+                $scope.BE.RequestedBy = '';
+                $scope.ItemAddfrm.$setPristine();
+                $scope.fmProductDetails.$setPristine();
+                $scope.submitted = false;
+                $scope.submittedAdd = false;
+                $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+                $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+
+                //  $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+                //   $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+                //    $("#collapseExamplea").removeClass("btn btn-primary collapsed").addClass("btn btn-primary");
+                //   $("#collapseExample").removeClass("widget-box collapsed collapse").addClass("widget-box collapsed collapse in");
+                $scope.hideindentno = false;
+                $http({
+                    method: 'POST',
+                    url: '/MMSTransaction/GetExistedIndents',
+                    data: { Indents: BE.Indenttypenew }
+                }).success(function (data) {
+                    debugger;
+                    $scope.existedIndents = data.Indents;
+                }).error(function (data) {
+                    $scope.message = 'Unexpected Error';
+                });
+            }
+            else {
+                $scope.hideindentno = true;
+            }
+            if (BE.Indenttypenew == "reorder") {
+                //alert("Re-Order");
+                jQuery("#grdCard").jqGrid("clearGridData", true);
+                $scope.BE.vchdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+                $scope.btnSave = "Save";
+                $scope.isdisabled = false;
+                $scope.hidereorderindent = false;
+                $scope.BS.productname = '';
+                $scope.BE.DeparmentName = '';
+                $scope.BE.reorderIndentNo = '';
+                $scope.lblCategory = '';
+                $scope.lblavailabilty = '';
+                $scope.lblmaxstock = '';
+                $scope.lblminstock = '';
+                $scope.lbluom = '';
+                $scope.lblsubcategory = '';
+                $scope.lblproducttype = '';
+                $scope.BS.shelfname = '';
+                $scope.BS.storagelocationname = '';
+
+                $scope.lblstoragelocationname = '';
+                $scope.lblshelfname = '';
+                //  $scope.pim.v.selected.productname = '';
+                $scope.BE.ApprovedBy = '';
+                $scope.BS.indentqty = '';
+                $scope.BE.IndentNo = '';
+                $scope.BE.RequestedBy = '';
+                $scope.ItemAddfrm.$setPristine();
+                $scope.fmProductDetails.$setPristine();
+                $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+                $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+                $scope.submitted = false;
+                $scope.submittedAdd = false;
+                $scope.hideindentno = true;
+                $http({
+                    method: 'POST',
+                    url: '/MMSTransaction/GetReorderIndents',
+                    data: { Indents: BE.Indenttypenew }
+                }).success(function (data) {
+                    debugger;
+                    $scope.ReorderIndents = data.Indentdetails;
+
+                }).error(function (data) {
+                    $scope.message = 'Unexpected Error';
+                });
+            }
+            else {
+                $scope.hidereorderindent = true;
+            }
+        }
+        $scope.Save_IndentDetails = function (BS, BE) {
+            debugger;
+            $scope.submitted = true;
+            console.log($scope.ItemAddfrm.$error);
+            if ($scope.isFormValid) {
+                var griddata = $('#grdCard').jqGrid('getGridParam', 'data');
+                // alert(griddata);
+                //  var griddata = $("#grdCard").getRowData();
+                debugger;
+                BE.RequestedBy = $("#RequestedBy option:selected").text();
+                BE.DeparmentName = $("#DeparmentName option:selected").text();
+                $scope.SavedIndent = $("#IndentNo option:selected").text();
+                var gridlength = $('#grdCard').jqGrid('getGridParam', 'data').length;
+                if (gridlength != 0) {
+                    if ($scope.btnSave == "Update") {
+                        // For Saving The Material Indent
+                        var ansu = confirm($rootScope.msgUpdate);
+                        if (ansu) {
+                            $http({
+                                method: 'POST',
+                                url: '/MMSTransaction/UpdateIndentDetails/',
+                                data: { 'griddata': griddata, 'BE': BE }
+                            }).success(function (data) {
+                                debugger;
+                                if (data) {
+                                    // alert("Indent Details Updated Successfully");
+                                    window.open("/MMSReports/ProductIndentReports/?indent=" + ($scope.SavedIndent) + "", '_blank');
+                                    alert($scope.SavedIndent + "  Indent Details Updated Successfully");
+                                    $scope.hideindentno = true;
+                                    $scope.hidereorderindent = true;
+                                    $scope.LoadData();
+                                    $scope.ClearForm();
+                                    $scope.BE.Indenttypenew = "New";
+                                    $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+                                    $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+
+                                }
+                            })
+                       .error(function (data) {
+                           debugger;
+                           $scope.message = 'Unexpected Error';
+                       });
+                        }
+                    }
+
+                    if ($scope.btnSave == "Save") {
+                        BE["categoryname"] = $scope.lblCategory;
+                        BE["AvailableQty"] = $scope.lblavailabilty;
+                        BE["maxqty"] = $scope.lblmaxstock;
+                        BE["minqty"] = $scope.lblminstock;
+                        BE["uomname"] = $scope.lbluom;
+                        BE["subcategoryname"] = $scope.lblsubcategory;
+                        BE["producttype"] = $scope.lblproducttype;
+                        BE["productid"] = BS.lblproductid;
+                        BE["productcode"] = BS.lblproductcode;
+                        BE["productcategoryid"] = BS.lblproductcategoryid;
+                        BE["productsubcategoryid"] = BS.lblproductsubcategoryid;
+                        BE["productcategoryid"] = BS.lblproductcategoryid;
+
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+
+                            $http({
+                                method: 'POST',
+                                url: '/MMSTransaction/SaveIndentDetails/',
+                                data: { 'griddata': griddata, 'BE': BE }
+                            }).success(function (data) {
+                                debugger;
+                                if (data) {
+                                    debugger;
+                                    //alert("Indent Details Saved Successfully");
+                                    window.open("/MMSReports/ProductIndentReports/?indent=" + (data.indentno) + "", '_blank');
+                                    $scope.hideindentno = true;
+                                    $scope.hidereorderindent = true;
+                                    alert(data.indentno + "   Indent Details Saved Successfully");
+                                    $scope.ClearForm();
+                                    $scope.LoadData();
+                                    $scope.BE.Indenttypenew = "New";
+                                    $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+                                    $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+                                }
+                            })
+                         .error(function (data) {
+                             debugger;
+                             console.log(data);
+                             $scope.message = 'Unexpected Error';
+                             alert($scope.message);
+                         });
+                        }
+                    }
+                }
+                else {
+                    alert("Please Add The Product Details In Grid");
+                }
+            }
+        }
+
+        //****************** Clear Functions  ************************//
+
+        $scope.ClearForm = function () {
+            $scope.LoadData();
+            $scope.BS = {};
+            $scope.BE = {};
+            jQuery("#grdCard").jqGrid("clearGridData");
+            $scope.btnSave = "Save";
+            $scope.btnAdd = "Add";
+            $scope.BE.Indenttypenew = "New";
+            $scope.Indentyperadio('New');
+            $scope.isdisabled = false;
+            $scope.BE.vchdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+            $scope.ItemAddfrm.$setPristine();
+            $scope.fmProductDetails.$setPristine();
+            $scope.submitted = false;
+            $scope.submittedAdd = false;
+            $("#collapseExamplea").removeClass("btn btn-primary").addClass("btn btn-primary collapsed");
+            //   $("#collapseExamplea").attr("aria - expanded", "false");
+            $("#collapseExample").removeClass("widget-box collapsed collapse in").addClass("widget-box collapsed collapse");
+
+            $scope.GridClear();
+        }
+        $scope.GridClear = function () {
+            debugger;
+            // $scope.LoadData();
+            pim.v.selected = {};
+            $scope.BS.indentqty = "";
+            $scope.BS.productname = "";
+            $scope.BS.storagelocationname = "";
+            $scope.BS.shelfname = "";
+            $scope.BS.lblproductcategoryid = "";
+            $scope.BS.lblproductcode = "";
+            $scope.BS.lblproductid = "";
+            $scope.BS.lblproductsubcategoryid = "";
+            $scope.lblCategory = '';
+            $scope.lblavailabilty = '';
+            $scope.lblmaxstock = '';
+            $scope.lblminstock = '';
+            $scope.lbluom = '';
+            $scope.lblsubcategory = '';
+            $scope.lblproducttype = '';
+            $scope.lblstoragelocationname = '';
+            $scope.lblshelfname = '';
+            $scope.btnAdd = "Add";
+            $scope.isdisabled = false;
+            $scope.BE.vchdate = $filter('date')(new Date(), 'dd-MM-yyyy');
+            $scope.ItemAddfrm.$setPristine();
+            $scope.fmProductDetails.$setPristine();
+            $scope.submittedAdd = false;
+        }
+
+        //************** Add Function For Grid  ************************//
+
+        $scope.AddProductDetalis = function (BS, BE) {
+            debugger;
+            // Checking Grdi Duplicate data
+            $scope.submittedAdd = true;
+            var griddata = $('#grdCard').jqGrid('getGridParam', 'data');
+            var chekcproductname = $scope.BS.productname;
+            // if (griddata.length != 0) {
+            var grdcount = 0;
+            if ($scope.btnAdd != "Update") {
+                for (var i = 0; i < griddata.length; i++) {
+                    var gridproductdata = griddata[i].productname;
+                    //   var checkuom = $scope.lbluom;
+                    //   var grduomname = griddata[i].uomname;
+                    //  alert(chekcproductname + "==" + gridproductdata);
+                    //   alert("uoms" + grduomname + " chekcuom" + checkuom);
+                    if (chekcproductname == gridproductdata) {
+                        grdcount++;
+                    }
+                }
+                if (grdcount <= 0) {
+                    Externalgridadd(BS);
+                } else {
+                    // alert(chekcproductname + "   Product Name Already Existed Please Add Another Product");
+                    alert("Product " + chekcproductname + " Already Existed. Please Add Another Product");
+                    // alert("Prodcut Already Exist In Grid");
+                    $scope.GridClear();
+                }
+                //  $("#grdCard").jqGrid("delRowData", row);
+            }
+            if ($scope.btnAdd == "Update") {
+                Externalgridadd(BS);
+            }
+        }
+        function Externalgridadd(BS) {
+            debugger;
+            $scope.SavedIndent = $("#IndentNo option:selected").text();
+            BS["categoryname"] = $scope.lblCategory;
+            BS["AvailableQty"] = $scope.lblavailabilty;
+            BS["maxqty"] = $scope.lblmaxstock;
+            BS["minqty"] = $scope.lblminstock;
+            BS["uomname"] = $scope.lbluom;
+            BS["subcategoryname"] = $scope.lblsubcategory;
+            BS["producttype"] = $scope.lblproducttype;
+            BS["IndentNo"] = $scope.SavedIndent;
+            // Hidden Data To Save
+            BS["productid"] = BS.lblproductid;
+            BS["productcode"] = BS.lblproductcode;
+            BS["productcategoryid"] = BS.lblproductcategoryid;
+            BS["productsubcategoryid"] = BS.lblproductsubcategoryid;
+            BS["storagelocationname"] = $scope.lblstoragelocationname;
+            BS["shelfname"] = $scope.lblshelfname;
+            //alert(pim.v.selected.productname.productname);
+            BS["productname"] = pim.v.selected.productname.productname;
+            debugger;
+            $scope.submittedAdd = true;
+            var storagearestxt = $("#storagelocationname option:selected").text();
+            var storagearesvalue = $("#storagelocationname option:selected").val();
+            var rowcount2 = $('#grdCard');
+            var rowcount = $('#grdCard')[0].rows.length;
+            if ($scope.isFormValidAdd) {
+                if (angular.isDefined(BS.row)) {
+                    row = parseInt(BS.row) + 1;
+                }
+                if ($scope.btnAdd == "Add") {
+                    BS["storagetext"] = storagearestxt;
+                    BS["storagevalue"] = storagearesvalue;
+                    rowcount = rowcount + 1;
+                    //$('#grdCard').jqGrid("addRowData", rowcount, BS, "last");
+                    $("#grdCard").jqGrid('addRowData', $("#grdCard").getGridParam("reccount") + 1, $scope.BS);
+                    // $("#grdCard").addRowData(5, $scope.BS);
+                }
+                if ($scope.btnAdd == "Update") {
+                    console.log($scope.BS.indentqty);
+                    BS["storagetext"] = storagearestxt;
+                    BS["storagevalue"] = storagearesvalue;
+                    console.log($scope.BS);
+                    // alert($scope.TempRow);
+                    $('#grdCard').jqGrid("setRowData", $scope.TempRow, $scope.BS, "last");
+                }
+                $scope.GridClear();
+            }
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            var grid_data = data;
+            var grid_selector = "#grdCard";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 75, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='angular.element(this).scope().edit(" + options.rowId + ")'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='angular.element(this).scope().Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'Record Id', name: 'recordid2', width: 100, editable: false, hidden: true },
+                        { label: 'Indent No', name: 'IndentNo', width: 100, editable: false, hidden: true },
+                { label: 'Product Name', name: 'productname', width: 100, editable: false, sortable: false },
+                  { label: 'ProductId', name: 'productid', width: 80, editable: false, hidden: true },
+                { label: 'Category', name: 'categoryname', width: 80, editable: false, hidden: true },
+                { label: 'Subcategory', name: 'subcategoryname', width: 120, editable: false, hidden: true },
+                { label: 'Product Type', name: 'producttype', width: 100, editable: false, hidden: true },
+                { label: 'UOM', name: 'uomname', width: 80, editable: false, sortable: false },
+                 { label: 'Indent UOM', name: 'UOM', width: 100, editable: false, hidden: true },
+
+                { label: 'Min. Stock', name: 'minqty', width: 80, editable: false, hidden: true },
+                { label: 'Max. Stock', name: 'maxqty', width: 80, editable: false, hidden: true },
+                { label: 'Available Qty.', name: 'AvailableQty', width: 100, editable: false, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' } },
+
+                  { label: 'Indent Qty.', name: 'indentqty', width: 100, editable: true, sortable: false, formatter: 'number', formatoptions: { decimalSeparator: ".", decimalPlaces: 3, defaultValue: '0.000' } },
+                   { label: 'Storage Location', name: 'storagelocationname', width: 150, editable: false },
+                   { label: 'Storage Area1', name: 'storagetext', width: 150, editable: false, sortable: false, hidden: true },
+                   { label: 'Storage AreaCode', name: 'storagevalue', width: 100, editable: false, hidden: true },
+                   { label: 'storageareavalue2', name: 'storagelocationcode', width: 100, editable: false, hidden: true },
+                { label: 'Shelf Name', name: 'shelfname', width: 100, editable: false, sortable: false },
+
+                { lable: 'ProductId', name: 'productid', width: 100, editable: false, hidden: true },
+        { lable: 'Product Code', name: 'productcode', width: 100, editable: false, hidden: true },
+        { lable: 'Product CategoryId', name: 'productcategoryid', width: 100, editable: false, hidden: true },
+        { lable: 'Product SubCategoryId', name: 'productsubcategoryid', width: 100, editable: false, hidden: true }
+                ],
+                viewrecords: true,
+
+                //  rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                //onSelectRow: editRow,
+                loadComplete: function (id) {
+                    var table = this;
+                    if ($('#grdCard').getGridParam('records') === 0) {
+                        var oldGrid = $('#productname tbody').html();
+                        //$('#grdCard tbody').html("<div style='padding:6px;background:#D8D8D8'>No records found</div>");
+                    }
+                    else
+                        var oldGrid = $('#productname tbody').html();
+                    oldGrid = "";
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                caption: "Indent Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+        }
+        // $scope.lastSelection = 0;
+        //function editRow(id) {
+        //    var grid = $("#grdCard");
+        //    debugger;
+        //    grid.jqGrid('saveRow', $scope.lastSelection);
+        //    grid.jqGrid("editRow", id, { keys: true });
+        //    $scope.lastSelection = id;
+        //}
+    });
+</script>

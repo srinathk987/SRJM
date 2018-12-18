@@ -1,0 +1,101 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="VendorItemListReportController">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="VendorItemListReportController" name="fmVendorReport" ng-init="LoadVendors()">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Vendor Name <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-model="Ven.vendorid" class=" form-control" name="Venodr" ng-options="c.vendorid as c.vchvendorname for c in VendorDetails" required>
+                                        <option value="">Select Vendor Name</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmVendorReport.Venodr.$dirty || vendorsubmitted ) && fmVendorReport.Venodr.$error.required">
+                                        Vendor Name required!
+                                    </span>
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="btn btn-success" type="button" ng-click="PrintVendorReport(Ven.vendorid)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('VendorItemListReportController', function ($scope, $http, $rootScope) {
+        $scope.Ven = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Vendor Item List";
+        $scope.isVendorFormValid = false;
+        $scope.vendorsubmitted = false;
+        $scope.$watch('fmVendorReport.$valid', function (newValue) {
+            $scope.isVendorFormValid = newValue;
+        });
+
+        $scope.LoadVendors = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/ShowVendors/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.VendorDetails = eval('(' + data.Data + ')');
+
+            });
+        }
+
+        $scope.PrintVendorReport = function (VendorId) {
+            debugger
+            $scope.vendorsubmitted = true;
+            if ($scope.isVendorFormValid) {
+                if (VendorId != null) {
+                    if (VendorId == 0) {
+                        VendorId = 'ALL';
+                    }
+                    var w = window.open("/MMSReports/VendorItemList/?VendorID=" + VendorId + "", '_blank');
+                    $scope.Ven = {};
+                    $scope.fmVendorReport.$setPristine();
+                    $scope.vendorsubmitted = false;
+                }
+            }
+        }
+
+
+    });
+</script>
+

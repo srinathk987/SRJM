@@ -1,0 +1,145 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="GRNReportController" ng-init="ngInitBindComboBoxes()">
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> GRN WISE REPORT </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="GRNReportController" name="fmGRNReport"
+                               novalidate>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="GRN.fromdate" placeholder="Select From Date" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmGRNReport.FromDate.$dirty || submitted ) && fmGRNReport.FromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="ToDate" type="text" id="datepicker" class=" form-control" placeholder="Select To Date" ng-model="GRN.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmGRNReport.ToDate.$dirty || submitted ) && fmGRNReport.ToDate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Vendor Name <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="GRN.vchvendorname=0" ng-model="GRN.vchvendorname" class=" form-control" name="vchvendorname" ng-options="c.vendorid as c.vchvendorname for c in VENDORNAMES" required></select>
+                                    <span class="error" ng-show="(fmGRNReport.vchvendorname.$dirty || submitted ) && fmGRNReport.vchvendorname.$error.required">
+                                        Vendor Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintGRNReport(GRN)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script>
+    var app = angular.module('RMS');
+    app.controller('GRNReportController', function ($scope, $http, $rootScope) {
+        $scope.GRN = {};        
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "GRN Wise Report";
+
+        $scope.isFormValid = false;
+        $scope.GRN.vchvendorname = 0;
+        $scope.$watch('fmGRNReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/GetGRNvendornames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.VENDORNAMES = eval('(' + data.Data + ')');                
+            });          
+
+        }
+        $scope.checkDate = function (date1, date2) {
+
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+
+                return false;
+            else
+                return true;
+        }
+
+        $scope.PrintGRNReport = function (GRN) {
+            debugger
+            $scope.submitted = true;
+            debugger;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+
+                    var w = window.open("/MMSReports/GetGrnReport/?fromdate=" + GRN.fromdate + "&todate=" + GRN.todate + "&vendorid=" + GRN.vchvendorname + "", '_blank');
+                    $scope.GRN = {};                    
+                    $scope.submitted = false;
+                    $scope.GRN.vchvendorname = 0;          
+                    $('#calendar').datepicker('setDate', null);                    
+                    $('#datepicker').datepicker('setDate', null);                   
+                    $scope.fmGRNReport.$setPristine();
+                   
+                }
+                else {
+                    alert("From Date Should Be LessThan To Date");
+                }
+            }
+
+        }  
+    });
+</script>

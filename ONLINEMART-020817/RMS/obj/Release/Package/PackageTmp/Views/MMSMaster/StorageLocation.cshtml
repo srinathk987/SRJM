@@ -1,0 +1,263 @@
+﻿@{
+    //ViewBag.Title = "StorageLocation";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('StorageLocationController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.SL = {};
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Storage Location";
+        $rootScope.ModuleName = "MMS Masters";
+        $scope.LoadData = function () {
+            $http({
+                url: '/MMSMaster/ShowStorageLocation/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+        $scope.$watch('fmStorageLocation.$valid', function (newValue) {
+            debugger
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.Save = function (SL) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http.post('/MMSMaster/SaveStorageLocation', SL).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Storage Location Details Saved Successfully");
+                                $scope.LoadData();
+                                $('gpStorageLocation').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                            } else {
+                                alert("Storage Location  Name  Already Exist");
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+                }
+                else {
+
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $http.post('/MMSMaster/UpdateStorageLocation', SL).success(function (data) {
+                            if (data == 0) {
+                                debugger
+                                alert("Storage Location Details Updated Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+                            } else {
+                                alert("Storage Location  Name  Already Exist");
+                                //alert("Cannot Update Storage Location Details as it is in use by the application");
+                            }
+                        }).error(function (data) {
+                            alert("Error found");
+                        });
+                    }
+                }
+
+                // }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            $('#txtName').focus();
+            $scope.SL = {};
+            $scope.btnSave = "Save";
+            $scope.fmStorageLocation.$setPristine();
+            $scope.submitted = false;
+        }
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+            var grid_data = data;
+            var grid_selector = "#gpStorageLocation";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+            { label: 'RecordId', name: 'RecordId', width: 75, hidden: true },
+            { label: 'Storage Location Code', name: 'StorageLocationCode', width: 90 },
+            { label: 'Storage Location Name', name: 'StorageLocationName', width: 75 },
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+                caption: "Storage Location <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+            });
+            $(window).triggerHandler('resize.jqGrid');
+        }
+
+    });
+</script>
+<div class="page-content" ng-controller="StorageLocationController" ng-init="LoadData()">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmStorageLocation" novalidate>
+
+                <div class="form-group" hidden>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                        Storage Location Code <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Code" ng-model="SL.StorageLocationCode" placeholder="Storage Location Code" class="form-control" maxlength="10" kit-alpha-numeric
+                               type="text" />
+                        <span class="error" ng-show="(fmStorageLocation.Code.$dirty || submitted) && fmStorageLocation.Code.$error.required">
+                            Storage Location Code required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Storage Location Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Name" id="txtName" ng-model="SL.StorageLocationName" placeholder="Enter Storage Location Name" maxlength="100" kit-alpha-numeric autofocus
+                               class="form-control" required type="text" kt-focus data-index="1" />
+                        <span class="error" ng-show="(fmStorageLocation.Name.$dirty || submitted ) && fmStorageLocation.Name.$error.required">
+                            Storage Location Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="Save(SL)" data-index="2">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpStorageLocation"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+
+<script type="text/javascript">
+    var appElement = document.querySelector('[ ng-controller=StorageLocationController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpStorageLocation"))
+    }
+    function edit(row) {
+        debugger;
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowData = $("#gpStorageLocation").getRowData(row);
+        $http.post('/MMSMaster/CheckStorageLocation', rowData).success(function (data) {
+            debugger;
+            if (data == 1) {
+                $scope.btnSave = "Update";
+                $scope.SL = rowData;
+                $scope.$apply();
+            }
+            else{
+                alert("Cannot update Storage Location Details  as it is in use by the application");
+            }
+        })
+    }
+    function Delete(row) {
+        var $scope = angular.element(appElement).scope();
+        if ($scope.btnSave == "Save") {
+            var $http = angular.element(appElement).injector().get('$http');
+            var rowdata = $("#gpStorageLocation").getRowData(row);
+            debugger;
+            $http.post('/MMSMaster/CheckStorageLocation', rowdata).success(function (data) {
+                debugger;
+                if (data == 1) {
+
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+                    if (ans) {
+                        $http({
+                            url: '/MMSMaster/DeleteStorageLocation/',
+                            method: "POST",
+                            data: { SL: rowdata.RecordId }
+                        }).success(function (data) {
+                            if (data == true) {
+                                alert("Storage Location Details Deleted Successfully");
+                                $('#gpStorageLocation').jqGrid('delRowData', row);
+                                $scope.LoadData();
+                            }
+                            else if (data == false) {
+                                alert("Deletion Failed");
+                            }
+                        })
+                    }
+                }
+                else
+                {
+                    alert("Cannot Delete Storage Location Details  as it is in use by the application");
+                }
+            })
+
+        }
+        else {
+            alert("Cannot Delete Storage Location Details in Editable Mode.");
+        }
+    }
+</script>

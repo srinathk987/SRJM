@@ -1,0 +1,7 @@
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Release\RMS.Infrastructure.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Release\RMS.Infrastructure.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Release\RMS.Core.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\bin\Release\RMS.Core.pdb
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\obj\Release\RMS.Infrastructure.csprojResolveAssemblyReference.cache
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\obj\Release\RMS.Infrastructure.dll
+D:\AGROSTORE-VSS\ONLINEMART-020817\RMS.Infrastructure\obj\Release\RMS.Infrastructure.pdb

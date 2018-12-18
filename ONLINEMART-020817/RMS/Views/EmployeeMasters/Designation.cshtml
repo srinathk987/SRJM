@@ -1,0 +1,441 @@
+﻿@{
+    //ViewBag.Title = "Designation";
+    Layout = "~/Views/Shared/_HRMSLayoutPage.cshtml";
+    //Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<script>
+    var app = angular.module('RMS');
+    app.controller('Designationcontroller', function ($scope, $http, $rootScope) {
+        debugger;
+        $scope.btnSave = "Save";
+        //$rootScope.ControllerName = "Employee Masters";
+        //$rootScope.PageName = "Designation";
+
+        $rootScope.FormName = "Designation";
+        $rootScope.ModuleName = "Employee Masters";
+
+        //Validations
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.$watch('Designationfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+
+        });
+
+
+        //Page Load Grid Bind
+        $http.get('/EmployeeMasters/ShowDesignation/')
+            .success(function (data) {
+                debugger;
+                BindGrid(data.Data);
+            });
+
+        //Save And  Grid Bind
+        $scope.Save = function (Desi) {
+            debugger;
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var text = $scope.btnSave;
+                //Save
+                if (text == "Save") {
+
+                    var DesignationDetails = JSON.stringify(Desi);
+                    var ans = window.confirm("Are you sure?Do you want to Save?");
+                    if (ans) {
+                        $http({
+                            url: '/EmployeeMasters/CreateDesignation/',
+                            method: "POST",
+                            data: { 'JsonData': DesignationDetails }
+
+                        }).success(function (data) {
+                            debugger;
+                            if (data.TorF == true) {
+
+                                $scope.Desi = "";
+
+                                $scope.submitted = false;
+                                $scope.Designationfrm.$setPristine();
+                                alert(" Designation Saved Successfully !");
+
+                                BindGrid(data.Data);
+                                $scope.btnSave = "Save";
+
+                            }
+                            else {
+                                alert(" Designation Already Exist !");
+                            }
+                        });
+                    }
+                }
+
+                //Update
+                if (text == "Update") {
+                    var recirdid = $scope.Recordid;
+
+                    var DesignationDetails = JSON.stringify(Desi);
+                    var ans = window.confirm("Are you sure?Do you want to Update?");
+                    if (ans) {
+                        $http({
+                            url: '/EmployeeMasters/UpdateDesignation/',
+                            method: "POST",
+                            data: { 'id': recirdid, 'JsonData': DesignationDetails }
+
+                        }).success(function (data) {
+                            debugger;
+                            if (data.TorF == true) {
+                                $scope.Desi = "";
+                                $scope.btnSave = "Save";
+                                $scope.submitted = false;
+                                $scope.Designationfrm.$setPristine();
+                                alert(" Designation Updated Successfully!");
+                                BindGrid(data.Data);
+
+                            }
+                            else {
+                                alert(" Designation Already Exist !");
+                                $scope.reset();
+                            }
+
+                        });
+                    }
+
+                }
+            }
+            else {
+
+                //                    alert("Please Fill the Details..");
+
+            }
+        }
+        // Reset
+        $scope.reset = function () {
+            debugger;
+            $scope.Desi = "";
+            $scope.$apply();
+            $scope.btnSave = "Save";
+            $scope.Designationfrm.$setPristine();
+            $scope.submitted = false;
+        }
+        // Grid Data
+        function BindGrid(data) {
+
+            var jsonObjdata = eval('(' + data + ')');
+            var dataModel = {};
+            var colM = {};
+            var obj = {
+
+                width: 100,
+                height: 300,
+                scrollModel: { autoFit: true },
+                showBottom: true,
+                editable: false,
+                selectionModel: { type: 'cell' },
+                title: "Designation Details",
+                numberCell: { show: true },
+                columnBorders: false,
+                resizable: false,
+                wrap: false,
+                hwrap: false,
+                pageModel: { type: "local", rPP: 10, strRpp: "{0}", strDisplay: "{0} to {1} of {2}" }
+            };
+
+
+
+            var obj = {
+                scrollModel: { autoFit: true },
+                selectionModel: { type: 'row' },
+                hoverMode: 'cell',
+                pageModel: { type: 'local' },
+                filterModel: { mode: 'OR' },
+            };
+
+            obj.dataModel = {
+                data: jsonObjdata
+            };
+            var colM = [
+                {
+                    title: "", editable: false, width: 105, sortable: false, render: function (ui) {
+                        return "<button type='button' class='btn btn-default edit_btn'>Edit</button>\
+                            <button type='button' class='btn btn-default delete_btn'>Delete</button>";
+                    }
+                },
+                { title: "Recordid", width: 200, dataIndx: "recordid", hidden: true },
+                { title: "Designation", width: 200, dataIndx: "vchdesignation", render: filterRender },
+                { title: "Description", width: 200, dataIndx: "vchdescription", render: filterRender },
+            ];
+        obj.colModel = colM;
+        //obj.filterModel = { mode: 'OR' }
+
+        obj.toolbar = {
+
+            cls: "pq-toolbar-search",
+            items: [
+
+               { type: 'textbox', attr: 'placeholder="Enter your keyword"', cls: "col-md-3 form-control-search filterValue", listeners: [{ 'keyup': filterhandler }] }
+// {type: "<span style='margin:10px;'></span>" }
+            ]
+        };
+
+        obj.refresh = function () {
+            debugger;
+            var $grid = $(this);
+            if (!$grid) {
+                return;
+            }
+
+            //delete button
+            $grid.find("button.delete_btn").button({ icons: { primary: 'ui-icon-close' } }).unbind("click").bind("click", function (evt) {
+                debugger;
+                if ($scope.btnSave == 'Save') {
+                    var $tr = $(this).closest("tr"),
+                    rowIndx = $grid.pqGrid("getRowIndx", { $tr: $tr }).rowIndx;
+                    var rowData = $grid.pqGrid("getRowData", { rowIndx: rowIndx });
+                    var DesignationDetails = JSON.stringify(rowData);
+
+                    $http({ url: '/EmployeeMasters/CheckDesignation/', method: "POST", data: { 'JsonData': DesignationDetails } }).success(function (data) {
+
+                        debugger;
+                        if (data) {
+
+                            $grid.pqGrid("deleteRow", { rowIndx: rowIndx, effect: true });
+                            var ans = window.confirm("Are you sure to Delete record?");
+                            if (ans) {
+                                $http({
+                                    url: '/EmployeeMasters/DeleteDesignation/',
+                                    method: "POST",
+                                    data: { 'id': rowData.recordid }
+
+                                }).success(function (data) {
+                                    debugger;
+
+                                    if (data.TorF = true) {
+
+                                        BindGrid(data.Data);
+
+
+                                        alert("Designation Details Deleted Successfully !");
+
+                                    }
+
+                                    BindGrid(data.Data);
+
+                                });
+                            }
+                        }
+                        else {
+                            alert('Cannot Delete the Designation as it is in use by the application');
+
+                        }
+
+                    });
+                }
+
+            });
+
+
+
+            ///////////
+
+
+
+            function filterhandler(evt, ui) {
+                debugger
+                var $toolbar = $grid.find('.pq-toolbar-search'),
+                    $value = $toolbar.find(".filterValue"),
+                    value = $value.val(),
+                    condition = "contain",
+                    dataIndx = $toolbar.find(".filterColumn").val(),
+
+
+                    filterObject = [];
+                var CM = $grid.pqGrid("getColModel");
+                for (var i = 0, len = CM.length; i < len; i++) {
+                    var dataIndx = CM[i].dataIndx;
+                    filterObject.push({ dataIndx: dataIndx, condition: condition, value: value });
+                }
+
+                $grid.pqGrid("filter", {
+                    oper: 'replace',
+                    data: filterObject
+                });
+            }
+            function filterRender(ui) {
+
+                var val = ui.cellData,
+                    filter = ui.column.filter;
+                if (filter && filter.on && filter.value) {
+
+
+                    var valUpper = val.toUpperCase();
+                    var txt = filter.value;
+                    txt = (txt == null) ? "" : txt.toString();
+                    var txtUpper = txt.toUpperCase();
+
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx >= 0) {
+                        var txt1 = val.substring(0, indx);
+                        var txt2 = val.substring(indx, indx + txt.length);
+                        var txt3 = val.substring(indx + txt.length);
+                        return txt1 + "<span style='background:green; color:#ffffff;'>" + txt2 + "</span>" + txt3;
+                    }
+                    else {
+                        return val;
+                    }
+                }
+                else {
+                    return val;
+                }
+            }
+
+
+
+
+
+
+
+
+            /////////////
+
+            //edit button
+            $grid.find("button.edit_btn").button({ icons: { primary: 'ui-icon-pencil' } }).unbind("click").bind("click", function (evt) {
+                debugger;
+                var $tr = $(this).closest("tr"),
+                    rowIndx = $grid.pqGrid("getRowIndx", { $tr: $tr }).rowIndx;
+                var rowData = $grid.pqGrid('getRowData', { rowIndx: rowIndx });
+                var DesignationDetails = JSON.stringify(rowData);
+
+
+                $http({ url: '/EmployeeMasters/CheckDesignation/', method: "POST", data: { 'JsonData': DesignationDetails } }).success(function (data) {
+                    debugger;
+                    if (data) {
+                        $scope.btnSave = "Update";
+                        $scope.Desi = Object.assign({}, rowData);
+                        $scope.$apply();
+                        $scope.btnSave = "Update";
+                        $scope.Recordid = rowData.recordid;
+                    }
+                    else {
+                        alert('Cannot edit the Designation as it is in use by the application');
+
+                    }
+                });
+
+            });
+
+            //rows which were in edit mode before refresh, put them in edit mode again.
+            //                var rows = $grid.pqGrid("getRowsByClass", { cls: 'pq-row-edit' });
+            //                if (rows.length > 0) {
+            //                    var rowIndx = rows[0].rowIndx;
+            //                    editRow(rowIndx, $grid);
+
+
+            //                }
+        };
+
+
+
+        $("#grid_Designation").removeData();
+        $grid = $("#grid_Designation").pqGrid(obj);
+
+    }
+
+    });
+</script>
+<style>
+    .pq-toolbar-search input[type=text] {
+        padding: 5px;
+        float: right;
+    }
+
+    .pq-toolbar-search input[type=text], .pq-grid-footer input[type=text] {
+        width: auto !important;
+    }
+</style>
+
+<div class="panel-body" ng-controller="Designationcontroller">
+    <div class="bs-example">
+        <div class="panel-group" id="accordion">
+            <div class="panel default">
+                @*<header class="panel-heading">
+                        <h4 class="panel-title">
+                            Designation
+                            <span class="tools pull-right">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="fa fa-chevron-down"></a>
+                            </span>
+                        </h4>
+                    </header>*@
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <form id='formBody' name="Designationfrm" class="FlowupLabels form-horizontal" novalidate>
+                            <div class='form-group'>
+                                <label class="col-md-2 control-label">
+                                    Designation <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control " name="DesignationName" placeholder="Enter Designation"
+                                           autofocus ng-model="Desi.vchdesignation" ng-maxlength="50" maxlength="50" required
+                                           ng-pattern="/^[a-zA-Z0-9.&-() ]*$/">
+                                    <span class="error" ng-show="(Designationfrm.DesignationName.$dirty || submitted) && Designationfrm.DesignationName.$error.required">
+                                        Designation required!
+                                    </span> <span class="error" ng-show="Designationfrm.DesignationName.$error.maxlength">
+                                        Enter Only 50 characters
+                                    </span><span class="error" ng-show="Designationfrm.DesignationName.$error.pattern">
+                                        Enter letters and numbers only
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                            </div>
+                            <div class='form-group'>
+                                <label class="col-md-2 control-label">
+                                    Description :
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control " name="Description" placeholder="Enter Description"
+                                           ng-model="Desi.vchdescription" ng-maxlength="150" maxlength="150" ng-pattern="/^[a-zA-Z0-9 ]*$/">
+                                    <span class="error" ng-show="(Designationfrm.Description.$dirty || submitted) && Designationfrm.Description.$error.required">
+                                        Description required!
+                                    </span><span class="error" ng-show="Designationfrm.Description.$error.maxlength">
+                                        Enter Only 150 characters
+                                    </span><span class="error" ng-show="Designationfrm.Description.$error.pattern">
+                                        Enter letters and numbers only
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8">
+                                    <div class="pull-right">
+                                        <button ng-click="Save(Desi)" class="btn btn-primary">
+                                            <i class="fa fa-save"></i>{{btnSave}}
+                                        </button>
+                                        <button ng-click="reset(Desi)" class="btn btn-danger">
+                                            <i class="fa fa-times"></i>Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <header class="panel-heading">
+            <h4 class="panel-title">
+                Designation Details
+                <span class="tools pull-right">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="fa fa-chevron-down"></a>
+                </span>
+            </h4>
+        </header>
+        <div id="collapseTwo" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div id="grid_Designation">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

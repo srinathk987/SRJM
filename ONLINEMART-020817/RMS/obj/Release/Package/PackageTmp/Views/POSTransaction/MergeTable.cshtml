@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "MergeTable";
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+
+<script src="~/Scripts/multidropdown.js"></script>
+@*<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-route.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-sanitize.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-touch.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.16/angular-animate.js"></script>*@
+<script src="~/Scripts/lodash.min.js"></script>
+@*<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>*@
+@*<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+<script type="text/javascript" src="https://rawgit.com/pc035860/angular-highlightjs/master/angular-highlightjs.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.js"></script>*@
+<script type="text/javascript" src="src/angularjs-dropdown-multiselect.js"></script>
+
+<div ng-controller="kotMergeController" ng-init="GetFromTableName();">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-sm-3 ">
+            </div>
+            <div class="col-sm-6">
+
+                <div class="page-header">
+                    <h1>
+                        Merge Table<small><i class="ace-icon fa fa-angle-double-right"></i></small>
+                    </h1>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-box">
+                        <div class="widget-main">
+                            <!-- PAGE CONTENT BEGINS -->
+                            <form class="form-horizontal" role="form" name="kotCancelMasterfrm" novalidate>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                                        From Table No. :
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="txtTableNO" class="form-control" disabled ng-model="FromTable" />
+                                    </div>
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        Table No :
+                                    </label>
+
+
+
+                                    <div ng-dropdown-multiselect="" options="example6data" tableid="kottt" selected-model="example6model" ng-model="dfdsf" translation-texts="example5customTexts" extra-settings="example6settings" checkboxes="true"></div>
+                                    @*<multiselectdropdown maxlenghttoshowselectedvalues="100" onchangeeventofcheckbox="setTabDirty()"
+                                        model="selectedOptions" multiselectoptions="options"></multiselectdropdown>*@
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6 control-label no-padding-right" for="form-field-1" ng-model="kOTID">
+                                        Kot No. : <div style="padding:5px; width:auto; min-height:100px; border:1px solid #ddd;"> {{kottt}} </div>
+                                    </label>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-9 ">
+                                        <button class="btn btn-success pull-right" type="button" ng-click="SaveMerge()">
+                                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 ">
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script>
+
+    var app = angular.module('RMS');
+    app.controller('kotMergeController', function ($scope, $http) {
+        debugger;
+
+        $scope.btnSave = "Save";
+
+
+        $scope.GetFromTableName = function () {
+            debugger;
+            $http({
+                url: '/POSTransaction/getData/',
+                method: "get"
+            }).success(function (data) {
+                debugger
+                $('#txtTableNO').val(data.split('-')[0]);
+                $scope.TableNo = data.split('-')[0];
+                $scope.FromTable = data.split('-')[0];
+
+                $http({
+                    url: '/POSTransaction/getTableNoS/',
+                    method: "POST",
+                    data: { TableId: $scope.FromTable }
+                }).success(function (data) {
+
+                    var obj = JSON.parse(data.jsonString);
+                    $scope.example6model = [];
+                    $scope.example6data = obj;
+                });
+            });
+        }
+
+        $scope.MultiSelectChange = function () {
+
+            alert('hai');
+        }
+
+        $scope.getTables = function () {
+
+            debugger;
+            Tableselected = "";
+            TableselectedText = "";
+            var tab = $scope.selectedOptions;
+            for (var i = 0; i < tab.length; i++) {
+
+                Tableselected = Tableselected + "," + (tab[i].value);
+                TableselectedText = TableselectedText + "," + (tab[i].text + "-" + tab[i].value);
+            }
+            Tableselected = Tableselected.substring(1);
+            TableselectedText = TableselectedText.substring(1).split(',');
+            $scope.TabledText = TableselectedText;
+
+            $http({
+                url: '/POSTransaction/getKotNo/',
+                method: "POST",
+                data: { JsonData: Tableselected }
+            }).success(function (data) {
+
+                $scope.kOTID = data.KOT;
+                if ($scope.kOTID != "") {
+                    datatosave = [];
+                    var ss = data.DD.split(',');
+                    for (var j = 0; j < ss.length; j++) {
+
+
+                        ssh = ss[j].split('-');
+
+                        var string = { id: ssh[0], Kotid: ssh[1] }
+                        datatosave.push(string);
+                    }
+
+
+                    for (var R = 0; R < $scope.TabledText.length; R++) {
+
+                        var id = $scope.TabledText[R].split('-')[1];
+                        for (var U = 0; U < datatosave.length; U++) {
+
+                            var dataid = datatosave[U].id;
+                            if (dataid == id) {
+                                datatosave[U]["tablesname"] = $scope.TabledText[0].split('-')[0];
+                            }
+                        }
+                    }
+
+                    $scope.koTdata = JSON.stringify(datatosave);
+                }
+                else {
+
+                    alert("KOT Not Availale !");
+
+                }
+            });
+
+        }
+
+        $scope.SaveMerge = function () {
+            debugger;
+
+            // $scope.koTdata = $scope.example6model;
+            if ($scope.kottt !== undefined && $scope.kottt.length != 0) {
+                var ans = window.confirm("Are you sure?Do you want to Save?");
+                if (ans) {
+
+                    datatosave = [];
+
+
+                    for (var I = 0; I < $scope.example6model.length; I++) {
+
+
+                        var selectedTableid = $scope.example6model[I].id.split('-')[0];
+                        var Kotlist = $scope.example6model[I].id.split('-')[1];
+                        var Kots = Kotlist.split(',');
+                        for (var J = 0; J < Kots.length; J++) {
+
+                            var string = { id: selectedTableid, Kotid: Kots[J] }
+                            datatosave.push(string);
+                        }
+
+                    }
+                    $scope.koTdata = JSON.stringify(datatosave);
+
+
+                    $http({
+                        url: '/POSTransaction/CreateMerge/',
+                        method: "POST",
+                        data: { TableId: $scope.FromTable, kotdatatosave: $scope.koTdata }
+                    }).success(function (data) {
+                        debugger
+
+                        if (data) {
+                            debugger;
+                            alert("Merge Tables Saved Successfully");
+                            var url = '@Url.Action("../POSTransaction/DashBoard")';
+                            window.location.href = url;
+                        }
+
+
+
+                    });
+                }
+
+            }
+            else {
+
+                alert("Select Table For Merge");
+            }
+        }
+
+
+
+
+
+    });
+
+</script>

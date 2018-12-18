@@ -1,0 +1,209 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<div class="page-content" ng-controller="ctrKotReprint">
+    @*<div class="page-header">
+            <h1>
+                KOT Reprint <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+            </h1>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form" name="KotReprintfrm">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                            Table No :
+                        </label>
+                        <div class="col-sm-3">
+                            <input id="form-field-1" ng-model="KR.TableName" placeholder="Autopopulated" class="form-control"
+                                   type="text" disabled="true">
+                        </div>
+                        <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                            KOT No :
+                        </label>
+                        <div class="col-sm-3">
+                            <select name="KOTNo" ng-model="KR.vchKotId" placeholder="BillNumber" ng-options="c.vchKotId as c.vchKotId for c in KOT"
+                                    required class="form-control">
+                                <option value="">Select KOT No</option>
+                            </select>
+                            <span class="error" ng-show="(KotReprintfrm.KOTNo.$dirty || submitted ) && KotReprintfrm.KOTNo.$error.required">
+                                Slect Kot No!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" ng-click="SaveKotReprint(KR)">
+                                <i class="ace-icon fa fa-save bigger-110"></i>Print
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>*@
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> KOT REPRINT </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" name="KotReprintfrm">
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                                    Table No :
+                                </label>
+                                <div class="col-sm-3">
+                                    <input id="form-field-1" ng-model="KR.TableName" placeholder="Autopopulated" class="form-control"
+                                           type="text" disabled="true">
+                                </div>
+                                <label class="col-sm-1 control-label no-padding-right" for="form-field-1">
+                                    KOT No :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select name="KOTNo" ng-model="KR.vchKotId" placeholder="BillNumber" ng-options="c.vchKotId as c.vchKotId for c in KOT"
+                                            required class="form-control">
+                                        <option value="">Select KOT No</option>
+                                    </select>
+                                    <span class="error" ng-show="(KotReprintfrm.KOTNo.$dirty || submitted ) && KotReprintfrm.KOTNo.$error.required">
+                                        Slect Kot No!
+                                    </span>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success" type="button" ng-click="SaveKotReprint(KR)">
+                                            <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script type="text/javascript">
+    var app = angular.module('RMS');
+    app.controller('ctrKotReprint', function ($scope, $http, $rootScope, $location) {
+        debugger
+        $scope.submitted = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Bill Edit";
+        $rootScope.ModuleName = "Transactions";
+
+        $scope.$watch('KotReprintfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.KR = {};
+        var UrlData = $location.$$absUrl.split('/');
+        var TableId = UrlData[UrlData.length - 1];
+
+
+        if (angular.isDefined(TableId) && TableId !== "" && TableId !== "kotreprint") {
+            LoadData(TableId);
+            ShowFromTableData(TableId);
+        }
+        else {
+            myService.Redirect();
+        }
+
+
+
+        function LoadData(TableId) {
+            debugger
+            $http({
+                url: '/POSTransaction/ShowKots/',
+                method: "post",
+                data: { tablid: TableId }
+
+            }).success(function (data) {
+                debugger;
+
+                $scope.KOT = data;
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+        function ShowFromTableData(tableId) {
+            debugger
+            $http.post('/POSTransaction/ShowTableData', { TableId: tableId }).success(function (data) {
+                debugger
+
+                $scope.KR.TableName = data.fromTableName;
+
+            });
+
+        }
+
+
+
+        $scope.SaveKotReprint = function (KR) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $http({
+                            url: '/POSTransaction/SaveKotReprint/',
+                            method: "POST",
+                            data: { objKotReprint: KR }
+                        }).success(function (data) {
+                            debugger;
+                            if (data.Success) {
+                                alert("Bill Edited Successfully");
+                                ClearForm();
+                                var url = '@Url.Action("../POSTransaction/DashBoard")';
+                                window.location.href = url;
+                            }
+
+                        });
+                    }
+
+                }
+
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+
+        }
+
+        function ClearForm() {
+            $scope.KR = {};
+            $scope.KotReprintfrm.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //$scope.PrintcategoryReport = function (category) {
+        //    debugger
+        //    var w = window.open("/POSReports/NewcategorywiseReport/?fromdate=" + category.fromdate + "&todate=" + category.todate + "&userid=" + category.categoryName + "", '_blank');
+
+        //}
+
+
+
+    });
+
+</script>
+

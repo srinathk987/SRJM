@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="StockLedgerDS" targetNamespace="http://tempuri.org/StockLedgerDS.xsd" xmlns:mstns="http://tempuri.org/StockLedgerDS.xsd" xmlns="http://tempuri.org/StockLedgerDS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="StockLedgerDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="StockLedgerDS" msprop:Generator_UserDSName="StockLedgerDS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Stock_x0020_Ledger" msprop:Generator_TableClassName="Stock_LedgerDataTable" msprop:Generator_TableVarName="tableStock_Ledger" msprop:Generator_TablePropName="Stock_Ledger" msprop:Generator_RowDeletingName="Stock_LedgerRowDeleting" msprop:Generator_RowChangingName="Stock_LedgerRowChanging" msprop:Generator_RowEvHandlerName="Stock_LedgerRowChangeEventHandler" msprop:Generator_RowDeletedName="Stock_LedgerRowDeleted" msprop:Generator_UserTableName="Stock Ledger" msprop:Generator_RowChangedName="Stock_LedgerRowChanged" msprop:Generator_RowEvArgName="Stock_LedgerRowChangeEvent" msprop:Generator_RowClassName="Stock_LedgerRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productid" msprop:Generator_ColumnVarNameInTable="columnproductid" msprop:Generator_ColumnPropNameInRow="productid" msprop:Generator_ColumnPropNameInTable="productidColumn" msprop:Generator_UserColumnName="productid" type="xs:long" minOccurs="0" />
+              <xs:element name="productname" msprop:Generator_ColumnVarNameInTable="columnproductname" msprop:Generator_ColumnPropNameInRow="productname" msprop:Generator_ColumnPropNameInTable="productnameColumn" msprop:Generator_UserColumnName="productname" type="xs:string" minOccurs="0" />
+              <xs:element name="categoryname" msprop:Generator_ColumnVarNameInTable="columncategoryname" msprop:Generator_ColumnPropNameInRow="categoryname" msprop:Generator_ColumnPropNameInTable="categorynameColumn" msprop:Generator_UserColumnName="categoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="subcategoryname" msprop:Generator_ColumnVarNameInTable="columnsubcategoryname" msprop:Generator_ColumnPropNameInRow="subcategoryname" msprop:Generator_ColumnPropNameInTable="subcategorynameColumn" msprop:Generator_UserColumnName="subcategoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="vchuom" msprop:Generator_ColumnVarNameInTable="columnvchuom" msprop:Generator_ColumnPropNameInRow="vchuom" msprop:Generator_ColumnPropNameInTable="vchuomColumn" msprop:Generator_UserColumnName="vchuom" type="xs:string" minOccurs="0" />
+              <xs:element name="storagelocation" msprop:Generator_ColumnVarNameInTable="columnstoragelocation" msprop:Generator_ColumnPropNameInRow="storagelocation" msprop:Generator_ColumnPropNameInTable="storagelocationColumn" msprop:Generator_UserColumnName="storagelocation" type="xs:string" minOccurs="0" />
+              <xs:element name="shelfname" msprop:Generator_ColumnVarNameInTable="columnshelfname" msprop:Generator_ColumnPropNameInRow="shelfname" msprop:Generator_ColumnPropNameInTable="shelfnameColumn" msprop:Generator_UserColumnName="shelfname" type="xs:string" minOccurs="0" />
+              <xs:element name="openingqty" msprop:Generator_ColumnVarNameInTable="columnopeningqty" msprop:Generator_ColumnPropNameInRow="openingqty" msprop:Generator_ColumnPropNameInTable="openingqtyColumn" msprop:Generator_UserColumnName="openingqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="purchaseqty" msprop:Generator_ColumnVarNameInTable="columnpurchaseqty" msprop:Generator_ColumnPropNameInRow="purchaseqty" msprop:Generator_ColumnPropNameInTable="purchaseqtyColumn" msprop:Generator_UserColumnName="purchaseqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="consumptionqty" msprop:Generator_ColumnVarNameInTable="columnconsumptionqty" msprop:Generator_ColumnPropNameInRow="consumptionqty" msprop:Generator_ColumnPropNameInTable="consumptionqtyColumn" msprop:Generator_UserColumnName="consumptionqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="returnqty" msprop:Generator_ColumnVarNameInTable="columnreturnqty" msprop:Generator_ColumnPropNameInRow="returnqty" msprop:Generator_ColumnPropNameInTable="returnqtyColumn" msprop:Generator_UserColumnName="returnqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="consumptionwasteqty" msprop:Generator_ColumnVarNameInTable="columnconsumptionwasteqty" msprop:Generator_ColumnPropNameInRow="consumptionwasteqty" msprop:Generator_ColumnPropNameInTable="consumptionwasteqtyColumn" msprop:Generator_UserColumnName="consumptionwasteqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="consumptionsaleqty" msprop:Generator_ColumnVarNameInTable="columnconsumptionsaleqty" msprop:Generator_ColumnPropNameInRow="consumptionsaleqty" msprop:Generator_ColumnPropNameInTable="consumptionsaleqtyColumn" msprop:Generator_UserColumnName="consumptionsaleqty" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

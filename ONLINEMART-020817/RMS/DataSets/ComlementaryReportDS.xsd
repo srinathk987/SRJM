@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ComlementaryReportDS" targetNamespace="http://tempuri.org/ComlementaryReportDS.xsd" xmlns:mstns="http://tempuri.org/ComlementaryReportDS.xsd" xmlns="http://tempuri.org/ComlementaryReportDS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ComlementaryReportDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ComlementaryReportDS" msprop:Generator_UserDSName="ComlementaryReportDS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ComplementaryReportDS" msprop:Generator_TableClassName="ComplementaryReportDSDataTable" msprop:Generator_TableVarName="tableComplementaryReportDS" msprop:Generator_RowChangedName="ComplementaryReportDSRowChanged" msprop:Generator_TablePropName="ComplementaryReportDS" msprop:Generator_RowDeletingName="ComplementaryReportDSRowDeleting" msprop:Generator_RowChangingName="ComplementaryReportDSRowChanging" msprop:Generator_RowEvHandlerName="ComplementaryReportDSRowChangeEventHandler" msprop:Generator_RowDeletedName="ComplementaryReportDSRowDeleted" msprop:Generator_RowClassName="ComplementaryReportDSRow" msprop:Generator_UserTableName="ComplementaryReportDS" msprop:Generator_RowEvArgName="ComplementaryReportDSRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="vchbillno" msprop:Generator_ColumnVarNameInTable="columnvchbillno" msprop:Generator_ColumnPropNameInRow="vchbillno" msprop:Generator_ColumnPropNameInTable="vchbillnoColumn" msprop:Generator_UserColumnName="vchbillno" type="xs:string" minOccurs="0" />
+              <xs:element name="billdate" msprop:Generator_ColumnVarNameInTable="columnbilldate" msprop:Generator_ColumnPropNameInRow="billdate" msprop:Generator_ColumnPropNameInTable="billdateColumn" msprop:Generator_UserColumnName="billdate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="billtime" msprop:Generator_ColumnVarNameInTable="columnbilltime" msprop:Generator_ColumnPropNameInRow="billtime" msprop:Generator_ColumnPropNameInTable="billtimeColumn" msprop:Generator_UserColumnName="billtime" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="tablesname" msprop:Generator_ColumnVarNameInTable="columntablesname" msprop:Generator_ColumnPropNameInRow="tablesname" msprop:Generator_ColumnPropNameInTable="tablesnameColumn" msprop:Generator_UserColumnName="tablesname" type="xs:string" minOccurs="0" />
+              <xs:element name="vchkotid" msprop:Generator_ColumnVarNameInTable="columnvchkotid" msprop:Generator_ColumnPropNameInRow="vchkotid" msprop:Generator_ColumnPropNameInTable="vchkotidColumn" msprop:Generator_UserColumnName="vchkotid" type="xs:string" minOccurs="0" />
+              <xs:element name="tableid" msprop:Generator_ColumnVarNameInTable="columntableid" msprop:Generator_ColumnPropNameInRow="tableid" msprop:Generator_ColumnPropNameInTable="tableidColumn" msprop:Generator_UserColumnName="tableid" type="xs:string" minOccurs="0" />
+              <xs:element name="itemid" msprop:Generator_ColumnVarNameInTable="columnitemid" msprop:Generator_ColumnPropNameInRow="itemid" msprop:Generator_ColumnPropNameInTable="itemidColumn" msprop:Generator_UserColumnName="itemid" type="xs:int" minOccurs="0" />
+              <xs:element name="itemname" msprop:Generator_ColumnVarNameInTable="columnitemname" msprop:Generator_ColumnPropNameInRow="itemname" msprop:Generator_ColumnPropNameInTable="itemnameColumn" msprop:Generator_UserColumnName="itemname" type="xs:string" minOccurs="0" />
+              <xs:element name="itemrate" msprop:Generator_ColumnVarNameInTable="columnitemrate" msprop:Generator_ColumnPropNameInRow="itemrate" msprop:Generator_ColumnPropNameInTable="itemrateColumn" msprop:Generator_UserColumnName="itemrate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="itemqty" msprop:Generator_ColumnVarNameInTable="columnitemqty" msprop:Generator_ColumnPropNameInRow="itemqty" msprop:Generator_ColumnPropNameInTable="itemqtyColumn" msprop:Generator_UserColumnName="itemqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="amount" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_UserColumnName="amount" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

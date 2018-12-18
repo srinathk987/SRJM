@@ -1,0 +1,353 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<h2></h2>
+<div class="page-content" ng-controller="TablesController" ng-init="LoadData();LoadSections()">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal" role="form" name="fmTables" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Table No. <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="TablesName" id="txtTablesName" ng-model="Tab.TablesName" placeholder="Enter Table No." class="form-control" kit-alpha-numeric data-index="1" kt-focus onblur="CheckZero(this)"
+                               maxlength="5" required autofocus type="text" />
+                        <span class="error" ng-show="(fmTables.TablesName.$dirty || submitted ) && fmTables.TablesName.$error.required">
+                            Table No. required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-2">
+                        Covers  <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Covers" id="txtCovers" ng-model="Tab.Convers" placeholder="Enter Covers" class="form-control" kit-digits maxlength="10" data-index="2" kt-focus onblur="CheckZero(this)"
+                               required type="text" />
+                        <span class="error" ng-show="(fmTables.Covers.$dirty || submitted) && fmTables.Covers.$error.required">
+                            Covers required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Section Name <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <select name="section2" data-index="3" kt-focus required ng-model="Tab.SectionId" class="form-control" ng-change="SelectSectionName()" ng-options="s.SectionId as s.SectionName123 for s in Sections">
+                            <option value="">Select Section Name</option>
+                        </select>
+                        <span class="error" ng-show="(fmTables.section2.$dirty || submitted ) && fmTables.section2.$error.required">
+                            Section Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                        Section Code  <span style="color: Red">*</span> :
+                    </label>
+                    <div class="col-sm-5">
+                        <input name="Name" ng-model="Tab.SectionCode" class="form-control" disabled required
+                               type="text" />
+                        <span class="error" ng-show="(fmTables.SectionCode.$dirty || submitted ) && fmTables.SectionCode.$error.required">
+                            Section Name required!
+                        </span>
+                    </div>
+                </div>
+                <div class=" col-sm-8">
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" ng-click="Save(Tab)">
+                            <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="gpTable"></table>
+    <div id="grid-pager">
+    </div>
+</div>
+<script type="text/javascript">
+
+    function CheckZero(e) {
+        debugger
+
+        if (parseFloat(e.value) == 0) {
+            $('#' + e.id + '').val('');
+            $('#' + e.id + '').focus();
+
+        }
+    }
+
+    var appElement = document.querySelector('[ ng-controller=TablesController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#gpTable"))
+    }
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#gpTable").getRowData(row);
+
+        $scope.btnSave = "Update"
+        $scope.Tab = rowdata;
+
+        $scope.Tab.SectionId = $.grep($scope.Sections, function (s) {
+            return s.SectionName123 == rowdata.SectionName;
+        })[0].SectionId;
+
+        $scope.$apply();
+    }
+    function Delete(row) {
+        debugger
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#gpTable").getRowData(row);
+        $http({
+            url: '/POSMasters/checkStatustoDelete/',
+            method: "POST",
+            data: { TableId: rowdata.TablesName }
+
+        }).success(function (data) {
+            debugger;
+            if (data != "R") {
+
+                if ($scope.btnSave == "Save") {
+
+                    rowdata = $("#gpTable").getRowData(row);
+
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+
+                    if (ans) {
+                        $http.post('/POSMasters/DeleteTable', rowdata).success(function (data) {
+                            if (data) {
+                                alert("Table and Covers  Details Deleted Successfully");
+                                $('#gpTable').jqGrid('delRowData', row);
+                                $scope.LoadData();
+                            }
+                        }).error(function (data) { alert("Error Occuerd"); });
+                    }
+                } else {
+                    alert("Cannot Delete Table and Covers Details In Edit Mode");
+                }
+            }
+            else {
+
+                alert("Can Not Delete This Table");
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('TablesController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Table and Covers";
+        $rootScope.ModuleName = "Masters";
+
+        $scope.SelectSectionName = function () {
+            debugger
+            $scope.Tab.SectionCode = '';
+            $scope.Tab.SectionCode = $.grep($scope.Sections, function (s) {
+                return s.SectionId == $scope.Tab.SectionId;
+            })[0].SectionCode;
+        }
+
+        $scope.LoadSections = function () {
+            $http({
+                url: '/POSMasters/ShowSection/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.Sections = data;
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+        $scope.$watch('fmTables.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        $scope.LoadData = function () {
+            $http({
+                url: '/POSMasters/ShowTables/',
+                method: "get"
+
+            }).success(function (data) {
+                debugger;
+                OriginGridBinding(data);
+
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+
+
+
+        $scope.Save = function (Tab) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                $scope.Tab.SectionName = $.grep($scope.Sections, function (s) {
+                    return s.SectionId == $scope.Tab.SectionId;
+                })[0].SectionName123;
+
+                if (parseFloat(Tab.Convers) > 0) {
+                    if ($scope.btnSave == "Save") {
+                        var ans = confirm($rootScope.msgSave);
+                        if (ans) {
+
+                            $http.post('/POSMasters/SaveTable', Tab).success(function (data) {
+                                debugger
+                                if (data == 0) {
+                                    alert("Table and Covers  Details Saved Successfully");
+                                    $scope.LoadData();
+                                    $('gpTable').trigger("reloadGrid", [{ page: 2 }])
+                                    ClearForm();
+                                }
+                                else {
+                                    alert("Table No. Already Exist");
+                                }
+                            })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                        }
+                    }
+                    else {
+                        var ans = confirm($rootScope.msgUpdate);
+                        if (ans) {
+                            $http.post('/POSMasters/UpdateTableandCovers', Tab).success(function (data) {
+                                debugger
+                                if (data == 0) {
+                                    alert("Table and Covers  Details Updated Successfully");
+                                    $scope.LoadData();
+                                    ClearForm();
+                                }
+                                else {
+                                    alert("Table No. Already Exist");
+                                }
+                            })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                        }
+
+                    }
+                }
+                else {
+                    alert('Covers Should be greater than Zero');
+                    //$('#Amount').focus();
+
+                }
+            }
+        }
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            debugger
+            $scope.Tab = {};
+            $scope.Sections = {};
+            $scope.btnSave = "Save";
+            $scope.LoadSections();
+            $scope.fmTables.$setPristine();
+            $scope.submitted = false;
+        }
+
+        //****************** JQ Grid  *******************************//
+        function OriginGridBinding(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#gpTable";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                    {
+                        label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                            //  return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                            return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                        }
+                    },
+                    { label: 'TableId', name: 'TableId', width: 75, hidden: true },
+        { label: 'Table No.', name: 'TablesName', width: 75 },
+        { label: 'Covers', name: 'Convers', width: 90 },
+         { label: 'SectionId', name: 'SectionId', width: 75, hidden: true },
+        { label: 'Section Name', name: 'SectionName', width: 75 },
+        { label: 'Section Code', name: 'SectionCode', width: 90 },
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "Tables and Covers <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+
+        }
+
+    });
+</script>

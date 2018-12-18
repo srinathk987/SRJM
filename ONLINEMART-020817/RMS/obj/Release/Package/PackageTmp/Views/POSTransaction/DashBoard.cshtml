@@ -1,0 +1,1370 @@
+﻿@{
+
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+@*<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>*@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="~/assets/js/google_pi.js"></script>
+@*<script src="~/assets/js/google_visual.js"></script>*@
+
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["corechart"] });
+</script>
+<style>
+    element.style {
+        background: #FFEB3B;
+    }
+
+    .order-nav {
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        padding-bottom: 10px;
+        border: 2px dotted #f3c306;
+        display: inline-block;
+        position: relative;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+
+    /*.order-nav li {
+                list-style: none;
+                float: left;
+                text-align: center;
+                padding: 0px;
+                margin: 0px 15px;
+              ;
+            }*/
+
+
+
+
+
+    ul.menu-item {
+        width: 100%;
+        padding: 3px;
+        margin: 0px;
+    }
+
+        ul.menu-item li {
+            width: 100%;
+            height: 40px;
+            display: inline;
+            padding: 8px 10px;
+            line-height: 30px;
+            font-size: 16px;
+            margin: 2px 0px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+        }
+
+            ul.menu-item li span {
+                float: left;
+            }
+
+            ul.menu-item li .item-title {
+                width: auto;
+                min-width: 70%;
+            }
+            ul.menu-item li .item-UOM {
+                width: auto;
+                min-width: 70%;
+            }
+            ul.menu-item li .item-Code {
+                width: auto;
+                min-width: 70%;
+            }
+
+            ul.menu-item li .quantity {
+                width: auto;
+                min-width: 10%;
+            }
+
+        ul.menu-item .rate-item {
+            width: auto;
+            min-width: 20%;
+            text-align: right;
+        }
+
+            ul.menu-item .rate-item .fa {
+                color: #080000 !important;
+            }
+
+
+
+    #thirdparty-popup .modal-backdrop {
+        background-color: transparent !important;
+    }
+    /*.order-nav li {
+                list-style: none;
+                float: left;
+                text-align: center;
+                padding: 0px;
+                margin: 0px 15px;
+              ;
+            }*/
+    .order-nav img {
+        transition: All 1s ease;
+        -webkit-transition: All 1s ease;
+        -moz-transition: All 1s ease;
+        -o-transition: All 1s ease;
+        transform: rotate(0deg) scale(1) skew(0deg) translate(10px);
+        -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(10px);
+        -moz-transform: rotate(0deg) scale(1) skew(0deg) translate(10px);
+        -o-transform: rotate(0deg) scale(1) skew(0deg) translate(10px);
+        -ms-transform: rotate(0deg) scale(1) skew(0deg) translate(10px);
+    }
+
+
+
+        .order-nav img:hover {
+            transform: rotate(0deg) scale(1.2) skew(0deg) translate(2px);
+            -webkit-transform: rotate(0deg) scale(1.2) skew(0deg) translate(2px);
+            -moz-transform: rotate(0deg) scale(1.2) skew(0deg) translate(2px);
+            -o-transform: rotate(0deg) scale(1.2) skew(0deg) translate(2px);
+            -ms-transform: rotate(0deg) scale(1.2) skew(0deg) translate(2px);
+        }
+
+    ul.thirdparty-vendors {
+        width: auto;
+        height: auto;
+        display: block;
+        margin: auto;
+    }
+
+
+        ul.thirdparty-vendors li {
+            width: 23%;
+            height: 80px;
+            padding: 2%;
+            float: left;
+            position: relative;
+            margin: 1%;
+            border: 1px solid #ddd;
+            text-align: center;
+            cursor: pointer;
+        }
+
+
+            ul.thirdparty-vendors li span {
+                width: 22px;
+                height: 20px;
+                text-align: center;
+                position: absolute;
+                right: -4px;
+                top: -4px;
+                background: #00c27b;
+                color: #fff;
+                font-size: 10px;
+                padding: 2px;
+                display: block;
+            }
+
+
+            ul.thirdparty-vendors li img {
+                width: 100%;
+                height: 100%;
+                /*box-shadow: 2px 2px 2px rgba(0,0,0,0.8);*/
+            }
+
+            ul.thirdparty-vendors li i.add-vendor {
+                font-size: 24px;
+                text-align: center;
+                line-height: 60px;
+                color: #ddd;
+            }
+
+            ul.thirdparty-vendors li:last-child {
+                cursor: pointer;
+            }
+
+    .create-thirdparty {
+        width: 100%;
+        height: auto;
+        max-height: 440px;
+        position: absolute;
+        display: inline-block;
+        background: rgba(245, 235, 235, 0.20);
+        overflow-y: auto;
+        overflow-x: hidden;
+        border: 1px solid #dcdcdc;
+        padding: 0px 10px;
+        z-index: 9999;
+    }
+    li.header-item {
+        width:100%;
+        padding:0px;
+        margin:0px;
+    }
+    li.header-item span{
+        width:20%;
+        float:left;
+
+    }
+
+
+
+</style>
+<div class="main-container" id="main-container" ng-controller="DashboardController" ng-init="init()">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="alert alert-block alert-success">
+
+                            @*<i class="ace-icon fa fa-check green"></i> Welcome to <strong class="green"> RESTO <small>(v16.1)</small> </strong>,*@
+                            <i class="ace-icon fa fa-check green"></i> Welcome to <strong class="green"> {{username |uppercase}}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-5">
+
+
+                        <div>
+                            <div class="widget-box transparent" id="recent-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title blue smaller"> <i class="ace-icon fa fa-signal orange"></i>SALES GRAPH </h4>
+                                    <div class="widget-toolbar no-border">
+                                        <ul class="nav nav-tabs" id="">
+                                            <li class="active"> <a data-toggle="tab" href="#sales">Today   </a> </li>
+                                            <li> <a data-toggle="tab" href="#MONTH">Week  </a> </li>
+                                            <li> <a data-toggle="tab" href="#YEAR">Month  </a> </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="widget-body">
+                                    <div class="widget-main padding-4">
+                                        <div class="tab-content white-bg padding-8">
+                                            <div id="sales" class="tab-pane active">
+                                                <h4 class="smaller lighter green">
+                                                    <i class="ace-icon fa fa-clock-o"></i> Today Sale - {{username}}
+
+
+
+
+
+
+
+                                                </h4>
+                                                <div id="chartdiv">
+                                                </div>
+                                            </div>
+                                            <div id="MONTH" class="tab-pane">
+                                                <h4 class="smaller lighter green">
+                                                    <i class="ace-icon fa fa-clock-o"></i> Week Wise Sale - {{username}}
+
+
+                                                </h4>
+                                                <div id="chartdiv1">
+                                                </div>
+                                            </div>
+                                            <div id="YEAR" class="tab-pane">
+                                                <h4 class="smaller lighter green">
+                                                    <i class="ace-icon fa fa-clock-o"></i>Month Wise Sale - {{username}}
+
+
+
+
+                                                </h4>
+                                                <div id="chartdiv2">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- /.#member-tab -->
+
+                                    </div>
+                                </div>
+                                <div class="hr hr-dotted hr8"></div>
+                                <!-- /.widget-main -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-7 col-xs-12">
+
+                       
+
+
+                            <div class="panel-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h5 class="widget-title dark black"> <i class="ace-icon fa fa-hand-o-down animated fadeInDown infinite"></i> Available Items List </h5>
+                                    </div>
+                                    <div class="col-sm-6 pull-right">
+                                        <form class="navbar-form" role="search">
+                                            <div class="input-group add-on">
+                                                <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" ng-model="filter">
+                                                <div class="input-group-btn">
+                                                    <button class="btn " type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                              
+                                </div>
+                                <div ng-repeat="group in groups">
+                                    <div class="panel no-radius panel-default" id="accordion" style="margin-top:5px; box-shadow:1px 1px 2px rgba(0,0,0,0.1)">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#{{group.name.split(' ').join('')}}">
+                                            <div class="panel-heading alert-warning">
+                                                <h4 class="panel-title">
+
+                                                    {{group.name}}
+                                                    <i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i>
+
+                                                </h4>
+                                            </div>
+                                        </a>
+                                        <div id="{{group.name.split(' ').join('')}}" class="panel-collapse collapse in">
+                                            
+                                            <div class="panel-body" style="padding:10px !important;  ">
+                                                @*<ul class="widget-main no-padding no-margin" style="display:inline-block; ">
+                                                    <li ng-click="Click(table)" ng-repeat="table in group.items">
+                                                        <span ng-class="getClass(table)" data-toggle="modal" data-target="#myModal" class="animated fadeIn">
+                                                            <a>{{table.TableName}}</a>
+                                                            <img src="~/assets/Images/table.png" width="40" height="40" class="inverted pull-left" />
+                                                        </span>
+                                                    </li>
+                                                </ul>*@
+                                                <ul class="menu-item">
+                                                  
+                                                    <table class="table table-hover table-sm">
+                                                        <thead style="background:#fff !important; border-bottom:2px solid #111;">
+                                                            <tr>
+                                                                <th>Product</th>
+                                                                <th>UOM</th>
+                                                                <th>Quantity</th>
+                                                                <th>Rate</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="table in group.items| filter:filter">
+
+                                                                <td class="item-title">{{table.Pluname}}</td>
+                                                                <td>{{table.Uomname}}</td>
+                                                                <td class="quantity">{{table.Availableqty|number:3}} </td>
+                                                                <td class="rate-item"><i class="fa fa-inr"></i> {{table.Unitprice}}</td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                    </div>
+                    <!-- /.widget-box -->
+                </div>
+                <!-- /.row -->
+                <!-- PAGE CONTENT ENDS -->
+            </div>
+            <!-- /.col -->
+        </div>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: #FFEB3B">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">MENU <i class="fa  fa-hand-o-down animated bounce"></i></h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="menu-pos">
+
+                            <li ng-repeat="table in ChildNames" ng-click="ChildClick(table)">
+                                <a href="">
+
+                                    <span class="{{table.Functionclass}}"></span>
+                                    <span>{{table.FunctionName}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script>
+
+                var app = angular.module('RMS');
+                app.controller("DashboardController", ['$scope', '$http', '$rootScope', 'myService', '$q', function ($scope, $http, $rootScope, myService, $q) {
+                    debugger
+
+                    $scope.submitted = false;
+                    $scope.isFormValid = false;
+                    $scope.ShoWFirst = false;
+                    $scope.Reuired = true;
+                    $scope.$watch('FmThirdparty.$valid', function (newValue) {
+                        debugger
+                        $scope.isFormValid = newValue;
+                    });
+
+
+                    $scope.Third = { VendorImage: "" }
+                    $scope.uploadFile = function (input) {
+
+                        if (input.files && input.files[0]) {
+
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                debugger;
+                                var image = e.target.result.replace(/data:image\/jpeg;base64,/g, '');
+                                image = image.replace(/data:image\/png;base64,/g, '');
+                                $scope.Third.VendorImage = image;
+                                $scope.Third.files = input.files[0];
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    };
+
+
+                    $scope.ChangeCategoryPeriod = function () {
+
+
+                        var Result = $scope.CategoryPeriod;
+
+                        if (Result == "Select") {
+                            alert("Please Select Month/Week/Yearly")
+                        }
+                        else {
+                            $http({
+                                url: '/POSTransaction/ShowCategoryPeriodwise/',
+                                method: "post",
+                                data: { Period: Result }
+                            }).success(function (data) {
+                                var data1 = new google.visualization.DataTable();
+                                //  alert(data1);
+                                debugger;
+                                data1.addColumn('string', 'PlanName');
+                                data1.addColumn('number', 'PaymentAmount');
+
+                                for (var i = 0; i < data.chartlistForCategoryPeriod.length; i++) {
+
+                                    data1.addRow([data.chartlistForCategoryPeriod[i].PlanName, data.chartlistForCategoryPeriod[i].PaymentAmount]);
+                                }
+                                debugger;
+                                $scope.datachart = data1;
+                                var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+                                chart.draw(data1,
+                             {
+
+                                 position: "top",
+                                 fontsize: "14px",
+                                 is3D: true,
+
+                                 width: '100%',
+                                 height: '250',
+                                 chartArea: {
+                                     left: 5,
+                                     top: 20,
+                                     width: '100%',
+                                     height: '250'
+                                 }
+                             });
+                            });
+                        }
+
+
+
+                        // alert("ok--------This is ChangeCategoryPeriod ");
+                    }
+
+                    $scope.ChangesessionPeriod = function () {
+
+                        var SessionResult = $scope.SESSIONPeriod;
+
+                        if (SessionResult == "Select") {
+                            alert("Please Select Month/Week/Yearly")
+                        }
+                        else {
+                            $http({
+                                url: '/POSTransaction/ShowSessionwisePeriod/',
+                                method: "post",
+                                data: { Period: SessionResult }
+                            }).success(function (data) {
+
+                                var session = new google.visualization.DataTable();
+                                session.addColumn('string', 'PlanName');
+                                session.addColumn('number', 'PaymentAmount');
+                                debugger;
+                                for (var i = 0; i < data.chartlistForSessionwisePeriod.length; i++) {
+
+                                    session.addRow([data.chartlistForSessionwisePeriod[i].PlanName, data.chartlistForSessionwisePeriod[i].PaymentAmount]);
+                                }
+                                var chart2 = new google.visualization.PieChart(document.getElementById('chartdiv2'));
+
+                                chart2.draw(session,
+                             {
+
+                                 position: "top",
+                                 fontsize: "14px",
+                                 is3D: true,
+                                 width: '100%',
+                                 height: '350',
+                                 chartArea: {
+                                     left: 5,
+                                     top: 20,
+                                     width: '100%',
+                                     height: '350'
+                                 }
+                             });
+
+                            });
+                        }
+                    }
+
+                    $scope.ChangesectionPeriod = function () {
+                        debugger;
+                        var SectionResult = $scope.SECTIONPeriod;
+
+                        if (SectionResult == "Select") {
+                            alert("Please Select Month/Week/Yearly")
+                        }
+                        else {
+                            $http({
+                                url: '/POSTransaction/ShowSectionwisePeriod/',
+                                method: "post",
+                                data: { Period: SectionResult }
+                            }).success(function (data) {
+
+                                var Section = new google.visualization.DataTable();
+                                Section.addColumn('string', 'PlanName');
+                                Section.addColumn('number', 'PaymentAmount');
+
+                                for (var i = 0; i < data.chartlistForSectionwisePeriod.length; i++) {
+
+                                    Section.addRow([data.chartlistForSectionwisePeriod[i].PlanName, data.chartlistForSectionwisePeriod[i].PaymentAmount]);
+                                }
+                                var chart1 = new google.visualization.PieChart(document.getElementById('chartdiv1'));
+
+                                chart1.draw(Section,
+                             {
+
+                                 position: "top",
+                                 fontsize: "14px",
+                                 is3D: true,
+                                 width: '100%',
+                                 height: '350',
+                                 chartArea: {
+                                     left: 5,
+                                     top: 20,
+                                     width: '100%',
+                                     height: '350'
+                                 }
+                             });
+
+                            });
+                        }
+                    }
+
+
+
+
+                    $scope.SaveThirPartyVendor = function (Third) {
+
+                        debugger;
+                        $scope.submitted = true;
+                        if ($scope.isFormValid) {
+
+                            Third["fromdate"] = document.getElementById("calendar").value;
+                            debugger;
+                            var formData = new FormData();
+                            formData.append("Tfile", $scope.Third.files);
+                            //We can send more data to server using append
+                            formData.append("Third", JSON.stringify(Third));
+
+                            var defer = $q.defer();
+                            debugger;
+                            $http.post("/POSTransaction/SaveThirPartyVendor/", formData,
+                                {
+                                    withCredentials: true,
+                                    headers: { 'Content-Type': undefined },
+                                    transformRequest: angular.identity
+                                })
+                            .success(function (data) {
+                                debugger;
+                                $scope.ThirdPartyImages = eval('(' + data.JsonString + ')');
+                                $("#photo-upload").val('');
+
+                                $scope.Third = {};
+                                $scope.FmThirdparty.$setPristine();
+                                $scope.submitted = false;
+
+                            })
+                            .error(function () {
+
+                            });
+
+
+
+
+
+
+
+
+                            //$http({
+                            //    url: '/POSTransaction/SaveThirPartyVendor/',
+                            //    method: "POST",
+                            //    data: { Third: JSON.stringify(Third) }
+                            //}).success(function (data) {
+
+
+                            //});
+                        }
+
+                    }
+
+                    $scope.RedirectToVendorOeders = function (VendorDetails) {
+                        debugger;
+                        window.location.href = "/TakeAway/ThirdPartyDetails/" + VendorDetails.vchpartyname + "?" + VendorDetails.vchpartyid + "?" + VendorDetails.recordid + "";
+
+                    }
+
+
+
+
+
+
+                    $scope.ChildClick = function (x) {
+                        debugger
+                        var count = 0;
+                        if (count == 0) {
+                            $http.post('/POSTransaction/CheckBillStatus', { tableid: $scope.Tableid }).success(function (data) {
+
+                                data = data.split(':');
+                                debugger;
+
+                                if (data[2] == "Yes" && (x.FunctionName == "MERGE TABLE")) {
+                                    alert("Bills Generated For this Table ! ");
+                                    return false;
+                                }
+
+                                if (data[0] == "B" && (x.FunctionName == "MERGE TABLE" || x.FunctionName == "TABLE CHANGE" || x.FunctionName == "KOT CANCEL" || x.FunctionName == "BILL GENERATION" || x.FunctionName == "KOT REPRINT" || x.FunctionName == "MODIFY ORDER" || x.FunctionName == "KOT TRANSFER")) {
+
+                                    alert("Bills Generated For All Kots");
+                                    return false;
+
+                                }
+
+                                if (data[1] == 0 && data[0] == "B" && (x.FunctionName == "MERGE TABLE" || x.FunctionName == "TABLE CHANGE" || x.FunctionName == "KOT CANCEL" || x.FunctionName == "BILL GENERATION" || x.FunctionName == "KOT REPRINT" || x.FunctionName == "MODIFY ORDER")) {
+
+                                    alert("Bills Generated For All Tables");
+                                    return false;
+
+                                }
+
+                                if (data[0] == "A" && (x.FunctionName == "MERGE TABLE" || x.FunctionName == "TABLE CHANGE" || x.FunctionName == "KOT CANCEL" || x.FunctionName == "BILL GENERATION" || x.FunctionName == "KOT REPRINT" || x.FunctionName == "MODIFY ORDER" || x.FunctionName == "BILL CANCEL" || x.FunctionName == "KOT TRANSFER")) {
+                                    alert("Table Should be in running status");
+                                    return false;
+                                }
+                                if (data[2] == "No" && (x.FunctionName == "BILL CANCEL")) {
+                                    alert("Bills Not Generated For this Table ");
+                                    return false;
+                                }
+                                if (data[2] == "Yes" && (x.FunctionName == "TABLE CHANGE")) {
+                                    alert("Bills Generated For this Table ! ");
+                                    return false;
+                                }
+                                if (data[3] == "S" && data[2] == "Yes" && (x.FunctionName == "KOT TRANSFER")) {
+                                    alert("No Other Running Tables! ");
+                                    return false;
+                                }
+                                if (data[3] == "S" && (x.FunctionName == "MERGE TABLE" || x.FunctionName == "KOT TRANSFER")) {
+                                    alert("No Other Running Tables ! ");
+                                    return false;
+                                }
+
+                                else {
+
+                                    window.location.href = x.FunctionUrl + "/" + $scope.Tableid;
+
+                                }
+
+                            });
+                        }
+                    }
+
+                    $scope.init = function () {
+                        debugger
+                        // $scope.LoadSessiondata();
+                        $scope.LoadSession();
+
+                        $http({
+                            url: '/POSTransaction/ShowThirPartyVendorImages/',
+                            method: "POST",
+
+                        }).success(function (data) {
+                            debugger
+                            $scope.ThirdPartyImages = eval('(' + data.JsonString + ')');
+
+                        });
+                    }
+
+                    $scope.selected = {};
+                    $scope.closetodaysession = function () {
+                        $http({
+                            url: '/POSTransaction/UpdatetableDetails/',
+                            method: "POST"
+                        }).success(function (data) {
+                            if (data.Success) {
+                                alert("Assigned tables cleared Successfully");
+                                var url = '@Url.Action("../POSTransaction/DashBoard")';
+                                window.location.href = url;
+                            }
+                            else {
+                                alert("Tables Are in Running Status");
+                            }
+
+                        });
+                    }
+                    $scope.ShowSelected = function () {
+
+                        var checkboxes = document.getElementsByClassName('groupHeader');
+
+                        debugger;
+                        var TableNames = "";;
+                        for (var i = 0; i < checkboxes.length; i++) {
+                            if (checkboxes[i].checked) {
+                                (checkboxes[i].value);
+                                TableNames = TableNames + "," + "'" + checkboxes[i].value + "'";
+
+                            }
+                        }
+
+                        TableNames = TableNames.substring(1);
+                        if (TableNames == "") {
+                            alert("Please Select Tables");
+                        }
+                        else {
+                            $http({
+                                url: '/POSTransaction/SaveTableDetails/',
+                                method: "POST",
+
+                                data: { TableName: TableNames }
+                            }).success(function (data) {
+                                if (data.Success) {
+                                    alert("Tables Assigned Successfully");
+                                    var url = '@Url.Action("../POSTransaction/DashBoard")';
+                                    window.location.href = url;
+                                }
+
+                            });
+                        }
+
+                    };
+
+                    $scope.Click = function (x) {
+                        debugger
+                        $rootScope.TableName = x.TableName;
+                        var TableName = x.TableName + '-' + x.Tableid
+                        $scope.Tableid = x.Tableid;
+
+                        $http.post('/POSTransaction/PassData', { Table: TableName }).success(function (data) {
+                            debugger;
+                        });
+                    }
+                    $scope.getClass = function (strValue) {
+
+                        if (strValue.TableStatus == "M")
+                            return "table-list badge-info";
+                        else if (strValue.TableStatus == "R" || strValue.TableStatus == "B")
+                            return "table-list badge-danger ";
+
+                        else
+                            return "table-list badge-success ";
+
+                    }
+
+                    $scope.Color = function (item) {
+
+                        debugger
+                        for (var i = 0; i < $scope.lstAvailabletable.length; i++) {
+                            if (parseInt(item.length) % 2 == 0) {
+                                $scope.myColor = 'Red';
+                            }
+                            else {
+                                $scope.myColor = 'Blue';
+                            }
+                        }
+                    };
+                    $scope.OpenHomedelivary = function () {
+                        debugger;
+
+                        window.location.href = "/TakeAway/PhoneDelivery";
+                    }
+                    $scope.OpenTakeAwayAtHotel = function () {
+                        debugger;
+
+                        window.location.href = "/TakeAway/TakeAwayAtHotel";
+                    }
+                    $scope.ThirdParty = function () {
+                        debugger;
+
+                        // window.location.href = "/TakeAway/ThirdParty";
+                    }
+
+                    $scope.LoadSessiondata = function () {
+
+                        $http({
+                            url: '/POSTransaction/ShowAlltablesbind/',
+                            method: "get"
+                        }).success(function (data) {
+                            debugger;
+                            $scope.lstAvailabletablesdata = data.lstAvailabletablesdata;
+                        });
+
+                    }
+
+                    $scope.LoadSession = function () {
+                        debugger
+                        $http({
+                            url: '/POSTransaction/ShowAlltables/',
+                            method: "get"
+                        }).success(function (data) {
+                            debugger;
+
+                            $scope.lstAvailabletable = data.lstAvailabletable;
+                            $scope.ChildNames = data.ChildNames
+                            $scope.KotsCount = data.KotsCount;
+                            $scope.TotalKots = data.KotsCount.Totalkots;
+                            $scope.RunningKots = data.KotsCount.RunningKots;
+                            $scope.CompletedKots = data.KotsCount.CompletedKots;
+                            $scope.CancelKots = data.KotsCount.CancelKots;
+                            $scope.username = data.username;
+
+
+                            //Chart
+
+                            debugger;
+                            //var data1 = new google.visualization.DataTable();
+                            ////  alert(data1);
+
+                            //data1.addColumn('string', 'PlanName');
+                            //data1.addColumn('number', 'PaymentAmount');
+
+                            //for (var i = 0; i < data.chartsdata.length; i++) {
+
+                            //    data1.addRow([data.chartsdata[i].PlanName, data.chartsdata[i].PaymentAmount]);
+                            //}
+
+                            //$scope.datachart = data1;
+
+                            //var session = new google.visualization.DataTable();
+                            //session.addColumn('string', 'PlanName');
+                            //session.addColumn('number', 'PaymentAmount');
+
+                            //for (var i = 0; i < data.ChartListForSessionwise.length; i++) {
+
+                            //    session.addRow([data.ChartListForSessionwise[i].PlanName, data.ChartListForSessionwise[i].PaymentAmount]);
+                            //}
+
+                            //var Section = new google.visualization.DataTable();
+                            //Section.addColumn('string', 'PlanName');
+                            //Section.addColumn('number', 'PaymentAmount');
+
+                            //for (var i = 0; i < data.ChartListForSectionwise.length; i++) {
+
+                            //    Section.addRow([data.ChartListForSectionwise[i].PlanName, data.ChartListForSectionwise[i].PaymentAmount]);
+                            //}
+
+
+                            //var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+                            //var chart1 = new google.visualization.PieChart(document.getElementById('chartdiv1'));
+                            //var chart2 = new google.visualization.PieChart(document.getElementById('chartdiv2'));
+
+
+                            //chart.draw(data1,
+                            //  {
+
+                            //      position: "top",
+                            //      fontsize: "14px",
+                            //      is3D: true,
+
+                            //      width: '100%',
+                            //      height: '250',
+                            //      chartArea: {
+                            //          left: 5,
+                            //          top: 20,
+                            //          width: '100%',
+                            //          height: '250'
+                            //      }
+                            //  });
+                            //chart1.draw(Section,
+                            // {
+
+                            //     position: "top",
+                            //     fontsize: "14px",
+                            //     is3D: true,
+                            //     width: '100%',
+                            //     height: '350',
+                            //     chartArea: {
+                            //         left: 5,
+                            //         top: 20,
+                            //         width: '100%',
+                            //         height: '350'
+                            //     }
+                            // });
+                            //chart2.draw(session,
+                            // {
+
+                            //     position: "top",
+                            //     fontsize: "14px",
+                            //     is3D: true,
+                            //     width: '100%',
+                            //     height: '350',
+                            //     chartArea: {
+                            //         left: 5,
+                            //         top: 20,
+                            //         width: '100%',
+                            //         height: '350'
+                            //     }
+                            // });
+
+
+
+
+                            $scope.groups = [];
+                            $scope.Names = [];
+
+
+                            for (var s = 0; s < $scope.lstAvailabletable.length; s++) {
+                                $scope.Names.push($scope.lstAvailabletable[s]["Categoryname"]);
+                            }
+
+
+                            debugger
+                            // var Departments = $.unique($scope.Names);
+
+                            var Departments = $scope.Names.filter(function (item, i, ar) {
+                                return ar.indexOf(item) === i;
+                            });
+
+
+                            debugger
+                            for (var i = 0; i < Departments.length; i++) {
+
+                                $scope.groups[i] = {
+                                    name: Departments[i],
+                                    items: []
+                                };
+
+
+                                for (var j = 0; j < $scope.lstAvailabletable.length; j++) {
+
+                                    if ($scope.lstAvailabletable[j]["Categoryname"] == Departments[i]) {
+
+                                        $scope.groups[i].items.push($scope.lstAvailabletable[j]);
+                                        //  $scope.groups[i].items.Quantity = 0;
+                                    }
+
+                                }
+                            }
+
+                        });
+                    }
+
+
+                }]);
+            </script>
+
+            <!-- /.row -->
+
+        </div>
+
+        <!-- Modal thirdparty -->
+        <form class="form-horizontal" role="form" name="FmThirdparty" novalidate enctype="multipart/form-data">
+            <div class="modal " id="thirdparty-popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="z-index:9999;">
+                <div class="modal-dialog thirdparty-popup animated fadeInRightBig " role="document">
+                    <div class="modal-content" style="height:100%;">
+                        <div class="modal-header" style="background:#00c27b; color:#fff;">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">THIRD PARTY ORDERS</h4>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="thirdparty-vendors">
+                                <li ng-repeat="TI in ThirdPartyImages" ng-click="RedirectToVendorOeders(TI)">
+                                    <img ng-src="~/thirdparty-vendors/{{TI.vchimageid}}" />
+                                    <span>{{TI.vchpartyname}}</span>
+
+                                    <span>{{TI.nooforders}}</span>
+                                    <span ng-hide="true">{{TI.vchpartyid}}</span>
+
+                                </li>
+                                @*<li>
+                                        <img src="~/assets/Css/images/thirdparty-vendors/zomoto.png" />
+                                        <span> 20</span>
+                                    </li>
+                                    <li>
+                                        <img src="~/assets/Css/images/thirdparty-vendors/Foodpanda.png" />
+                                        <span> 01</span>
+                                    </li>
+                                    <li>
+                                        <img src="~/assets/Css/images/thirdparty-vendors/faasos.png" />
+                                        <span> 50</span>
+                                    </li>
+                                    <li>
+                                        <img src="~/assets/Css/images/thirdparty-vendors/tinyowl.png" />
+                                        <span> 100</span>
+                                    </li>*@
+                                <li data-toggle="collapse" data-target="#create-thirdparty-vendor"><i class="fa fa-plus-square add-vendor"></i></li>
+
+                            </ul>
+                        </div>
+
+
+                        <div id="create-thirdparty-vendor" class="collapse create-thirdparty">
+                            <div class="row">
+                                <h2 style="font-size:16px; padding:10px; font-weight:400; color:#666; margin:0px 0px 5px 0px; background:#ddd; ">Create Thirdparty Vendor</h2>
+
+
+                                <div class="col-sm-12" style="padding:0px 20px !important; ">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-12" for="form-field-1">Third Party Name<span style="color: Red">*</span> :</label>
+                                        <input name="TName" required id="form-field-1" kit-alpha-numeric ng-model="Third.ThirdPartyName" class="form-control" type="text" placeholder="Enter Third Party Name" ng-minlength="3" maxlength="200">
+                                        <span class="error" ng-show="(FmThirdparty.TName.$dirty || submitted ) && FmThirdparty.TName.$error.required">
+                                            Enter Third Party Name!
+                                        </span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-12" for="form-field-1"> Contact No. <span style="color: Red">*</span>:</label>
+
+                                        <input name="TContact" required id="form-field-1" ng-model="Third.ContactNo" class="form-control " type="text" placeholder="Enter Contact No." ng-minlength="10" maxlength="10">
+
+                                        <span class="error" ng-show="(FmThirdparty.TContact.$dirty || submitted ) && FmThirdparty.TContact.$error.required">
+                                            Enter Contact No.!
+                                        </span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-12" for="form-field-1"> Mode Of Payment <span style="color: Red">*</span>:</label>
+
+                                        <select id="form-field-1" ng-model="Third.ModeOfPayment" class="form-control" name="TMode" required>
+                                            <option value="">Select</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="Card">Card</option>
+                                            <option value="BankTransfer">Bank Transfer</option>
+
+
+                                        </select>
+                                        <span class="error" ng-show="(FmThirdparty.TMode.$dirty || submitted ) && FmThirdparty.TMode.$error.required">
+                                            Select  ModeOfPayment!
+                                        </span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="form-field-1">Duration <span style="color: Red">*</span>:</label>
+
+                                        <div class="switch-field pull-left">
+
+                                            <input type="radio" id="switch_leftDays" name="switch_2Day" value="Days" onchange="DayOrDays()" />
+                                            <label for="switch_leftDays">S-D</label>
+                                            <input type="radio" id="switch_rightDay" name="switch_2Day" value="Day" checked onchange="DayOrDays()" />
+                                            <label for="switch_rightDay"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+                                        </div>
+
+                                        <select id="form-field-1" ng-model="Third.Duration" class="form-control" name="TDur" ng-hide="ShoWFirst" ng-required="Reuired">
+                                            <option value="">Select</option>
+                                            <option value="07Days">07 Days</option>
+                                            <option value="10Days">10 Days</option>
+                                            <option value="15Days">15 Days</option>
+                                            <option value="20Days">20 Days</option>
+                                            <option value="25Days">25 Days</option>
+                                            <option value="30Days">30 Days</option>
+
+                                        </select>
+                                        <span class="error" ng-show="(FmThirdparty.TDur.$dirty || submitted ) && FmThirdparty.TDur.$error.required">
+                                            Select Duration!
+                                        </span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-12" for="form-field-1">
+                                            From Date <span style="color: Red">*</span>:
+                                        </label>
+
+                                        <input name="FromDate" type="text" ng-model="bill.fromdate" class=" form-control" id="calendar" data-date-format="dd/mm/yyyy" required />
+                                        <span class="error" ng-show="(FmThirdparty.FromDate.$dirty || submitted ) && FmThirdparty.FromDate.$error.required">
+                                            Select From Date!
+                                        </span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-6 pull-left" style="margin-top:5px;">
+                                            <span style="float: left; margin-right: 5px;"> Margin:</span>
+                                            <div class="switch-field pull-right">
+
+                                                <input type="radio" id="switch_left" name="switch_2" value="PERCENTAGE" ng-model="Third.Margintype" required />
+                                                <label for="switch_left"> %</label>
+                                                <span class="error" ng-show="(FmThirdparty.switch_2.$dirty || submitted ) && FmThirdparty.switch_2.$error.required">
+                                                    Check Percentage !
+                                                </span>
+                                                @*<input type="radio" id="switch_right" name="switch_2" value="FLAT" checked ng-model="Third.Margintype" />
+                                                    <label for="switch_right"> ₹ </label>*@
+                                            </div>
+                                        </div>
+
+
+                                        <input id="form-field-1" ng-model="Third.MarginAmount" class="form-control" type="text" maxlength="3" kit-digits name="TMargin" placeholder="Enter Margin" required>
+                                        <span class="error" ng-show="(FmThirdparty.TMargin.$dirty || submitted ) && FmThirdparty.TMargin.$error.required">
+                                            Enter Margin !
+                                        </span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-12" for="form-field-1">
+                                            Upload Image :
+                                        </label>
+
+                                        <input type="file" name="Tfile" ng-model="Third.VendorImage" onchange="angular.element(this).scope().uploadFile(this)" id="photo-upload" required />
+                                        <span class="error" ng-show="(FmThirdparty.Tfile.$dirty || submitted ) && FmThirdparty.Tfile.$error.required">
+                                            Upload Image!
+                                        </span>
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label class="control-label col-sm-12" for="form-field-1">
+                                            Address <span style="color: Red">*</span>:
+
+                                        </label>
+
+                                        <textarea id="form-field-1" ng-model="Third.Address" name="TAddre"
+                                                  maxlength="500" rows="5" placeholder="Enter Address" class="form-control " required></textarea>
+                                        <span class="error" ng-show="(FmThirdparty.TAddre.$dirty || submitted ) && FmThirdparty.TAddre.$error.required">
+                                            Enter Address !
+                                        </span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="reset" class="btn btn-info2">Clear</button>
+                                        <button type="button" class="btn btn-primary" ng-click="SaveThirPartyVendor(Third)">Add Vendor</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @*<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: #FFEB3B">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Select Tables <i class="fa  fa-hand-o-down animated bounce"></i></h4>
+                        </div>
+                        <div class="modal-body" ng-repeat="group in lstAvailabletablesdata">
+
+                            <h1>CSS3 Checkbox Styles</h1>
+                            <em>Click any button below</em>
+
+
+                            <div class="ondisplay">
+
+                                <section title=".slideOne">
+                                    <!-- .slideOne -->
+                                    <div class="slideOne">
+                                        <input type="checkbox" value="None" id="slideOne" name="check" checked />
+                                        <label for="slideOne"></label>
+                                    </div>
+                                    <!-- end .slideOne -->
+                                </section>
+
+                                <section title=".slideTwo">
+                                    <!-- .slideTwo -->
+                                    <div class="slideTwo">
+                                        <input type="checkbox" value="None" id="slideTwo" name="check" checked />
+                                        <label for="slideTwo"></label>
+                                    </div>
+                                    <!-- end .slideTwo -->
+                                </section>
+
+                                <section title=".slideThree">
+                                    <!-- .slideThree -->
+                                    <div class="slideThree">
+                                        <input type="checkbox" value="None" id="slideThree" name="check" checked />
+                                        <label for="slideThree"></label>
+                                    </div>
+                                    <!-- end .slideThree -->
+                                </section>
+
+                                <section title=".roundedOne">
+                                    <!-- .roundedOne -->
+                                    <div class="roundedOne">
+                                        <input type="checkbox" value="None" id="roundedOne" name="check" checked />
+                                        <label for="roundedOne"></label>
+                                    </div>
+                                    <!-- end .roundedOne -->
+                                </section>
+
+                                <section title=".roundedTwo">
+                                    <!-- .roundedTwo -->
+                                    <div class="roundedTwo">
+                                        <input type="checkbox" value="None" id="roundedTwo" name="check" checked />
+                                        <label for="roundedTwo"></label>
+                                    </div>
+                                    <!-- end .roundedTwo -->
+                                </section>
+
+                                <section title=".squaredOne">
+                                    <!-- .squaredOne -->
+                                    <div class="squaredOne">
+                                        <input type="checkbox" value="None" id="squaredOne" name="check" checked />
+                                        <label for="squaredOne"></label>
+                                    </div>
+                                    <!-- end .squaredOne -->
+                                </section>
+
+                                <section title=".squaredTwo">
+                                    <!-- .squaredTwo -->
+                                    <div class="squaredTwo">
+                                        <input type="checkbox" value="None" id="squaredTwo" name="check" checked />
+                                        <label for="squaredTwo"></label>
+                                    </div>
+                                    <!-- end .squaredTwo -->
+                                </section>
+
+                                <section title=".squaredThree">
+                                    <!-- .squaredThree -->
+                                    <div class="squaredThree">
+                                        <input type="checkbox" value="None" id="squaredThree" name="check" checked />
+                                        <label for="squaredThree"></label>
+                                    </div>
+                                    <!-- end .squaredThree -->
+                                </section>
+
+                                <section title=".squaredFour">
+                                    <!-- .squaredFour -->
+                                    <div class="squaredFour">
+                                        <input type="checkbox" value="None" id="squaredFour" name="check" checked />
+                                        <label for="squaredFour"></label>
+                                    </div>
+                                    <!-- end .squaredFour -->
+                                </section>
+
+                            </div>
+                            <div>  {{ group.SectioName }}</div>
+
+                            <ul class="widget-main" style="display:inline-block">
+
+                                <li ng-repeat="name in group.MytableName">
+                                    <span>
+
+                                        <input type="checkbox" class="groupHeader" value="{{name}}" /><a>{{name}}</a>
+                                        <img src="~/assets/Images/table.png" width="40" height="40" class="inverted pull-left" />
+
+                                    </span>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button class="btn btn-success" type="button" id="btnshowtablesave" data-ng-click="ShowSelected()">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>Save
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+</div>
+@*<script type="text/javascript">
+        $(window).load(function () {
+            $('#myModal1').modal('show');
+            // LoadSession();
+        });
+
+    </script>*@
+<script>
+
+    // Converted to SCSS. If you want to grab just the CSS, click the `View Compiled` button on the css window over there <-- . That will list out the compiled css for you to use. Grab all the css between the comments and the html between the comments and it should work like a champ anywhere you place it.
+
+    // All this jquery is just used for presentation. Not required at all for the radio buttons to work.
+    $(document).ready(function () {
+        //   Hide the border by commenting out the variable below
+        var $on = 'section';
+        $($on).css({
+            'background': 'none',
+            'border': 'none',
+            'box-shadow': 'none'
+        });
+    });
+
+
+
+</script>
+<script>
+
+
+    function toggleChevron(e) {
+        $(e.target)
+            .prev('.panel-heading')
+            .find("i.indicator")
+            .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+    }
+    $('#accordion').on('hidden.bs.collapse', toggleChevron)
+</script>
+<script>
+    $(function () {
+        $("#calendar").datepicker({ startDate: 'today', });
+    });
+</script>
+<script>
+    var appElement = document.querySelector('[ ng-controller=DashboardController]');
+    function DayOrDays() {
+        debugger;
+
+        var $scope = angular.element(appElement).scope();
+        var switch_leftDays = document.getElementById('switch_leftDays').checked;
+        var switch_rightDay = document.getElementById('switch_rightDay').checked;
+
+        debugger;
+        if (switch_leftDays == true) {
+
+            $scope.ShoWFirst = true;
+            $scope.Reuired = false;
+        }
+        else if (switch_rightDay == true) {
+
+            $scope.ShoWFirst = false;
+            $scope.Reuired = true;
+
+        }
+        $scope.$apply();
+    }
+
+</script>

@@ -1,0 +1,323 @@
+﻿@{
+    //ViewBag.Title = "Shelf";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+
+
+
+<div ng-controller="ShelfController" ng-init="LoadData()">
+    <div class="page-content">
+        <!-- /.page-header -->
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="ShelfMasterfrm" novalidate>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                            Shelf Name <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-5">
+                            <input type="text" name="ShelfName" id="ShelfName" placeholder="Enter Shelf Name" ng-model="Ic.ShelfName" maxlength="100"  autofocus
+                                   class="form-control" required data-index="1" kt-focus />
+                            <span class="error" ng-show="(ShelfMasterfrm.ShelfName.$dirty || submitted) && ShelfMasterfrm.ShelfName.$error.required">
+                                Shelf Name Required!
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" hidden>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                            Shelf Code <span style="color: Red">*</span>:
+                        </label>
+                        <div class="col-sm-5">
+                            <input type="text" name="ShelfCode" id="ShelfCode" placeholder="ShelfCode" ng-model="Ic.ShelfCode" maxlength="100" kit-alpha-numeric autofocus
+                                   class="form-control"  />
+                            <span class="error" ng-show="(ShelfMasterfrm.ShelfCode.$dirty || submitted) && ShelfMasterfrm.ShelfCode.$error.required">
+                                Shelf Code  Abbreviation!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+                            Storage Location <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-5">
+                          
+                            <select name="StorageLocationName" id="StorageLocationName" ng-model="Ic.StorageLocationCode" placeholder="Select StorageName" ng-options="c.StorageLocationCode as c.StorageLocationName for c in lstStorageLocation" ng-change="SelectShelf()"
+                                    class="form-control" required kt-focus data-index="2">
+                                <option value="">Select  Storage Location</option>
+
+                            </select>
+                            <span class="error" ng-show="(ShelfMasterfrm.StorageLocationName.$dirty || submitted) && ShelfMasterfrm.StorageLocationName.$error.required">
+                                Storage Location Required!
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class=" col-sm-8">
+                        <div class="pull-right">
+                            <button class="btn btn-success" data-index="3" type="button" ng-click="SaveShelf(Ic)">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset" type="button">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table id="grdCategory"></table>
+        <div id="grid-pager">
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    var appElement = document.querySelector('[ ng-controller=ShelfController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdCategory"))
+    }
+    function edit(row) {
+        debugger;
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdCategory").getRowData(row);
+        debugger;
+        $scope.btnSave = "Update"
+        $scope.Ic = rowdata;
+       // $scope.Ic.StorageLocationCode = rowdata.ShelfCode;
+        $scope.$apply();
+        // $scope.Ic.StorageLocationCode = rowdata.StorageLocationCode;
+
+        //$scope.Ic.StorageLocationCode = $.grep($scope.lstStorageLocation, function (c) {
+        //    return c.StorageLocationName == $scope.Ic.StorageLocationName;
+        //})[0].StorageLocationCode;
+
+    }
+
+    function Delete(row) {
+        debugger;
+       
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdCategory").getRowData(row);
+        if ($scope.btnSave == "Save") {
+            var ans = confirm("Are You Sure? Do You Want To Delete?");
+            if (ans) {
+                $http.post('/MMSMaster/DeleteShelfMaster', rowdata).success(function (data) {
+                    if (data == true) {
+                        alert("Shelf Master Details Deleted Successfully");
+                        $('#grdCategory').jqGrid('delRowData', row);
+                        $scope.LoadData();
+                    }
+                    else if (data == false) {
+                        alert("Cannot Delete Shelf Details as it is in use by the application");
+                    }
+                }).error(function (data) { alert("Error Occuerd"); });
+            }
+        }
+        else
+        {
+            alert("Cannot Delete Shelf Details in editable mode");
+        }
+    }
+  
+</script>
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('ShelfController', function ($scope, $http, $rootScope) {
+        debugger
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "Shelf Master";
+        $rootScope.ModuleName = "MMS Masters";
+        //$scope.lstStorageLocation = {};
+
+        $scope.$watch('ShelfMasterfrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.SelectShelf = function () {
+            debugger
+            $scope.Ic.StorageLocationName = $.grep($scope.Ic, function (c) {
+                return c.StorageLocationCode == $scope.Ic.StorageLocationCode;
+            })[0].StorageLocationName;
+        }
+
+        $scope.LoadData = function () {
+            debugger;
+            $http({
+                url: '/MMSMaster/ShowShelfMaster/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.lstStorageLocation = data.lstStorageLocation;
+                OriginGridBinding(data.lstDetails);
+            }).error(function () {
+                alert("Error Occuerd");
+
+            });
+        }
+            
+
+
+        $scope.SaveShelf = function (Ic) {
+            debugger
+            $scope.submitted = true;
+
+            // alert();
+            if ($scope.isFormValid) {
+                if ($scope.btnSave == "Save") {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $scope.Ic.StorageLocationName = $("#StorageLocationName option:selected").text();
+                        $http.post('/MMSMaster/SaveShelfMaster', Ic).success(function (data) {
+                            debugger
+                            if (data == 0) {
+                                alert("Shelf " + $rootScope.Save);
+                                $scope.LoadData();
+                                $('grdCategory').trigger("reloadGrid", [{ page: 2 }])
+                                ClearForm();
+                            } else {
+                                alert("Shelf Name Already Exist");
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+                }
+                else {
+                    var ans = confirm($rootScope.msgUpdate);
+                    if (ans) {
+                        $scope.Ic.StorageLocationName = $("#StorageLocationName option:selected").text();
+                        $http.post('/MMSMaster/UpdateShelfMaster', Ic).success(function (data) {
+                            debugger;
+                            if (data ==0) {
+
+                                alert("Shelf Details Updated Successfully");
+                                $scope.LoadData();
+                                ClearForm();
+                            }
+                            else {
+
+                                alert(" Shelf name Already exist");
+
+                            }
+                        })
+                   .error(function (data) {
+                       alert("Error found");
+                   });
+                    }
+
+                    //}
+
+                }
+            }
+        }
+            $scope.Reset = function () {
+                ClearForm();
+            }
+
+
+
+            //****************** Clear Details *******************************//
+
+            function ClearForm() {
+                $scope.Ic = {};
+                $scope.ShelfMasterfrm.$setPristine();
+                $scope.submitted = false;
+                $scope.btnSave = "Save";
+
+            }
+
+            //****************** JQ Grid  *******************************//
+            function OriginGridBinding(data) {
+                debugger
+
+                var grid_data = data;
+                var grid_selector = "#grdCategory";
+                var pager_selector = "#grid-pager";
+
+                //grid data refresh
+                jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+                //resize to fit page size
+                $(window).on('resize.jqGrid', function () {
+                    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+                })
+                //resize on sidebar collapse/expand
+                var parent_column = $(grid_selector).closest('[class*="col-"]');
+                $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                    if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                        //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                        setTimeout(function () {
+                            $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                        }, 0);
+                    }
+                })
+
+
+                jQuery(grid_selector).jqGrid({
+                    data: grid_data,
+                    datatype: "local",
+                    height: 290,
+                    rownumbers: true,
+                    colModel: [
+                            {
+                                label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+
+                                    // return "<button class='btn-grid' type='button' id='btnEdit'  onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button> ";
+                                    return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                                }
+                            },
+                            { label: 'Shelfid', name: 'Shelfid', width: 75, hidden: true },
+                   { label: 'Shelf Code', name: 'ShelfCode', width: 75 },
+                { label: 'Shelf Name', name: 'ShelfName', width: 75 },
+
+                { label: 'Storage Location', name: 'StorageLocationName', width: 75 },
+
+                    { label: 'Storage Location Code', name: 'StorageLocationCode', width: 75, hidden: true }
+                    ],
+
+                    viewrecords: true,
+                    rowNum: 8,
+                    rowList: [8, 16, 25, 100],
+                    pager: pager_selector,
+                    altRows: true,
+                    search: true,
+                    ignoreCase: true,
+                    loadComplete: function (id) {
+                        var table = this;
+                        setTimeout(function () {
+                            styleCheckbox(table);
+
+                            updateActionIcons(table);
+                            updatePagerIcons(table);
+                            enableTooltips(table);
+                        }, 0);
+                    },
+
+
+                    caption: "Shelf Master <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+                });
+                $(window).triggerHandler('resize.jqGrid');
+
+            }
+
+       
+    });
+    
+</script>

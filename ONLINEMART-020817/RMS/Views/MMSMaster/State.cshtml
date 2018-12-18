@@ -1,0 +1,325 @@
+﻿@{
+    // ViewBag.Title = "State";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+<div ng-controller="StateController" ng-init="LoadAllStates()">
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="Statefrm" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            Country Name <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <select name="country" id="state" ng-model="state.CountryId" placeholder="Select Country Name" ng-options="c.CountryId as c.Country for c in States" ng-change="SelectCountry()"
+                                    class="form-control" required kt-focus data-index="1">
+                                <option value="">Select Country Name</option>
+                            </select>
+
+
+                            <span class="error" ng-show="(Statefrm.country.$dirty || submitted) && Statefrm.country.$error.required">
+                                Country Name Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                            State Name <span style="color: Red">*</span> :
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" name="statename" ng-model="state.state" maxlength="100" kit-alpha-numeric kt-focus data-index="2"
+                                   placeholder="Enter State Name" class="form-control" required />
+                            <span class="error" ng-show="(Statefrm.statename.$dirty || submitted) && Statefrm.statename.$error.required">
+                                State Name Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="pull-right">
+                            <button class="btn btn-success" type="button" ng-click="SaveState(state)" data-index="3">
+                                <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn orange" ng-click="Reset()" id="Reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table id="grdState"></table>
+        <div id="grid-pager">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+    app.controller('StateController', function ($scope, $http, $rootScope) {
+        debugger
+        $('#state').focus();
+        $scope.submitted = false;
+        $scope.isFormValid = false;
+        $scope.btnSave = "Save";
+        $rootScope.FormName = "State";
+        $rootScope.ModuleName = "MMS Masters";
+
+        $scope.$watch('Statefrm.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+        debugger;
+        $scope.SelectCountry = function () {
+            debugger
+            $scope.state.country = $.grep($scope.States, function (c) {
+                return c.CountryId == $scope.state.CountryId;
+            })[0].country;
+        }
+
+        $http({
+            url: '/MMSMaster/ShowCountry/',
+            method: "get"
+
+        }).success(function (data) {
+            debugger;
+            $scope.States = data;
+
+        }).error(function () {
+            alert("Error Occuerd");
+        });
+
+
+
+
+        $scope.LoadAllStates = function () {
+            $http({ method: "GET", url: '/MMSMaster/BindStateDetails/' }).success(function (data, status, headers, config) {
+                debugger;
+                LoadGrid(data);
+            });
+        }
+
+        $scope.SaveState = function (state) {
+            debugger;
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                $scope.state.Country = $.grep($scope.States, function (c) {
+                    return c.CountryId == $scope.state.CountryId;
+                })[0].Country;
+                if ($scope.btnSave == 'Save') {
+                    debugger;
+                    var result = confirm('Are You Sure? Do You Want To Save?');
+                    if (result) {
+
+                        $http.post("/MMSMaster/SaveState/", state).success(function (data, status) {
+                            debugger;
+                            if (data == 'True') {
+                                alert('State Details Saved Sucessfully');
+                                ClearForm();
+                                $scope.LoadAllStates()
+                            }
+                            else {
+                                $scope.StateName = ''
+                                alert("State Name Already Exist");
+                                ClearForm();
+                                $scope.LoadAllStates()
+                            }
+                        });
+
+                    }
+                }
+
+                if ($scope.btnSave == 'Update') {
+                    var result = confirm('Are You Sure? Do You Want To Update?');
+                    if (result) {
+                        $scope.state.Country = $.grep($scope.States, function (c) {
+                            return c.CountryId == $scope.state.CountryId;
+                        })[0].Country;
+                        $http({ method: 'POST', data: state, url: '/MMSMaster/UpdateState' }).success(function (data) {
+                            $scope.Is_Saved = data;
+                            if ($scope.Is_Saved == 'True') {
+                                window.alert('State Updated Successfully');
+                            }
+                            else if ($scope.Is_Saved == 'False') {
+                                window.alert('State Name already existed');
+
+                            }
+                        });
+                        ClearForm();
+                        $scope.LoadAllStates();
+                    }
+                }
+            }
+
+        };
+
+
+        $scope.Reset = function () {
+            ClearForm();
+        }
+
+
+
+        //****************** Clear Details *******************************//
+
+        function ClearForm() {
+            debugger;
+            $scope.state = {};
+            $scope.Statefrm.$setPristine();
+            $scope.submitted = false;
+            $scope.btnSave = "Save";
+
+        }
+
+        //****************** JQ Grid  *******************************//
+        function LoadGrid(data) {
+            debugger
+
+            var grid_data = data;
+            var grid_selector = "#grdState";
+            var pager_selector = "#grid-pager";
+
+            //grid data refresh
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+            //resize to fit page size
+            $(window).on('resize.jqGrid', function () {
+                $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            })
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+
+            jQuery(grid_selector).jqGrid({
+                data: grid_data,
+                datatype: "local",
+                height: 290,
+                rownumbers: true,
+                colModel: [
+                        {
+                            label: ' ', width: 25, sortable: false, key: true, formatter: function (cellvalue, options, rowObject) {
+                                return "<button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><i class='fa fa-pencil'></i><br/></button> <button class='btn-grid' type='button' onclick='Delete(" + options.rowId + ")'  ><i class='fa fa-trash'></i></button>";
+                            }
+                        },
+                        { label: 'Country Id', name: 'CountryId', width: 20, hidden: true },
+                         { label: 'Country Name', name: 'Country', width: 50 },
+                         { label: 'State Name', name: 'state', width: 90 },
+                          { label: 'State Id', name: 'StateId', width: 20, hidden: true },
+
+
+
+                ],
+
+                viewrecords: true,
+                rowNum: 8,
+                rowList: [8, 16, 25, 100],
+                pager: pager_selector,
+                altRows: true,
+                search: true,
+                ignoreCase: true,
+                loadComplete: function (id) {
+                    var table = this;
+                    setTimeout(function () {
+                        styleCheckbox(table);
+                        updateActionIcons(table);
+                        updatePagerIcons(table);
+                        enableTooltips(table);
+                    }, 0);
+                },
+
+
+                caption: "States <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+
+
+            });
+            $(window).triggerHandler('resize.jqGrid');
+
+        }
+
+    });
+</script>
+
+<script type="text/javascript">
+
+    var appElement = document.querySelector('[ ng-controller=StateController]');
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#grdState"))
+    }
+    function edit(row) {
+        debugger;
+        
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = $("#grdState").getRowData(row);
+
+
+        //var rowdata = jQuery('#grdState').jqGrid('getRowData', row);
+        //var $scope = angular.element(appElement).scope();
+        //var copy = Object.assign({}, rowdata);
+        $http.post('/MMSMaster/CheckState', rowdata).success(function (data) {
+
+            debugger;
+            if (data == 1) {
+                $scope.btnSave = "Update";
+                $scope.state = rowdata;
+                $scope.$apply();
+            }
+            else {
+                alert("Cannot Update State as it is in use by the application");
+            }
+        })
+
+    }
+    function Delete(row) {
+        debugger
+        var $http = angular.element(appElement).injector().get('$http');
+        var $scope = angular.element(appElement).scope();
+        var rowdata = jQuery("#grdState").jqGrid('getRowData', row);
+        debugger;
+        if ($scope.btnSave == "Save") {
+            $http.post('/MMSMaster/CheckState', rowdata).success(function (data) {
+
+                debugger;
+                if (data == 1) {
+                    var ans = confirm("Are You Sure? Do You Want To Delete?");
+                    if (ans) {
+                        $http.post('/MMSMaster/DeleteState', rowdata).success(function (data) {
+
+                            if (data == "True") {
+
+                                alert("State Details Deleted Successfully");
+                                $scope.LoadAllStates();
+                                ClearForm();
+                               
+                            }
+                            else {
+                                alert("Deletion failed");
+                               
+                            }
+                        })
+                    }
+                }
+                else {
+                    alert("Cannot Delete State as it is in use by the application");
+                }
+            })
+        }
+        else {
+            alert("Cannot Delete State in editable mode.");
+        }
+    }
+
+</script>

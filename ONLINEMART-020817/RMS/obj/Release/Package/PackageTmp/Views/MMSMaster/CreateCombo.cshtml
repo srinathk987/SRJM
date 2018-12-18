@@ -1,0 +1,1325 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+
+
+
+<div ng-controller="ComboController" ng-init="BindProducts();BindComboGrid()">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+
+                <form class="form-horizontal" role="form" name="ProductsForm" novalidate>
+                    <div id="Inputdivv">
+
+                        @*comboname and date*@
+
+
+                        <div class="form-group">
+                            <fieldset class="scheduler-border">
+                                <label for="vchcomboname" class="col-sm-2 form-horizontal">
+                                    Combo Name :
+                                    <span><i style="color:red">*</i></span>
+                                </label>
+
+                                <div class="col-sm-3 form-horizontal">
+                                    <input class="form-control" style="width:150px"
+                                           placeholder="Enter Combo Name" type="text"
+                                           id="txtvchcomboname" maxlength="50"
+                                           ng-model="product.vchcomboname" name="vchcomboname" required capitalize autofocus>
+                                    <span class="error" ng-show="(ProductsForm.vchcomboname.$dirty || psubmitted ) && ProductsForm.vchcomboname.$error.required">
+                                        Combo Name Required!
+                                    </span>
+                                </div>
+
+                                <label for="Date" class="col-sm-2  form-horizontal">
+                                    Date :
+                                    <span><i style="color:red">*</i></span>
+                                </label>
+                                <div class="col-sm-3 form-horizontal">
+                                    <input class="form-control" style="width:150px" placeholder="Select Date"
+                                           type="text" id="txtdate" ng-model="product.vchdate" name="vchdate" data-date-format="dd/mm/yyyy" required>
+                                    <span class="error" ng-show="(ProductsForm.vchdate.$dirty || psubmitted ) && ProductsForm.vchdate.$error.required">
+                                        Date Required!
+                                    </span>
+
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+
+
+                        @*end comboname and date*@
+
+
+                        @*Create Combo Field*@
+
+                        <div class="widget-box">
+
+                            <div class="widget-header widget-header-flat widget-header-small">
+                                <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i> CREATE COMBO </h5>
+                                <div class="widget-toolbar">
+                                    <a href="#" data-action="collapse">
+                                        <i class="ace-icon fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <fieldset class="scheduler-border">
+                                                    <label class="col-sm-2 form-horizontal" for="form-field-1">Product :<span style="color: Red">*</span></label>
+                                                    <div class="col-sm-3 form-horizontal">
+                                                        <select id="vchproductid" class="Search-Select form-control" name="vchproductid" ng-model="product.vchproductid" ng-change="productChange();" ng-options="c.productid as c.productname for c in products"
+                                                                required style="text-decoration: none;width: 600px;height: 32px;">
+                                                            <option value="">Select Product</option>
+                                                        </select>
+                                                        <span class="error" ng-show="(ProductsForm.vchproductid.$dirty || psubmitted) && ProductsForm.vchproductid.$error.required">
+                                                            Product Required!
+                                                        </span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <fieldset class="scheduler-border">
+                                                    <label class="col-sm-2  padding-0 control-label" for="form-field-1">Product Code :</label>
+                                                    <div class="col-sm-3 form-horizontal">
+                                                        <input class="form-control" style="width:150px"
+                                                               type="text"
+                                                               id="txtvchproductcode" maxlength="50"
+                                                               ng-model="product.vchproductcode" name="vchproductcode" ng-disabled readonly>
+                                                    </div>
+
+                                                    <label class="col-sm-3 padding-0 control-label" for="form-field-1">UOM :</label>
+                                                    <div class="col-sm-3 form-horizontal">
+                                                        <input class="form-control" style="width:150px"
+                                                               type="text"
+                                                               id="txtvchuom" maxlength="50"
+                                                               ng-model="product.vchuom" name="vchuom" ng-disabled readonly>
+                                                    </div>
+
+                                                </fieldset>
+                                            </div>
+                                            <div class="form-group">
+
+                                                <fieldset class="scheduler-border">
+                                                    <label class="col-sm-2  padding-0 control-label" for="form-field-1">Unit Rate :</label>
+                                                    <div class="col-sm-3 form-horizontal">
+                                                        <input class="form-control" style="width:150px"
+                                                               type="text"
+                                                               id="txtvchamount" maxlength="50"
+                                                               ng-model="product.vchamount" name="vchamount" ng-disabled readonly>
+                                                    </div>
+
+                                                    <label class="col-sm-3 padding-0 control-label" for="form-field-1">
+                                                        Qty Approved For Combo:
+                                                        <span><i style="color:red">*</i></span>
+                                                    </label>
+                                                    <div class="col-sm-3 form-horizontal">
+                                                        <input class="form-control" style="width:150px"
+                                                               type="text" placeholder="Enter Quantity of Product"
+                                                               id="txtvchqty" maxlength="50" ng-pattern="/^[0-9]+([,.][0-9]{0,2})?$/"
+                                                               ng-model="product.vchqty" name="vchqty" required kit-numeric-withdot>
+                                                        <span class="error" ng-show="(ProductsForm.vchqty.$dirty || psubmitted ) && ProductsForm.vchqty.$error.required">
+                                                            Quantity Of Product Required!
+                                                        </span>
+                                                        <span class="error" ng-show="(ProductsForm.vchqty.$dirty || psubmitted) && ProductsForm.vchqty.$error.pattern">
+                                                            Enter valid Quantity upto 2 Decimal Values!
+                                                        </span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="pull-right">
+                                                    <button class="btn btn-success" type="button" ng-click="AddProducts(product)">
+                                                        <i class="ace-icon fa fa-plus bigger-110"></i>{{btnAdd}}
+                                                    </button>
+                                                    &nbsp; &nbsp; &nbsp;
+                                                    <button class="btn orange" ng-click="ProductssClear()" id="Reset" type="button">
+                                                        <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                    </button>
+                                                    <input type="hidden" hidden="hidden" id="HdnEditValue" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*End Create Combo*@
+                    </div>
+                </form>
+
+
+                <form class="form-horizontal" role="form" name="ComboForm" novalidate>
+                    <div id="Inputdiv">
+
+                        @*Products Grid Adding*@
+
+                        <div id="tblgrid">
+                            <table id="tblProducts"></table>
+                            <div id="pageProducts">
+                            </div>
+                        </div>
+
+
+                        @*End Grid Adding Products*@
+
+
+                        @*Products, Actual AMount and Combo COst*@
+
+
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <fieldset class="scheduler-border">
+                                                <label class="col-sm-2  padding-0 control-label" for="form-field-1">No of Products :</label>
+                                                <div class="col-sm-2 form-horizontal">
+                                                    <input class="form-control" style="width:150px"
+                                                           type="text"
+                                                           id="txtvchnoofproducts" maxlength="50"
+                                                           ng-model="combo.vchnoofproducts" name="vchnoofproducts" ng-disabled readonly>
+                                                    @*<span class="error" ng-show="(ComboForm.vchnoofproducts.$dirty || submitted ) && ComboForm.vchnoofproducts.$error.required">
+                                                            No of Products Required!
+                                                        </span>*@
+                                                </div>
+
+                                                <label class="col-sm-2 padding-0 control-label" for="form-field-1">Actual Amount :</label>
+                                                <div class="col-sm-2 form-horizontal">
+                                                    <input class="form-control" style="width:150px"
+                                                           type="text"
+                                                           id="txtvchactualamount" maxlength="50"
+                                                           ng-model="combo.vchactualamount" name="vchactualamount" ng-disabled readonly>
+                                                    @*<span class="error" ng-show="(ComboForm.vchactualamount.$dirty || submitted ) && ComboForm.vchactualamount.$error.required">
+                                                            Actual Amount Required!
+                                                        </span>*@
+                                                </div>
+
+                                                <label class="col-sm-2 padding-0 control-label" for="form-field-1">
+                                                    Combo Amount :
+                                                    <span><i style="color:red">*</i></span>
+                                                </label>
+                                                <div class="col-sm-2 form-horizontal">
+                                                    <input class="form-control" style="width:200px"
+                                                           type="text" placeholder="Enter Combo Cost"
+                                                           id="txtvchcombocost" maxlength="50" ng-pattern="/^[0-9]+([,.][0-9]{0,2})?$/"
+                                                           ng-model="combo.vchcombocost" name="vchcombocost" required kit-numeric>
+                                                    <span class="error" ng-show="(ComboForm.vchcombocost.$dirty || csubmitted ) && ComboForm.vchcombocost.$error.required">
+                                                        Combo Cost Required!
+                                                    </span>
+                                                    <span class="error" ng-show="(ComboForm.vchcombocost.$dirty || csubmitted) && ComboForm.vchcombocost.$error.pattern">
+                                                        Enter valid Amount upto 2 Decimal Values!
+                                                    </span>
+
+
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="pull-right">
+                                                <button class="btn btn-success" type="button" ng-click="SaveCombo()">
+                                                    <i class="ace-icon fa fa-plus bigger-110"></i>{{btnSave}}
+                                                </button>
+                                                &nbsp; &nbsp; &nbsp;
+                                                <button class="btn orange" ng-click="Reset()" id="Reset" type="button">
+                                                    <i class="ace-icon fa fa-undo bigger-110"></i>Reset
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        @*<div id="dialog-confirm" title="View Combo Details"  style="height:150px;width:950px;padding-left:-5em">*@
+                                        <table id="tblView" title="View Combo Details" style="height:auto;left:108px;top:-374px;"></table>
+                                        <div id="pageView">
+                                        </div>
+                                        @*</div>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @*End Products, Actual AMount and Combo COst*@
+
+                        <div id="tblCombogrid">
+                            <table id="tblCombo"></table>
+                            <div id="pageCombo">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    @*<table id="tblView" title="View Combo Details" style="height:auto;left:108px;top:-374px"></table>
+                        <div id="pageView">
+                        </div>*@
+
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var i = 1;
+    var s = 1;
+
+    $(function () {
+        $("#txtdate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    var app = angular.module('RMS');
+
+    app.controller('ComboController', function ($scope, $http, $rootScope) {
+        $scope.combo = {};
+        $scope.product = {};
+        $scope.csubmitted = false;
+        $scope.psubmitted = false;
+        $scope.comboisFormValid = false;
+        $scope.productisFormValid = false;
+        $rootScope.FormName = "COMBO";
+        $rootScope.ModuleName = "Masters";
+        $scope.btnAdd = "ADD";
+        $scope.btnSave = "SAVE";
+        $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+
+        $scope.$watch('ComboForm.$valid', function (newValue) {
+            $scope.comboisFormValid = newValue;
+        });
+
+        $scope.$watch('ProductsForm.$valid', function (newValue) {
+            $scope.productisFormValid = newValue;
+        });
+
+
+        var appElement = document.querySelector('[ ng-controller=ComboController]');
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+
+        $scope.BindProducts = function () {
+            debugger;
+            $http({
+                url: '/MMSMaster/GetProductnames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.products = eval('(' + data.Data + ')');
+                var Value = '';
+                $scope.ProductsGrid(Value);
+            });
+
+        }
+
+
+
+        $scope.BindComboGrid = function () {
+            debugger;
+            $http({ method: "GET", url: '/MMSMaster/GetComboDetails' }).success(function (data, status, headers, config) {
+                $scope.ComboDetailsArray = [];
+                //$scope.ComboDetailsArray = data;
+                debugger;
+                for (var k = 0; k < data.length; k++) {
+                    $scope.ComboDetailsArray.push({ 'ID': s++, 'combocode': data[k].combocode, 'comboname': data[k].comboname, 'noofproducts': data[k].noofproducts, 'actualcost': data[k].actualcost, 'combocost': data[k].combocost });
+
+                }
+                $scope.ComboGrid($scope.ComboDetailsArray);
+            });
+        }
+
+
+        $scope.ProductsClear = function () {
+            debugger;
+            $scope.Copy = $scope.product.vchcomboname;
+            $scope.product = {};
+            $scope.psubmitted = false;
+            $scope.ProductsForm.$setPristine();
+            $scope.product.vchcomboname = $scope.Copy;
+            $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+        }
+
+        $scope.ProductssClear = function () {
+            debugger;
+            $scope.product = {};
+            $scope.psubmitted = false;
+            $scope.ProductsForm.$setPristine();
+            $scope.product.vchcomboname = $scope.Copy;
+            $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+        }
+
+        $scope.SaveClear = function () {
+            debugger;
+            $scope.product = {};
+            $scope.psubmitted = false;
+            $scope.ProductsForm.$setPristine();            
+            $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+            $scope.combo = {};
+            $scope.ComboForm.$setPristine();
+            $scope.csubmitted = false;
+            $("#tblProducts").jqGrid("clearGridData", true).trigger("reloadGrid");
+        }     
+       
+
+
+
+        $scope.Reset = function () {
+            debugger;
+
+            if ($scope.btnSave == "SAVE") {
+
+                $scope.product = {};                
+                $scope.ProductsForm.$setPristine();
+                $scope.psubmitted = false;
+                $scope.combo = {};               
+                $scope.ComboForm.$setUntouched();
+                $scope.csubmitted = false;
+                $("#tblProducts").jqGrid("clearGridData", true).trigger("reloadGrid");
+                $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+            }
+            else if ($scope.btnSave == "UPDATE") {
+                debugger;
+                $scope.btnSave = "SAVE";                
+                document.getElementById("txtvchcomboname").value = "";
+                $scope.product = {};
+                $scope.ProductsForm.$setPristine();
+                $scope.psubmitted = false;
+                $scope.combo = {};
+                $scope.ComboForm.$setUntouched();               
+                $scope.csubmitted = false;             
+                $scope.ComboForm.$setPristine();
+                $("#tblProducts").jqGrid("clearGridData", true).trigger("reloadGrid");
+                $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+            }
+            else {
+                $scope.product = {};
+                $scope.ProductsForm.$setPristine();
+                $scope.product.vchdate = new Date().getDate() + '/' + (parseInt(new Date().getMonth()) + 1) + '/' + new Date().getFullYear();
+
+            }
+
+        }
+
+        $scope.ResetCombo = function () {
+            debugger;
+            $scope.combo = {};
+            $scope.ComboForm.$setPristine();
+        }
+
+
+
+        $scope.ProductsArray = new Array();
+        $scope.AddProducts = function (data) {
+            debugger;
+
+            if ($scope.btnSave == "SAVE") {
+                $scope.psubmitted = true;
+                if ($scope.productisFormValid) {
+                    if (data != undefined) {
+
+                        var uom = data.vchuomid;
+                        var Qnty = parseFloat(data.vchqty).toFixed(3);
+                        var UnitRate = parseFloat(data.vchamount).toFixed(2);
+
+                        if (uom == 'KG') {
+                            var TotalAmount = parseFloat(Qnty * UnitRate).toFixed(2);
+                        }
+                        else if (uom == 'GMS') {
+                            var TotalAmount = parseFloat(Qnty * UnitRate).toFixed(2);
+                        }
+                        else if (uom == 'NO.' || uom == 'NO') {
+                            var TotalAmount = parseFloat(Qnty * UnitRate).toFixed(2);
+                        }
+
+
+                        var result = confirm('Are You Sure? Do You Want To Add These Details to Grid?');
+                        if (result) {
+                            $scope.ProductsArray.push({ 'Id': i++, 'productid': data.vchproductid, 'productcode': data.vchproductcode, 'amount': TotalAmount, 'productname': data.vchproductname, 'uom': data.vchuomid, 'qafc': data.vchqty, 'rate': UnitRate })
+                            $scope.ProductsGrid($scope.ProductsArray);
+                            //$scope.product = {};
+                            //$scope.ProductsForm.$setPristine();
+                            $scope.ProductsClear();
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                }
+            }
+            else if ($scope.btnSave == "UPDATE") {
+                debugger;
+                if (data != undefined) {
+
+                    var uom = data.vchuomid;
+                    var Qnty = parseFloat(data.vchqty).toFixed(3);
+                    var UnitRate = parseFloat(data.vchamount).toFixed(2);
+
+                    if (uom == 'KG') {
+                        var TotalAmount = parseFloat(Qnty * UnitRate).toFixed(2);
+                    }
+                    else if (uom == 'GMS') {
+                        var TotalAmount = parseFloat(Qnty * UnitRate).toFixed(2);
+                    }
+                    else if (uom == 'NO.' || uom == 'NO') {
+                        var TotalAmount = parseFloat(Qnty * UnitRate).toFixed(2);
+                    }
+
+
+                    var result = confirm('Are You Sure? Do You Want To Add These Details to Grid?');
+                    if (result) {
+                        $scope.ProductsArray.push({ 'Id': i++, 'productid': data.vchproductid, 'productcode': data.vchproductcode, 'amount': TotalAmount, 'productname': data.vchproductname, 'uom': data.vchuomid, 'qafc': data.vchqty, 'rate': UnitRate })
+                        $scope.ProductsGrid($scope.ProductsArray);
+                        //$scope.product = {};
+                        //$scope.ProductsForm.$setPristine();
+                        $scope.ProductsClear();
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+        }
+
+
+
+
+        $scope.SaveCombo = function () {
+
+            debugger;
+            if ($scope.btnSave == "SAVE") {
+                debugger;
+                $scope.csubmitted = true;
+                if ($scope.comboisFormValid) {
+                    var Data = [];
+                    var ids = jQuery("#tblProducts").jqGrid('getDataIDs');
+                    if (ids.length < 0) {
+                        alert("No Products are added to Grid");
+                        return false;
+                    }
+                    else {
+
+                        for (var i = 1; i <= ids.length; i++) {
+                            if ($($("#tblProducts").jqGrid("getInd", i, true)).attr("editable") === "1") {
+                                debugger;
+                                alert("Please Save Rows in Products Grid to Proceed Further");
+                                return false;
+                            }
+                            var rowData = $("#tblProducts").getRowData(i);
+                            if (rowData.amount == 0 || isNaN(rowData.amount)) {
+                                alert("For few items Amount and Quantity are Zero,Please edit desired details of Amount and Quantity Fields  of those products");
+                                return false;
+                            }
+                            else if (rowData.qafc == null || rowData.qafc == '0') {
+                                alert("For Few items Quantity is not Mentioned,make sure to have valid Quantity");
+                                return false;
+                            }
+                        }
+                        var GridData = $("#tblProducts").jqGrid('getRowData');
+                        Data = GridData;
+                        var ComboData = JSON.stringify(Data);
+                        var NOP = $scope.combo.vchnoofproducts;
+                        var ActualAMount = $scope.combo.vchactualamount;
+                        var CmbCost = $scope.combo.vchcombocost;
+                        var CnfrmSave = confirm("Do you want to Save these Combo Details?");
+                        if (CnfrmSave) {
+                            debugger;
+                            $http.post("/MMSMaster/SaveComboDetails", { objLComboDetails: ComboData, NoOfProducts: NOP, ActualAmount: ActualAMount, ComboCost: CmbCost, ComboName: $scope.product.vchcomboname, ComboDate: $scope.product.vchdate }).success(function (data) {
+                                debugger;
+                                var Code = data;
+                                if (Code != undefined && Code != "CMBB") {
+                                    alert("Combo Created Successfully with Name " + Code);
+                                    $("#tblProducts").jqGrid("clearGridData", true).trigger("reloadGrid");                                   
+                                    $scope.ProductsArray = [];                                   
+                                    $scope.SaveClear();
+                                    $scope.BindComboGrid();                                   
+
+                                }
+                                else if (Code == "CMBB") {
+                                    alert("Combo Name already Exists ! Please Give another Name")
+                                    $scope.product.vchcomboname = "";
+                                    document.getElementById("txtvchcomboname").focus();
+                                    return false;
+                                }
+
+                            });
+                        }
+                    }
+                }
+            }
+            else if ($scope.btnSave == "UPDATE") {
+                debugger;
+                var CDATA = [];
+                var ids = jQuery("#tblProducts").jqGrid('getDataIDs');
+                if (ids.length < 0) {
+                    alert("No Products are added to Grid");
+                    return false;
+                }
+
+                else {
+                    for (var i = 1; i <= ids.length; i++) {
+                        if ($($("#tblProducts").jqGrid("getInd", i, true)).attr("editable") === "1") {
+                            debugger;
+                            alert("Please Save Rows in Products Grid to Proceed Further");
+                            return false;
+                        }
+                        var rowData = $("#tblProducts").getRowData(i);
+                        if (rowData.amount == 0 || isNaN(rowData.amount)) {
+                            alert("For few items Amount and Quantity are Zero,Please edit desired details of Amount and Quantity Fields  of those products");
+                            return false;
+                        }
+                        else if (rowData.qafc == null || rowData.qafc == '0') {
+                            alert("For Few items Quantity is not Mentioned,make sure to have valid Quantity");
+                            return false;
+                        }
+                    }
+                    var CGridData = $("#tblProducts").jqGrid('getRowData');
+                    CDATA = CGridData;
+                    var JComboData = JSON.stringify(CDATA);
+                    var NOP = $scope.combo.vchnoofproducts;
+                    var ActualAMount = document.getElementById("txtvchactualamount").value;
+                    var CmbCost = $scope.combo.vchcombocost;
+                    var CnfrmUpdate = confirm("Do you Want to Update these Combo Details?");
+                    if (CnfrmUpdate) {
+                        debugger;
+                        $http.post("/MMSMaster/UpdateComboDetails", { objLComboDetails: JComboData, NoOfProducts: NOP, ActualAmount: ActualAMount, ComboCost: CmbCost, ComboName: document.getElementById("txtvchcomboname").value, ComboDate: "", ComboCode: $scope.cId }).success(function (data) {
+                            debugger;
+                            var Code = data;
+                            if (Code != undefined) {
+                                alert("Combo Updated Successfully");
+                                $("#tblProducts").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $scope.Reset();
+                                $scope.ResetCombo();
+                                $scope.ComboForm.$setPristine();
+                                $scope.ProductsForm.$setPristine();
+                                $scope.BindComboGrid();
+                                $scope.ProductsArray = [];
+                                $scope.btnSave = "SAVE";
+                                document.getElementById("txtvchcomboname").value = "";                               
+                            }
+                            else {
+                                alert("Exception Occured while Updating Combo Pack");
+                                return false;
+                            }
+
+                        });
+                    }
+
+                }
+
+            }
+
+        }
+
+
+
+
+        $scope.ClearComboDetails = function () {
+            debugger;
+            $scope.combo.vchnoofproducts = "";
+            $scope.combo.vchactualamount = "";
+            $scope.combo.vchcombocost = "";
+            $scope.ComboForm.$setPristine();
+        }
+
+
+        $scope.productChange = function () {
+            debugger;
+            var Pid = $scope.product.vchproductid;
+            if (Pid != undefined) {
+                $http.post('/MMSMaster/GetComboProductDetails', { ProductId: Pid }).success(function (data) {
+                    debugger;
+                    var C = eval('(' + data.productdetails + ')');;
+                    var strUom = C[0]["uomname"];
+                    var strproductcode = C[0]["productcode"];
+                    var strproductname = C[0]["productname"];
+                    var strvchuomid = C[0]["vchuomid"];
+                    var strproductid = C[0]["productid"];
+                    var strnumsalerate = C[0]["numsalerate"];
+
+                    $scope.product.vchproductcode = strproductcode;
+                    $scope.product.vchuom = strUom;
+                    $scope.product.vchamount = strnumsalerate;
+                    $scope.product.vchproductid = strproductid;
+                    $scope.product.vchproductname = strproductname;
+                    $scope.product.vchuomid = strvchuomid;
+
+                });
+            }
+            else if (Pid == undefined) {
+                $scope.ProductsClear();
+            }
+        }
+
+
+
+        /// Products Grid Create Combo ////
+
+
+        $scope.ProductsGrid = function (data) {
+            var grid_data = data;
+            var grid_selector = "#tblProducts";
+            var pager_selector = "#pageProducts";
+            //grid data refresh
+            $("#tblProducts").prepend(grid_data);
+
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            //$(window).on('resize.jqGrid', function () {
+            //    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            //})
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            $('#tblProducts').addClass('th');
+            //apply styles to table(grid)//
+            $(grid_selector).addClass('jqgrid-border');
+
+            $('header').addClass('th');
+            $('#tr').addClass("tr");
+            $('#tblProducts_rn').addClass("div");
+            // $('button').css({ "background-Color": "Blue", "font-family": "Bold" });
+
+
+            jQuery(grid_selector).jqGrid
+                ({
+
+                    data: grid_data,
+                    datatype: "local",
+                    height: 250,
+                    width: 1000,
+                    rowNum: 1000,
+                    rownumbers: true,
+                    colNames: ['Id', 'Product Id', 'Product Code', 'Product Name ', 'UOM', 'Quantity', 'Amount', '', 'Rate'],
+                    colModel: [
+                        { name: 'Id', dataIndx: 'Id', editable: false, align: 'center', resizable: false, hidden: true },
+                        { name: 'productid', dataIndx: 'productid', editable: false, align: 'center', resizable: false, hidden: true },
+
+                        { name: 'productcode', dataIndx: 'productcode', editable: false, width: 150, align: 'center', resizable: false },
+                        { name: 'productname', dataIndx: 'productname', editable: false, align: 'center', resizable: false },
+                        {
+                            name: 'uom', dataIndx: 'uom', width: 100, height: 120, editable: false, search: false, resizable: false
+                        },
+                        {
+                            name: 'qafc', dataIndx: 'qafc', width: 100, height: 120, editable: true, search: false, resizable: false, editoptions: {
+
+                                dataEvents: [
+                                           {
+                                               type: 'keyup',
+
+                                               fn: function (e) {
+                                                   debugger;
+                                                   calDiscount(this.value);
+                                               }
+                                           }]
+                            }
+                        },
+                        {
+                            name: 'amount', dataIndx: 'amount', width: 100, height: 120, editable: false, search: false, resizable: false
+                        },
+                        {
+                            name: 'act', index: 'act', width: 150, height: 120, editable: false, sortable: false, search: false
+                        },
+                        {
+                            name: 'rate', index: 'rate', width: 150, height: 120, hidden: true, editable: false, sortable: false, search: false
+                        },
+
+                    ],
+
+                    viewrecords: true,
+                    sortorder: "desc",
+                    altRows: true,
+                    ignoreCase: true,
+                    groupCollapse: true,
+                    caption: "Product  Details ",
+                    toppager: false,
+                    emptyrecords: 'Scan Items to Display',
+                    headertitles: false,
+                    rowcontent: false,
+                    pgbuttons: false,
+                    footerrow: true,
+                    gridComplete: function () {
+
+                        var ids = jQuery(grid_selector).jqGrid('getDataIDs');
+                        //$('#tblPOS').jqGrid('delRowData', ids[0]);
+                        var c;
+                        for (var i = 0; i < ids.length; i++) {
+
+                            var cl = ids[i];
+                            be = "<button  type='button' id='btnedit' class='btn-grid' onclick='edit(" + cl + ");'><i class='fa fa-pencil'></i><br/></button>";
+                            ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + cl + ");'><i class='fa fa-trash'></i><br/></button>";
+                            jQuery("#tblProducts").jqGrid('setRowData', ids[i], { act: be + ce });
+                        }
+
+                        /// *******  Footer Row Enable and display Total Sum of amount  ******////////
+
+
+                        var $grid = $(grid_selector);
+
+
+                        //check total sum of amount,unit price,no of items of that sale//
+
+                        var colSum = $grid.jqGrid('getCol', 'amount', false, 'sum');
+                        var NoofItems = $grid.getGridParam("reccount");
+
+                        $scope.combo.vchnoofproducts = NoofItems;
+                        $scope.combo.vchactualamount = parseFloat(Math.round(colSum)).toFixed(2);
+
+                        //var $scope = angular.element(appElement).scope();
+                        //$scope.numsaleamount = colSum;
+
+                        //End//
+
+
+
+                        // $grid.jqGrid('footerData', 'set', { numsalerate: 'Total Amount:', amount: parseInt(Math.round(colSum * 100) / 100) });
+                        $grid.jqGrid('footerData', 'set', { qafc: 'Total Amount:', amount: parseFloat(Math.round(colSum)).toFixed(2) });
+                        $grid.jqGrid('footerData', 'set', { productcode: 'No of Items:', productname: NoofItems });
+                        //// ******  End  *******////
+
+                        //var GrdTotal = parseInt(Math.round($scope.numsaleamount));
+                        //document.getElementById("Txtamnt").value = GrdTotal;
+                        //var TotalAmount = document.getElementById("Txtamnt").value;
+                        //var balance = parseInt(TotalAmount) - parseInt(GrdTotal);
+                        //document.getElementById('TxtChange').value = balance;
+
+                    }
+                });
+            // $("#tblProducts").setGridParam({ sortname: 'ids', sortorder: 'desc' }).trigger('reloadGrid');
+            $(window).triggerHandler('resize.jqGrid');
+
+        };
+
+
+
+        //// End Products Grid Create COmbo ///
+
+
+
+
+
+        ///  Combo Grid  ////
+
+
+        $scope.ComboGrid = function (data) {
+            var grid_data = data;
+            var grid_selector = "#tblCombo";
+            var pager_selector = "#pageCombo";
+            //grid data refresh
+            $("#tblCombo").prepend(grid_data);
+
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            //$(window).on('resize.jqGrid', function () {
+            //    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            //})
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            $('#tblCombo').addClass('th');
+            //apply styles to table(grid)//
+            $(grid_selector).addClass('jqgrid-border');
+
+            $('header').addClass('th');
+            $('#tr').addClass("tr");
+            $('#tblCombo_rn').addClass("div");
+            // $('button').css({ "background-Color": "Blue", "font-family": "Bold" });
+
+
+            jQuery(grid_selector).jqGrid
+                ({
+
+                    data: grid_data,
+                    datatype: "local",
+                    height: 250,
+                    width: 1000,
+                    rowNum: 10000,
+                    rownumbers: true,
+                    colNames: ['Id', 'Combo Code', 'Combo Name', 'No Of Products', 'Actual Cost', 'Combo Cost', ''],
+                    colModel: [
+                         { name: 'ID', dataIndx: 'ID', key: true, editable: false, align: 'center', resizable: false, hidden: true },
+                        { name: 'combocode', dataIndx: 'combocode', editable: false, align: 'center', resizable: false },
+                        { name: 'comboname', dataIndx: 'comboname', editable: false, align: 'center', resizable: false },
+                        { name: 'noofproducts', dataIndx: 'noofproducts', editable: false, width: 150, align: 'center', resizable: false },
+                        {
+                            name: 'actualcost', dataIndx: 'actualcost', width: 150, align: 'center', resizable: false
+                        },
+                        {
+                            name: 'combocost', dataIndx: 'combocost', width: 100, height: 120, editable: false, search: false, resizable: false
+
+                        },
+                        {
+                            name: 'act', index: 'act', width: 150, height: 120, editable: false, sortable: false, search: false
+                        },
+                    ],
+                    rowNum: 8,
+                    rowList: [8, 16, 25, 100],
+                    //pager: pager_selector,
+                    search: true,
+                    viewrecords: true,
+                    sortorder: "desc",
+                    altRows: true,
+                    ignoreCase: true,
+                    caption: "Combo Pack Details <span class='input-icon grid-search'>  <input type='text' onkeyup='Search()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> ",
+                    emptyrecords: 'No Combos to Display',
+                    headertitles: false,
+                    rowcontent: false,
+                    footerrow: true,
+                    gridComplete: function () {
+                        debugger;
+                        var ids = jQuery(grid_selector).jqGrid('getDataIDs');
+                        var c;
+                        for (var i = 0; i < ids.length; i++) {
+
+                            var cl = ids[i];
+                            var rowdata = $("#tblCombo").getRowData(cl);
+                            var rid = rowdata.ID;
+                            be = "<button  type='button' id='btnedit' class='btn-grid' onclick='editcombo(" + rid + ");'><i class='fa fa-pencil'></i><br/></button>";
+                            ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Deletecombo(" + rid + ");'><i class='fa fa-trash'></i><br/></button>";
+                            de = "<button  type='button' id='btnview' class='btn-grid'  onclick= 'Showcombo(" + rid + ");'><i class='fa fa-eye' style='color:grey'></i><br/></button>"
+                            jQuery("#tblCombo").jqGrid('setRowData', ids[i], { act: be + ce + de });
+                        }
+                        var $grid = $(grid_selector);
+
+
+                        var NoofItems = $grid.getGridParam("reccount");
+                        $grid.jqGrid('footerData', 'set', { comboname: 'No of Combo Packs:', noofproducts: NoofItems });
+                    }
+
+                });
+            $(window).triggerHandler('resize.jqGrid');
+
+        };
+
+
+        /// End Combo Grid ////
+
+
+
+
+        /// View Products ///
+
+
+
+
+
+        $scope.ViewGrid = function (data) {
+            var grid_data = data;
+            var grid_selector = "#tblView";
+            var pager_selector = "#pageView";
+            //grid data refresh
+            $("#tblView").prepend(grid_data);
+
+            jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+            //resize to fit page size
+            //$(window).on('resize.jqGrid', function () {
+            //    $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+            //})
+            //resize on sidebar collapse/expand
+            var parent_column = $(grid_selector).closest('[class*="col-"]');
+            $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                    //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                    setTimeout(function () {
+                        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                    }, 0);
+                }
+            })
+
+            var cellsrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            var columnsrenderer = function (value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+            }
+            $('#tblView').addClass('th');
+            //apply styles to table(grid)//
+            $(grid_selector).addClass('jqgrid-border');
+
+            $('header').addClass('th');
+            $('#tr').addClass("tr");
+            $('#tblView_rn').addClass("div");
+            // $('button').css({ "background-Color": "Blue", "font-family": "Bold" });
+
+
+            jQuery(grid_selector).jqGrid
+                ({
+
+                    data: grid_data,
+                    datatype: "local",
+                    height: 150,
+                    width: 800,
+                    rowNum: 1000,
+                    rownumbers: true,
+                    colNames: ['Id', 'Product Id', 'Product Code', 'Product Name ', 'UOM', 'Quantity', 'Amount', '', 'Rate'],
+                    colModel: [
+                        { name: 'Id', dataIndx: 'Id', editable: false, align: 'center', resizable: false, hidden: true },
+                        { name: 'productid', dataIndx: 'productid', editable: false, align: 'center', resizable: false, hidden: true },
+
+                        { name: 'productcode', dataIndx: 'productcode', editable: false, width: 150, align: 'center', resizable: false },
+                        { name: 'productname', dataIndx: 'productname', editable: false, align: 'center', resizable: false },
+                        {
+                            name: 'uom', dataIndx: 'uom', width: 100, height: 120, editable: false, search: false, resizable: false
+                        },
+                        {
+                            name: 'qafc', dataIndx: 'qafc', width: 100, height: 120, editable: true, search: false, resizable: false
+                        },
+                        {
+                            name: 'amount', dataIndx: 'amount', width: 100, height: 120, editable: false, search: false, resizable: false
+                        },
+                        {
+                            name: 'act', index: 'act', width: 150, height: 120, editable: false, sortable: false, search: false, hidden: true
+                        },
+                        {
+                            name: 'rate', index: 'rate', width: 150, height: 120, hidden: true, editable: false, sortable: false, search: false
+                        },
+
+                    ],
+
+                    viewrecords: true,
+                    sortorder: "desc",
+                    altRows: true,
+                    ignoreCase: true,
+                    groupCollapse: true,
+                    caption: " View Combo  Details ",
+                    toppager: false,
+                    headertitles: false,
+                    rowcontent: false,
+                    pgbuttons: false
+
+
+                });
+            // $("#tblProducts").setGridParam({ sortname: 'ids', sortorder: 'desc' }).trigger('reloadGrid');
+            $(window).triggerHandler('resize.jqGrid');
+
+        };
+        /// End View Products///
+
+        /// On Editing Products in Grid ///
+
+        function calDiscount(value) {
+            debugger;
+            var rowid = parseInt(document.getElementById("HdnEditValue").value);
+            var rowData = $("#tblProducts").getRowData(rowid);
+            var Rate = parseFloat(rowData.rate);
+            var Qnti = parseFloat(document.getElementById("" + rowid + "_qafc").value);
+            var Total = parseFloat(Math.round(Rate * Qnti).toFixed(2));
+            $("#tblProducts").jqGrid("setCell", rowid, "amount", Total);
+            // $scope.combo.vchactualamount = Total;
+            var colSum = $("#tblProducts").jqGrid('getCol', 'amount', false, 'sum');
+            $("#tblProducts").jqGrid('footerData', 'set', { qafc: 'Total Amount:', amount: parseFloat(Math.round(colSum)).toFixed(2) });
+            // var amnt = parseFloat(Math.round(colSum)).toFixed(2);
+            // $scope.combo.vchactualamount = amnt;
+            document.getElementById("txtvchactualamount").value = parseFloat(Math.round(colSum)).toFixed(2);
+
+        }
+
+        /// End On Editing Products in Grid ///
+
+
+
+
+    });
+
+
+    var appElement = document.querySelector('[ ng-controller=ComboController]');
+    var $scope = angular.element(appElement).scope();
+
+
+    function Search() {
+        JqCustomSearch($("#globalSearchText").val(), $("#tblCombo"))
+    }
+
+
+    function edit(row) {
+        debugger;
+        var $scope = angular.element(appElement).scope();
+        document.getElementById("HdnEditValue").value = row;
+        var rowdata = $("#tblProducts").getRowData(row);   // To be used for Restore Row
+        $scope.Initial = rowdata;
+        //$scope.Availstck = rowdata.quantity;
+        // jQuery('#tblPOS').editRow(row, true);
+        jQuery('#tblProducts').editRow(row);
+        be = "<button type='button' class='btn-grid' id='btnSave'  onclick='save(" + row + ") '><i class='fa fa-floppy-o' aria-hidden='true' style='color:#8EB869;font-size:20px'></i></button>";
+        ce = "<button type='button' class='btn-grid' id='btnCancel'  onclick='Restore(" + row + ")'><i class='fa fa-undo' style='color:#45B5A4'></i></button>";
+        jQuery("#tblProducts").jqGrid('setRowData', row, { act: be + ce });
+    }
+
+    // Products Grid save Row ///
+    function save(row) {
+
+        debugger;
+        var rowdataaa = $("#tblProducts").getRowData(row);
+        //var Qntity = parseFloat(document.getElementById("" + row + "_qafc").value);
+        var Qntity = document.getElementById("" + row + "_qafc").value;
+        var codeid = rowdataaa.productcode;
+        var Id = rowdataaa.Id;
+        var uom = rowdataaa.uom;
+        var Rate = parseFloat(rowdataaa.rate);
+        var Total = parseFloat(Math.round(Rate * Qntity).toFixed(2));
+        var regex = /^[\0-9\b.]+$/;
+        if (isNaN(Qntity) || Qntity == '' || Qntity == '0') {
+            if (Qntity == '0') {
+                alert("Quantity Cannot be Zero");
+                document.getElementById("" + row + "_qafc").focus();
+                return false;
+            }
+            else if (isNaN(Qntity) || Qntity == '') {
+                alert("Please Enter Quantity before Proceeding Further");
+                document.getElementById("" + row + "_qafc").focus();
+                return false;
+            }
+        }
+        else {
+
+            var QQ = Qntity.toString();
+            if (QQ.match(regex)) {
+                var $scope = angular.element(appElement).scope();
+                jQuery('#tblProducts').saveRow(row);
+                // Save particular row data using barcode in array//
+                for (var i = 0; i < $scope.ProductsArray.length; i++) {
+                    if ($scope.ProductsArray[i].productcode == codeid && $scope.ProductsArray[i].Id == Id) {
+                        $scope.ProductsArray[i].qafc = Qntity;
+                        $scope.ProductsArray[i].amount = Total;
+                        $scope.ProductsArray[i].uom = uom;
+                        break;
+                    }
+                }
+                be = "<button  type='button' id='btnedit' class='btn-grid' onclick='edit(" + row + ");'><i class='fa fa-pencil'></i><br/></button>";
+                ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + row + ");'><i class='fa fa-trash'></i><br/></button>";
+                jQuery("#tblProducts").jqGrid('setRowData', row, { act: be + ce });
+
+
+            }
+            else {
+                alert("No Special Characters allowed");
+                document.getElementById("" + row + "_qafc").value = "";
+                document.getElementById("" + row + "_qafc").focus();
+                return false;
+            }
+        }
+    }
+
+    // End  Products Grid save Row ///
+
+    // Products Grid Restore Row ///
+    function Restore(row) {
+        var $scope = angular.element(appElement).scope();
+        jQuery('#tblProducts').restoreRow(row);
+        var data = $scope.Initial;
+        $("#tblProducts").jqGrid("setCell", row, "amount", data.amount);
+        $("#tblProducts").jqGrid("setCell", row, "quantity", data.qafc);
+        be = "<button  type='button' id='btnedit' class='btn-grid' onclick='edit(" + row + ");'><i class='fa fa-pencil'></i><br/></button>";
+        ce = "<button  type='button' id='btndelete' class='btn-grid'  onclick='Delete(" + row + ");'><i class='fa fa-trash'></i><br/></button>";
+        jQuery("#tblProducts").jqGrid('setRowData', row, { act: be + ce });
+    }
+
+    //End Products Grid Restore Row ///
+
+
+    // Products Grid Delete Row ///
+
+    function Delete(row) {
+        debugger;
+        var grid_selector = "#tblProducts";
+        var pager_selector = "#pageProducts";
+        var $grid = $(grid_selector);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#tblProducts").getRowData(row);
+        var Idd = rowdata.Id;
+        var res = confirm('Are you sure you want to delete this item from list ?');
+        if (res) {
+            // static data remove from jqgrid////
+            $('#tblProducts').jqGrid('delRowData', row);
+            // Remove Delated Item From array to prevent Rebinding on another Item Adding ///
+            var codeid = rowdata.productcode;
+            for (var i = 0; i < $scope.ProductsArray.length; i++) {
+                if ($scope.ProductsArray[i].productcode == codeid && $scope.ProductsArray[i].Id == Idd) {
+                    $scope.ProductsArray.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        var colSum = $("#tblProducts").jqGrid('getCol', 'amount', false, 'sum');
+        var amnt = parseFloat(Math.round(colSum)).toFixed(2);
+        document.getElementById("txtvchactualamount").value = amnt;
+    }
+
+    //end Products Grid Delete Row ///
+
+
+
+    // Combo Edit ///
+    function editcombo(row) {
+        debugger;
+        var grid_selector = "#tblCombo";
+        var pager_selector = "#pageCombo";
+        var $grid = $(grid_selector);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#tblCombo").getRowData(row);
+        $scope.cId = rowdata.combocode;
+        $scope.ProductsArray = [];
+
+        var CnfrmSave = confirm("Do you want to Edit these Combo Details?");
+        if (CnfrmSave) {
+            debugger;
+            $http.post("/MMSMaster/GetComboDetailsforUpdate", { ComboId: $scope.cId }).success(function (data) {
+                debugger;
+                var strcombocost = data[0].combocost;
+                var strcomboname = data[0].comboname;
+                $scope.combo.vchcombocost = strcombocost;
+                document.getElementById("txtvchcomboname").value = strcomboname;
+                for (var j = 0; j < data.length; j++) {
+                    $scope.ProductsArray.push({ 'Id': i++, 'productid': data[j].productid, 'productcode': data[j].productcode, 'amount': data[j].amount, 'productname': data[j].productname, 'uom': data[j].uom, 'qafc': data[j].qafc, 'rate': data[j].rate })
+                }
+                $scope.ProductsGrid($scope.ProductsArray);
+                $scope.btnSave = "UPDATE";
+            });
+        }
+    }
+
+    function Deletecombo(row) {
+        debugger;
+
+        var grid_selector = "#tblCombo";
+        var pager_selector = "#pageCombo";
+        var $grid = $(grid_selector);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#tblCombo").getRowData(row);
+        $scope.cId = rowdata.combocode;
+        var cnfDelete = confirm("Are you Sure? Do you want to Delete this Combo Permanently?");
+        if (cnfDelete) {
+            debugger;
+            $http.post("/MMSMaster/DeleteComboPackDetails", { ComboCode: $scope.cId }).success(function (data) {
+                debugger;
+
+                var Result = data;
+                if (Result == true) {
+                    alert("Combo Deleted Permanently");
+                    $('#tblCombo').trigger('reloadGrid');
+                    location.reload();
+                    return true;
+                }
+                else {
+                    alert("Error Occured While Deleting Combo");
+                    return false;
+                }
+
+
+            });
+        }
+
+    }
+
+
+
+
+
+
+</script>
+
+
+
+<script type="text/javascript">
+
+    function Showcombo(row) {
+        debugger;
+        var grid_selector = "#tblCombo";
+        var pager_selector = "#pageCombo";
+        var $grid = $(grid_selector);
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#tblCombo").getRowData(row);
+        $scope.cId = rowdata.combocode;
+        $scope.ViewArray = [];
+        $http.post("/MMSMaster/GetComboDetailsforUpdate", { ComboId: $scope.cId }).success(function (data) {
+            debugger;
+            for (var j = 0; j < data.length; j++) {
+                $scope.ViewArray.push({ 'Id': i++, 'productid': data[j].productid, 'productcode': data[j].productcode, 'amount': data[j].amount, 'productname': data[j].productname, 'uom': data[j].uom, 'qafc': data[j].qafc, 'rate': data[j].rate })
+            }
+            debugger;
+
+            //// Open Product Details in a Dialog Box On Viewbuttn Click ///
+            var dialog;
+
+            dialog = $("#tblView").dialog({
+
+                autoOpen: true,
+                title: "Combo Details",
+                closeOnEscape: true,
+                width: 800,
+                height: 100,
+                resizable: true,
+                modal: true,
+                draggable: true,
+                dialogClass: "alert",
+                position: { my: "center", at: "center", of: window },
+                buttons: {
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                }
+            });
+
+            ////  End  ////
+
+            $scope.ViewGrid($scope.ViewArray);
+        });
+    }
+</script>
+
+<script src="~/Scripts/jquery-1.12.2-ui.js"></script>

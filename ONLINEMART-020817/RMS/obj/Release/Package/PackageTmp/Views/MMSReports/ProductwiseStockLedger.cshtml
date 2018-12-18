@@ -1,0 +1,173 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="productwiseStockledgerController" ng-init="ngInitBindComboBoxes()">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> PRODUCT WISE STOCK LEDGER </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="productwiseStockledgerController" name="fmproductstockledgerReport"
+                              ng-init="ngInitBindComboBoxes()" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    From Date <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="prdFromDate" type="text" ng-model="product.fromdate" class=" form-control" id="prdfromdate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmproductstockledgerReport.prdFromDate.$dirty || submitted ) && fmproductstockledgerReport.prdFromDate.$error.required">
+                                        From Date required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    To Date <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="prdTodate" type="text" id="prdtodate" class=" form-control" ng-model="product.todate" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmproductstockledgerReport.prdTodate.$dirty || submitted ) && fmproductstockledgerReport.prdTodate.$error.required">
+                                        To Date required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Product Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select id="selectproduct" ng-init="product.productName=0" ng-model="product.productName" class=" form-control" name="productName" ng-options="c.productid as c.productname for c in productdetails" required></select>
+                                    <span class="error" ng-show="(fmproductstockledgerReport.productName.$dirty || submitted ) && fmproductstockledgerReport.productName.$error.required">
+                                        product Name required!
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-success" type="button" ng-click="PrintproductwiseStockledgerReport(product)">
+                                        <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#prdfromdate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#prdtodate").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+
+<script>
+    var app = angular.module('RMS');
+    app.controller('productwiseStockledgerController', function ($scope, $http, $rootScope) {
+        $scope.product = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Productwise Stock Ledger";
+        $scope.isFormValid = false;
+        $scope.product.productName = 0;
+        $scope.$watch('fmproductstockledgerReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.ngInitBindComboBoxes = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/Getmmsproductnameswithselect/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.productdetails = eval('(' + data.Data + ')');
+            });
+        }
+
+        $scope.checkDate = function (date1, date2) {
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+
+                return false;
+            else
+                return true;
+        }
+
+        $scope.PrintproductwiseStockledgerReport = function (product) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.product.productName == 0) {
+                alert("Please select ProductName to get Report");
+                document.getElementById("selectproduct").focus();
+
+            }
+            else {
+                if ($scope.isFormValid) {
+                    var res = $scope.checkDate($("#prdfromdate").val(), $("#prdtodate").val());
+                    if (res) {
+                        var w = window.open("/MMSReports/GetProductwiseStockLedgerReport/?fromdate=" + product.fromdate + "&todate=" + product.todate + "&product=" + product.productName + "", '_blank');
+                        $scope.product = {};
+                        $('#calendar').datepicker('setDate', null);
+                        $('#datepicker').datepicker('setDate', null);
+                        $("#prdfromdate").datepicker('setDate', null);
+                        $("#prdtodate").datepicker('setDate', null);
+                        $scope.fmproductstockledgerReport.$setPristine();
+                        $scope.submitted = false;                       
+                        $scope.product.productName = 0;
+                    }
+                    else {
+                        alert("From Date Should Be LessThan To Date");
+                    }
+
+                }
+            }
+
+        }
+
+
+
+    });
+
+</script>
+
+
+

@@ -1,0 +1,963 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div ng-controller="IssueVoucherController">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form class="form-horizontal" role="form" name="IssueVoucherFrm" novalidate>
+                    @* Customer Details*@
+                    <div class="widget-box">
+                        @* Issue Voucher Details*@
+                        <div class="widget-main">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Customer Name <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input id="CustomerName" placeholder="Autopopulated" class="form-control" autofocus
+                                           ng-keypress="complete()" type="text" ng-model="Issue.CustomerName" name="CustomerName"
+                                           ng-change="CustomerFocus()" required maxlength="100" />
+                                    <span class="error" ng-show="(IssueVoucherFrm.CustomerName.$dirty || submitted) && IssueVoucherFrm.CustomerName.$error.required">
+                                        Customer Name Required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label">
+                                    Contact No<span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="ContactNO" ng-model="Issue.ContactNO" placeholder="Contact No."
+                                           class="form-control" required id="ContactNO" kit-digits maxlength="10" min="10" />
+                                    <span class="error" ng-show="(IssueVoucherFrm.ContactNO.$dirty || submitted) && IssueVoucherFrm.ContactNO.$error.required">
+                                        Contact No. Required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label ">
+                                    <strong> Date : </strong>  &nbsp;{{Issue.Date}}
+                                </label>
+
+                                @*<div class="col-sm-2">
+                                        <input type="text" name="Date" ng-model="Issue.Date" placeholder="Select Date"
+                                               id="Date" class="form-control" />
+                                        <span class="error" ng-show="(IssueVoucherFrm.Date.$dirty || submitted) && IssueVoucherFrm.Date.$error.required">
+                                            date required!
+                                        </span>
+                                        @*</span><span class="input-group-addon">
+                                                <i class="fa fa-calendar bigger-110">
+                                                </i>
+                                            </span>
+                                    </div>*@
+
+                                <div class="col-sm-2 col-xs-12 no-padding">
+                                    <label class="col-sm-2 control-label" ng-hide="true">
+                                        Time <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-4 " ng-hide="true">
+                                        <div class="input-group bootstrap-timepicker">
+                                            <input type="text" name="Time" ng-model="Issue.Time" placeholder="Select Time" class="form-control"
+                                                   id="Time" />
+                                            <span class="error" ng-show="(IssueVoucherFrm.Time.$dirty || submitted) && IssueVoucherFrm.Time.$error.required">
+                                                Time Required!
+                                            </span><span class="input-group-addon">
+                                                <i class="fa fa-clock-o bigger-110">
+                                                </i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Voucher Type <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select name="VoucherType" ng-model="Issue.VoucherType" placeholder="Voucher Type"
+                                            ng-options="V.VoucherType as V.VoucherType for V in Voucherstype" required class="form-control"
+                                            ng-change="VoucherTypeChange()">
+                                        <option value="">Select Voucher Type</option>
+                                    </select>
+                                    <span class="error" ng-show="(IssueVoucherFrm.VoucherType.$dirty || submitted) && IssueVoucherFrm.VoucherType.$error.required">
+                                        Voucher Type Required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label">
+                                    Issued By <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select name="IssuedBy" ng-model="Issue.IssuedBy" class="form-control" required ng-options="U.UserId as U.UserName for U in Users"
+                                            id="IssuedBy">
+                                        <option value="">Select Issue Person</option>
+                                    </select>
+                                    <span class="error" ng-show="(IssueVoucherFrm.IssuedBy.$dirty || submitted) && IssueVoucherFrm.IssuedBy.$error.required">
+                                        Issue Person Required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Voucher No <span style="color: Red">*</span> :
+                                </label>
+                                <div class="col-sm-3">
+                                    @* <input type="text" name="VoucherNO" ng-model="Issue.VoucherNO" placeholder="Enter Voucher NO"
+                                        class="form-control" required id="VoucherNO" />*@
+                                    <select name="VoucherNO" ng-model="Issue.VoucherNO" placeholder="Select Voucher"
+                                            ng-options="V.VoucherTypeId as V.VoucherTypeName for V in Vouchers" required
+                                            class="form-control" ng-change="VoucherChange()">
+                                        <option value="">Select Voucher</option>
+                                    </select>
+                                    <span class="error" ng-show="(IssueVoucherFrm.VoucherNO.$dirty || submitted) && IssueVoucherFrm.VoucherNO.$error.required">
+                                        Voucher No. Required!
+                                    </span>
+                                </div>
+                                <label class="col-sm-2 control-label ">
+                                    Authorised By <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select name="AuthorizePerson" ng-model="Issue.AuthorizePerson" class="form-control"
+                                            required ng-options="U.UserId as U.UserName for U in Users" id="AuthorizePerson">
+                                        <option value="">Select Authorize Person</option>
+                                    </select>
+                                    <span class="error" ng-show="(IssueVoucherFrm.AuthorizePerson.$dirty || submitted) && IssueVoucherFrm.AuthorizePerson.$error.required">
+                                        Authorize Person Required!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">
+                                    Description :
+                                </label>
+                                <div class="col-sm-3">
+                                    <textarea id="Description" placeholder="Enter Description" class="col-xs-12 col-sm-12" style="resize:none"
+                                              ng-model="Issue.Description" rows="3" name="Description" disabled></textarea>
+                                </div>
+                                <label class="col-sm-2 control-label ">
+                                    Remarks :
+                                </label>
+                                <div class="col-sm-3">
+                                    <textarea id="Remarks" placeholder="Enter Remarks" class="col-xs-12 col-sm-12" style="resize:none" ng-model="Issue.Remarks"
+                                              rows="3" name="Remarks"></textarea>
+                                </div>
+                            </div>
+                            <div class="hr hr-18 dotted hr-dotted">
+                            </div>
+                            @* Issue Voucher Buttons *@ @*<div class="form-group">
+                                    <div class="col-sm-8">
+                                        <div class="pull-right">
+                                            <button class="btn btn-info" type="button">
+                                                <i class="ace-icon fa fa-save bigger-110"></i>COMPUTE
+                                            </button>
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn btn-success" type="button">
+                                                <i class="ace-icon fa fa-save bigger-110"></i>Save &amp; Print</button>
+                                            &nbsp; &nbsp; &nbsp;
+                                            <button class="btn orange" type="button">
+                                                <i class="ace-icon fa fa-times bigger-110"></i>Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            *@
+                        </div>
+                        <div class="col-sm-12 col-xs-12">
+                            @* Tax Details*@
+                            <div class="widget-box">
+
+                                <div class="widget-header widget-header-flat widget-header-large">
+                                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-o"></i> TAX DETAILS </h5>
+                                    <div class="widget-toolbar">
+                                        <a href="#" data-action="collapse">
+                                            <i class="ace-icon fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                Voucher Value :
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="VoucherValue" ng-model="Issue.VoucherValue"
+                                                       class="form-control" id="VoucherValue" kit-amount disabled />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                Vat (In %):
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="Vat" ng-model="Issue.Vat" placeholder="Enter  Value" class="form-control"
+                                                       id="Vat" kit-amount ng-change="TaxChange()" ng-blur="Percentage('Vat')" maxlength="5" />
+                                            </div>
+                                            <label class="col-sm-3 control-label">
+                                                Service Tax (In %):
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="ServiceTax" ng-model="Issue.ServiceTax" placeholder="Enter  Value" maxlength="5"
+                                                       class="form-control" id="ServiceTax" kit-amount ng-change="TaxChange()" ng-blur="Percentage('ServiceTax')" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                Service Charges (In %):
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="ServiceCharge" ng-model="Issue.ServiceCharge" placeholder="Enter  Value" maxlength="5"
+                                                       class="form-control" id="ServiceCharge" kit-amount ng-change="TaxChange()" ng-blur="Percentage('ServiceCharge')" />
+                                            </div>
+                                            <label class="col-sm-3 control-label">
+                                                Net Payable:
+                                            </label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="NetPayable" ng-model="Issue.NetPayable" class="form-control"
+                                                       id="NetPayable" kit-amount disabled />
+                                                @*  <span class="error" ng-show="(IssueVoucherFrm.NetPayable.$dirty || submitted) && IssueVoucherFrm.NetPayable.$error.required">
+                                                    Net Payable Required! </span>*@
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr hr-18 dotted hr-double">
+                    </div>
+                </form>
+                @* Payment Details*@
+                <input type="hidden" ng-model="Issue.Charge" />
+                <input type="hidden" ng-model="Issue.PaymentType" />
+                <div ng-disabled="Charge" ng-show="!Charge">
+                    @* Payment Details*@
+                    <form class="form-horizontal" role="form" name="IssuePaymentFrm" novalidate>
+                        PAYMENT DETAILS
+
+                        @*<div class="form-group">
+                                @*<label class="col-sm-3 control-label">
+                                        Payment Split <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select name="PaymentSplit" ng-model="Issue.PaymentSplit" placeholder="Payment Split"
+                                                class="form-control" required>
+                                            <option value="">Select </option>
+                                            <option value="1">YES</option>
+                                            <option value="2">NO</option>
+                                        </select>
+                                        <span class="error" ng-show="(IssuePaymentFrm.PaymentSplit.$dirty || PaymentSubmited) && IssuePaymentFrm.PaymentSplit.$error.required">
+                                            Payment Split Required!
+                                        </span>
+                                    </div>
+                                <label class="col-sm-3 control-label">
+                                    Payment Mode <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <select name="PaymentMode" ng-model="Issue.PaymentMode" placeholder="Payment Split"
+                                            class="form-control">
+                                        @*required ng-change="PaymentModeChange()
+                                        <option value=" ">
+                                            Select Payment Mode
+                                        </option>
+                                        <option value="1">Card</option>
+                                        <option value="2">Cash</option>
+                                        <option value="3">Voucher</option>
+                                        <option value="4" selected="selected">BOTH</option>
+                                    </select>
+                                    <span class="error" ng-show="(IssuePaymentFrm.PaymentMode.$dirty || PaymentSubmited) && IssuePaymentFrm.PaymentMode.$error.required">
+                                        Payment Mode Required!
+                                    </span>
+                                </div>
+                            </div>*@
+                    </form>
+                </div>
+
+                <div class="widget-box" ng-disabled="CardPayment" ng-show="!CardPayment">
+
+                    <div class="widget-header widget-header-flat widget-header-large">
+                        <h5 class="widget-title"> <i class="ace-icon fa fa-credit-card"></i>   CARD DETAILS </h5>
+                        <div class="widget-toolbar">
+
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <form class="form-horizontal" role="form" name="IssueVoucherCardFrm" novalidate>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        Card No. <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CardNo" ng-model="Issue.CardNo" placeholder="Enter  Card No." kit-digits
+                                               class="form-control" id="CardNo" maxlength="20" />
+                                        <span class="error" ng-show="(IssueVoucherCardFrm.CardNo.$dirty || Cardsubmitted) && IssueVoucherCardFrm.CardNo.$error.required">
+                                            Card No. Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-3 control-label">
+                                        Type of Card <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CardType" ng-model="Issue.CardType" placeholder="Enter Type of Card"
+                                               class="form-control" id="CardType" maxlength="50" />
+                                        <span class="error" ng-show="(IssueVoucherCardFrm.CardType.$dirty || Cardsubmitted) && IssueVoucherCardFrm.CardType.$error.required">
+                                            Card Type Required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        Card Holder Name <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="NameOnCard" ng-model="Issue.NameOnCard" placeholder="Enter Name On Card"
+                                               class="form-control" id="NameOnCard" maxlength="50" />
+                                        <span class="error" ng-show="(IssueVoucherCardFrm.NameOnCard.$dirty || Cardsubmitted) && IssueVoucherCardFrm.NameOnCard.$error.required">
+                                            Name On Card Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-3 control-label">
+                                        Exp. Date <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CardExpDate" ng-model="Issue.CardExpDate" placeholder="Enter Exp. Date" maxlength="50"
+                                               id="CardExpDate" class="form-control date-picker" data-date-format="dd-mm-yyyy" />
+                                        <span class="error" ng-show="(IssueVoucherCardFrm.CardExpDate.$dirty || Cardsubmitted) && IssueVoucherCardFrm.CardExpDate.$error.required">
+                                            Card Exp. Date Required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                    </div>
+                                    <label class="col-sm-3 control-label">
+                                        Amount <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CardAmount" ng-model="Issue.CardAmount" placeholder="Enter  Value"
+                                               class="form-control" id="CardAmount" ng-change="ComputeCash(Issue)" />
+                                        <span class="error" ng-show="(IssueVoucherCardFrm.CardAmount.$dirty || Cardsubmitted) && IssueVoucherCardFrm.CardAmount.$error.required">
+                                            Amount Required!
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                @* Voucher Payment Details*@
+                <div class="widget-box" ng-disabled="VoucherPayment" ng-show="!VoucherPayment">
+
+                    <div class="widget-header widget-header-flat widget-header-large">
+                        <h5 class="widget-title"> <i class="ace-icon fa fa-ticket"></i>   VOUCHER DETAILS </h5>
+                        <div class="widget-toolbar">
+
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <form class="form-horizontal" role="form" name="IssueVoucherCoupanFrm" novalidate>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        Voucher No <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CouponNo" ng-model="Issue.CouponNo" placeholder="Enter Voucher No"
+                                               class="form-control" id="CouponNo" />
+                                        <span class="error" ng-show="(IssueVoucherCoupanFrm.CouponNo.$dirty || Couponsubmitted) && IssueVoucherCoupanFrm.CouponNo.$error.required">
+                                            Voucher No Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-3 control-label">
+                                        Type of Voucher <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="TypeofCoupon" ng-model="Issue.TypeofCoupon" placeholder="Enter Type of Voucher"
+                                               class="form-control" id="TypeofCoupon" />
+                                        <span class="error" ng-show="(IssueVoucherCoupanFrm.TypeofCoupon.$dirty || Couponsubmitted) && IssueVoucherCoupanFrm.TypeofCoupon.$error.required">
+                                            Voucher Type Required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        Voucher  Name <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CouponName" ng-model="Issue.CouponName" placeholder="Enter Voucher Name"
+                                               class="form-control" id="CouponName" />
+                                        <span class="error" ng-show="(IssueVoucherCoupanFrm.CouponName.$dirty || Couponsubmitted) && IssueVoucherCoupanFrm.CouponName.$error.required">
+                                            Voucher Name Required!
+                                        </span>
+                                    </div>
+                                    <label class="col-sm-3 control-label">
+                                        Exp. Date <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CouponExpDate" ng-model="Issue.CouponExpDate" placeholder="Enter   Exp. Date"
+                                               class="form-control date-picker" data-date-format="dd-mm-yyyy" id="CouponExpDate" />
+                                        <span class="error" ng-show="(IssueVoucherCoupanFrm.CouponExpDate.$dirty || Couponsubmitted) && IssueVoucherCoupanFrm.CouponExpDate.$error.required">
+                                            Coupon Exp. Date Required!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                    </div>
+                                    <label class="col-sm-3 control-label">
+                                        Amount <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="CouponAmount" ng-model="Issue.CouponAmount" placeholder="Enter  Amount"
+                                               class="form-control" id="CouponAmount" ng-change="ComputeCash(Issue)" />
+                                        <span class="error" ng-show="(IssueVoucherCoupanFrm.CouponAmount.$dirty || Couponsubmitted) && IssueVoucherCoupanFrm.CouponAmount.$error.required">
+                                            Voucher Amount Required!
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @* Cash Payment Details*@
+                <div class="widget-box" ng-disabled="CashPayment" ng-show="!CashPayment">
+                    <div class="widget-header widget-header-flat widget-header-large">
+                        <h5 class="widget-title"> <i class="ace-icon fa fa-money"></i>   CASH DETAILS </h5>
+                        <div class="widget-toolbar">
+
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            1000
+                                        </label>
+                                        <input type="text" name="Thousand" ng-model="Issue.Thousand" placeholder="Enter  Value" maxlength="4"
+                                               class="col-xs-8 col-sm-6" id="Thousand" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            500
+                                        </label>
+                                        <input type="text" name="FiveHundred" ng-model="Issue.FiveHundred" placeholder="Enter  Value"
+                                               class="col-xs-8 col-sm-6" id="FiveHundred" kit-digits ng-change="ComputeCash(Issue)" maxlength="7" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            100
+                                        </label>
+                                        <input type="text" name="Hundred" ng-model="Issue.Hundred" placeholder="Enter  Value" maxlength="7"
+                                               class="col-xs-8 col-sm-6" id="Hundred" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            50
+                                        </label>
+                                        <input type="text" name="Fifty" ng-model="Issue.Fifty" placeholder="Enter  Value" maxlength="7"
+                                               class="col-xs-8 col-sm-6" id="Fifty" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            20
+                                        </label>
+                                        <input type="text" name="Twenty" ng-model="Issue.Twenty" placeholder="Enter  Value" maxlength="7"
+                                               class="col-xs-8 col-sm-6" id="Twenty" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12 no-padding-right">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            10
+                                        </label>
+                                        <input type="text" name="Ten" ng-model="Issue.Ten" placeholder="Enter  Value" class="col-xs-8 col-sm-6 " maxlength="7"
+                                               id="Ten" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            5
+                                        </label>
+                                        <input type="text" name="Five" ng-model="Issue.Five" placeholder="Enter  Value" class="col-xs-8 col-sm-6" maxlength="7"
+                                               id="Five" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            2
+                                        </label>
+                                        <input type="text" name="Two" ng-model="Issue.Two" placeholder="Enter  Value" class="col-xs-8 col-sm-6" maxlength="7"
+                                               id="Two" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            1
+                                        </label>
+                                        <input type="text" name="One" ng-model="Issue.One" placeholder="Enter  Value" class="col-xs-8 col-sm-6" maxlength="7"
+                                               id="One" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12">
+                                        <label class="col-sm-4 col-xs-6  control-label">
+                                            .50
+                                        </label>
+                                        <input type="text" name="FiftyPaisa" ng-model="Issue.FiftyPaisa" placeholder="Enter  Value" maxlength="7"
+                                               class="col-xs-8 col-sm-6" id="FiftyPaisa" kit-digits ng-change="ComputeCash(Issue)" />
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <label class="col-sm-6 col-xs-6  control-label">
+                                            Amount :
+                                        </label>
+                                        <input type="text" name="CashTotal" ng-model="Issue.CashTotal"
+                                               class="col-xs-6 col-sm-6 " id="CashTotal" required kit-amount disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="hr hr-4 dotted hr-double"></div>
+                <div class="form-group">
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="col-sm-6 control-label" for="form-field-1"> Paid Amount :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" placeholder="" class="form-control" type="text" ng-model="Issue.PaidAmount" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12" ng-hide="true">
+                        <label class="col-sm-6 control-label" for="form-field-1"> Balance Amount :</label>
+                        <div class="col-sm-6">
+                            <input id="form-field-1" class="form-control" type="text" ng-model="Issue.BalanceAmount" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                @* Form Button*@
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        @*<button class="btn btn-info" type="button" ng-click="ComputeCash(Issue)">
+                                <i class="ace-icon fa fa-save bigger-110"></i>COMPUTE
+                            </button>
+                            &nbsp; &nbsp; &nbsp;*@
+                        <button class="btn btn-success" type="button" ng-click="Save(Issue)">
+                            <i class="ace-icon fa fa-save bigger-110"></i>Save &amp; Print
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn orange" type="reset" ng-click="Reset()">
+                            <i class="ace-icon fa fa-times bigger-110"></i>Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var app = angular.module('RMS');
+        app.controller('IssueVoucherController', function ($scope, $http, $rootScope) {
+            debugger
+            $scope.Issue = {};
+            var date = new Date();
+
+            $scope.Issue.Date = date.toLocaleDateString();
+
+
+            $scope.submitted = false;
+            $scope.IsFormValid = false;
+
+            $scope.IsPaymentCardFormValid = false;
+            $scope.Cardsubmitted = false;
+
+            $scope.IsPaymentVoucherFormValid = false;
+            $scope.Couponsubmitted = false;
+
+            $scope.IssuePaymentFormValid = false;
+            $scope.PaymentSubmited = false;
+
+
+            $rootScope.FormName = "Issue Voucher";
+            $scope.CardPayment = true;
+            $scope.CashPayment = true;
+            $scope.VoucherPayment = true;
+
+            $scope.Charge = false;
+            $scope.Compute = true;
+
+            $scope.IsFormValid = false;
+            // Payment Change
+            $scope.CardPayment = false;
+            $scope.CashPayment = false;
+            $scope.VoucherPayment = false;
+            // Payment Change
+            debugger;
+
+
+            $scope.$watch('IssueVoucherFrm.$valid', function (newValue) {
+                debugger;
+                $scope.IsFormValid = newValue;
+            });
+            $scope.$watch('IssueVoucherCardFrm.$valid', function (newValue) {
+                debugger;
+                $scope.IsPaymentCardFormValid = newValue;
+            });
+            $scope.$watch('IssueVoucherCoupanFrm.$valid', function (newValue) {
+                debugger;
+                $scope.IsPaymentVoucherFormValid = newValue;
+            });
+            //$scope.$watch('IssuePaymentFrm.$valid', function (newValue) {
+            //    debugger;
+            //    $scope.IssuePaymentFormValid = newValue;
+            //});
+
+            $http({
+                url: '/POSTransaction/ShowUserNames/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                var Custo = [];
+                var Vouch = [];
+                if (data.Customer.length > 0) {
+                    for (var i = 0; i < data.Customer.length; i++) {
+                        Custo.push(data.Customer[i].CustomerName);
+                    }
+                }
+                if (data.Voucher.length > 0) {
+                    for (var i = 0; i < data.Voucher.length; i++) {
+                        var rd = { VoucherId: data.Voucher[i].VoucherTypeId, VoucherType: data.Voucher[i].VoucherTypeName };
+                        Vouch.push(rd);
+                    }
+                }
+
+                $scope.Customer = data.Customer;
+                $scope.VoucherType = data.Voucher;
+                $scope.Customers = Custo;
+                $scope.Users = data.User;
+                $scope.Voucherstype = Vouch;
+            }).error(function () {
+                alert("Error Occuerd");
+            });
+            $scope.TaxChange = function () {
+                debugger;
+                var Vat = $scope.Issue.Vat || 0;
+                var ServiceCharge = $scope.Issue.ServiceCharge || 0;
+                var ServiceTax = $scope.Issue.ServiceTax || 0;
+                var VoucherValue = $scope.Issue.VoucherValue || 0;
+                $scope.Issue.NetPayable = Math.round(parseFloat(parseFloat((Vat * VoucherValue) / 100) + parseFloat((ServiceCharge * VoucherValue) / 100) + parseFloat(ServiceTax * VoucherValue / 100)) + parseFloat(VoucherValue));
+            }
+            $scope.complete = function () {
+                $("#CustomerName").autocomplete({
+                    source: $scope.Customers,
+                    select: function (event, ui) {
+                        var Customers = $scope.Customer;
+                        var CustID;
+                        var CustContact;
+                        for (var i = 0; i < Customers.length; i++) {
+                            if (Customers[i].CustomerName == ui.item.value) {
+                                CustID = Customers[i].CustomerId;
+                                CustContact = Customers[i].CustomerContact;
+                            }
+                        }
+                        if (CustID === undefined) {
+                            CustID = 0;
+                        }
+                        if (CustContact === undefined) {
+                            CustContact = 0;
+                        }
+                        $scope.Issue.ContactNO = CustContact;
+                        $("#ContactNO").val(CustContact);
+                    }
+                });
+            }
+            $scope.CustomerFocus = function () {
+                $("#ContactNO").val('');
+                $scope.Issue.ContactNO = null;
+            }
+
+            //-----------Voucher Type Change-----------//
+            $scope.VoucherTypeChange = function () {
+                debugger;
+                var Vouch = $scope.VoucherType;
+                var VouchName = $scope.Issue.VoucherType;
+                var Charge;
+                var VouchID;
+                $scope.Vouchers = null;
+                $scope.Charge = true;
+                for (var i = 0; i < Vouch.length; i++) {
+                    if (Vouch[i].VoucherTypeName === VouchName) {
+                        Charge = Vouch[i].ChargeApplicable;
+                        VochID = Vouch[i].VoucherTypeId;
+                    }
+                }
+                debugger;
+                $scope.Issue.PaymentType = '';
+                $('#PaymentMode').val('');
+                $('#PaymentSplit').val('');
+                $scope.CardPayment = false;
+                $scope.CashPayment = false;
+                $scope.VoucherPayment = false;
+                $scope.Issue.Charge = 'Y';
+                $scope.Charge = false;
+                //if (Charge.trim() == 'Y') {
+                //    $scope.Charge = false;
+                //} else {
+                //    $scope.Charge = true;
+                //}
+                $scope.IssueVoucherCardFrm.$setPristine();
+                $scope.IssueVoucherCoupanFrm.$setPristine();
+                $scope.IssuePaymentFrm.$setPristine();
+                debugger;
+                if (VouchName != null && typeof VouchName != undefined) {
+                    $http({
+                        url: '/POSTransaction/ShowVouchers/',
+                        method: "POST",
+                        data: { VouchName: VouchName, VouchID: VouchID }
+                    }).success(function (data) {
+                        $scope.VouchersDetails = data;
+                        var Vouchers1 = [];
+                        for (var i = 0; i < data.length; i++) {
+                            //V.VoucherTypeId as V.VoucherTypeName for V in Vouchers
+                            var rd = { VoucherTypeId: data[i].VoucherTypeId, VoucherTypeName: data[i].VoucherTypeName };
+                            Vouchers1.push(rd);
+                        }
+                        $scope.Vouchers = Vouchers1;
+                    }).error(function () {
+                        alert("Error Occuerd");
+                    });
+                } else {
+                    alert('Select Voucher Type!');
+                }
+            }
+
+            $scope.VoucherChange = function () {
+                debugger;
+                var VouchersDetails = $scope.VouchersDetails;
+                var ID = $scope.Issue.VoucherNO;
+                var Description;
+                var VoucherValue;
+                for (var i = 0; i < VouchersDetails.length; i++) {
+                    if (VouchersDetails[i].VoucherTypeId === ID) {
+                        Description = VouchersDetails[i].VoucherDescription;
+                        VoucherValue = VouchersDetails[i].VoucherValue;
+                    }
+                }
+                $scope.Issue.Description = Description;
+                $scope.Issue.VoucherValue = VoucherValue;
+                $scope.Issue.NetPayable = VoucherValue;
+            }
+
+            //-----------Clear Form----------//
+            function ClearForm() {
+                debugger;
+                $scope.Issue = {};
+                $scope.IssueVoucherFrm.$setPristine();
+                $scope.IssueVoucherCardFrm.$setPristine();
+                $scope.IssueVoucherCoupanFrm.$setPristine();
+                $scope.IssuePaymentFrm.$setPristine();
+
+                $scope.CardPayment = false;
+                $scope.CashPayment = false;
+                $scope.VoucherPayment = false;
+                $scope.Charge = false;
+                $scope.Compute = true;
+
+                //////////////
+                $scope.Charge = false;
+                $scope.Compute = true;
+                $scope.IsFormValid = false;
+                //Payment Change
+                $scope.CardPayment = false;
+                $scope.CashPayment = false;
+                $scope.VoucherPayment = false;
+                /////////////////
+                $scope.submitted = false;
+                $scope.IsFormValid = false;
+                $scope.IsPaymentCardFormValid = false;
+                $scope.Cardsubmitted = false;
+                $scope.IsPaymentVoucherFormValid = false;
+                $scope.Couponsubmitted = false;
+                $scope.IssuePaymentFormValid = false;
+                $scope.PaymentSubmited = false;
+
+                //  $('.date-picker').datepicker('setDate', new Date());
+            }
+
+            $scope.Reset = function () {
+                ClearForm();
+            }
+            //-----------Save Form-----------//
+            $scope.Save = function (Issue) {
+                debugger;
+                var IsValid = false;
+                $scope.submitted = true;
+                $scope.Cardsubmitted = false;
+                $scope.Couponsubmitted = false;
+                // $scope.Issue.PaymentType = 'BOTH';
+                if ($scope.Charge == false) {
+                    $scope.PaymentSubmited = true;
+                }
+                $scope.Couponsubmitted = true;
+                $scope.Cardsubmitted = true;
+                $scope.PaymentSubmited = true;
+                $scope.Issue.CustomerName = $('#CustomerName').val();
+
+                if (angular.isDefined(Issue.CardNo) || angular.isDefined(Issue.CardType) || angular.isDefined(Issue.NameOnCard) || angular.isDefined(Issue.CardExpDate) || angular.isDefined(Issue.CardAmount)) {
+                    alert('Enter All Card Details ');
+                }
+                else if (angular.isDefined(Issue.CouponNo) || angular.isDefined(Issue.TypeofCoupon) || angular.isDefined(Issue.CouponName) || angular.isDefined(Issue.CouponExpDate) || angular.isDefined(Issue.CouponAmount)) {
+                    alert('Enter All Voucher Details');
+                }
+                else if ($scope.IsFormValid) {
+                    var ans = confirm($rootScope.msgSave);
+                    if (ans) {
+                        $scope.Issue.Thousand = $scope.Issue.Thousand || 0;
+                        $scope.Issue.FiveHundred = $scope.Issue.FiveHundred || 0;
+                        $scope.Issue.Hundred = $scope.Issue.Hundred || 0;
+                        $scope.Issue.Fifty = $scope.Issue.Fifty || 0;
+                        $scope.Issue.Twenty = $scope.Issue.Twenty || 0;
+                        $scope.Issue.Ten = $scope.Issue.Ten || 0;
+                        $scope.Issue.Five = $scope.Issue.Five || 0;
+                        $scope.Issue.Two = $scope.Issue.Two || 0;
+                        $scope.Issue.One = $scope.Issue.One || 0;
+                        $scope.Issue.FiftyPaisa = $scope.Issue.FiftyPaisa || 0;
+
+                        $scope.Issue.Vat = $scope.Issue.Vat || 0;
+                        $scope.Issue.ServiceCharge = $scope.Issue.ServiceCharge || 0;
+                        $scope.Issue.ServiceTax = $scope.Issue.ServiceTax || 0;
+
+                        $http({
+                            url: '/POSTransaction/SaveIssueVoucher/',
+                            method: "POST",
+                            data: $scope.Issue
+                        }).success(function (data) {
+                            alert('Issue Voucher Saved Successfully');
+                            ClearForm();
+                        }).error(function () {
+                            alert("Error Occuerd");
+                        });
+                    }
+                }
+            }
+            //-----------Payment Mode Change-----------//
+            $scope.PaymentModeChange = function () {
+                debugger;
+                $scope.CardPayment = true;
+                $scope.CashPayment = true;
+                $scope.VoucherPayment = true;
+                $scope.Cardsubmitted = false;
+                $scope.Couponsubmitted = false;
+                if ($scope.Issue.PaymentMode == 1) {
+                    $scope.CardPayment = false;
+                    $scope.Issue.PaymentType = 'Card';
+                    $scope.Issue.CardAmount = $scope.Issue.NetPayable;
+                } else if ($scope.Issue.PaymentMode == 2) {
+                    $scope.CashPayment = false;
+                    $scope.Issue.PaymentType = 'Cash';
+                } else if ($scope.Issue.PaymentMode == 3) {
+                    $scope.CardPayment = false;
+                    $scope.CashPayment = false;
+                    $scope.VoucherPayment = false;
+                    $scope.Issue.PaymentType = 'BOTH';
+                    $scope.Issue.CouponAmount = 0;
+                    $scope.Issue.CardAmount = 0;
+                } else if ($scope.Issue.PaymentMode == 4) {
+                    $scope.VoucherPayment = false;
+                    $scope.Issue.PaymentType = 'Voucher';
+                    $scope.Issue.CouponAmount = $scope.Issue.NetPayable;
+                }
+            }
+            $scope.ComputeCash = function (Issue) {
+
+                Issue.CashTotal = FnNotNull(Issue.Thousand) * 1000 + FnNotNull(Issue.FiveHundred) * 500 + FnNotNull(Issue.Hundred) * 100 + FnNotNull(Issue.Fifty) * 50 + FnNotNull(Issue.Twenty) * 20 + FnNotNull(Issue.Ten) * 10 + FnNotNull(Issue.Five) * 5 + FnNotNull(Issue.Two) * 2 + FnNotNull(Issue.One) * 1 + FnNotNull(Issue.FiftyPaisa) * 0.50;
+                Issue.PaidAmount = Issue.CashTotal + FnNotNull(Issue.CardAmount) + FnNotNull(Issue.CouponAmount);
+                Issue.BalanceAmount = FnNotNull(Issue.NetPayable) - Issue.PaidAmount;
+
+            }
+            function Compute(Issue) {
+                debugger
+                var IsValid = false;
+                //            var Thousand = $scope.Issue.Thousand * 1000 || 0;
+                //            var FiveHundred = $scope.Issue.FiveHundred * 500 || 0;
+                //            var Hundred = $scope.Issue.Hundred * 100 || 0;
+                //            var Fifty = $scope.Issue.Fifty * 50 || 0;
+                //            var Twenty = $scope.Issue.Twenty * 20 || 0;
+                //            var Ten = $scope.Issue.Ten * 10 || 0;
+                //            var Five = $scope.Issue.Five * 5 || 0;
+                //            var Two = $scope.Issue.Two * 2 || 0;
+                //            var One = $scope.Issue.One * 1 || 0;
+                //            var FiftyPaisa = $scope.Issue.FiftyPaisa * (0.50) || 0;
+                //////////////////////////////////////////////////////////
+                //if ($scope.Issue.PaymentType == 'Cash') {
+                //    $scope.Issue.CashTotal = FnNotNull(Issue.Thousand) * 1000 + FnNotNull(Issue.FiveHundred) * 500 + FnNotNull(Issue.Hundred) * 100 + FnNotNull(Issue.Fifty) * 50 + FnNotNull(Issue.Twenty) * 20 + FnNotNull(Issue.Ten) * 10 + FnNotNull(Issue.Five) * 5 + FnNotNull(Issue.Two) * 2 + FnNotNull(Issue.One) * 1 + FnNotNull(Issue.FiftyPaisa) * 0.50;
+                //}
+                //if ($scope.Issue.PaymentType == 'Cash') {
+                //    if (FnNotNull($scope.Issue.CashTotal) > 0) {
+                //        if (FnNotNull($scope.Issue.NetPayable) == FnNotNull($scope.Issue.CashTotal)) {
+                //            IsValid = true;
+                //        }
+                //    }
+                //} else if ($scope.Issue.PaymentType == 'Voucher') {
+                //    if (FnNotNull($scope.Issue.CouponAmount) > 0) {
+                //        if (FnNotNull($scope.Issue.NetPayable) == FnNotNull($scope.Issue.CouponAmount)) {
+                //            IsValid = true;
+                //        }
+                //    }
+                //} else if ($scope.Issue.PaymentType == 'Card') {
+                //    if (FnNotNull($scope.Issue.CardAmount) > 0) {
+                //        if (FnNotNull($scope.Issue.NetPayable) == FnNotNull($scope.Issue.CardAmount)) {
+                //            IsValid = true;
+                //        }
+                //    }
+                //} else if ($scope.Issue.PaymentType == 'BOTH') {
+                //$scope.Issue.CashTotal = FnNotNull(Issue.Thousand) * 1000 + FnNotNull(Issue.FiveHundred) * 500 + FnNotNull(Issue.Hundred) * 100 + FnNotNull(Issue.Fifty) * 50 + FnNotNull(Issue.Twenty) * 20 + FnNotNull(Issue.Ten) * 10 + FnNotNull(Issue.Five) * 5 + FnNotNull(Issue.Two) * 2 + FnNotNull(Issue.One) * 1 + FnNotNull(Issue.FiftyPaisa) * 0.50;
+                //if (parseFloat(FnNotNull($scope.Issue.NetPayable)) == parseFloat(parseFloat(FnNotNull($scope.Issue.CardAmount)) + parseFloat(FnNotNull($scope.Issue.CashTotal)) + parseFloat(FnNotNull($scope.Issue.CouponAmount)))) {
+                //    IsValid = true;
+                //}
+                //}
+                ////////////////////////////////////////////////////////////
+                $scope.Issue.CashTotal = FnNotNull(Issue.Thousand) * 1000 + FnNotNull(Issue.FiveHundred) * 500 + FnNotNull(Issue.Hundred) * 100 + FnNotNull(Issue.Fifty) * 50 + FnNotNull(Issue.Twenty) * 20 + FnNotNull(Issue.Ten) * 10 + FnNotNull(Issue.Five) * 5 + FnNotNull(Issue.Two) * 2 + FnNotNull(Issue.One) * 1 + FnNotNull(Issue.FiftyPaisa) * 0.50;
+                if (parseFloat(FnNotNull($scope.Issue.NetPayable)) <= parseFloat(parseFloat(FnNotNull($scope.Issue.CardAmount)) + parseFloat(FnNotNull($scope.Issue.CashTotal)) + parseFloat(FnNotNull($scope.Issue.CouponAmount)))) {
+                    IsValid = true;
+                }
+                if ($scope.Charge == true) {
+                }
+                if (IsValid != true) {
+                    IsValid = true
+                    alert('Entered Amount is Less than or Equal to Net payable Amount!');
+                }
+
+                return IsValid;
+            }
+            function FnNotNull(x) {
+                var res = 0;
+                if (angular.isDefined(x) && x != "") {
+                    return parseInt(x);
+                }
+                else {
+                    return 0;
+                }
+            }
+            $scope.Percentage = function (str) {
+                debugger;
+                var Value = $('#' + str + '').val();
+                if (parseFloat(Value) > 100 || parseFloat(Value) < 0) {
+                    alert(str + ' percentage is should be in Between 0 to 100!');
+                    $('#' + str + '').val('');
+                }
+            }
+        });
+    </script>
+    <script src="~/assets/js/jsautcompleted.js"></script>
+    <script type="text/javascript">
+        $('#Time').timepicker();
+    </script>
+

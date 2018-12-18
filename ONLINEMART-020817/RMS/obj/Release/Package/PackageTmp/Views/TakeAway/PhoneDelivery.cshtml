@@ -1,0 +1,667 @@
+﻿@{
+    Layout = "~/Views/Shared/Trans_LayoutPage.cshtml";
+}
+
+<style>
+    .ui-jqgrid-btable select {
+        width: 350px !important;
+        font-size: 14px !important;
+    }
+</style>
+
+<div class="page-content" ng-controller="PhoneDeliveryController" ng-init="getGridData();">
+    <div class="row">
+
+        <div class=" col-sm-12 col-xs-12">
+
+
+            <div class="page-header" style="padding-bottom:42px !important; ">
+
+                <h1 style="width:auto; line-height:35px;  float:left">
+
+                    HOME DELIVERY
+                    <small><i class="ace-icon fa fa-angle-double-right"></i></small>
+
+
+
+                </h1>
+
+                <a href="" ng-click="Back();" class="pull-right right " style="font-size:16px;">
+                    <i class="ace-icon fa fa-chevron-left"> </i> BACK TO HOME PAGE
+                </a>
+
+
+            </div>
+            <!-- PAGE CONTENT BEGINS -->
+
+            <script>
+                function OpenNewOrder() {
+                    debugger;
+                    window.location.href = "/TakeAway/NewOrder";
+                }
+
+            </script>
+            <div class="col-sm-2">
+                <button class="btn btn-success " onclick="OpenNewOrder()" data-toggle='modal' data-target='#myModal2'>
+                    <i class="ace-icon fa fa-apple"></i> New Order
+                </button>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" ng-click="returnclose()">&times;</button>
+                                <h4 class="modal-title">Select Order Return Reason</h4>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <select name="ReasonForOrdercancel" class="form-control" ng-model="ReasonForOrdercancel" ng-change="selectreason(ReasonForOrdercancel)">
+                                    <option value="">Select Reason </option>
+                                    <option value="CustomerNotAvailable">Customer Not Available</option>
+                                    <option value="WrongAddress">Wrong Address </option>
+
+                                </select>
+
+
+                                @*
+                                    </div>*@
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" ng-hide="hidesave" class="btn btn-default" ng-click="SaveReturnStatus(ReasonForOrdercancel)" data-dismiss="modal">Save</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal fade" id="myModal1" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" ng-click="close()">&times;</button>
+                                <h4 class="modal-title">Select Delivery Boy Details </h4>
+                            </div>
+                            <div class="modal-body">
+                                @*<input list="Delivary" /><datalist id="Delivary">
+                                        <option ng-repeat="vchname  in DelivaryBoy"></option>
+                                    </datalist>*@
+                                <select name="DelivaryBoyDetailsOut" class="form-control" ng-model="DelivaryBoyDetails" ng-change="selectDelivaryBoyDetails(DelivaryBoyDetails)" ng-options="c.vchname as c.vchname for c in DelivaryBoy"></select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" ng-hide="HideSaveInDelivery" class="btn btn-default" ng-click="SaveReturnStatus(ReasonForOrdercancel)" data-dismiss="modal">Save</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal fade" id="myModal2" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                                <h4 class="modal-title">Order Details </h4>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table" style="margin:3px 0px; border:#f5ecec; " width="100">
+                                    <thead class="">
+                                        <tr>
+
+                                            <th align="center" style="width:45%">
+                                                Item
+                                            </th>
+
+                                            <th align="center" style="width:30%">
+                                                Qty.
+                                            </th>
+
+                                            <th style="width:25%">
+                                                Rate
+                                            </th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tr ng-repeat="Itema in GetItemsOfSpecicOrder1">
+
+
+
+                                        <td>
+                                            {{Itema.itemname}}
+                                        </td>
+
+
+
+                                        <td>
+
+                                            {{Itema.itemqty}}
+
+                                        </td>
+
+                                        <td>
+                                            {{Itema.numitemrate| currency:'₹ '}}
+                                        </td>
+
+
+
+
+                                    </tr>
+
+
+                                    @*<tfoot>
+
+                                            <tr class="" style="">
+                                                <td></td>
+
+
+                                                <th id="total" colspan="1">Total:</th>
+                                                <th>{{Total| currency:'₹ '}}</th>
+                                            </tr>
+
+
+
+
+
+                                        </tfoot>*@
+                                </table>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="clearfix"></div>
+            <table id="grid-HomeDelivery"></table>
+            <div id="grid-HomeDeliverypager">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+
+    var app = angular.module('RMS');
+    app.controller("PhoneDeliveryController", ['$filter', '$scope', '$http', '$rootScope', '$location', 'myService', function ($filter, $scope, $http, $rootScope, $location, myService) {
+        debugger;
+        $scope.hidesave = true;
+        $rootScope.Items = {};
+        $scope.HideSaveInDelivery = true;
+
+        $scope.getGridData = function () {
+            debugger;
+            $http({
+                url: '/TakeAway/DeliveryItemsForCustomer/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                HomedeliveryGrid(data.lstItems)
+
+            });
+            $http({
+                url: '/TakeAway/GetDeliveryBoyDetails/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.DelivaryBoy = eval('(' + data.DeliveryBoyDetails + ')')
+
+            });
+
+        }
+
+        $scope.Back = function () {
+            debugger;
+            window.location.href = "/POSTransaction/DashBoard/";
+
+        }
+        $scope.close = function () {
+            debugger;
+
+
+            var rowid = parseInt($("#grid-HomeDelivery").jqGrid('getGridParam', 'selrow'));
+            var rowdata = $("#grid-HomeDelivery").getRowData(rowid);
+
+
+
+            if (rowdata.status == "ORI") {
+
+                updateStataus = "In Preparation";
+
+            }
+            if (rowdata.status == "ORP") {
+                updateStataus = "Payment Made";
+
+            }
+            if (rowdata.status == "ORC") {
+                updateStataus = "Order Cancel";
+
+            }
+            if (rowdata.status == "ORO") {
+
+                updateStataus = "Out For Delivery";
+
+
+            }
+
+            var k = $scope.DelivaryBoyDetails;
+            if (k == "" || k === undefined) {
+
+                $("#myModal1").modal("hide");
+                $("#grid-HomeDelivery").saveRow(rowid);
+                $("#grid-HomeDelivery").jqGrid('setCell', rowid, 'vchstatus', updateStataus);
+            }
+        }
+        $scope.returnclose = function () {
+            debugger;
+            var rowid = parseInt($("#grid-HomeDelivery").jqGrid('getGridParam', 'selrow'));
+            var rowdata = $("#grid-HomeDelivery").getRowData(rowid);
+
+
+
+            if (rowdata.status == "ORI") {
+
+                updateStataus = "In Preparation";
+
+            }
+            if (rowdata.status == "ORP") {
+                updateStataus = "Payment Made";
+
+            }
+            if (rowdata.status == "ORC") {
+                updateStataus = "Order Cancel";
+
+            }
+            if (rowdata.status == "ORO") {
+
+                updateStataus = "Out For Delivery";
+
+
+            }
+
+            var k = $scope.ReasonForOrdercancel;
+            if (k == "" || k === undefined) {
+
+                $("#myModal").modal("hide");
+                $("#grid-HomeDelivery").saveRow(rowid);
+                $("#grid-HomeDelivery").jqGrid('setCell', rowid, 'vchstatus', updateStataus);
+            }
+        }
+        $scope.selectreason = function (ReasonForOrdercancel) {
+            debugger;
+            if (ReasonForOrdercancel == "") {
+
+
+                $scope.hidesave = true;
+            }
+            else {
+
+
+                $scope.hidesave = false;
+            }
+
+        }
+        $scope.selectDelivaryBoyDetails = function (DelivaryBoyDetails) {
+            debugger;
+            if (DelivaryBoyDetails == "") {
+
+                $scope.HideSaveInDelivery = true;
+                ;
+            }
+            else {
+
+                $scope.HideSaveInDelivery = false;
+
+            }
+        }
+
+
+    }]);
+
+    function HomedeliveryGrid(data) {
+
+        var grid_data = eval('(' + data + ')');
+        var grid_selector = "#grid-HomeDelivery";
+        var pager_selector = "#grid-HomeDeliverypager";
+
+        //grid data refresh
+        jQuery(grid_selector).jqGrid('clearGridData')
+        jQuery(grid_selector).jqGrid('setGridParam', { datatype: 'local', data: grid_data }).trigger("reloadGrid");
+
+        //resize to fit page size
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+        debugger;
+        jQuery(grid_selector).jqGrid({
+
+            data: grid_data,
+            datatype: "local",
+            rownumbers: true,
+            height: 'auto',
+            colModel: [
+
+                    { label: 'Order Status.', name: 'status', width: 25, align: 'center', hidden: true },
+                     {
+                         label: ' ', sortable: false, width: 60, key: true, formatter: function (cellvalue, options, rowObject) {
+                             return " <button class='btn-grid' type='button' onclick='editHomeDelivery(" + options.rowId + ");'  ><img src='/assets/css/Images/Edit.png' width='20'><br/></button>";
+                         }
+                     },
+                    { label: 'Order No.', name: 'vchorderno', width: 75, formatter: 'showlink', formatoptions: { baseLinkUrl: 'javascript:', showAction: "Link('", addParam: "');" } },
+
+                    { label: 'Order Time', name: 'ordertime', width: 100 },
+                       { label: 'Bill No.', name: 'billno', width: 75, align: 'center' },
+                    { label: 'Customer Name', name: 'vchcustomername', width: 175 },
+                    { label: 'Contact No.', name: 'vchcustomercontactno', width: 100 },
+                    {
+                        label: 'Bill Amount', name: 'numnetpayable', width: 60, align: 'Right', formatter: 'currency',
+                        formatoptions: { prefix: '', suffix: '', thousandsSeparator: ',', decimalPlaces: 2 }
+                    },
+                    {
+                        label: 'Status', name: 'vchstatus', align: 'center', width: 200, editable: true, edittype: "select", editoptions: {
+                            value: ["In Preparation", "Order Prepared", "Out For Delivery", "Order Cancel", "Order Returned"],
+                            dataEvents: [
+                                       {
+                                           type: 'change',
+                                           fn: function (e) {
+                                               debugger;
+                                               var appElement = document.querySelector('[ ng-controller=PhoneDeliveryController]');
+                                               var $scope = angular.element(appElement).scope();
+                                               var rowid = parseInt($("#grid-HomeDelivery").jqGrid('getGridParam', 'selrow'));
+                                               var rowdata = $("#grid-HomeDelivery").getRowData(rowid);
+                                               var text = this[this.value].innerHTML;
+                                               $scope.OrderNo = rowdata.vchorderno;
+                                               if (rowdata.status == "ORI" && text == "Order Returned") {
+                                                   $('#grid-HomeDelivery').saveRow(rowid);
+                                                   alert("Order In Process !");
+                                                   $("#grid-HomeDelivery").jqGrid('setCell', rowid, 'vchstatus', "In Preparation");
+                                                   return false;
+                                               }
+                                               else if (text == "Order Returned") {
+
+                                                   $("#myModal").modal({ backdrop: 'static', keyboard: false });
+
+                                               }
+                                               else if (text == "Out For Delivery") {
+
+                                                   $("#myModal1").modal({ backdrop: 'static', keyboard: false });
+
+                                               }
+                                           }
+                                       }]
+                        }
+                    },
+                     { label: 'Delivery Boy Details', name: 'vchdeliveryboyderails', width: 175 },
+                    {
+                        label: ' ', sortable: false, width: 60, key: true, formatter: function (cellvalue, options, rowObject) {
+                            return " <button class='btn-grid' type='button' onclick='edit(" + options.rowId + ");'  ><img src='/assets/css/Images/save-btn.png' width='30'><br/></button>";
+                        }
+                    }
+
+
+
+            ],
+            onSelectRow: editRow,
+            viewrecords: true,
+
+            rowList: [8, 16, 25, 100],
+            //pager: pager_selector,
+            altRows: true,
+            ignoreCase: true,
+            loadComplete: function () {
+                var table = this;
+
+                setTimeout(function () {
+                    styleCheckbox(table);
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+
+            },
+            caption: "Orders <span class='input-icon grid-search'>  <input type='text' onkeyup='GridSearch()'  id='globalSearchText'  placeholder='Search ...' class='nav-search-input' autocomplete='off'>  <i class='ace-icon fa fa-search nav-search-icon'></i></span> "
+        });
+        $(window).triggerHandler('resize.jqGrid');
+
+    }
+
+
+
+
+
+    var appElement = document.querySelector('[ ng-controller=PhoneDeliveryController]');
+
+    var lastSelection;
+
+    function editRow(id) {
+        debugger;
+
+        var grid = $("#grid-HomeDelivery");
+
+        grid.jqGrid('editRow', id, { keys: true });
+
+    }
+
+    function editHomeDelivery(row) {
+
+
+
+        var rowdata = $("#grid-HomeDelivery").getRowData(row);
+        debugger;
+        if (rowdata.status == "ORI" || rowdata.status == "ORRD") {
+            window.location.href = "/TakeAway/NewOrder/" + rowdata.vchorderno + "";
+        }
+        else {
+
+            alert("Order Out For Delivery !");
+            $("#grid-HomeDelivery").saveRow(rowid);
+        }
+
+
+    }
+    function edit(row) {
+        debugger;
+
+        $("#grid-HomeDelivery").saveRow(row);
+        var $scope = angular.element(appElement).scope();
+        $scope.Reportstatus = "";
+        var $http = angular.element(appElement).injector().get('$http');
+        var rowdata = $("#grid-HomeDelivery").getRowData(row);
+        updateStataus = "";
+        if (rowdata.status == "ORI") {
+
+            updateStataus = "In Preparation";
+
+        }
+        if (rowdata.status == "ORP") {
+            updateStataus = "Payment Made";
+
+        }
+        if (rowdata.status == "ORC") {
+            updateStataus = "Order Cancel";
+
+        }
+        if (rowdata.status == "ORO") {
+
+            updateStataus = "Out For Delivery";
+
+
+        }
+        if (rowdata.status == "ORRD") {
+
+            updateStataus = "Order Prepared";
+
+
+        }
+        if (rowdata.status == "ORI" && rowdata.vchstatus == "In Preparation") {
+
+            alert("Order Already In Preparation!")
+            $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', updateStataus);
+            return false;
+
+
+        }
+        if (rowdata.status == "ORRD" && rowdata.vchstatus == "Order Prepared" || rowdata.vchstatus == "In Preparation") {
+
+            alert("Order Already Prepared!")
+            $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', updateStataus);
+            return false;
+
+
+        }
+        if (rowdata.status == "ORO" && rowdata.vchstatus == "Order Prepared" || rowdata.vchstatus == "In Preparation") {
+
+            alert("Order Already Out For Delivery!")
+            $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', updateStataus);
+            return false;
+
+
+        }
+        if (rowdata.status == "ORI" && rowdata.vchstatus == "Out For Delivery") {
+
+            $scope.Reportstatus = "Out For Delivery";
+
+
+        }
+
+        debugger;
+
+        if (rowdata.vchstatus != "In Preparation") {
+            if (rowdata.vchstatus == "Order Returned") {
+                if ($scope.ReasonForOrdercancel !== undefined) {
+
+                    $http({
+                        url: '/TakeAway/UpdateReturnStatus/',
+                        method: "post",
+                        data: { OrderReason: $scope.ReasonForOrdercancel, Nameofcust: rowdata.vchcustomername, OrderNo: rowdata.vchorderno, contactno: rowdata.vchcustomercontactno, netamount: rowdata.numnetpayable }
+                    }).success(function (data) {
+                        debugger;
+                        HomedeliveryGrid(data.Data)
+                        $scope.ReasonForOrdercancel = {};
+                        $scope.HideSaveInDelivery = true;
+                    });
+
+                }
+                else {
+
+
+                    alert("Select Order Return Reason")
+                    $("#myModal").modal({ backdrop: 'static', keyboard: false });
+
+                }
+            }
+
+            else if (rowdata.status != "ORO" || rowdata.vchstatus != "Order Cancel") {
+                if (rowdata.status != "ORO") {
+
+                    var DeliveryBoydetails = "";
+                    if (rowdata.vchstatus == "Out For Delivery") {
+
+                        DeliveryBoydetails = $scope.DelivaryBoyDetails;
+                    }
+
+                    $http({
+                        url: '/TakeAway/UpdateeliveryStatus/',
+                        method: "POST",
+                        data: { OderNo: rowdata.vchorderno, Status: rowdata.vchstatus, DeliveryBoydetails: DeliveryBoydetails }
+
+                    }).success(function (data) {
+                        debugger
+                        HomedeliveryGrid(data.Data)
+                        $scope.hidesave = true;
+                        $scope.DelivaryBoyDetails = "";
+                        if ($scope.Reportstatus == "Out For Delivery") {
+                            var w = window.open("/POSReports/BillReprintReport/?Billno=" + data.BillNo + "&Billtype=HOME DELIVERY&Printtype=Original", '_blank');
+                            //var w = window.open("/POSReports/BillGenerationReport/?billno=" + data.BillNo + "", '_blank');
+                        }
+                    }).error(function (data) { alert("Error found"); });
+
+                }
+                else {
+
+
+                    $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', "Out For Delivery");
+                    alert("Order Out For Delivery!");
+                }
+
+            }
+            else {
+                $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', "Out For Delivery");
+                alert("Order Cancel Not possible!");
+            }
+        }
+        else {
+
+
+            $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', updateStataus);
+            //alert("Order Out For Delivery!");
+        }
+
+
+        //else {
+
+
+        //    $("#grid-HomeDelivery").jqGrid('setCell', row, 'vchstatus', updateStataus);
+        //    alert("Order Already In Preparation");
+        //}
+
+    }
+
+    function GridSearch() {
+        debugger;
+        JqCustomSearch($("#globalSearchText").val(), $("#grid-HomeDelivery"))
+
+    }
+    function Link(id) {
+        debugger;
+        var row = id.split("=");
+        var row_ID = row[1];
+
+        var appElement = document.querySelector('[ ng-controller=PhoneDeliveryController]');
+        var $scope = angular.element(appElement).scope();
+        var $http = angular.element(appElement).injector().get('$http');
+        var content = $("#grid-HomeDelivery").getCell(row_ID, 'vchorderno');
+
+        $http({
+            url: '/TakeAway/GetItemsOfSpecicOrder/',
+            method: "post",
+            data: { orderNo: content }
+        }).success(function (data) {
+            debugger;
+
+            $scope.GetItemsOfSpecicOrder1 = eval('(' + data.DeliveryBoyDetails + ')')
+
+            $("#myModal2").modal();
+
+        });
+
+
+
+
+
+    }
+</script>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsSubcategoryWisePurchaseAndSale" targetNamespace="http://tempuri.org/dsSubcategoryWisePurchaseAndSale.xsd" xmlns:mstns="http://tempuri.org/dsSubcategoryWisePurchaseAndSale.xsd" xmlns="http://tempuri.org/dsSubcategoryWisePurchaseAndSale.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsSubcategoryWisePurchaseAndSale" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsSubcategoryWisePurchaseAndSale" msprop:Generator_UserDSName="dsSubcategoryWisePurchaseAndSale">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="SubcategoryWisePurchaseAndSale" msprop:Generator_TableClassName="SubcategoryWisePurchaseAndSaleDataTable" msprop:Generator_TableVarName="tableSubcategoryWisePurchaseAndSale" msprop:Generator_RowChangedName="SubcategoryWisePurchaseAndSaleRowChanged" msprop:Generator_TablePropName="SubcategoryWisePurchaseAndSale" msprop:Generator_RowDeletingName="SubcategoryWisePurchaseAndSaleRowDeleting" msprop:Generator_RowChangingName="SubcategoryWisePurchaseAndSaleRowChanging" msprop:Generator_RowEvHandlerName="SubcategoryWisePurchaseAndSaleRowChangeEventHandler" msprop:Generator_RowDeletedName="SubcategoryWisePurchaseAndSaleRowDeleted" msprop:Generator_RowClassName="SubcategoryWisePurchaseAndSaleRow" msprop:Generator_UserTableName="SubcategoryWisePurchaseAndSale" msprop:Generator_RowEvArgName="SubcategoryWisePurchaseAndSaleRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productcategoryname" msprop:Generator_ColumnVarNameInTable="columnproductcategoryname" msprop:Generator_ColumnPropNameInRow="productcategoryname" msprop:Generator_ColumnPropNameInTable="productcategorynameColumn" msprop:Generator_UserColumnName="productcategoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="productsubcategoryname" msprop:Generator_ColumnVarNameInTable="columnproductsubcategoryname" msprop:Generator_ColumnPropNameInRow="productsubcategoryname" msprop:Generator_ColumnPropNameInTable="productsubcategorynameColumn" msprop:Generator_UserColumnName="productsubcategoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="purchaseamount" msprop:Generator_ColumnVarNameInTable="columnpurchaseamount" msprop:Generator_ColumnPropNameInRow="purchaseamount" msprop:Generator_ColumnPropNameInTable="purchaseamountColumn" msprop:Generator_UserColumnName="purchaseamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="saleamount" msprop:Generator_ColumnVarNameInTable="columnsaleamount" msprop:Generator_ColumnPropNameInRow="saleamount" msprop:Generator_ColumnPropNameInTable="saleamountColumn" msprop:Generator_UserColumnName="saleamount" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

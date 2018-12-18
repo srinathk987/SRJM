@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MMSBetweenDatesReportds" targetNamespace="http://tempuri.org/MMSBetweenDatesReportds.xsd" xmlns:mstns="http://tempuri.org/MMSBetweenDatesReportds.xsd" xmlns="http://tempuri.org/MMSBetweenDatesReportds.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="MMSBetweenDatesReportds" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="MMSBetweenDatesReportds" msprop:Generator_UserDSName="MMSBetweenDatesReportds">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="MMSBetweenDatesds" msprop:Generator_TableClassName="MMSBetweenDatesdsDataTable" msprop:Generator_TableVarName="tableMMSBetweenDatesds" msprop:Generator_RowChangedName="MMSBetweenDatesdsRowChanged" msprop:Generator_TablePropName="MMSBetweenDatesds" msprop:Generator_RowDeletingName="MMSBetweenDatesdsRowDeleting" msprop:Generator_RowChangingName="MMSBetweenDatesdsRowChanging" msprop:Generator_RowEvHandlerName="MMSBetweenDatesdsRowChangeEventHandler" msprop:Generator_RowDeletedName="MMSBetweenDatesdsRowDeleted" msprop:Generator_RowClassName="MMSBetweenDatesdsRow" msprop:Generator_UserTableName="MMSBetweenDatesds" msprop:Generator_RowEvArgName="MMSBetweenDatesdsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productname" msprop:Generator_ColumnVarNameInTable="columnproductname" msprop:Generator_ColumnPropNameInRow="productname" msprop:Generator_ColumnPropNameInTable="productnameColumn" msprop:Generator_UserColumnName="productname" type="xs:string" minOccurs="0" />
+              <xs:element name="vchuom" msprop:Generator_ColumnVarNameInTable="columnvchuom" msprop:Generator_ColumnPropNameInRow="vchuom" msprop:Generator_ColumnPropNameInTable="vchuomColumn" msprop:Generator_UserColumnName="vchuom" type="xs:string" minOccurs="0" />
+              <xs:element name="numstockinstore" msprop:Generator_ColumnVarNameInTable="columnnumstockinstore" msprop:Generator_ColumnPropNameInRow="numstockinstore" msprop:Generator_ColumnPropNameInTable="numstockinstoreColumn" msprop:Generator_UserColumnName="numstockinstore" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numstockinsystem" msprop:Generator_ColumnVarNameInTable="columnnumstockinsystem" msprop:Generator_ColumnPropNameInRow="numstockinsystem" msprop:Generator_ColumnPropNameInTable="numstockinsystemColumn" msprop:Generator_UserColumnName="numstockinsystem" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numvarianceqty" msprop:Generator_ColumnVarNameInTable="columnnumvarianceqty" msprop:Generator_ColumnPropNameInRow="numvarianceqty" msprop:Generator_ColumnPropNameInTable="numvarianceqtyColumn" msprop:Generator_UserColumnName="numvarianceqty" type="xs:decimal" minOccurs="0" />
+              <xs:element name="datreconcilationdate" msdata:DataType="System.DateTimeOffset" msprop:Generator_ColumnVarNameInTable="columndatreconcilationdate" msprop:Generator_ColumnPropNameInRow="datreconcilationdate" msprop:Generator_ColumnPropNameInTable="datreconcilationdateColumn" msprop:Generator_UserColumnName="datreconcilationdate" type="xs:anyType" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

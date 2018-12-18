@@ -1,0 +1,249 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div id="Xyx" class="page-content" ng-controller="PurchaseReportController">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat widget-header-large">
+                    <h5 class="widget-title"> <i class="ace-icon fa fa-file-pdf-o"></i> Purchase Report </h5>
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form class="form-horizontal" role="form" ng-controller="PurchaseReportController" name="fmPurchaseReport" ng-init="LoadVendors()">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-hide="showandhidedatelabel">
+                                    As on Date :
+                                </label>
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1" ng-hide="showandhide">
+                                    From Date <span style="color: Red">*</span>:
+                                </label>
+                                <div class="col-sm-3">
+                                    <input name="FromDate" type="text" ng-model="Section.fromdate" id="calendar" placeholder="Select From Date" class=" form-control" data-date-format="dd/mm/yyyy" required />
+                                    <span class="error" ng-show="(fmPurchaseReport.FromDate.$dirty || submitted ) && fmPurchaseReport.FromDate.$error.required">
+                                        From Date Reqired !
+                                    </span>
+                                </div>
+                                <div ng-hide="showandhide">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        To Date <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input name="ToDate" type="text" id="datepicker" ng-model="Section.todate" placeholder="Select To Date" class=" form-control" data-date-format="dd/mm/yyyy" ng-required="Valid" />
+                                        <span class="error" ng-show="(fmPurchaseReport.ToDate.$dirty || submitted ) && fmPurchaseReport.ToDate.$error.required">
+                                            To Date Reqired !
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                @*<label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        Report Type <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select ng-model="Section.ReportType" class=" form-control" name="ReportType" required>
+                                            <option value="">Select Report Type</option>
+                                            <option value="Purchse Statement">Purchse Statement</option>
+                                            <option value="Purchase Bill Statement">Purchase Bill Statement</option>
+                                            <option value="Purchase Item Statement">Purchase Item Statement</option>
+                                        </select>
+                                        <span class="error" ng-show="(fmPurchaseReport.ReportType.$dirty || submitted ) && fmPurchaseReport.ReportType.$error.required">
+                                            Report Type required!
+                                        </span>
+                                    </div>*@
+
+                                @*<div class="col-sm-3">
+                                        <button class="btn btn-success" type="button" ng-click="PrintPurchaseReport(Section)">
+                                            <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                        </button>
+                                    </div>*@
+                                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                    Vendor Name :
+                                </label>
+                                <div class="col-sm-3">
+                                    <select ng-init="Section.vendorid=0" ng-model="Section.vendorid" class=" form-control" name="Venodr" ng-options="c.vendorid as c.vchvendorname for c in VendorDetails" required>
+                                        <option value="">Select Vendor Name</option>
+                                    </select>
+                                    <span class="error" ng-show="(fmPurchaseReport.Venodr.$dirty || submitted ) && fmPurchaseReport.Venodr.$error.required">
+                                        Vendor Name required!
+                                    </span>
+                                </div>
+                                <button class="btn btn-success" type="button" ng-click="PrintPurchaseReport(Section)">
+                                    <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                </button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @*<div class="widget-body">
+                        <div class="widget-main">
+                            <form class="form-horizontal" role="form" ng-controller="PurchaseReportController" name="fmVendorReport" ng-init="LoadVendors()">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">
+                                        Vendor Name <span style="color: Red">*</span>:
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select ng-model="Ven.vendorid" class=" form-control" name="Venodr" ng-options="c.vendorid as c.vchvendorname for c in VendorDetails" required>
+                                            <option value="">Select Vendor Name</option>
+                                        </select>
+                                        <span class="error" ng-show="(fmVendorReport.Venodr.$dirty || vendorsubmitted ) && fmVendorReport.Venodr.$error.required">
+                                            Vendor Name required!
+                                        </span>
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button class="btn btn-success" type="button" ng-click="PrintVendorReport(Ven)">
+                                            <i class="ace-icon fa fa-save bigger-110"></i>Print
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#calendar").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            endDate: '+0d'
+
+        });
+    });
+</script>
+<script>
+    var app = angular.module('RMS');
+    app.controller('PurchaseReportController', function ($scope, $http, $rootScope) {
+        $scope.Section = {};
+        $scope.Ven = {};
+        $rootScope.ModuleName = "Reports";
+        $rootScope.FormName = "Purchase";
+        $scope.Valid = true;;
+        $scope.isFormValid = false;
+        $scope.submitted = false;
+
+        $scope.$watch('fmPurchaseReport.$valid', function (newValue) {
+            $scope.isFormValid = newValue;
+        });
+
+        $scope.isVendorFormValid = false;
+        $scope.vendorsubmitted = false;
+
+        $scope.$watch('fmVendorReport.$valid', function (newValue) {
+            $scope.isVendorFormValid = newValue;
+        });
+
+
+
+        $scope.showandhide = false;
+        $scope.showandhidedatelabel = true;
+        //$scope.changeReporttype = function (reporttype) {
+
+        //    if (reporttype == "Purchse Statement") {
+        //        $scope.showandhide = true;
+        //        $scope.showandhidedatelabel = false;
+        //        $scope.Valid = false;;
+        //    }
+        //    else if (reporttype == "Purchase Bill Statement") {
+        //        $scope.showandhide = true;
+        //        $scope.showandhidedatelabel = false;
+        //        $scope.Valid = false;;
+        //    }
+        //    else {
+        //        $scope.showandhide = false;
+        //        $scope.showandhidedatelabel = true;
+        //        $scope.Valid = true;;
+        //    }
+        //}
+
+        $scope.checkDate = function (date1, date2) {
+            debugger;
+            // if ((new Date(parseInt(date1.split('/')[1]) - 1, date1.split('/')[2], date1.split('/')[0])) > (new Date(parseInt(date2.split('/')[1]) - 1, date2.split('/')[2], date2.split('/')[0])))
+            if ((new Date(date1.split('/')[2], parseInt(date1.split('/')[1]) - 1, date1.split('/')[0])) > (new Date(date2.split('/')[2], parseInt(date2.split('/')[1]) - 1, date2.split('/')[0])))
+                //if (date1 > date2)
+                return false;
+            else
+                return true;
+        }
+
+        $scope.PrintPurchaseReport = function (Section) {
+            debugger
+            $scope.submitted = true;
+            if ($scope.isFormValid) {
+                var res = $scope.checkDate($("#calendar").val(), $("#datepicker").val());
+                if (res) {
+
+                    $scope.Section.vchvendorname = $.grep($scope.VendorDetails, function (c) {
+                        return c.vendorid == $scope.Section.vendorid;
+                    })[0].vchvendorname;
+
+                    Section.ReportType = "Purchse Statement";
+                    var w = window.open("/MMSReports/PurchaseReports/?fromdate=" + (Section.fromdate) + "&todate=" + (Section.todate) + "&Reporttype=" + Section.ReportType + "&VendorName=" + $scope.Section.vchvendorname + "", '_blank');
+                    $scope.Section = {};
+                    $scope.fmPurchaseReport.$setPristine();
+                    $scope.submitted = false;
+                    $scope.Section.vendorid = 0;
+                }
+                else {
+                    alert("To Date Should Be GreterThan or Equal to From Date");
+                }
+            }
+        }
+
+
+        $scope.LoadVendors = function () {
+            debugger;
+            $http({
+                url: '/MMSReports/ShowVendors/',
+                method: "get"
+            }).success(function (data) {
+                debugger;
+                $scope.VendorDetails = eval('(' + data.Data + ')');
+
+            });
+        }
+
+        $scope.PrintVendorReport = function (Ven) {
+            debugger
+            $scope.vendorsubmitted = true;
+            if ($scope.isVendorFormValid) {
+
+                $scope.Ven.vchvendorname = $.grep($scope.VendorDetails, function (c) {
+                    return c.vendorid == $scope.Ven.vendorid;
+                })[0].vchvendorname;
+
+                var w = window.open("/MMSReports/VendorPurchaseReports/?VendorName=" + $scope.Ven.vchvendorname + "", '_blank');
+                $scope.Ven = {};
+                $scope.fmVendorReport.$setPristine();
+                $scope.vendorsubmitted = false;
+
+
+            }
+        }
+
+
+    });
+</script>
+

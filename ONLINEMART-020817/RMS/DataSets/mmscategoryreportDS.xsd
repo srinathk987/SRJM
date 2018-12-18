@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="mmscategoryreportDS" targetNamespace="http://tempuri.org/mmscategoryreportDS.xsd" xmlns:mstns="http://tempuri.org/mmscategoryreportDS.xsd" xmlns="http://tempuri.org/mmscategoryreportDS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="mmscategoryreportDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="mmscategoryreportDS" msprop:Generator_UserDSName="mmscategoryreportDS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="mmscategoryreportDS" msprop:Generator_TableClassName="mmscategoryreportDSDataTable" msprop:Generator_TableVarName="tablemmscategoryreportDS" msprop:Generator_TablePropName="_mmscategoryreportDS" msprop:Generator_RowDeletingName="mmscategoryreportDSRowDeleting" msprop:Generator_RowChangingName="mmscategoryreportDSRowChanging" msprop:Generator_RowEvHandlerName="mmscategoryreportDSRowChangeEventHandler" msprop:Generator_RowDeletedName="mmscategoryreportDSRowDeleted" msprop:Generator_UserTableName="mmscategoryreportDS" msprop:Generator_RowChangedName="mmscategoryreportDSRowChanged" msprop:Generator_RowEvArgName="mmscategoryreportDSRowChangeEvent" msprop:Generator_RowClassName="mmscategoryreportDSRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="productcategoryid" msprop:Generator_ColumnVarNameInTable="columnproductcategoryid" msprop:Generator_ColumnPropNameInRow="productcategoryid" msprop:Generator_ColumnPropNameInTable="productcategoryidColumn" msprop:Generator_UserColumnName="productcategoryid" type="xs:int" minOccurs="0" />
+              <xs:element name="categoryname" msprop:Generator_ColumnVarNameInTable="columncategoryname" msprop:Generator_ColumnPropNameInRow="categoryname" msprop:Generator_ColumnPropNameInTable="categorynameColumn" msprop:Generator_UserColumnName="categoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="productsubcategoryid" msprop:Generator_ColumnVarNameInTable="columnproductsubcategoryid" msprop:Generator_ColumnPropNameInRow="productsubcategoryid" msprop:Generator_ColumnPropNameInTable="productsubcategoryidColumn" msprop:Generator_UserColumnName="productsubcategoryid" type="xs:int" minOccurs="0" />
+              <xs:element name="subcategoryname" msprop:Generator_ColumnVarNameInTable="columnsubcategoryname" msprop:Generator_ColumnPropNameInRow="subcategoryname" msprop:Generator_ColumnPropNameInTable="subcategorynameColumn" msprop:Generator_UserColumnName="subcategoryname" type="xs:string" minOccurs="0" />
+              <xs:element name="totalbasic" msprop:Generator_ColumnVarNameInTable="columntotalbasic" msprop:Generator_ColumnPropNameInRow="totalbasic" msprop:Generator_ColumnPropNameInTable="totalbasicColumn" msprop:Generator_UserColumnName="totalbasic" type="xs:decimal" minOccurs="0" />
+              <xs:element name="totaldiscount" msprop:Generator_ColumnVarNameInTable="columntotaldiscount" msprop:Generator_ColumnPropNameInRow="totaldiscount" msprop:Generator_ColumnPropNameInTable="totaldiscountColumn" msprop:Generator_UserColumnName="totaldiscount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="transportcharges" msprop:Generator_ColumnVarNameInTable="columntransportcharges" msprop:Generator_ColumnPropNameInRow="transportcharges" msprop:Generator_ColumnPropNameInTable="transportchargesColumn" msprop:Generator_UserColumnName="transportcharges" type="xs:decimal" minOccurs="0" />
+              <xs:element name="servicetaxamount" msprop:Generator_ColumnVarNameInTable="columnservicetaxamount" msprop:Generator_ColumnPropNameInRow="servicetaxamount" msprop:Generator_ColumnPropNameInTable="servicetaxamountColumn" msprop:Generator_UserColumnName="servicetaxamount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="vatorcstamount" msprop:Generator_ColumnVarNameInTable="columnvatorcstamount" msprop:Generator_ColumnPropNameInRow="vatorcstamount" msprop:Generator_ColumnPropNameInTable="vatorcstamountColumn" msprop:Generator_UserColumnName="vatorcstamount" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
